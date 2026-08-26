@@ -1,0 +1,53 @@
+{
+  "dataset_version": "1.1.0",
+  "random_seed": 42,
+  "customers": {
+    "churn_dates_added": 23,
+    "existing_churn_dates_adjusted_to_activity": 3
+  },
+  "motorcycles": {
+    "observation_end_dates_added": 36,
+    "existing_observation_end_dates_adjusted_to_activity": 1,
+    "production_years_regenerated": 0,
+    "production_year_basis_updated": 10000
+  },
+  "usage_profiles": {
+    "profile_end_dates_updated": 37
+  },
+  "motorcycle_models": {
+    "production_ranges_added": 39,
+    "cooling_types_added": 2
+  },
+  "appointments": {
+    "existing_converted_preserved": 24209,
+    "new_cancelled": 1971,
+    "new_no_show": 1126,
+    "new_rescheduled": 844
+  },
+  "workshops": {
+    "sunday_open_enabled": 2,
+    "multibrand_preserved_due_to_history": true,
+    "abs_support_preserved_due_to_history": true
+  },
+  "noise_audit": {
+    "schema_updated": true,
+    "canonical_clean_semantics_rows": 45839
+  },
+  "parquet_targets": {
+    "empty_string_to_null": 148151,
+    "minus_one_task_missing_sentinel_to_null": 683802,
+    "target_unknown_value_column_removed": true
+  },
+  "derived_outputs": {
+    "regenerated": [
+      "service_status_history.csv",
+      "noise_audit.csv",
+      "ml_maintenance_snapshots.parquet",
+      "ml_next_service_targets.parquet",
+      "ml_next_task_targets.parquet",
+      "split_manifest.csv",
+      "dataset_metadata.json",
+      "quality_report.json"
+    ]
+  }
+}

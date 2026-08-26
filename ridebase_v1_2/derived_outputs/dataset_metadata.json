@@ -1,0 +1,379 @@
+{
+  "dataset": {
+    "name": "RideBase Synthetic Motorcycle Maintenance Dataset",
+    "short_name": "RideBase",
+    "dataset_version": "1.2.0",
+    "status": "V1_2_RELEASE_PASS",
+    "generated_date": "2026-08-25",
+    "language": "tr-TR",
+    "currency": "TRY",
+    "data_origin": "SYNTHETIC",
+    "random_seed": 42,
+    "generator_version": "1.2.0",
+    "rule_set_version": "1.2.0",
+    "scenario_id": "MAINTENANCE_EVENT_SIM_V1",
+    "purpose": "Develop and evaluate leakage-aware machine-learning workflows for predicting the timing/kilometres of the next motorcycle service and the canonical maintenance tasks expected at that service."
+  },
+  "design_principles": [
+    "Simulate the causal maintenance process first, then derive relational records.",
+    "Motorcycle mileage is longitudinal and must not decrease in the clean simulation backbone.",
+    "Maintenance work and parts must respect motorcycle technical compatibility rules.",
+    "Synthetic/derived records retain provenance and deterministic generator metadata.",
+    "Future service information is kept out of feature snapshots and stored in separate target tables.",
+    "Controlled noise and repaired inconsistencies are auditable rather than silently discarded.",
+    "Primary evaluation is temporal; additional unseen-motorcycle and unseen-workshop regimes are provided."
+  ],
+  "prediction_tasks": {
+    "next_service": {
+      "feature_table": "ml_maintenance_snapshots.parquet",
+      "target_table": "ml_next_service_targets.parquet",
+      "target_examples": [
+        "days_to_next_service",
+        "km_to_next_service",
+        "target_event_observed",
+        "is_right_censored"
+      ]
+    },
+    "next_maintenance_tasks": {
+      "feature_table": "ml_maintenance_snapshots.parquet",
+      "target_table": "ml_next_task_targets.parquet",
+      "target_type": "multi_label_classification",
+      "canonical_target_class_count": 81,
+      "unknown_label_semantics": "NULL"
+    }
+  },
+  "coverage": {
+    "service_received_at_min": "2021-01-27 09:01:00",
+    "service_received_at_max": "2026-08-01 17:31:00",
+    "entity_counts": {
+      "workshops": 10,
+      "customers": 7000,
+      "motorcycles": 10000,
+      "services": 41518,
+      "service_tasks": 201800,
+      "service_parts": 76305,
+      "appointments": 28150,
+      "canonical_maintenance_tasks": 86,
+      "maintenance_policies": 621,
+      "motorcycle_models": 39
+    },
+    "unique_service_linked_motorcycles": 8442,
+    "unique_service_linked_customers": 6080,
+    "unique_service_linked_workshops": 10
+  },
+  "ml_snapshot_contract": {
+    "snapshot_key": "snapshot_id",
+    "snapshot_semantics": "Post-service canonical state after the current service has been delivered.",
+    "feature_target_join": "snapshot_id",
+    "feature_row_count": 41518,
+    "next_service_target_row_count": 41518,
+    "next_task_target_row_count": 41518,
+    "right_censoring_supported": true,
+    "raw_future_fields_in_feature_table": false
+  },
+  "split_contract": {
+    "manifest_file": "split_manifest.csv",
+    "primary_split": "TIME_BASED",
+    "train_end": "2025-06-30 23:59:59",
+    "validation_end": "2025-12-31 23:59:59",
+    "test_start": "2026-01-01 00:00:00",
+    "additional_regimes": [
+      "UNSEEN_MOTORCYCLE",
+      "UNSEEN_WORKSHOP"
+    ],
+    "direct_target_rule": "A next-service/task target is directly eligible in a primary split only when the next event is observed by that split's label cutoff."
+  },
+  "provenance": {
+    "technical_spec_master": "ridebase_motorcycle_models_v1.csv",
+    "maintenance_taxonomy": "maintenance_tasks.csv",
+    "maintenance_policy_master": "maintenance_policies.csv",
+    "noise_audit": "noise_audit.csv",
+    "status_history": "service_status_history.csv",
+    "synthetic_data_notice": "This dataset is synthetic and is not evidence of real market frequencies, manufacturer-specific service intervals, real customer behaviour, or real-world model performance."
+  },
+  "file_catalog": [
+    {
+      "file_name": "ml_maintenance_snapshots.parquet",
+      "layer": "DERIVED_OUTPUT",
+      "format": "PARQUET",
+      "size_bytes": 7554708,
+      "sha256": "a4f9a31315b1c056866c3941ab5b4e19e878b0b004a9d754baf9f31fc4dc6b6c",
+      "row_count": 41518,
+      "column_count": 142
+    },
+    {
+      "file_name": "ml_next_service_targets.parquet",
+      "layer": "DERIVED_OUTPUT",
+      "format": "PARQUET",
+      "size_bytes": 4238538,
+      "sha256": "1c990d6c71dcf24174a7b5e69258ce61ce1281dc1ad26a1dfcc8b4d84dfd0140",
+      "row_count": 41518,
+      "column_count": 38
+    },
+    {
+      "file_name": "ml_next_task_targets.parquet",
+      "layer": "DERIVED_OUTPUT",
+      "format": "PARQUET",
+      "size_bytes": 2251399,
+      "sha256": "8d47dcdb330d1622554f672ca3a8eb748198a3c1fc6d7212674758cbbc9fa887",
+      "row_count": 41518,
+      "column_count": 122
+    },
+    {
+      "file_name": "noise_audit.csv",
+      "layer": "DERIVED_OUTPUT",
+      "format": "CSV",
+      "size_bytes": 18615141,
+      "sha256": "37e9a330db4779b353d3813c7e41cd982832e26b820f9ec3ded2557b42a53e0e",
+      "row_count": 46621,
+      "column_count": 26
+    },
+    {
+      "file_name": "quality_report.json",
+      "layer": "DERIVED_OUTPUT",
+      "format": "JSON",
+      "size_bytes": 10994,
+      "sha256": "7513a3bbeff7d0a5288e01b03e2a9301e22366318369dca24a4f4f5a5f12dcb0"
+    },
+    {
+      "file_name": "service_status_history.csv",
+      "layer": "DERIVED_OUTPUT",
+      "format": "CSV",
+      "size_bytes": 65588466,
+      "sha256": "f6b88b25c3248992af2609e8edd4d15e76b898e5e307760a8bfeaf25321db024",
+      "row_count": 312644,
+      "column_count": 21
+    },
+    {
+      "file_name": "split_manifest.csv",
+      "layer": "DERIVED_OUTPUT",
+      "format": "CSV",
+      "size_bytes": 21180620,
+      "sha256": "6613d01a5d0c8153d07607842ead3c071a600dd60e4d2bae5cd55e416a0f375e",
+      "row_count": 41518,
+      "column_count": 37
+    },
+    {
+      "file_name": "appointments.csv",
+      "layer": "SOURCE",
+      "format": "CSV",
+      "size_bytes": 4042922,
+      "sha256": "6452b761204f5f5d60377e08f2d9f13ff2ef4571dc4da8327d5c09d54b5f8525",
+      "row_count": 28150,
+      "column_count": 13
+    },
+    {
+      "file_name": "customers.csv",
+      "layer": "SOURCE",
+      "format": "CSV",
+      "size_bytes": 798461,
+      "sha256": "44e91e02711480109572d909e1218295c761a6fe18b535efffc892c12b07fb35",
+      "row_count": 7000,
+      "column_count": 16
+    },
+    {
+      "file_name": "maintenance_policies.csv",
+      "layer": "SOURCE",
+      "format": "CSV",
+      "size_bytes": 153957,
+      "sha256": "0db667b03dbba87ca326ca10a6d484c068f104f17ab57ac559fa6bbd37665640",
+      "row_count": 621,
+      "column_count": 30
+    },
+    {
+      "file_name": "maintenance_tasks.csv",
+      "layer": "SOURCE",
+      "format": "CSV",
+      "size_bytes": 16902,
+      "sha256": "3bdd6fdf14140dda41b4de70703957a9a62dc8fa7b82a164514d9093a15ba8dd",
+      "row_count": 98,
+      "column_count": 17
+    },
+    {
+      "file_name": "mileage_timeline_monthly.csv",
+      "layer": "SOURCE",
+      "format": "CSV",
+      "size_bytes": 38324020,
+      "sha256": "76d265e13bc56484cc88231b729d2731bedd55c62c0d172ca271c675f768f8ea",
+      "row_count": 344714,
+      "column_count": 15
+    },
+    {
+      "file_name": "motorcycles.csv",
+      "layer": "SOURCE",
+      "format": "CSV",
+      "size_bytes": 3241293,
+      "sha256": "7430f61bfb6ae7da68f279e8e3760ed408b1e5581f0b1617b5fc64c130f7b22e",
+      "row_count": 10000,
+      "column_count": 29
+    },
+    {
+      "file_name": "ridebase_motorcycle_models_v1.csv",
+      "layer": "SOURCE",
+      "format": "CSV",
+      "size_bytes": 17586,
+      "sha256": "eb80109c89977cc8ef9b9080e8b894e17f8ca38c4ef291d7f995f91c893c676a",
+      "row_count": 39,
+      "column_count": 38
+    },
+    {
+      "file_name": "service_parts.csv",
+      "layer": "SOURCE",
+      "format": "CSV",
+      "size_bytes": 25682620,
+      "sha256": "4e45a358c5b67392780a1c4a77cb592afddf3f42dc8b680ba23974d45faeadf0",
+      "row_count": 76305,
+      "column_count": 27
+    },
+    {
+      "file_name": "service_tasks.csv",
+      "layer": "SOURCE",
+      "format": "CSV",
+      "size_bytes": 57993105,
+      "sha256": "8a6ca2892a974ed1fbce9144ec516f0e31d2971e1b33f93d3e8f36064dc4c3f6",
+      "row_count": 204000,
+      "column_count": 27
+    },
+    {
+      "file_name": "services.csv",
+      "layer": "SOURCE",
+      "format": "CSV",
+      "size_bytes": 15068438,
+      "sha256": "d7fed5a02a2ad3b3ddd18159b62a1177e5a9e6725edb91ba3e69d833117b0cbc",
+      "row_count": 41518,
+      "column_count": 43
+    },
+    {
+      "file_name": "services_enriched.csv",
+      "layer": "SOURCE",
+      "format": "CSV",
+      "size_bytes": 18964741,
+      "sha256": "d1e06dc9096503d72512c191ef86f821f97bb51e5bb53831a3862f3cef6c6d75",
+      "row_count": 41518,
+      "column_count": 49
+    },
+    {
+      "file_name": "usage_profiles.csv",
+      "layer": "SOURCE",
+      "format": "CSV",
+      "size_bytes": 2366527,
+      "sha256": "763721d208325ebd6ac8adb7b140e041f9139f45be1d4db1a6b6e3cfa552bb7e",
+      "row_count": 10000,
+      "column_count": 30
+    },
+    {
+      "file_name": "workshops.csv",
+      "layer": "SOURCE",
+      "format": "CSV",
+      "size_bytes": 4259,
+      "sha256": "c426f6c4ca9b77f573c30d1cd26869d3f6110deaa92310754cc8c41011f613ea",
+      "row_count": 10,
+      "column_count": 35
+    }
+  ],
+  "expected_final_support_files": [
+    "dataset_metadata.json",
+    "quality_report.json"
+  ],
+  "known_v1_notes": [
+    "Canonical next-task taxonomy contains 81 eligible target classes.",
+    "Some eligible target classes may have zero positive examples in this specific simulation run.",
+    "Timeline repairs and controlled text noise are retained in noise_audit.csv.",
+    "Synthetic model/part compatibility records are engineering simulation artifacts and are not OEM fitment claims.",
+    "Synthetic test metrics must not be presented as real-world deployment performance."
+  ],
+  "changelog_summary": {
+    "dataset_version": "1.2.0",
+    "random_seed": 42,
+    "usage_profiles_changed": 6596,
+    "services_regenerated": true,
+    "service_rows_changed": 4163,
+    "repair_count_before": 1159,
+    "repair_count_after": 1778,
+    "breakdown_count_before": 993,
+    "breakdown_count_after": 422,
+    "warranty_rows_changed": 1647,
+    "service_delay_semantic_changes": 2200,
+    "overdue_fields_added": [
+      "maintenance_overdue_days_pre_service",
+      "maintenance_overdue_km_pre_service",
+      "overdue_maintenance_days_at_failure",
+      "overdue_maintenance_km_at_failure"
+    ],
+    "task_rows_before": 201800,
+    "task_rows_after": 204000,
+    "task_rows_added": 2200,
+    "task_role_added": true,
+    "final_drive_failure_tasks_added": 168,
+    "brand_risk_coefficients_range": [
+      0.985643924014098,
+      1.0109737058789177
+    ],
+    "model_residual_coefficients_range": [
+      0.9404401158247341,
+      1.0579573494674996
+    ],
+    "chronic_risk_distribution": {
+      "NORMAL": 7568,
+      "LOW": 1963,
+      "ELEVATED": 469
+    },
+    "derived_files_regenerated": [
+      "service_status_history.csv",
+      "noise_audit.csv",
+      "ml_maintenance_snapshots.parquet",
+      "ml_next_service_targets.parquet",
+      "ml_next_task_targets.parquet",
+      "split_manifest.csv",
+      "dataset_metadata.json",
+      "quality_report.json"
+    ]
+  },
+  "null_semantics": {
+    "general": "Unknown values use NULL/NaN; empty strings are not missing-value sentinels.",
+    "next_service_targets": "Future event fields are NULL when target_event_observed=0.",
+    "next_task_targets": "Task labels are 1/0 for observed next services and NULL for right-censored snapshots."
+  },
+  "layer_definitions": {
+    "services.csv": "BASE EVENT TABLE / RAW OPERATIONAL BACKBONE. Cost aggregation fields are intentionally unpopulated in the base event table. Use services_enriched.csv for analysis-ready cost fields.",
+    "services_enriched.csv": "ANALYSIS READY ENRICHED SERVICE TABLE with populated cost aggregation fields."
+  },
+  "target_semantics": {
+    "next_service": "Observed future event values are populated; right-censored future fields are NULL.",
+    "next_task": "For an observed next service, present=1 and absent=0. For a right-censored snapshot, all task labels are NULL."
+  },
+  "noise_audit_semantics": {
+    "clean_value_available": "Indicates that a usable canonical clean representation exists.",
+    "original_clean_value_available": "Indicates that the exact pre-corruption original value was persisted.",
+    "canonical_clean_value": "Canonical repaired timestamp or taxonomy representation usable downstream."
+  },
+  "appointment_lifecycle": {
+    "status_distribution": {
+      "CONVERTED_TO_SERVICE": 24209,
+      "CANCELLED": 1971,
+      "NO_SHOW": 1126,
+      "RESCHEDULED": 844
+    },
+    "rescheduled_link_semantics": "RESCHEDULED lifecycle-only rows have no service_id and no successor link in v1.1 to avoid a disruptive schema change."
+  },
+  "workshop_variability_decision": "sunday_open was diversified. multibrand and supports_abs_diagnostics were preserved because all workshops have conflicting historical multi-brand and ABS service activity.",
+  "failure_generation_model": {
+    "method": "hazard-based service-event windows",
+    "age_exposure": true,
+    "km_exposure": true,
+    "usage_severity": true,
+    "maintenance_overdue": true,
+    "previous_failure_history": true,
+    "bounded_brand_residual": [
+      0.985643924014098,
+      1.0109737058789177
+    ],
+    "bounded_model_residual": [
+      0.9404401158247341,
+      1.0579573494674996
+    ],
+    "warranty_eligibility": "registration date + synthetic months + odometer limit",
+    "component_fault_selection": "powertrain/category/age/km/usage conditioned",
+    "random_seed": 42
+  }
+}

@@ -1,0 +1,47 @@
+{
+  "dataset_version": "1.2.0",
+  "random_seed": 42,
+  "usage_profiles_changed": 6596,
+  "services_regenerated": true,
+  "service_rows_changed": 4163,
+  "repair_count_before": 1159,
+  "repair_count_after": 1778,
+  "breakdown_count_before": 993,
+  "breakdown_count_after": 422,
+  "warranty_rows_changed": 1647,
+  "service_delay_semantic_changes": 2200,
+  "overdue_fields_added": [
+    "maintenance_overdue_days_pre_service",
+    "maintenance_overdue_km_pre_service",
+    "overdue_maintenance_days_at_failure",
+    "overdue_maintenance_km_at_failure"
+  ],
+  "task_rows_before": 201800,
+  "task_rows_after": 204000,
+  "task_rows_added": 2200,
+  "task_role_added": true,
+  "final_drive_failure_tasks_added": 168,
+  "brand_risk_coefficients_range": [
+    0.985643924014098,
+    1.0109737058789177
+  ],
+  "model_residual_coefficients_range": [
+    0.9404401158247341,
+    1.0579573494674996
+  ],
+  "chronic_risk_distribution": {
+    "NORMAL": 7568,
+    "LOW": 1963,
+    "ELEVATED": 469
+  },
+  "derived_files_regenerated": [
+    "service_status_history.csv",
+    "noise_audit.csv",
+    "ml_maintenance_snapshots.parquet",
+    "ml_next_service_targets.parquet",
+    "ml_next_task_targets.parquet",
+    "split_manifest.csv",
+    "dataset_metadata.json",
+    "quality_report.json"
+  ]
+}

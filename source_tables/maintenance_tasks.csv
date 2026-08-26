@@ -1,0 +1,87 @@
+﻿task_code,canonical_name_tr,canonical_name_en,component_group,action_type,is_periodic,is_wear_based,is_fault_based,requires_part,applicable_powertrain,required_final_drive,required_cooling_type,required_transmission_type,part_category_hint,can_be_next_service_target,notes,taxonomy_version
+ENGINE_OIL_CHECK,Motor Yağı Seviye Kontrolü,Engine Oil Level Check,ENGINE,INSPECT,1,0,0,0,ICE,,,,ENGINE_OIL,1,Yağ seviyesi ve genel durumu kontrol edilir.,1.0.0
+ENGINE_OIL_CHANGE,Motor Yağı Değişimi,Engine Oil Change,ENGINE,REPLACE,1,0,0,1,ICE,,,,ENGINE_OIL,1,Yağ miktarı model teknik özelliğinden/politikadan türetilmelidir.,1.0.0
+OIL_FILTER_CHANGE,Yağ Filtresi Değişimi,Oil Filter Replacement,ENGINE,REPLACE,1,0,0,1,ICE,,,,OIL_FILTER,1,Yalnızca yağ filtresi bulunan uyumlu modellerde.,1.0.0
+OIL_LEAK_INSPECTION,Motor Yağ Kaçağı Kontrolü,Engine Oil Leak Inspection,ENGINE,INSPECT,0,0,1,0,ICE,,,,,1,Arıza/şikâyet veya genel kontrol sonucu tetiklenebilir.,1.0.0
+ENGINE_COMPRESSION_TEST,Motor Kompresyon Testi,Engine Compression Test,ENGINE,DIAGNOSE,0,0,1,0,ICE,,,,,1,"Performans düşüşü, zor çalışma veya motor arızası şüphesinde.",1.0.0
+VALVE_CLEARANCE_INSPECTION,Supap Boşluğu Kontrolü,Valve Clearance Inspection,ENGINE,INSPECT,1,1,0,0,ICE,,,,,1,Model bakım politikasına bağlı periyodik kontrol.,1.0.0
+VALVE_CLEARANCE_ADJUST,Supap Boşluğu Ayarı,Valve Clearance Adjustment,ENGINE,ADJUST,0,1,1,0,ICE,,,,,1,Kontrol sonucu tolerans dışıysa uygulanır.,1.0.0
+CAM_CHAIN_INSPECTION,Eksantrik Zinciri Kontrolü,Cam Chain Inspection,ENGINE,INSPECT,0,1,1,0,ICE,,,,,1,Motor yapısına göre uygulanır.,1.0.0
+CAM_CHAIN_TENSIONER_SERVICE,Eksantrik Zincir Gergisi Servisi,Cam Chain Tensioner Service,ENGINE,REPAIR,0,1,1,1,ICE,,,,CAM_CHAIN_TENSIONER,1,Gürültü/aşınma bulgusunda uygulanır.,1.0.0
+AIR_FILTER_INSPECTION,Hava Filtresi Kontrolü,Air Filter Inspection,INTAKE,INSPECT,1,1,0,0,ICE,,,,AIR_FILTER,1,Tozlu kullanım profillerinde daha sık tetiklenebilir.,1.0.0
+AIR_FILTER_CLEAN,Hava Filtresi Temizliği,Air Filter Cleaning,INTAKE,CLEAN,1,1,0,0,ICE,,,,AIR_FILTER,1,Yalnızca temizlenebilir filtre tiplerinde.,1.0.0
+AIR_FILTER_CHANGE,Hava Filtresi Değişimi,Air Filter Replacement,INTAKE,REPLACE,1,1,0,1,ICE,,,,AIR_FILTER,1,Parça uyumluluğu modelden gelmelidir.,1.0.0
+THROTTLE_BODY_CLEAN,Gaz Kelebeği Temizliği,Throttle Body Cleaning,INTAKE,CLEAN,0,1,1,0,ICE,,,,,1,Rölanti/tepki sorunları veya kirlenme durumunda.,1.0.0
+INTAKE_LEAK_INSPECTION,Emme Sistemi Kaçak Kontrolü,Intake Leak Inspection,INTAKE,INSPECT,0,0,1,0,ICE,,,,,1,Vakum kaçağı veya düzensiz çalışma şüphesinde.,1.0.0
+SPARK_PLUG_INSPECTION,Buji Kontrolü,Spark Plug Inspection,IGNITION,INSPECT,1,1,0,0,ICE,,,,SPARK_PLUG,1,Buji sayısı model teknik özelliklerinden türetilir.,1.0.0
+SPARK_PLUG_CHANGE,Buji Değişimi,Spark Plug Replacement,IGNITION,REPLACE,1,1,0,1,ICE,,,,SPARK_PLUG,1,EV motosikletlere uygulanmaz.,1.0.0
+FUEL_FILTER_INSPECTION,Yakıt Filtresi Kontrolü,Fuel Filter Inspection,FUEL,INSPECT,1,1,0,0,ICE,,,,FUEL_FILTER,1,Sisteme/model yapısına göre uygulanır.,1.0.0
+FUEL_FILTER_CHANGE,Yakıt Filtresi Değişimi,Fuel Filter Replacement,FUEL,REPLACE,1,1,0,1,ICE,,,,FUEL_FILTER,1,Uyumlu sistemlerde.,1.0.0
+FUEL_INJECTOR_CLEAN,Enjektör Temizliği,Fuel Injector Cleaning,FUEL,CLEAN,0,1,1,0,ICE,,,,,1,Yakıt püskürtme problemi/performans şikâyetinde.,1.0.0
+FUEL_SYSTEM_DIAGNOSTIC,Yakıt Sistemi Arıza Teşhisi,Fuel System Diagnostic,FUEL,DIAGNOSE,0,0,1,0,ICE,,,,,1,Arıza kodu veya çalışma problemiyle tetiklenir.,1.0.0
+COOLANT_LEVEL_CHECK,Soğutma Sıvısı Seviye Kontrolü,Coolant Level Check,COOLING,INSPECT,1,0,0,0,ICE,,LIQUID,,COOLANT,1,Yalnızca sıvı soğutmalı motosikletlerde.,1.0.0
+COOLANT_CHANGE,Soğutma Sıvısı Değişimi,Coolant Replacement,COOLING,FLUSH,1,0,0,1,ICE,,LIQUID,,COOLANT,1,Sıvı soğutmalı sistemlerde zaman bazlı bakım olabilir.,1.0.0
+COOLING_SYSTEM_INSPECTION,Soğutma Sistemi Kontrolü,Cooling System Inspection,COOLING,INSPECT,1,1,1,0,ICE,,LIQUID,,,1,"Hortum, radyatör ve kaçak kontrollerini kapsar.",1.0.0
+RADIATOR_CLEAN,Radyatör Temizliği,Radiator Cleaning,COOLING,CLEAN,0,1,0,0,ICE,,LIQUID,,,1,Kirlenme ve kullanım ortamına göre.,1.0.0
+THERMOSTAT_DIAGNOSTIC,Termostat Kontrolü,Thermostat Diagnostic,COOLING,DIAGNOSE,0,0,1,0,ICE,,LIQUID,,THERMOSTAT,1,Hararet/ısı yönetimi sorunlarında.,1.0.0
+CLUTCH_FREE_PLAY_CHECK,Debriyaj Boşluğu Kontrolü,Clutch Free Play Check,TRANSMISSION,INSPECT,1,1,0,0,ICE,,,MANUAL,,1,Manuel debriyajlı motosikletlerde.,1.0.0
+CLUTCH_ADJUST,Debriyaj Ayarı,Clutch Adjustment,TRANSMISSION,ADJUST,0,1,1,0,ICE,,,MANUAL,,1,Kaçırma/kavrama noktası problemi veya kontrol sonucunda.,1.0.0
+CLUTCH_PLATE_INSPECTION,Debriyaj Balata Kontrolü,Clutch Plate Inspection,TRANSMISSION,INSPECT,0,1,1,0,ICE,,,MANUAL,CLUTCH_PLATE,1,Aşınma/kaçırma şüphesinde.,1.0.0
+CLUTCH_PLATE_CHANGE,Debriyaj Balata Değişimi,Clutch Plate Replacement,TRANSMISSION,REPLACE,0,1,1,1,ICE,,,MANUAL,CLUTCH_PLATE,1,Kontrol sonucu aşınmışsa.,1.0.0
+GEARBOX_OIL_CHANGE,Şanzıman Yağı Değişimi,Gearbox Oil Change,TRANSMISSION,REPLACE,1,0,0,1,BOTH,,,,GEAR_OIL,1,Ayrı şanzıman yağı kullanan sistemlerde; model politikasıyla filtrelenmeli.,1.0.0
+CVT_CASE_INSPECTION,CVT Kutu Kontrolü,CVT Case Inspection,TRANSMISSION,INSPECT,1,1,0,0,ICE,V_BELT,,CVT,,1,Scooter CVT sistemlerinde.,1.0.0
+CVT_BELT_INSPECTION,CVT Kayışı Kontrolü,CVT Belt Inspection,TRANSMISSION,INSPECT,1,1,0,0,ICE,V_BELT,,CVT,CVT_BELT,1,CVT kayış aşınması/çatlak kontrolü.,1.0.0
+CVT_BELT_CHANGE,CVT Kayışı Değişimi,CVT Belt Replacement,TRANSMISSION,REPLACE,1,1,0,1,ICE,V_BELT,,CVT,CVT_BELT,1,CVT kayışlı modellerde.,1.0.0
+CVT_ROLLER_INSPECTION,Varyatör Ruloları Kontrolü,CVT Roller Inspection,TRANSMISSION,INSPECT,1,1,0,0,ICE,V_BELT,,CVT,CVT_ROLLER,1,Scooter varyatör sistemlerinde.,1.0.0
+CVT_ROLLER_CHANGE,Varyatör Ruloları Değişimi,CVT Roller Replacement,TRANSMISSION,REPLACE,0,1,0,1,ICE,V_BELT,,CVT,CVT_ROLLER,1,Aşınmaya bağlı değişim.,1.0.0
+FINAL_GEAR_OIL_CHANGE,Son Dişli Yağı Değişimi,Final Gear Oil Change,TRANSMISSION,REPLACE,1,0,0,1,ICE,V_BELT,,CVT,FINAL_GEAR_OIL,1,Bazı scooterlarda ayrı final dişli yağı bulunur; model politikası şart.,1.0.0
+CHAIN_INSPECTION,Zincir Kontrolü,Drive Chain Inspection,FINAL_DRIVE,INSPECT,1,1,0,0,BOTH,CHAIN,,,CHAIN,1,Zincir aktarmalı motosikletlerde.,1.0.0
+CHAIN_CLEAN,Zincir Temizliği,Drive Chain Cleaning,FINAL_DRIVE,CLEAN,1,1,0,0,BOTH,CHAIN,,,CHAIN_CLEANER,1,Kullanım koşullarına göre sıklaşabilir.,1.0.0
+CHAIN_LUBRICATE,Zincir Yağlama,Drive Chain Lubrication,FINAL_DRIVE,LUBRICATE,1,1,0,1,BOTH,CHAIN,,,CHAIN_LUBE,1,Zincir aktarmalı motosikletlerde.,1.0.0
+CHAIN_ADJUST,Zincir Gerginlik Ayarı,Drive Chain Adjustment,FINAL_DRIVE,ADJUST,1,1,0,0,BOTH,CHAIN,,,,1,Zincir boşluğu tolerans dışıysa.,1.0.0
+CHAIN_SPROCKET_REPLACE,Zincir-Dişli Seti Değişimi,Chain and Sprocket Set Replacement,FINAL_DRIVE,REPLACE,0,1,0,1,BOTH,CHAIN,,,CHAIN_SPROCKET_KIT,1,Zincir ve dişli seti aşınmasına bağlı.,1.0.0
+DRIVE_BELT_INSPECTION,Tahrik Kayışı Kontrolü,Drive Belt Inspection,FINAL_DRIVE,INSPECT,1,1,0,0,BOTH,BELT,,,DRIVE_BELT,1,Harici belt final-drive kullanan motosikletlerde.,1.0.0
+DRIVE_BELT_CHANGE,Tahrik Kayışı Değişimi,Drive Belt Replacement,FINAL_DRIVE,REPLACE,0,1,0,1,BOTH,BELT,,,DRIVE_BELT,1,Aşınma/periyot sonucu.,1.0.0
+SHAFT_DRIVE_OIL_CHANGE,Şaft Aktarma Yağı Değişimi,Shaft Drive Oil Change,FINAL_DRIVE,REPLACE,1,0,0,1,BOTH,SHAFT,,,SHAFT_OIL,1,Şaft aktarmalı motosikletlerde.,1.0.0
+SHAFT_DRIVE_INSPECTION,Şaft Aktarma Kontrolü,Shaft Drive Inspection,FINAL_DRIVE,INSPECT,1,1,1,0,BOTH,SHAFT,,,,1,"Kaçak, boşluk ve genel kontrol.",1.0.0
+FRONT_BRAKE_PAD_INSPECTION,Ön Fren Balatası Kontrolü,Front Brake Pad Inspection,BRAKES,INSPECT,1,1,0,0,BOTH,,,,FRONT_BRAKE_PAD,1,Aşınma bazlı.,1.0.0
+FRONT_BRAKE_PAD_CHANGE,Ön Fren Balatası Değişimi,Front Brake Pad Replacement,BRAKES,REPLACE,0,1,0,1,BOTH,,,,FRONT_BRAKE_PAD,1,Kalınlık/aşınma eşiği altında.,1.0.0
+REAR_BRAKE_PAD_INSPECTION,Arka Fren Balatası Kontrolü,Rear Brake Pad Inspection,BRAKES,INSPECT,1,1,0,0,BOTH,,,,REAR_BRAKE_PAD,1,Disk frenli arka sistemlerde.,1.0.0
+REAR_BRAKE_PAD_CHANGE,Arka Fren Balatası Değişimi,Rear Brake Pad Replacement,BRAKES,REPLACE,0,1,0,1,BOTH,,,,REAR_BRAKE_PAD,1,Uyumlu fren sistemlerinde.,1.0.0
+BRAKE_DISC_INSPECTION,Fren Diski Kontrolü,Brake Disc Inspection,BRAKES,INSPECT,1,1,0,0,BOTH,,,,BRAKE_DISC,1,"Kalınlık, yüzey ve eğrilik kontrolü.",1.0.0
+BRAKE_DISC_CHANGE,Fren Diski Değişimi,Brake Disc Replacement,BRAKES,REPLACE,0,1,1,1,BOTH,,,,BRAKE_DISC,1,Aşınma/hasar sonucunda.,1.0.0
+BRAKE_FLUID_CHECK,Fren Hidroliği Kontrolü,Brake Fluid Check,BRAKES,INSPECT,1,0,0,0,BOTH,,,,BRAKE_FLUID,1,Seviye ve durum kontrolü.,1.0.0
+BRAKE_FLUID_CHANGE,Fren Hidroliği Değişimi,Brake Fluid Replacement,BRAKES,FLUSH,1,0,0,1,BOTH,,,,BRAKE_FLUID,1,Çoğunlukla zaman bazlı politika.,1.0.0
+BRAKE_SYSTEM_BLEED,Fren Sisteminin Havasını Alma,Brake System Bleeding,BRAKES,FLUSH,0,0,1,0,BOTH,,,,BRAKE_FLUID,1,Hidrolik sistem açıldığında veya hava şüphesinde.,1.0.0
+ABS_DIAGNOSTIC,ABS Sistem Teşhisi,ABS System Diagnostic,BRAKES,DIAGNOSE,0,0,1,0,BOTH,,,,,1,ABS bulunan motosikletlerde model özelliğiyle filtrelenmeli.,1.0.0
+FRONT_TIRE_INSPECTION,Ön Lastik Kontrolü,Front Tire Inspection,TIRES_WHEELS,INSPECT,1,1,0,0,BOTH,,,,FRONT_TIRE,1,"Diş, çatlak, basınç ve yaş kontrolü.",1.0.0
+FRONT_TIRE_CHANGE,Ön Lastik Değişimi,Front Tire Replacement,TIRES_WHEELS,REPLACE,0,1,0,1,BOTH,,,,FRONT_TIRE,1,"Aşınma, yaş veya hasara bağlı.",1.0.0
+REAR_TIRE_INSPECTION,Arka Lastik Kontrolü,Rear Tire Inspection,TIRES_WHEELS,INSPECT,1,1,0,0,BOTH,,,,REAR_TIRE,1,"Diş, çatlak, basınç ve yaş kontrolü.",1.0.0
+REAR_TIRE_CHANGE,Arka Lastik Değişimi,Rear Tire Replacement,TIRES_WHEELS,REPLACE,0,1,0,1,BOTH,,,,REAR_TIRE,1,"Aşınma, yaş veya hasara bağlı.",1.0.0
+TIRE_PRESSURE_CHECK,Lastik Basınç Kontrolü,Tire Pressure Check,TIRES_WHEELS,INSPECT,1,0,0,0,BOTH,,,,,0,Rutin kontrol; sonraki servis ana hedefi olarak genellikle kullanılmaz.,1.0.0
+WHEEL_BALANCE,Teker Balans Ayarı,Wheel Balancing,TIRES_WHEELS,ADJUST,0,1,1,0,BOTH,,,,,1,Lastik değişimi/titreşim şikâyeti sonrası.,1.0.0
+WHEEL_BEARING_INSPECTION,Teker Rulmanı Kontrolü,Wheel Bearing Inspection,TIRES_WHEELS,INSPECT,1,1,0,0,BOTH,,,,WHEEL_BEARING,1,Boşluk ve ses kontrolü.,1.0.0
+WHEEL_BEARING_CHANGE,Teker Rulmanı Değişimi,Wheel Bearing Replacement,TIRES_WHEELS,REPLACE,0,1,1,1,BOTH,,,,WHEEL_BEARING,1,Aşınma/arıza halinde.,1.0.0
+FORK_INSPECTION,Ön Amortisör Kontrolü,Front Fork Inspection,SUSPENSION,INSPECT,1,1,0,0,BOTH,,,,,1,"Kaçak, boşluk ve çalışma kontrolü.",1.0.0
+FORK_OIL_CHANGE,Ön Amortisör Yağı Değişimi,Fork Oil Replacement,SUSPENSION,REPLACE,1,1,0,1,BOTH,,,,FORK_OIL,1,Model/politikaya göre periyodik veya kondisyon bazlı.,1.0.0
+FORK_SEAL_CHANGE,Amortisör Keçesi Değişimi,Fork Seal Replacement,SUSPENSION,REPLACE,0,1,1,1,BOTH,,,,FORK_SEAL,1,Yağ kaçağı/aşınma halinde.,1.0.0
+REAR_SHOCK_INSPECTION,Arka Amortisör Kontrolü,Rear Shock Inspection,SUSPENSION,INSPECT,1,1,0,0,BOTH,,,,,1,"Boşluk, kaçak ve çalışma kontrolü.",1.0.0
+STEERING_BEARING_INSPECTION,Gidon Rulmanı Kontrolü,Steering Head Bearing Inspection,STEERING,INSPECT,1,1,0,0,BOTH,,,,STEERING_BEARING,1,Boşluk/takılma kontrolü.,1.0.0
+STEERING_BEARING_ADJUST,Gidon Rulmanı Ayarı,Steering Head Bearing Adjustment,STEERING,ADJUST,0,1,0,0,BOTH,,,,,1,Kontrol sonucunda gerekirse.,1.0.0
+STEERING_BEARING_CHANGE,Gidon Rulmanı Değişimi,Steering Head Bearing Replacement,STEERING,REPLACE,0,1,1,1,BOTH,,,,STEERING_BEARING,1,Aşınma/hasar halinde.,1.0.0
+BATTERY_TEST,Akü Testi,Battery Test,ELECTRICAL,DIAGNOSE,1,1,0,0,BOTH,,,,BATTERY,1,"12V/yardımcı akü dahil, modele göre filtrelenmeli.",1.0.0
+BATTERY_CHANGE,Akü Değişimi,Battery Replacement,ELECTRICAL,REPLACE,0,1,1,1,BOTH,,,,BATTERY,1,Kapasite/sağlık düşüşü veya arıza halinde.,1.0.0
+CHARGING_SYSTEM_TEST,Şarj Sistemi Testi,Charging System Test,ELECTRICAL,DIAGNOSE,0,0,1,0,BOTH,,,,,1,ICE alternatör/regülatör veya EV yardımcı sistemlerine uygun şekilde yorumlanmalı.,1.0.0
+LIGHTING_SYSTEM_INSPECTION,Aydınlatma Sistemi Kontrolü,Lighting System Inspection,ELECTRICAL,INSPECT,1,1,0,0,BOTH,,,,LIGHTING,1,"Far, stop, sinyal ve plaka aydınlatması.",1.0.0
+ECU_DIAGNOSTIC_SCAN,ECU Arıza Taraması,ECU Diagnostic Scan,ELECTRICAL,DIAGNOSE,0,0,1,0,BOTH,,,,,1,Arıza lambası/şikâyet veya gelişmiş periyodik kontrolde.,1.0.0
+EV_TRACTION_BATTERY_HEALTH_CHECK,Çekiş Bataryası Sağlık Kontrolü,EV Traction Battery Health Check,EV_POWERTRAIN,DIAGNOSE,1,1,0,0,EV,,,,TRACTION_BATTERY,1,EV motosikletlere özgü.,1.0.0
+EV_CHARGING_PORT_INSPECTION,Şarj Soketi Kontrolü,EV Charging Port Inspection,EV_POWERTRAIN,INSPECT,1,1,0,0,EV,,,,CHARGING_PORT,1,"Soket, pin ve fiziksel hasar kontrolü.",1.0.0
+EV_DRIVE_MOTOR_DIAGNOSTIC,Elektrik Motoru Teşhisi,EV Drive Motor Diagnostic,EV_POWERTRAIN,DIAGNOSE,0,0,1,0,EV,,,,,1,Tahrik motoru arızası/performans problemi.,1.0.0
+EV_HIGH_VOLTAGE_SYSTEM_INSPECTION,Yüksek Voltaj Sistemi Kontrolü,EV High Voltage System Inspection,EV_POWERTRAIN,INSPECT,1,0,1,0,EV,,,,,1,Yalnızca uygun eğitim/servis prosedürleri kapsamında.,1.0.0
+GENERAL_SAFETY_INSPECTION,Genel Güvenlik Kontrolü,General Safety Inspection,GENERAL,INSPECT,1,0,0,0,BOTH,,,,,1,"Fren, lastik, aydınlatma, bağlantılar ve genel güvenlik.",1.0.0
+FASTENER_TORQUE_INSPECTION,Bağlantı Elemanları Sıkılık Kontrolü,Fastener Torque Inspection,GENERAL,INSPECT,1,1,0,0,BOTH,,,,,1,Kritik bağlantı noktalarının kontrolü.,1.0.0
+SIDE_STAND_INSPECTION,Yan Ayak Kontrolü,Side Stand Inspection,GENERAL,INSPECT,1,1,0,0,BOTH,,,,,0,Rutin güvenlik kontrolü.,1.0.0
+CENTER_STAND_INSPECTION,Orta Sehpa Kontrolü,Center Stand Inspection,GENERAL,INSPECT,1,1,0,0,BOTH,,,,,0,Yalnızca orta sehpası bulunan modellerde.,1.0.0
+CABLE_CONTROL_LUBRICATION,Kumanda Telleri Yağlama,Control Cable Lubrication,GENERAL,LUBRICATE,1,1,0,1,BOTH,,,,CABLE_LUBE,1,Mekanik gaz/debriyaj teli bulunan modellerde.,1.0.0
+THROTTLE_FREE_PLAY_CHECK,Gaz Kolu Boşluk Kontrolü,Throttle Free Play Check,GENERAL,INSPECT,1,1,0,0,BOTH,,,,,0,Gaz kontrol tipine göre uygulanır.,1.0.0
+WASH_AND_GENERAL_CLEANING,Genel Temizlik,General Cleaning,GENERAL,CLEAN,0,0,0,0,BOTH,,,,,0,Servis hedefi olarak kullanılmayan yardımcı işlem.,1.0.0

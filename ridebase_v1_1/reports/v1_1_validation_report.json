@@ -1,0 +1,25 @@
+{
+  "dataset_version": "1.1.0",
+  "before_v1": {
+    "inactive_customer_missing_churn": 23,
+    "inactive_motorcycle_missing_observation_end": 36,
+    "noise_audit_clean_value_semantic_conflict": 40909,
+    "model_missing_production_start_year": 39,
+    "model_missing_production_end_year": 39
+  },
+  "after_v1_1": {
+    "inactive_customer_missing_churn": 0,
+    "inactive_customer_churn_before_last_activity": 0,
+    "inactive_motorcycle_missing_observation_end": 0,
+    "inactive_motorcycle_end_before_last_activity": 0,
+    "noise_audit_clean_value_semantic_conflict": 0,
+    "invalid_motorcycle_production_year_range": 0,
+    "model_missing_production_start_year": 0,
+    "model_missing_production_end_year": 0,
+    "snapshot_unknown_cooling_type": 0,
+    "parquet_empty_string_cells": 0,
+    "censored_task_minus_one_labels": 0
+  },
+  "release_gate": "PASS",
+  "failed_high_severity_checks": []
+}

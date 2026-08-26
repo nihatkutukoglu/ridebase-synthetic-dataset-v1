@@ -1,0 +1,318 @@
+{
+  "report": {
+    "name": "RideBase Synthetic Dataset v1 Quality Report",
+    "dataset_version": "1.0.0",
+    "report_version": "QUALITY_REPORT_V1",
+    "report_date": "2026-08-25",
+    "data_origin": "SYNTHETIC",
+    "random_seed": 42,
+    "release_gate": "PASS"
+  },
+  "executive_summary": {
+    "total_checks": 15,
+    "pass_checks": 14,
+    "warn_checks": 1,
+    "fail_checks": 0,
+    "warning_check_names": [
+      "raw_service_timestamp_order"
+    ],
+    "failed_check_names": [],
+    "interpretation": "Dataset is release-ready for synthetic ML development when canonical repaired timelines, noise audit flags, and the supplied split manifest are used. The raw service table retains known timestamp anomalies by design; timeline-sensitive workflows must use the canonical status history."
+  },
+  "quality_checks": [
+    {
+      "check": "target_volume_minimums",
+      "status": "PASS",
+      "severity": "HIGH",
+      "summary": "All required synthetic table minimum volumes are satisfied.",
+      "metrics": {
+        "actual": {
+          "workshops": 10,
+          "motorcycles": 10000,
+          "customers": 7000,
+          "services": 41518,
+          "service_tasks": 201800,
+          "service_parts": 76305,
+          "canonical_maintenance_tasks": 86
+        },
+        "violations": {}
+      },
+      "notes": []
+    },
+    {
+      "check": "relational_foreign_keys",
+      "status": "PASS",
+      "severity": "HIGH",
+      "summary": "No orphan foreign-key references detected.",
+      "metrics": {
+        "services_to_workshops": 0,
+        "services_to_customers": 0,
+        "services_to_motorcycles": 0,
+        "service_tasks_to_services": 0,
+        "service_parts_to_services": 0,
+        "status_history_to_services": 0,
+        "appointments_linked_service_orphans": 0
+      },
+      "notes": []
+    },
+    {
+      "check": "service_task_parent_consistency",
+      "status": "PASS",
+      "severity": "HIGH",
+      "summary": "Service-task parent motorcycle/workshop IDs are consistent.",
+      "metrics": {
+        "motorcycle_mismatch": 0,
+        "workshop_mismatch": 0
+      },
+      "notes": []
+    },
+    {
+      "check": "raw_service_timestamp_order",
+      "status": "WARN",
+      "severity": "HIGH",
+      "summary": "Raw service table contains known synthetic timestamp inconsistencies; these are repaired in the canonical status history.",
+      "metrics": {
+        "completed_before_received": 19673,
+        "delivered_before_completed": 16103,
+        "delivered_before_received": 15236,
+        "service_count": 41518
+      },
+      "notes": [
+        "Canonical ML timelines must use service_status_history.csv rather than raw completed_at/delivered_at fields."
+      ]
+    },
+    {
+      "check": "canonical_status_timeline",
+      "status": "PASS",
+      "severity": "HIGH",
+      "summary": "Canonical service status histories are monotonic and terminate in DELIVERED.",
+      "metrics": {
+        "service_count": 41518,
+        "history_rows": 312644,
+        "non_monotonic_services": 0,
+        "first_status_not_received": 0,
+        "last_status_not_delivered": 0,
+        "repaired_status_events": 40909
+      },
+      "notes": []
+    },
+    {
+      "check": "service_task_status_consistency",
+      "status": "PASS",
+      "severity": "HIGH",
+      "summary": "COMPLETED and DECLINED service task state fields are internally consistent.",
+      "metrics": {
+        "completed_flag_mismatch": 0,
+        "completed_missing_completed_at": 0,
+        "completed_missing_completed_by": 0,
+        "completed_before_started": 0,
+        "declined_completed_flag_mismatch": 0,
+        "declined_with_completed_at": 0
+      },
+      "notes": []
+    },
+    {
+      "check": "mileage_longitudinal_quality",
+      "status": "PASS",
+      "severity": "HIGH",
+      "summary": "Mileage backbone is monotonic.",
+      "metrics": {
+        "negative_service_odometer": 0,
+        "missing_service_odometer": 0,
+        "service_level_regressions": 0,
+        "monthly_timeline_regressions": 0,
+        "estimated_service_odometer": 782,
+        "estimated_rate_pct": 1.8835
+      },
+      "notes": []
+    },
+    {
+      "check": "service_part_integrity",
+      "status": "PASS",
+      "severity": "HIGH",
+      "summary": "Service-part compatibility, quantity, and monetary arithmetic are internally consistent.",
+      "metrics": {
+        "incompatible_rows": 0,
+        "nonpositive_quantity_rows": 0,
+        "purchase_total_mismatch_rows": 0,
+        "sale_total_mismatch_rows": 0
+      },
+      "notes": []
+    },
+    {
+      "check": "appointment_service_linkage",
+      "status": "PASS",
+      "severity": "MEDIUM",
+      "summary": "Appointment-to-service conversion links are consistent.",
+      "metrics": {
+        "converted_without_service": 0,
+        "linked_service_but_status_not_converted": 0,
+        "service_appointment_orphans": 0
+      },
+      "notes": []
+    },
+    {
+      "check": "estimated_delivery_variability",
+      "status": "PASS",
+      "severity": "MEDIUM",
+      "summary": "Estimated delivery is not a single fixed constant offset.",
+      "metrics": {
+        "unique_estimated_delivery_offsets_minutes": 6,
+        "estimated_delivery_equals_received_rows": 39190,
+        "equals_received_rate_pct": 94.3928
+      },
+      "notes": []
+    },
+    {
+      "check": "historical_service_date_bounds",
+      "status": "PASS",
+      "severity": "HIGH",
+      "summary": "No service event occurs after the dataset report date.",
+      "metrics": {
+        "max_received_at": "2026-08-01 17:31:00",
+        "future_service_rows_after_2026_08_25": 0
+      },
+      "notes": []
+    },
+    {
+      "check": "noise_audit_coverage",
+      "status": "PASS",
+      "severity": "MEDIUM",
+      "summary": "Controlled noise and repaired inconsistencies have a unique audit trail.",
+      "metrics": {
+        "audit_rows": 46621,
+        "issue_counts": {
+          "STATUS_TIMESTAMP_INCONSISTENCY": 40909,
+          "CONTROLLED_TEXT_NOISE": 4930,
+          "MILEAGE_ESTIMATED": 782
+        },
+        "duplicate_noise_audit_ids": 0
+      },
+      "notes": []
+    },
+    {
+      "check": "ml_parquet_structure_and_shape",
+      "status": "PASS",
+      "severity": "HIGH",
+      "summary": "All ML Parquet files passed footer/schema/row-group/page decompression validation and match their expected row/column counts.",
+      "metrics": {
+        "ml_maintenance_snapshots.parquet": {
+          "structurally_valid": true,
+          "rows": 41518,
+          "columns": 137,
+          "row_groups": 3,
+          "validated_data_pages": 411,
+          "created_by": "RideBase ML snapshot builder 1.0.0",
+          "file_size_bytes": 5972362,
+          "expected_rows": 41518,
+          "expected_columns": 137,
+          "shape_matches_expected": true
+        },
+        "ml_next_service_targets.parquet": {
+          "structurally_valid": true,
+          "rows": 41518,
+          "columns": 38,
+          "row_groups": 3,
+          "validated_data_pages": 114,
+          "created_by": "RideBase next-service target builder 1.0.0",
+          "file_size_bytes": 2757772,
+          "expected_rows": 41518,
+          "expected_columns": 38,
+          "shape_matches_expected": true
+        },
+        "ml_next_task_targets.parquet": {
+          "structurally_valid": true,
+          "rows": 41518,
+          "columns": 106,
+          "row_groups": 3,
+          "validated_data_pages": 318,
+          "created_by": "RideBase next-task target builder 1.0.0",
+          "file_size_bytes": 2575503,
+          "expected_rows": 41518,
+          "expected_columns": 106,
+          "shape_matches_expected": true
+        }
+      },
+      "notes": [
+        "The execution environment does not include pyarrow/fastparquet, so pandas.read_parquet is unavailable.",
+        "Validation therefore parses Parquet Thrift metadata directly and decompresses every stored data page."
+      ]
+    },
+    {
+      "check": "split_leakage_and_group_isolation",
+      "status": "PASS",
+      "severity": "HIGH",
+      "summary": "Primary temporal and group-holdout split manifests satisfy the configured leakage guards.",
+      "metrics": {
+        "duplicate_snapshot_rows": 0,
+        "primary_split_counts": {
+          "TRAIN": 27428,
+          "TEST": 7691,
+          "VALIDATION": 6399
+        },
+        "boundary_crossing_direct_target_eligibility_violations": 0,
+        "motorcycles_crossing_unseen_motorcycle_groups": 0,
+        "workshops_crossing_unseen_workshop_groups": 0
+      },
+      "notes": []
+    },
+    {
+      "check": "provenance_metadata_consistency",
+      "status": "PASS",
+      "severity": "MEDIUM",
+      "summary": "Core synthetic tables retain consistent provenance metadata.",
+      "metrics": {
+        "services": {
+          "data_origin": {
+            "SYNTHETIC": 41518
+          },
+          "generator_version": {
+            "1.0.0": 41518
+          },
+          "random_seed": {
+            "42": 41518
+          }
+        },
+        "service_tasks": {
+          "data_origin": {
+            "SYNTHETIC": 201800
+          },
+          "generator_version": {
+            "1.0.0": 201800
+          },
+          "random_seed": {
+            "42": 201800
+          }
+        },
+        "service_parts": {
+          "data_origin": {
+            "SYNTHETIC": 76305
+          },
+          "generator_version": {
+            "1.0.0": 76305
+          },
+          "random_seed": {
+            "42": 76305
+          }
+        }
+      },
+      "notes": []
+    }
+  ],
+  "known_limitations": [
+    "The dataset is synthetic; performance measured on it is not evidence of real-world model performance.",
+    "Raw services.csv contains intentional/legacy timestamp inconsistencies; canonical service_status_history.csv must be used for timeline-sensitive ML.",
+    "Estimated odometer readings represent observation uncertainty and should retain mileage-quality flags.",
+    "Some canonical next-task target classes have no positive examples in this simulation run.",
+    "Part compatibility and interval policy data are simulation artifacts and are not OEM fitment/service claims.",
+    "Primary model evaluation must use the temporal split; random row-level service splitting is not approved."
+  ],
+  "release_requirements": [
+    "Use ml_maintenance_snapshots.parquet as the feature source.",
+    "Join targets by snapshot_id only.",
+    "Use split_manifest.csv for train/validation/test assignment.",
+    "Respect task_target_eligible_primary and next_service_regression_eligible_primary.",
+    "Treat -1 task labels on right-censored rows as UNKNOWN, not negative.",
+    "Use noise_audit.csv and repaired status history for data-quality-aware analysis."
+  ]
+}

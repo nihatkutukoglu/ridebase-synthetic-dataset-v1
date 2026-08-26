@@ -1,0 +1,356 @@
+{
+  "report": {
+    "name": "RideBase Synthetic Dataset v1.1 Quality Report",
+    "dataset_version": "1.1.0",
+    "report_version": "QUALITY_REPORT_V1_1",
+    "report_date": "2026-08-25",
+    "data_origin": "SYNTHETIC",
+    "random_seed": 42,
+    "release_gate": "PASS"
+  },
+  "executive_summary": {
+    "total_checks": 25,
+    "pass_checks": 25,
+    "fail_checks": 0,
+    "failed_high_severity_checks": []
+  },
+  "quality_checks": [
+    {
+      "check": "row_volume_checks",
+      "status": "PASS",
+      "severity": "HIGH",
+      "summary": "All required source tables are present and non-empty.",
+      "metrics": {
+        "appointments": 28150,
+        "customers": 7000,
+        "maintenance_policies": 621,
+        "maintenance_tasks": 86,
+        "mileage_timeline_monthly": 344714,
+        "motorcycles": 10000,
+        "ridebase_motorcycle_models_v1": 39,
+        "service_parts": 76305,
+        "service_tasks": 201800,
+        "services": 41518,
+        "services_enriched": 41518,
+        "usage_profiles": 10000,
+        "workshops": 10,
+        "violations": 0
+      }
+    },
+    {
+      "check": "duplicate_checks",
+      "status": "PASS",
+      "severity": "HIGH",
+      "summary": "No full-row duplicates.",
+      "metrics": {
+        "appointments": 0,
+        "customers": 0,
+        "maintenance_policies": 0,
+        "maintenance_tasks": 0,
+        "mileage_timeline_monthly": 0,
+        "motorcycles": 0,
+        "ridebase_motorcycle_models_v1": 0,
+        "service_parts": 0,
+        "service_tasks": 0,
+        "services": 0,
+        "services_enriched": 0,
+        "usage_profiles": 0,
+        "workshops": 0,
+        "service_status_history": 0,
+        "noise_audit": 0,
+        "ml_maintenance_snapshots": 0,
+        "ml_next_service_targets": 0,
+        "ml_next_task_targets": 0,
+        "split_manifest": 0,
+        "violations": 0
+      }
+    },
+    {
+      "check": "primary_key_duplicates",
+      "status": "PASS",
+      "severity": "HIGH",
+      "summary": "Primary keys are unique.",
+      "metrics": {
+        "appointments": 0,
+        "customers": 0,
+        "maintenance_policies": 0,
+        "maintenance_tasks": 0,
+        "mileage_timeline_monthly": 0,
+        "motorcycles": 0,
+        "ridebase_motorcycle_models_v1": 0,
+        "service_parts": 0,
+        "service_tasks": 0,
+        "services": 0,
+        "services_enriched": 0,
+        "usage_profiles": 0,
+        "workshops": 0,
+        "service_status_history": 0,
+        "noise_audit": 0,
+        "ml_maintenance_snapshots": 0,
+        "ml_next_service_targets": 0,
+        "ml_next_task_targets": 0,
+        "split_manifest": 0,
+        "violations": 0
+      }
+    },
+    {
+      "check": "foreign_key_orphans",
+      "status": "PASS",
+      "severity": "HIGH",
+      "summary": "All required foreign keys resolve.",
+      "metrics": {
+        "motorcycles_customer": 0,
+        "customers_workshop": 0,
+        "services_workshop": 0,
+        "services_customer": 0,
+        "services_motorcycle": 0,
+        "services_appointment": 0,
+        "service_tasks_service": 0,
+        "service_tasks_task": 0,
+        "service_parts_service": 0,
+        "status_history_service": 0,
+        "violations": 0
+      }
+    },
+    {
+      "check": "service_timeline_ordering",
+      "status": "PASS",
+      "severity": "HIGH",
+      "summary": "Canonical status timestamps are monotonic.",
+      "metrics": {
+        "backwards_events": 0,
+        "violations": 0
+      }
+    },
+    {
+      "check": "service_task_status_consistency",
+      "status": "PASS",
+      "severity": "HIGH",
+      "summary": "Task status fields are consistent.",
+      "metrics": {
+        "completed_bad": 0,
+        "declined_bad": 0,
+        "violations": 0
+      }
+    },
+    {
+      "check": "mileage_monotonicity",
+      "status": "PASS",
+      "severity": "HIGH",
+      "summary": "Monthly closing odometer is monotonic.",
+      "metrics": {
+        "regressions": 0,
+        "violations": 0
+      }
+    },
+    {
+      "check": "service_part_compatibility",
+      "status": "PASS",
+      "severity": "HIGH",
+      "summary": "Used parts are compatible.",
+      "metrics": {
+        "incompatible_rows": 0,
+        "violations": 0
+      }
+    },
+    {
+      "check": "cost_arithmetic",
+      "status": "PASS",
+      "severity": "HIGH",
+      "summary": "Part cost arithmetic is valid.",
+      "metrics": {
+        "purchase_mismatch": 0,
+        "sale_mismatch": 0,
+        "violations": 0
+      }
+    },
+    {
+      "check": "appointment_lifecycle_validity",
+      "status": "PASS",
+      "severity": "HIGH",
+      "summary": "Appointment lifecycle and service links are valid.",
+      "metrics": {
+        "converted_without_service": 0,
+        "nonconverted_with_service": 0,
+        "status_counts": {
+          "CONVERTED_TO_SERVICE": 24209,
+          "CANCELLED": 1971,
+          "NO_SHOW": 1126,
+          "RESCHEDULED": 844
+        },
+        "violations": 0
+      }
+    },
+    {
+      "check": "inactive_customer_churn_completeness",
+      "status": "PASS",
+      "severity": "HIGH",
+      "summary": "Conditional churn-date semantics are valid.",
+      "metrics": {
+        "inactive_missing": 0,
+        "active_with_churn": 0,
+        "churn_before_last_activity": 0,
+        "violations": 0
+      }
+    },
+    {
+      "check": "inactive_motorcycle_observation_end_completeness",
+      "status": "PASS",
+      "severity": "HIGH",
+      "summary": "Inactive motorcycles have valid observation end dates.",
+      "metrics": {
+        "inactive_missing": 0,
+        "end_before_last_activity": 0,
+        "violations": 0
+      }
+    },
+    {
+      "check": "usage_profile_end_date_synchronization",
+      "status": "PASS",
+      "severity": "HIGH",
+      "summary": "Inactive usage profiles share the motorcycle boundary.",
+      "metrics": {
+        "mismatches": 0,
+        "violations": 0
+      }
+    },
+    {
+      "check": "model_production_year_range_consistency",
+      "status": "PASS",
+      "severity": "HIGH",
+      "summary": "Model and instance production years are consistent.",
+      "metrics": {
+        "invalid_model_ranges": 0,
+        "motorcycles_outside_range": 0,
+        "violations": 0
+      }
+    },
+    {
+      "check": "noise_audit_semantic_consistency",
+      "status": "PASS",
+      "severity": "HIGH",
+      "summary": "Noise audit availability flags match their values.",
+      "metrics": {
+        "canonical_conflicts": 0,
+        "original_conflicts": 0,
+        "violations": 0
+      }
+    },
+    {
+      "check": "parquet_readability",
+      "status": "PASS",
+      "severity": "HIGH",
+      "summary": "All Parquet files are readable by pyarrow.",
+      "metrics": {
+        "ml_maintenance_snapshots.parquet": {
+          "rows": 41518,
+          "columns": 137,
+          "readable": true
+        },
+        "ml_next_service_targets.parquet": {
+          "rows": 41518,
+          "columns": 38,
+          "readable": true
+        },
+        "ml_next_task_targets.parquet": {
+          "rows": 41518,
+          "columns": 105,
+          "readable": true
+        },
+        "violations": 0
+      }
+    },
+    {
+      "check": "parquet_null_semantics",
+      "status": "PASS",
+      "severity": "HIGH",
+      "summary": "Missing Parquet values do not use empty strings.",
+      "metrics": {
+        "empty_string_cells": 0,
+        "violations": 0
+      }
+    },
+    {
+      "check": "snapshot_target_key_alignment",
+      "status": "PASS",
+      "severity": "HIGH",
+      "summary": "Snapshot and target keys align.",
+      "metrics": {
+        "symmetric_key_difference": 0,
+        "violations": 0
+      }
+    },
+    {
+      "check": "right_censor_semantics",
+      "status": "PASS",
+      "severity": "HIGH",
+      "summary": "Censored future service fields are NULL.",
+      "metrics": {
+        "censored_future_nonnull_cells": 0,
+        "violations": 0
+      }
+    },
+    {
+      "check": "task_target_nullable_semantics",
+      "status": "PASS",
+      "severity": "HIGH",
+      "summary": "Task labels are NULL only for censored snapshots.",
+      "metrics": {
+        "censored_nonnull_labels": 0,
+        "observed_null_labels": 0,
+        "violations": 0
+      }
+    },
+    {
+      "check": "split_leakage",
+      "status": "PASS",
+      "severity": "HIGH",
+      "summary": "Boundary-crossing future labels are not directly eligible.",
+      "metrics": {
+        "boundary_eligibility_violations": 0,
+        "violations": 0
+      }
+    },
+    {
+      "check": "unseen_motorcycle_isolation",
+      "status": "PASS",
+      "severity": "HIGH",
+      "summary": "Motorcycles do not cross unseen groups.",
+      "metrics": {
+        "cross_group_motorcycles": 0,
+        "violations": 0
+      }
+    },
+    {
+      "check": "unseen_workshop_isolation",
+      "status": "PASS",
+      "severity": "HIGH",
+      "summary": "Workshops do not cross unseen groups.",
+      "metrics": {
+        "cross_group_workshops": 0,
+        "violations": 0
+      }
+    },
+    {
+      "check": "provenance_version_fields",
+      "status": "PASS",
+      "severity": "HIGH",
+      "summary": "Generator provenance is v1.1.0.",
+      "metrics": {
+        "non_v1_1_generator_version_rows": 0,
+        "violations": 0
+      }
+    },
+    {
+      "check": "future_date_check",
+      "status": "PASS",
+      "severity": "HIGH",
+      "summary": "No service begins after the observation horizon.",
+      "metrics": {
+        "service_rows_after_horizon": 0,
+        "violations": 0
+      }
+    }
+  ],
+  "layer_note": "services.csv intentionally leaves aggregate cost fields unpopulated; use services_enriched.csv for analysis-ready cost measures."
+}
