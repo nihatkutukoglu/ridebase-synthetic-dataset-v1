@@ -605,8 +605,10 @@ def build_manifest():
         "current_dataset": "v1.3",
         "environment": "PILOT",
         "real_fleet_validation": "PENDING",
-        # public inference API base URL, injected at build time; empty => Live Prediction stays offline
-        "v2_api": os.environ.get("RIDEBASE_V2_API", "").rstrip("/"),
+        # public inference API base URL; RIDEBASE_V2_API overrides, else the live Render service
+        "v2_api": os.environ.get(
+            "RIDEBASE_V2_API", "https://ridebase-inference-api.onrender.com"
+        ).rstrip("/"),
         "modules": MODULES,
         "notebooks": [
             {"n": n, "title": t, "file": f, "dataset": d, "result": r, "status": s, "module": m}

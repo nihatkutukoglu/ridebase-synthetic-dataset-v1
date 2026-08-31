@@ -40,6 +40,9 @@ class Settings:
         if o.strip()
     ]
 
+    # optional regex for CORS origins (e.g. published Claude artifacts on *.claudeusercontent.com)
+    ALLOWED_ORIGIN_REGEX: str = os.environ.get("ALLOWED_ORIGIN_REGEX", "")
+
     MAX_REQUEST_BYTES: int = int(os.environ.get("MAX_REQUEST_BYTES", 1_000_000))
     SCATTER_SAMPLE: int = int(os.environ.get("SCATTER_SAMPLE", 1500))
 

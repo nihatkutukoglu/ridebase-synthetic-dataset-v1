@@ -1,10 +1,10 @@
 {
-  "generated_at": "2026-08-31T12:33:24",
+  "generated_at": "2026-08-31T21:01:57",
   "project": "RideBase ML",
   "current_dataset": "v1.3",
   "environment": "PILOT",
   "real_fleet_validation": "PENDING",
-  "v2_api": "",
+  "v2_api": "https://ridebase-inference-api.onrender.com",
   "modules": [
     {
       "id": "eda",
@@ -2354,7 +2354,7 @@
       "mae": 67.41054109598393,
       "r2": -2.7934328237780446,
       "artifact": "models/v0_rule_baseline_config.json",
-      "last_updated": "2026-08-27"
+      "last_updated": "2026-08-31"
     },
     {
       "name": "V0 rule · KM",
@@ -2365,7 +2365,7 @@
       "mae": 4515.311594202899,
       "r2": -3.3196202867163924,
       "artifact": "models/v0_rule_baseline_config.json",
-      "last_updated": "2026-08-27"
+      "last_updated": "2026-08-31"
     },
     {
       "name": "V1 · next-service DAYS",
@@ -2377,7 +2377,7 @@
       "mae": 21.963199961193467,
       "r2": 0.6666527374598262,
       "artifact": "models/v1_final_days_model.joblib",
-      "last_updated": "2026-08-28"
+      "last_updated": "2026-08-31"
     },
     {
       "name": "V1 · next-service KM",
@@ -2389,7 +2389,7 @@
       "mae": 939.991936306075,
       "r2": 0.4628012619073232,
       "artifact": "models/v1_final_km_model.joblib",
-      "last_updated": "2026-08-28"
+      "last_updated": "2026-08-31"
     },
     {
       "name": "V2 · survival",

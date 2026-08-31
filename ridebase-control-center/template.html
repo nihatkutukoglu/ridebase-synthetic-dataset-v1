@@ -1333,72 +1333,118 @@ function v2Limitations(){
     +'<li>scikit-survival ortamda scikit-learn 1.5.x sabitliyor.</li>'
     +'</ul>')+'</div>';
 }
+var V2_TIMEOUT=78000; /* Render free instance cold start can take 50+ s */
+function v2fetch(url,opts){
+  opts=opts||{};
+  var ctl=("AbortController" in window)?new AbortController():null;
+  if(ctl){opts.signal=ctl.signal;var to=setTimeout(function(){ctl.abort();},V2_TIMEOUT);}
+  return fetch(url,opts).then(function(r){if(ctl)clearTimeout(to);return r;},
+    function(e){if(ctl)clearTimeout(to);throw e;});
+}
 function v2Predict(){
   var api=(window.__V2_API__||"").replace(/\/$/,"");
   var out=pageNote(
-    "Tek bir motor için canlı tahmin. <b>Örnek motor yükle</b> → <b>Tahmin et</b>. Sonuçta ne göreceğin: "
+    "Tek bir motor için canlı tahmin. <b>Örnek motor yükle & tahmin et</b>'e bas. Sonuçta ne göreceğin: "
     +"<b>30 / 60 / 90 / 120 gün</b> — motorun o süre içinde <i>herhangi bir zamanda</i> servise gelme ihtimali; "
-    +"<b>Risk grubu</b> — 90 günlük tahmine göre LOW / MEDIUM / HIGH; "
-    +"<b>Tahmini medyan servis süresi</b> — modelin servis olasılığının %50'ye ulaştığı yaklaşık gün sayısı. "
-    +"Buradaki sonuçlar <b>gerçek model API'sinden</b> gelir; backend erişilemezse sonuç gösterilmez (sahte tahmin yok).",
+    +"<b>90 günlük risk</b> — LOW / MEDIUM / HIGH; "
+    +"<b>medyan servis süresi</b> — modelin servis olasılığının %50'ye ulaştığı yaklaşık gün. "
+    +"Sonuçlar <b>gerçek model API'sinden</b> gelir ("+esc(api||"—")+"); erişilemezse sonuç gösterilmez — sahte tahmin yok.",
     null,"Teknik adı: Live Prediction");
-  out+='<div class="sec"><div id="v2apiStatus" class="chips"><span class="chip">Model servisine bağlanılıyor…</span></div></div>';
-  out+='<div class="sec">'+card("Canlı V2 tahmini",api?("API: "+esc(api)):"API yapılandırılmadı",
-    (api
-      ?'<div id="v2pf"><div class="chips" style="margin:2px 0 10px"><button class="subtab" id="v2runSample">Örnek motor yükle & tahmin et</button></div>'
-        +'<div id="v2pfout"></div></div>'
-      :'<p class="copy">Public model API henüz bağlı değil. Canlı tahmin için ya sayfayı '
-        +'<code>?v2api=https://SENIN-API-ADRESIN</code> ile aç, ya da backend deploy edildikten sonra '
-        +'build sırasında <code>RIDEBASE_V2_API</code> ortam değişkenini ayarla. '
-        +'Backend: <code>ridebase-v1-dashboard/backend</code> → <code>POST /api/v2/predict</code>. '
-        +'Deploy blueprint\'i: <code>ridebase-v1-dashboard/render.yaml</code>.</p>'
-        +'<p class="copy" style="margin-top:8px">Response şekli: <code>{prediction:{risk_30d,risk_60d,risk_90d,risk_120d,median_service_days,risk_group_90d}, model, calibration, warning}</code>.</p>'))
+  out+='<div class="sec"><div id="v2apiStatus" class="chips"><span class="chip"><span class="dot"></span>Model servisine bağlanılıyor…</span></div>'
+    +'<p class="copy" style="margin-top:8px;font-size:.8rem" id="v2coldNote" hidden>Render ücretsiz sunucusu uykudaysa ilk istek 50+ saniye sürebilir — beklemede kal.</p></div>';
+  out+='<div class="sec">'+card("Canlı tahmin — V1 + V2","POST /api/predict/service",
+    '<div id="v2pf"><div class="chips" style="margin:2px 0 12px">'
+      +'<button class="subtab" id="v2runSample">Örnek motor yükle & tahmin et</button></div>'
+      +'<div id="v2pfout"></div></div>')
     +'</div>';
   return out;
 }
-function v2ApiPing(){
+function v2StatusChips(h){
+  var v1ok=(h.v1==="ok"||h.status==="ok"||h.days_model_loaded);
+  var v2ok=(h.v2_model_loaded===true);
+  return '<span class="chip good"><span class="dot"></span>BACKEND API ONLINE</span>'
+    +'<span class="chip '+(v1ok?'good':'warn')+'">V1 '+(v1ok?'LOADED':'—')+'</span>'
+    +'<span class="chip '+(v2ok?'good':'warn')+'">V2 '+(v2ok?'LOADED':'—')+'</span>'
+    +'<span class="chip">DATASET '+esc(h.v2_dataset_version||h.dataset_version||"1.3.0")+'</span>'
+    +'<span class="chip">MODEL '+esc((h.v2_run_mode||"FULL"))+' · FINAL</span>'
+    +'<span class="chip">CHECKSUMS '+esc(h.v2_checksums||"—")+'</span>'
+    +'<span class="chip warn">REAL FLEET '+esc(h.v2_real_fleet_validation||"PENDING")+'</span>';
+}
+function v2ApiPing(attempt){
+  attempt=attempt||0;
   var api=(window.__V2_API__||"").replace(/\/$/,"");
   var el=document.getElementById("v2apiStatus"); if(!el)return;
+  var cold=document.getElementById("v2coldNote");
   if(!api){el.innerHTML='<span class="chip warn"><span class="dot"></span>API OFFLINE</span>'
-    +'<span class="chip">public model API yapılandırılmadı</span>'
-    +'<span class="chip">REAL FLEET VALIDATION: BEKLENİYOR</span>';return;}
-  var t=setTimeout(function(){},1);
-  fetch(api+"/health").then(function(r){return r.json();}).then(function(h){
-    var v1ok=(h.v1==="ok"||h.status==="ok"||h.v1_model_loaded);
-    var v2ok=(h.v2_model_loaded===true);
-    el.innerHTML='<span class="chip good"><span class="dot"></span>API ONLINE</span>'
-      +'<span class="chip '+(v1ok?'good':'warn')+'">V1 '+(v1ok?'AKTİF':'—')+'</span>'
-      +'<span class="chip '+(v2ok?'good':'warn')+'">V2 '+(v2ok?'AKTİF':'—')+'</span>'
-      +'<span class="chip">'+esc(h.v2_model||"")+'</span>'
-      +'<span class="chip">dataset '+esc(h.v2_dataset_version||M.current_dataset||"v1.3")+'</span>'
-      +'<span class="chip warn">REAL FLEET: '+esc(h.v2_real_fleet_validation||"PENDING")+'</span>';
-  }).catch(function(){clearTimeout(t);
-    el.innerHTML='<span class="chip bad"><span class="dot"></span>API OFFLINE</span>'
-      +'<span class="chip">backend erişilemedi — ilk istek (cold start) biraz uzun sürebilir</span>';
+    +'<span class="chip">public model API yapılandırılmadı</span>';return;}
+  if(cold)cold.hidden=false;
+  el.innerHTML='<span class="chip"><span class="dot"></span>'
+    +(attempt?'Model servisi uyanıyor… (deneme '+(attempt+1)+')':'Model servisine bağlanılıyor…')+'</span>';
+  v2fetch(api+"/health").then(function(r){return r.json();}).then(function(h){
+    window.__V2_ONLINE__=true; if(cold)cold.hidden=true;
+    el.innerHTML=v2StatusChips(h);
+  }).catch(function(){
+    if(attempt<2){setTimeout(function(){v2ApiPing(attempt+1);},4000);return;}
+    window.__V2_ONLINE__=false;
+    el.innerHTML='<span class="chip bad"><span class="dot"></span>API\'YE ULAŞILAMADI</span>'
+      +'<span class="chip">'+esc(api)+'</span>'
+      +'<button class="subtab" id="v2retry" style="padding:4px 10px">Tekrar dene</button>';
+    var rb=document.getElementById("v2retry"); if(rb)rb.addEventListener("click",function(){v2ApiPing(0);});
+    if(cold){cold.hidden=false;cold.innerHTML='Servis uykuda olabilir (birkaç saniye sonra tekrar dene) '
+      +'<b>veya</b> bu yayınlanmış artifact sayfası tarayıcı güvenlik politikası nedeniyle dış API çağrısı '
+      +'yapamıyor olabilir. Bu durumda canlı tahmin için <code>RideBase_Control_Center.full.html</code> '
+      +'dosyasını doğrudan tarayıcıda aç ya da dashboard\'u kendi ortamında çalıştır — API adresi zaten hazır: '
+      +esc(api)+'/docs';}
   });
 }
+function v2ResultCard(v1,v2,warn){
+  var g='<div class="grid g4" style="margin-top:6px">'
+    +kpi("30 GÜN",pct(v2.risk_30d),"önümüzdeki 30 gün içinde servise gelme ihtimali","plain")
+    +kpi("60 GÜN",pct(v2.risk_60d),"önümüzdeki 60 gün içinde","plain")
+    +kpi("90 GÜN",pct(v2.risk_90d),"bugünden 90. güne kadar herhangi bir zamanda servise gelme ihtimali","cyan")
+    +kpi("120 GÜN",pct(v2.risk_120d),"önümüzdeki 120 gün içinde","plain")+'</div>'
+    +'<div class="chips" style="margin-top:12px">'
+    +'<span class="chip accent">90 GÜNLÜK RİSK: '+esc(v2.risk_group_90d||"—")+'</span>'
+    +'<span class="chip">MEDYAN SERVİS SÜRESİ ~'+n0(v2.median_service_days)+' gün</span></div>';
+  if(v1){
+    g+='<div class="grid g2" style="margin-top:14px">'
+      +card("V1 — nokta tahmini","yaklaşık tek değer",
+        '<p class="copy">~<b>'+n0(v1.next_service_days)+'</b> gün · ~<b>'+n0(v1.next_service_km)+'</b> km sonra servis'
+        +(v1.estimated_service_date?' · tahmini tarih <b>'+esc(v1.estimated_service_date)+'</b>':'')+'</p>')
+      +card("V2 — olasılık tahmini","zaman aralıklarında ihtimal",
+        '<p class="copy">30g %'+pct(v2.risk_30d,0).replace("%","")+' · 60g '+pct(v2.risk_60d)+' · 90g '+pct(v2.risk_90d)+' · 120g '+pct(v2.risk_120d)+'</p>')
+      +'</div>'
+      +finding("","V1 + V2","<p>V1 tek bir yaklaşık servis zamanı verir. V2 farklı zaman aralıklarında servise gelme ihtimalini verir.</p>");
+  }
+  g+=finding("warn","Uyarı","<p><b>SENTETİK VERİDE DOĞRULANDI.</b> "+esc(warn||"")
+    +" GERÇEK RIDEBASE FİLO TESTİ BEKLENİYOR.</p>");
+  return g;
+}
 function wireV2Predict(){
-  v2ApiPing();
+  v2ApiPing(0);
   var api=(window.__V2_API__||"").replace(/\/$/,"");
   var btn=document.getElementById("v2runSample"); if(!btn||!api)return;
   btn.addEventListener("click",function(){
-    var box=document.getElementById("v2pfout"); box.innerHTML='<p class="copy">Tahmin ediliyor… (ilk istek biraz uzun sürebilir)</p>';
-    fetch(api+"/api/v2/sample").then(function(r){return r.json();}).then(function(s){
-      return fetch(api+"/api/v2/predict",{method:"POST",headers:{"Content-Type":"application/json"},
-        body:JSON.stringify({features:s.features})});
-    }).then(function(r){return r.json();}).then(function(d){
-      var p=d.prediction||{};
-      if(p.risk_90d==null){box.innerHTML='<div class="empty">Model sonucu boş döndü — '+esc((d.detail||"bilinmeyen hata"))+'</div>';return;}
-      box.innerHTML='<div class="grid g4" style="margin-top:6px">'
-        +kpi("30 GÜN",pct(p.risk_30d),"önümüzdeki 30 gün içinde","plain")
-        +kpi("60 GÜN",pct(p.risk_60d),"önümüzdeki 60 gün içinde","plain")
-        +kpi("90 GÜN",pct(p.risk_90d),"90 güne kadar herhangi bir zamanda","cyan")
-        +kpi("120 GÜN",pct(p.risk_120d),"önümüzdeki 120 gün içinde","plain")+'</div>'
-        +'<div class="chips" style="margin-top:10px">'
-        +'<span class="chip accent">RİSK GRUBU: '+esc(p.risk_group_90d||"—")+'</span>'
-        +'<span class="chip">tahmini medyan servis süresi ~'+n0(p.median_service_days)+' gün</span></div>'
-        +finding("warn","Not","<p>"+esc(d.warning||"Bu model SENTETİK olarak doğrulandı (RideBase v1.3). Gerçek filo doğrulaması PENDING.")+"</p>");
-    }).catch(function(e){box.innerHTML='<div class="empty">API erişilemedi — '+esc(String(e))+' (sahte tahmin üretilmez)</div>';});
+    var box=document.getElementById("v2pfout");
+    box.innerHTML='<p class="copy"><span class="dot"></span> Tahmin ediliyor… (servis uykudaysa ilk istek 50+ sn sürebilir)</p>';
+    var attempt=0;
+    (function run(){
+      v2fetch(api+"/api/v2/sample").then(function(r){return r.json();}).then(function(s){
+        return v2fetch(api+"/api/predict/service",{method:"POST",headers:{"Content-Type":"application/json"},
+          body:JSON.stringify({features:s.features})}).then(function(r){return r.json();});
+      }).then(function(d){
+        var v2=d.v2||d.prediction||{}, v1=d.v1||null;
+        if(v2.risk_90d==null){
+          box.innerHTML='<div class="empty">Model sonucu boş döndü — '+esc(d.detail||JSON.stringify(d).slice(0,140))+'</div>';return;}
+        box.innerHTML=v2ResultCard(v1,v2,d.warning);
+      }).catch(function(e){
+        if(attempt++<1){box.innerHTML='<p class="copy"><span class="dot"></span> Servis uyanıyor, tekrar deneniyor…</p>';setTimeout(run,4000);return;}
+        box.innerHTML='<div class="empty">API\'ye ulaşılamadı — '+esc(String(e))
+          +'. <b>Sahte tahmin üretilmez.</b> Servis uykuda olabilir (tekrar dene), ya da bu yayınlanmış '
+          +'artifact dış API çağrısına izin vermiyor olabilir — o durumda '
+          +'<code>RideBase_Control_Center.full.html</code> dosyasını tarayıcıda aç.</div>';
+      });
+    })();
   });
 }
 
@@ -1584,10 +1630,12 @@ $("#paletteInput").addEventListener("input",function(e){filterPalette(e.target.v
 $("#paletteBack").addEventListener("click",function(e){if(e.target===$("#paletteBack"))closePalette();});
 
 /* ---------------- boot ---------------- */
-/* Live API URL priority: (1) ?v2api= query param  (2) build-time injected M.v2_api  (3) none.
-   No default fake host — if none resolves, Live Prediction stays offline and says so. */
+/* Live API URL priority: (1) ?v2api= query param  (2) build-time injected M.v2_api
+   (3) the live public RideBase inference API (Render). All point at a REAL backend —
+   no fake host, no fake prediction. */
+var V2_DEFAULT_API="https://ridebase-inference-api.onrender.com";
 try{var _q=new URLSearchParams(location.search).get("v2api");
-  window.__V2_API__=(_q||M.v2_api||window.__V2_API__||"").replace(/\/$/,"");}catch(e){}
+  window.__V2_API__=(_q||M.v2_api||window.__V2_API__||V2_DEFAULT_API||"").replace(/\/$/,"");}catch(e){}
 $("#ham").addEventListener("click",function(){$("#shell").classList.toggle("drawer");});
 if(!location.hash)location.hash="#overview";
 route();

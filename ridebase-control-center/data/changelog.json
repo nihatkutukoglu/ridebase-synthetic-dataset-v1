@@ -27,7 +27,7 @@
   },
   {
     "id": "EDA-3",
-    "timestamp": "2026-08-27",
+    "timestamp": "2026-08-31",
     "module": "EDA",
     "type": "EXPERIMENT",
     "title": "Keşifsel veri analizi tamamlandı",
@@ -40,7 +40,7 @@
   },
   {
     "id": "V0-4",
-    "timestamp": "2026-08-27",
+    "timestamp": "2026-08-31",
     "module": "V0",
     "type": "MODEL",
     "title": "V0 kural bazlı baseline",
@@ -53,7 +53,7 @@
   },
   {
     "id": "V1-5",
-    "timestamp": "2026-08-28",
+    "timestamp": "2026-08-31",
     "module": "V1",
     "type": "MODEL",
     "title": "V1 basic → advanced → AutoML regression",
@@ -66,7 +66,7 @@
   },
   {
     "id": "DATA-6",
-    "timestamp": "2026-08-28",
+    "timestamp": "2026-08-31",
     "module": "DATA",
     "type": "DATA",
     "title": "RideBase v1.3 regression calibration",
@@ -79,7 +79,7 @@
   },
   {
     "id": "V1-7",
-    "timestamp": "2026-08-28",
+    "timestamp": "2026-08-31",
     "module": "V1",
     "type": "MODEL",
     "title": "V1.3 final regression benchmark (nb10)",
@@ -92,7 +92,7 @@
   },
   {
     "id": "V1-8",
-    "timestamp": "2026-08-28",
+    "timestamp": "2026-08-31",
     "module": "V1",
     "type": "EXPERIMENT",
     "title": "Manufacturer maintenance knowledge test edildi (nb11)",
@@ -105,7 +105,7 @@
   },
   {
     "id": "V1-9",
-    "timestamp": "2026-08-28",
+    "timestamp": "2026-08-31",
     "module": "V1",
     "type": "MODEL",
     "title": "Final hyperparameter tuning (nb12)",
@@ -114,32 +114,6 @@
     "version": "v1.3",
     "artifacts": [
       "ridebase-ml/reports/v1_final_hyperparameter_tuning_report.md"
-    ]
-  },
-  {
-    "id": "V2-12",
-    "timestamp": "2026-08-30",
-    "module": "V2",
-    "type": "DATA",
-    "title": "V2 survival data preparation (nb13)",
-    "description": "Frozen v1.3'ten leakage-safe time-to-next-service survival episode'ları; sağ-sansürlü kayıtlar korunuyor; strict-temporal censoring + informative-censoring audit. Henüz predictive model yok.",
-    "status": "PASS",
-    "version": "v1.3",
-    "artifacts": [
-      "ridebase-ml/reports/v2_survival_data_prep_report.md"
-    ]
-  },
-  {
-    "id": "V2-13",
-    "timestamp": "2026-08-30",
-    "module": "V2",
-    "type": "MODEL",
-    "title": "V2 survival baseline models (nb14)",
-    "description": "Kaplan-Meier reference vs Cox PH vs Random Survival Forest on 41.518 episode. Champion Cox: TEST IPCW C-index 0.895, IBS 0.058. SURVIVAL SIGNAL STRONG. Ready for nb15.",
-    "status": "PASS",
-    "version": "v1.3",
-    "artifacts": [
-      "ridebase-ml/reports/v2_survival_baseline_report.md"
     ]
   },
   {
@@ -166,6 +140,32 @@
     "version": "v1.3",
     "artifacts": [
       "ridebase-control-center/README.md"
+    ]
+  },
+  {
+    "id": "V2-12",
+    "timestamp": "2026-08-31",
+    "module": "V2",
+    "type": "DATA",
+    "title": "V2 survival data preparation (nb13)",
+    "description": "Frozen v1.3'ten leakage-safe time-to-next-service survival episode'ları; sağ-sansürlü kayıtlar korunuyor; strict-temporal censoring + informative-censoring audit. Henüz predictive model yok.",
+    "status": "PASS",
+    "version": "v1.3",
+    "artifacts": [
+      "ridebase-ml/reports/v2_survival_data_prep_report.md"
+    ]
+  },
+  {
+    "id": "V2-13",
+    "timestamp": "2026-08-31",
+    "module": "V2",
+    "type": "MODEL",
+    "title": "V2 survival baseline models (nb14)",
+    "description": "Kaplan-Meier reference vs Cox PH vs Random Survival Forest on 41.518 episode. Champion Cox: TEST IPCW C-index 0.895, IBS 0.058. SURVIVAL SIGNAL STRONG. Ready for nb15.",
+    "status": "PASS",
+    "version": "v1.3",
+    "artifacts": [
+      "ridebase-ml/reports/v2_survival_baseline_report.md"
     ]
   },
   {

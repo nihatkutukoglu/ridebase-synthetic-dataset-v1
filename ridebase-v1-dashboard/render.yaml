@@ -30,8 +30,9 @@ services:
       - key: DATASET_DIR
         value: /artifacts/dataset
       - key: ALLOWED_ORIGINS
-        # Claude artifacts are served from claude.ai / claudeusercontent.com.
-        # Replace with your exact Control Center origin(s), comma-separated. No wildcard.
-        value: https://claude.ai,https://claudeusercontent.com
+        value: https://claude.ai,https://preview.claude.ai
+      - key: ALLOWED_ORIGIN_REGEX
+        # published Claude artifacts fetch from a per-artifact *.claudeusercontent.com origin
+        value: https://.*\.claudeusercontent\.com
       - key: MAX_REQUEST_BYTES
         value: "1000000"

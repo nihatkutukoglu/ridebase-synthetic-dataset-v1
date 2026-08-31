@@ -26,6 +26,8 @@ app = FastAPI(
 app.add_middleware(
     CORSMiddleware,
     allow_origins=settings.ALLOWED_ORIGINS,
+    # published Claude artifacts run from a per-artifact *.claudeusercontent.com origin
+    allow_origin_regex=settings.ALLOWED_ORIGIN_REGEX or None,
     allow_credentials=False,
     allow_methods=["GET", "POST", "OPTIONS"],
     allow_headers=["Content-Type", "Authorization"],
