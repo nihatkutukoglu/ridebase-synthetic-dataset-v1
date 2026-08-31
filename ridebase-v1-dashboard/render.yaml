@@ -15,7 +15,7 @@ services:
     runtime: docker
     dockerfilePath: ./ridebase-v1-dashboard/backend/Dockerfile.prod
     dockerContext: .
-    plan: starter                     # 512 MB RAM is enough for the frozen models
+    plan: free                    # 512 MB RAM is enough for the frozen models
     healthCheckPath: /health
     autoDeploy: false
     envVars:
