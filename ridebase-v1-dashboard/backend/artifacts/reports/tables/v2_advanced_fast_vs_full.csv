@@ -1,0 +1,6 @@
+﻿metric,fast,full,rel_change,direction
+ipcw_c_index,0.9126,0.9131,0.0005,flat
+ibs,0.0495,0.0488,0.0148,improved
+brier_90,0.0502,0.0503,-0.0021,flat
+auc_90,0.9512,0.9507,-0.0005,flat
+cal_error_90,0.0668,0.0612,0.0839,improved

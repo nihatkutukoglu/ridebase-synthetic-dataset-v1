@@ -1,0 +1,9 @@
+﻿,value
+primary_confidence_filter,HIGH+MEDIUM
+task_rows_used_HIGH,336
+task_rows_used_MEDIUM,86
+task_rows_excluded_LOW,10
+conflict_rows_total,2
+conflict_rows_forced_to_single_value,0
+conflict_task_features_nulled,1
+unresolved_models_emitting_due_values,0

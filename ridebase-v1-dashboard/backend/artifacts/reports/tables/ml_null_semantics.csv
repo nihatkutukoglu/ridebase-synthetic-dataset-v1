@@ -1,0 +1,7 @@
+﻿column,null_count,null_rate,null_type,recommended_strategy,reason
+engine_displacement_cc,3187,0.07676188641071342,STRUCTURAL_NULL_OR_UNKNOWN_SOURCE_VALUE,CONSTANT_-1_PLUS_MISSING_INDICATOR,EV için uygulanamaz olabilir veya teknik master değeri bilinmiyor; boşluk bilgisi korunmalı
+engine_oil_service_qty_l,36246,0.8730189315477624,STRUCTURAL_NULL_OR_UNKNOWN_SOURCE_VALUE,CONSTANT_-1_PLUS_MISSING_INDICATOR,EV için uygulanamaz olabilir veya teknik master değeri bilinmiyor; boşluk bilgisi korunmalı
+spark_plug_count,663,0.015968977311045813,STRUCTURAL_NULL_OR_UNKNOWN_SOURCE_VALUE,CONSTANT_-1_PLUS_MISSING_INDICATOR,EV için uygulanamaz olabilir veya teknik master değeri bilinmiyor; boşluk bilgisi korunmalı
+ml_next_service_targets.days_to_next_service,8442,,CENSORING_RELATED,PRESERVE_NULL_AND_EXCLUDE_WITH_MASK,"Olay/label henüz gözlenmedi; 0, -1, median, mode veya UNKNOWN yapılamaz"
+ml_next_service_targets.km_to_next_service,8442,,CENSORING_RELATED,PRESERVE_NULL_AND_EXCLUDE_WITH_MASK,"Olay/label henüz gözlenmedi; 0, -1, median, mode veya UNKNOWN yapılamaz"
+ml_next_task_targets.task__*,827316,,CENSORING_RELATED,PRESERVE_NULL_AND_EXCLUDE_WITH_MASK,"Olay/label henüz gözlenmedi; 0, -1, median, mode veya UNKNOWN yapılamaz"

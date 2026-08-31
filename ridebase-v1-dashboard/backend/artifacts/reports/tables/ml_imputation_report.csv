@@ -1,0 +1,128 @@
+﻿column,feature_type,train_null_before,val_null_before,test_null_before,strategy,fit_source,fill_value_if_applicable,train_null_after,val_null_after,test_null_after,reason
+service_sequence,NUMERIC,0,0,0,NO_IMPUTATION_NEEDED,TRAIN_ONLY,,0,0,0,v1.2 candidate feature complete
+snapshot_year,NUMERIC,0,0,0,NO_IMPUTATION_NEEDED,TRAIN_ONLY,,0,0,0,v1.2 candidate feature complete
+snapshot_month,NUMERIC,0,0,0,NO_IMPUTATION_NEEDED,TRAIN_ONLY,,0,0,0,v1.2 candidate feature complete
+snapshot_quarter,NUMERIC,0,0,0,NO_IMPUTATION_NEEDED,TRAIN_ONLY,,0,0,0,v1.2 candidate feature complete
+snapshot_day_of_year,NUMERIC,0,0,0,NO_IMPUTATION_NEEDED,TRAIN_ONLY,,0,0,0,v1.2 candidate feature complete
+snapshot_month_sin,NUMERIC,0,0,0,NO_IMPUTATION_NEEDED,TRAIN_ONLY,,0,0,0,v1.2 candidate feature complete
+snapshot_month_cos,NUMERIC,0,0,0,NO_IMPUTATION_NEEDED,TRAIN_ONLY,,0,0,0,v1.2 candidate feature complete
+cylinder_count,NUMERIC,0,0,0,NO_IMPUTATION_NEEDED,TRAIN_ONLY,,0,0,0,v1.2 candidate feature complete
+production_year,NUMERIC,0,0,0,NO_IMPUTATION_NEEDED,TRAIN_ONLY,,0,0,0,v1.2 candidate feature complete
+motorcycle_age_years,NUMERIC,0,0,0,NO_IMPUTATION_NEEDED,TRAIN_ONLY,,0,0,0,v1.2 candidate feature complete
+ownership_months,NUMERIC,0,0,0,NO_IMPUTATION_NEEDED,TRAIN_ONLY,,0,0,0,v1.2 candidate feature complete
+initial_mileage_km,NUMERIC,0,0,0,NO_IMPUTATION_NEEDED,TRAIN_ONLY,,0,0,0,v1.2 candidate feature complete
+days_observed,NUMERIC,0,0,0,NO_IMPUTATION_NEEDED,TRAIN_ONLY,,0,0,0,v1.2 candidate feature complete
+annual_km_baseline,NUMERIC,0,0,0,NO_IMPUTATION_NEEDED,TRAIN_ONLY,,0,0,0,v1.2 candidate feature complete
+city_ratio,NUMERIC,0,0,0,NO_IMPUTATION_NEEDED,TRAIN_ONLY,,0,0,0,v1.2 candidate feature complete
+highway_ratio,NUMERIC,0,0,0,NO_IMPUTATION_NEEDED,TRAIN_ONLY,,0,0,0,v1.2 candidate feature complete
+offroad_ratio,NUMERIC,0,0,0,NO_IMPUTATION_NEEDED,TRAIN_ONLY,,0,0,0,v1.2 candidate feature complete
+track_ratio,NUMERIC,0,0,0,NO_IMPUTATION_NEEDED,TRAIN_ONLY,,0,0,0,v1.2 candidate feature complete
+avg_ride_days_per_week,NUMERIC,0,0,0,NO_IMPUTATION_NEEDED,TRAIN_ONLY,,0,0,0,v1.2 candidate feature complete
+daily_active_probability,NUMERIC,0,0,0,NO_IMPUTATION_NEEDED,TRAIN_ONLY,,0,0,0,v1.2 candidate feature complete
+avg_km_per_active_day,NUMERIC,0,0,0,NO_IMPUTATION_NEEDED,TRAIN_ONLY,,0,0,0,v1.2 candidate feature complete
+seasonality_strength,NUMERIC,0,0,0,NO_IMPUTATION_NEEDED,TRAIN_ONLY,,0,0,0,v1.2 candidate feature complete
+winter_usage_factor,NUMERIC,0,0,0,NO_IMPUTATION_NEEDED,TRAIN_ONLY,,0,0,0,v1.2 candidate feature complete
+weather_sensitivity,NUMERIC,0,0,0,NO_IMPUTATION_NEEDED,TRAIN_ONLY,,0,0,0,v1.2 candidate feature complete
+load_severity_factor,NUMERIC,0,0,0,NO_IMPUTATION_NEEDED,TRAIN_ONLY,,0,0,0,v1.2 candidate feature complete
+service_bay_count,NUMERIC,0,0,0,NO_IMPUTATION_NEEDED,TRAIN_ONLY,,0,0,0,v1.2 candidate feature complete
+technician_count,NUMERIC,0,0,0,NO_IMPUTATION_NEEDED,TRAIN_ONLY,,0,0,0,v1.2 candidate feature complete
+daily_service_capacity,NUMERIC,0,0,0,NO_IMPUTATION_NEEDED,TRAIN_ONLY,,0,0,0,v1.2 candidate feature complete
+appointment_rate,NUMERIC,0,0,0,NO_IMPUTATION_NEEDED,TRAIN_ONLY,,0,0,0,v1.2 candidate feature complete
+avg_parts_lead_days,NUMERIC,0,0,0,NO_IMPUTATION_NEEDED,TRAIN_ONLY,,0,0,0,v1.2 candidate feature complete
+same_day_parts_rate,NUMERIC,0,0,0,NO_IMPUTATION_NEEDED,TRAIN_ONLY,,0,0,0,v1.2 candidate feature complete
+labor_rate_index,NUMERIC,0,0,0,NO_IMPUTATION_NEEDED,TRAIN_ONLY,,0,0,0,v1.2 candidate feature complete
+customer_volume_index,NUMERIC,0,0,0,NO_IMPUTATION_NEEDED,TRAIN_ONLY,,0,0,0,v1.2 candidate feature complete
+courier_customer_share,NUMERIC,0,0,0,NO_IMPUTATION_NEEDED,TRAIN_ONLY,,0,0,0,v1.2 candidate feature complete
+snapshot_odometer_km,NUMERIC,0,0,0,NO_IMPUTATION_NEEDED,TRAIN_ONLY,,0,0,0,v1.2 candidate feature complete
+current_service_delay_days,NUMERIC,0,0,0,NO_IMPUTATION_NEEDED,TRAIN_ONLY,,0,0,0,v1.2 candidate feature complete
+current_labor_total,NUMERIC,0,0,0,NO_IMPUTATION_NEEDED,TRAIN_ONLY,,0,0,0,v1.2 candidate feature complete
+current_parts_total,NUMERIC,0,0,0,NO_IMPUTATION_NEEDED,TRAIN_ONLY,,0,0,0,v1.2 candidate feature complete
+current_grand_total,NUMERIC,0,0,0,NO_IMPUTATION_NEEDED,TRAIN_ONLY,,0,0,0,v1.2 candidate feature complete
+current_task_count,NUMERIC,0,0,0,NO_IMPUTATION_NEEDED,TRAIN_ONLY,,0,0,0,v1.2 candidate feature complete
+current_completed_task_count,NUMERIC,0,0,0,NO_IMPUTATION_NEEDED,TRAIN_ONLY,,0,0,0,v1.2 candidate feature complete
+current_declined_task_count,NUMERIC,0,0,0,NO_IMPUTATION_NEEDED,TRAIN_ONLY,,0,0,0,v1.2 candidate feature complete
+current_policy_due_task_count,NUMERIC,0,0,0,NO_IMPUTATION_NEEDED,TRAIN_ONLY,,0,0,0,v1.2 candidate feature complete
+current_fault_task_count,NUMERIC,0,0,0,NO_IMPUTATION_NEEDED,TRAIN_ONLY,,0,0,0,v1.2 candidate feature complete
+current_inspection_finding_task_count,NUMERIC,0,0,0,NO_IMPUTATION_NEEDED,TRAIN_ONLY,,0,0,0,v1.2 candidate feature complete
+current_replace_task_count,NUMERIC,0,0,0,NO_IMPUTATION_NEEDED,TRAIN_ONLY,,0,0,0,v1.2 candidate feature complete
+current_parts_line_count,NUMERIC,0,0,0,NO_IMPUTATION_NEEDED,TRAIN_ONLY,,0,0,0,v1.2 candidate feature complete
+current_supplier_parts_line_count,NUMERIC,0,0,0,NO_IMPUTATION_NEEDED,TRAIN_ONLY,,0,0,0,v1.2 candidate feature complete
+days_since_previous_service,NUMERIC,0,0,0,NO_IMPUTATION_NEEDED,TRAIN_ONLY,,0,0,0,v1.2 candidate feature complete
+km_since_previous_service,NUMERIC,0,0,0,NO_IMPUTATION_NEEDED,TRAIN_ONLY,,0,0,0,v1.2 candidate feature complete
+avg_km_per_day_since_previous_service,NUMERIC,0,0,0,NO_IMPUTATION_NEEDED,TRAIN_ONLY,,0,0,0,v1.2 candidate feature complete
+avg_service_interval_days,NUMERIC,0,0,0,NO_IMPUTATION_NEEDED,TRAIN_ONLY,,0,0,0,v1.2 candidate feature complete
+avg_service_interval_km,NUMERIC,0,0,0,NO_IMPUTATION_NEEDED,TRAIN_ONLY,,0,0,0,v1.2 candidate feature complete
+rolling3_interval_days,NUMERIC,0,0,0,NO_IMPUTATION_NEEDED,TRAIN_ONLY,,0,0,0,v1.2 candidate feature complete
+rolling3_interval_km,NUMERIC,0,0,0,NO_IMPUTATION_NEEDED,TRAIN_ONLY,,0,0,0,v1.2 candidate feature complete
+periodic_service_count,NUMERIC,0,0,0,NO_IMPUTATION_NEEDED,TRAIN_ONLY,,0,0,0,v1.2 candidate feature complete
+repair_service_count,NUMERIC,0,0,0,NO_IMPUTATION_NEEDED,TRAIN_ONLY,,0,0,0,v1.2 candidate feature complete
+breakdown_service_count,NUMERIC,0,0,0,NO_IMPUTATION_NEEDED,TRAIN_ONLY,,0,0,0,v1.2 candidate feature complete
+warranty_service_count,NUMERIC,0,0,0,NO_IMPUTATION_NEEDED,TRAIN_ONLY,,0,0,0,v1.2 candidate feature complete
+appointment_service_count,NUMERIC,0,0,0,NO_IMPUTATION_NEEDED,TRAIN_ONLY,,0,0,0,v1.2 candidate feature complete
+walkin_service_count,NUMERIC,0,0,0,NO_IMPUTATION_NEEDED,TRAIN_ONLY,,0,0,0,v1.2 candidate feature complete
+services_last_90d,NUMERIC,0,0,0,NO_IMPUTATION_NEEDED,TRAIN_ONLY,,0,0,0,v1.2 candidate feature complete
+services_last_365d,NUMERIC,0,0,0,NO_IMPUTATION_NEEDED,TRAIN_ONLY,,0,0,0,v1.2 candidate feature complete
+cumulative_service_spend,NUMERIC,0,0,0,NO_IMPUTATION_NEEDED,TRAIN_ONLY,,0,0,0,v1.2 candidate feature complete
+avg_service_spend,NUMERIC,0,0,0,NO_IMPUTATION_NEEDED,TRAIN_ONLY,,0,0,0,v1.2 candidate feature complete
+total_task_count,NUMERIC,0,0,0,NO_IMPUTATION_NEEDED,TRAIN_ONLY,,0,0,0,v1.2 candidate feature complete
+total_completed_task_count,NUMERIC,0,0,0,NO_IMPUTATION_NEEDED,TRAIN_ONLY,,0,0,0,v1.2 candidate feature complete
+total_declined_task_count,NUMERIC,0,0,0,NO_IMPUTATION_NEEDED,TRAIN_ONLY,,0,0,0,v1.2 candidate feature complete
+total_policy_due_task_count,NUMERIC,0,0,0,NO_IMPUTATION_NEEDED,TRAIN_ONLY,,0,0,0,v1.2 candidate feature complete
+total_fault_task_count,NUMERIC,0,0,0,NO_IMPUTATION_NEEDED,TRAIN_ONLY,,0,0,0,v1.2 candidate feature complete
+total_inspection_finding_task_count,NUMERIC,0,0,0,NO_IMPUTATION_NEEDED,TRAIN_ONLY,,0,0,0,v1.2 candidate feature complete
+total_replace_task_count,NUMERIC,0,0,0,NO_IMPUTATION_NEEDED,TRAIN_ONLY,,0,0,0,v1.2 candidate feature complete
+days_since_engine_task,NUMERIC,0,0,0,NO_IMPUTATION_NEEDED,TRAIN_ONLY,,0,0,0,v1.2 candidate feature complete
+km_since_engine_task,NUMERIC,0,0,0,NO_IMPUTATION_NEEDED,TRAIN_ONLY,,0,0,0,v1.2 candidate feature complete
+days_since_brakes_task,NUMERIC,0,0,0,NO_IMPUTATION_NEEDED,TRAIN_ONLY,,0,0,0,v1.2 candidate feature complete
+km_since_brakes_task,NUMERIC,0,0,0,NO_IMPUTATION_NEEDED,TRAIN_ONLY,,0,0,0,v1.2 candidate feature complete
+days_since_final_drive_task,NUMERIC,0,0,0,NO_IMPUTATION_NEEDED,TRAIN_ONLY,,0,0,0,v1.2 candidate feature complete
+km_since_final_drive_task,NUMERIC,0,0,0,NO_IMPUTATION_NEEDED,TRAIN_ONLY,,0,0,0,v1.2 candidate feature complete
+days_since_tires_wheels_task,NUMERIC,0,0,0,NO_IMPUTATION_NEEDED,TRAIN_ONLY,,0,0,0,v1.2 candidate feature complete
+km_since_tires_wheels_task,NUMERIC,0,0,0,NO_IMPUTATION_NEEDED,TRAIN_ONLY,,0,0,0,v1.2 candidate feature complete
+days_since_electrical_task,NUMERIC,0,0,0,NO_IMPUTATION_NEEDED,TRAIN_ONLY,,0,0,0,v1.2 candidate feature complete
+km_since_electrical_task,NUMERIC,0,0,0,NO_IMPUTATION_NEEDED,TRAIN_ONLY,,0,0,0,v1.2 candidate feature complete
+days_since_transmission_task,NUMERIC,0,0,0,NO_IMPUTATION_NEEDED,TRAIN_ONLY,,0,0,0,v1.2 candidate feature complete
+km_since_transmission_task,NUMERIC,0,0,0,NO_IMPUTATION_NEEDED,TRAIN_ONLY,,0,0,0,v1.2 candidate feature complete
+days_since_cooling_task,NUMERIC,0,0,0,NO_IMPUTATION_NEEDED,TRAIN_ONLY,,0,0,0,v1.2 candidate feature complete
+km_since_cooling_task,NUMERIC,0,0,0,NO_IMPUTATION_NEEDED,TRAIN_ONLY,,0,0,0,v1.2 candidate feature complete
+days_since_intake_task,NUMERIC,0,0,0,NO_IMPUTATION_NEEDED,TRAIN_ONLY,,0,0,0,v1.2 candidate feature complete
+km_since_intake_task,NUMERIC,0,0,0,NO_IMPUTATION_NEEDED,TRAIN_ONLY,,0,0,0,v1.2 candidate feature complete
+maintenance_overdue_days_pre_service,NUMERIC,0,0,0,NO_IMPUTATION_NEEDED,TRAIN_ONLY,,0,0,0,v1.2 candidate feature complete
+maintenance_overdue_km_pre_service,NUMERIC,0,0,0,NO_IMPUTATION_NEEDED,TRAIN_ONLY,,0,0,0,v1.2 candidate feature complete
+previous_failure_count,NUMERIC,0,0,0,NO_IMPUTATION_NEEDED,TRAIN_ONLY,,0,0,0,v1.2 candidate feature complete
+failure_hazard_score,NUMERIC,0,0,0,NO_IMPUTATION_NEEDED,TRAIN_ONLY,,0,0,0,v1.2 candidate feature complete
+engine_displacement_cc,NUMERIC,2068,475,644,CONSTANT_-1_PLUS_MISSING_INDICATOR,TRAIN_ONLY,-1.0,0,0,0,Structural/unknown technical master NULL; missing meaning retained
+engine_oil_service_qty_l,NUMERIC,23980,5556,6710,CONSTANT_-1_PLUS_MISSING_INDICATOR,TRAIN_ONLY,-1.0,0,0,0,Structural/unknown technical master NULL; missing meaning retained
+spark_plug_count,NUMERIC,442,94,127,CONSTANT_-1_PLUS_MISSING_INDICATOR,TRAIN_ONLY,-1.0,0,0,0,Structural/unknown technical master NULL; missing meaning retained
+policy_ready,BOOLEAN,0,0,0,MOST_FREQUENT_IF_NEEDED,TRAIN_ONLY,TRAIN_MODE,0,0,0,Boolean NULL oluşursa yalnız TRAIN mode; mevcut v1.2'de NULL yok
+is_left_truncated,BOOLEAN,0,0,0,MOST_FREQUENT_IF_NEEDED,TRAIN_ONLY,TRAIN_MODE,0,0,0,Boolean NULL oluşursa yalnız TRAIN mode; mevcut v1.2'de NULL yok
+is_fleet_customer,BOOLEAN,0,0,0,MOST_FREQUENT_IF_NEEDED,TRAIN_ONLY,TRAIN_MODE,0,0,0,Boolean NULL oluşursa yalnız TRAIN mode; mevcut v1.2'de NULL yok
+current_mileage_estimated,BOOLEAN,0,0,0,MOST_FREQUENT_IF_NEEDED,TRAIN_ONLY,TRAIN_MODE,0,0,0,Boolean NULL oluşursa yalnız TRAIN mode; mevcut v1.2'de NULL yok
+current_is_breakdown,BOOLEAN,0,0,0,MOST_FREQUENT_IF_NEEDED,TRAIN_ONLY,TRAIN_MODE,0,0,0,Boolean NULL oluşursa yalnız TRAIN mode; mevcut v1.2'de NULL yok
+current_is_warranty,BOOLEAN,0,0,0,MOST_FREQUENT_IF_NEEDED,TRAIN_ONLY,TRAIN_MODE,0,0,0,Boolean NULL oluşursa yalnız TRAIN mode; mevcut v1.2'de NULL yok
+current_service_timestamp_repaired,BOOLEAN,0,0,0,MOST_FREQUENT_IF_NEEDED,TRAIN_ONLY,TRAIN_MODE,0,0,0,Boolean NULL oluşursa yalnız TRAIN mode; mevcut v1.2'de NULL yok
+service_odometer_regression_count_to_date,BOOLEAN,0,0,0,MOST_FREQUENT_IF_NEEDED,TRAIN_ONLY,TRAIN_MODE,0,0,0,Boolean NULL oluşursa yalnız TRAIN mode; mevcut v1.2'de NULL yok
+workshop_id,CATEGORICAL,0,0,0,CONSTANT_UNKNOWN_THEN_ONE_HOT,TRAIN_ONLY,UNKNOWN,0,0,0,Future gerçek missing kategori için explicit unknown; v1.2'de categorical NULL yok
+model_id,CATEGORICAL,0,0,0,CONSTANT_UNKNOWN_THEN_ONE_HOT,TRAIN_ONLY,UNKNOWN,0,0,0,Future gerçek missing kategori için explicit unknown; v1.2'de categorical NULL yok
+brand,CATEGORICAL,0,0,0,CONSTANT_UNKNOWN_THEN_ONE_HOT,TRAIN_ONLY,UNKNOWN,0,0,0,Future gerçek missing kategori için explicit unknown; v1.2'de categorical NULL yok
+category,CATEGORICAL,0,0,0,CONSTANT_UNKNOWN_THEN_ONE_HOT,TRAIN_ONLY,UNKNOWN,0,0,0,Future gerçek missing kategori için explicit unknown; v1.2'de categorical NULL yok
+powertrain_type,CATEGORICAL,0,0,0,CONSTANT_UNKNOWN_THEN_ONE_HOT,TRAIN_ONLY,UNKNOWN,0,0,0,Future gerçek missing kategori için explicit unknown; v1.2'de categorical NULL yok
+cooling_type,CATEGORICAL,0,0,0,CONSTANT_UNKNOWN_THEN_ONE_HOT,TRAIN_ONLY,UNKNOWN,0,0,0,Future gerçek missing kategori için explicit unknown; v1.2'de categorical NULL yok
+final_drive_type,CATEGORICAL,0,0,0,CONSTANT_UNKNOWN_THEN_ONE_HOT,TRAIN_ONLY,UNKNOWN,0,0,0,Future gerçek missing kategori için explicit unknown; v1.2'de categorical NULL yok
+transmission_type,CATEGORICAL,0,0,0,CONSTANT_UNKNOWN_THEN_ONE_HOT,TRAIN_ONLY,UNKNOWN,0,0,0,Future gerçek missing kategori için explicit unknown; v1.2'de categorical NULL yok
+policy_group,CATEGORICAL,0,0,0,CONSTANT_UNKNOWN_THEN_ONE_HOT,TRAIN_ONLY,UNKNOWN,0,0,0,Future gerçek missing kategori için explicit unknown; v1.2'de categorical NULL yok
+spec_confidence,CATEGORICAL,0,0,0,CONSTANT_UNKNOWN_THEN_ONE_HOT,TRAIN_ONLY,UNKNOWN,0,0,0,Future gerçek missing kategori için explicit unknown; v1.2'de categorical NULL yok
+customer_type,CATEGORICAL,0,0,0,CONSTANT_UNKNOWN_THEN_ONE_HOT,TRAIN_ONLY,UNKNOWN,0,0,0,Future gerçek missing kategori için explicit unknown; v1.2'de categorical NULL yok
+acquisition_channel,CATEGORICAL,0,0,0,CONSTANT_UNKNOWN_THEN_ONE_HOT,TRAIN_ONLY,UNKNOWN,0,0,0,Future gerçek missing kategori için explicit unknown; v1.2'de categorical NULL yok
+usage_type,CATEGORICAL,0,0,0,CONSTANT_UNKNOWN_THEN_ONE_HOT,TRAIN_ONLY,UNKNOWN,0,0,0,Future gerçek missing kategori için explicit unknown; v1.2'de categorical NULL yok
+riding_intensity,CATEGORICAL,0,0,0,CONSTANT_UNKNOWN_THEN_ONE_HOT,TRAIN_ONLY,UNKNOWN,0,0,0,Future gerçek missing kategori için explicit unknown; v1.2'de categorical NULL yok
+storage_condition,CATEGORICAL,0,0,0,CONSTANT_UNKNOWN_THEN_ONE_HOT,TRAIN_ONLY,UNKNOWN,0,0,0,Future gerçek missing kategori için explicit unknown; v1.2'de categorical NULL yok
+climate_zone,CATEGORICAL,0,0,0,CONSTANT_UNKNOWN_THEN_ONE_HOT,TRAIN_ONLY,UNKNOWN,0,0,0,Future gerçek missing kategori için explicit unknown; v1.2'de categorical NULL yok
+workshop_region,CATEGORICAL,0,0,0,CONSTANT_UNKNOWN_THEN_ONE_HOT,TRAIN_ONLY,UNKNOWN,0,0,0,Future gerçek missing kategori için explicit unknown; v1.2'de categorical NULL yok
+price_level,CATEGORICAL,0,0,0,CONSTANT_UNKNOWN_THEN_ONE_HOT,TRAIN_ONLY,UNKNOWN,0,0,0,Future gerçek missing kategori için explicit unknown; v1.2'de categorical NULL yok
+current_mileage_source,CATEGORICAL,0,0,0,CONSTANT_UNKNOWN_THEN_ONE_HOT,TRAIN_ONLY,UNKNOWN,0,0,0,Future gerçek missing kategori için explicit unknown; v1.2'de categorical NULL yok
+current_mileage_quality_flag,CATEGORICAL,0,0,0,CONSTANT_UNKNOWN_THEN_ONE_HOT,TRAIN_ONLY,UNKNOWN,0,0,0,Future gerçek missing kategori için explicit unknown; v1.2'de categorical NULL yok
+current_service_type_code,CATEGORICAL,0,0,0,CONSTANT_UNKNOWN_THEN_ONE_HOT,TRAIN_ONLY,UNKNOWN,0,0,0,Future gerçek missing kategori için explicit unknown; v1.2'de categorical NULL yok
+current_arrival_mode,CATEGORICAL,0,0,0,CONSTANT_UNKNOWN_THEN_ONE_HOT,TRAIN_ONLY,UNKNOWN,0,0,0,Future gerçek missing kategori için explicit unknown; v1.2'de categorical NULL yok
+current_primary_trigger_task,CATEGORICAL,0,0,0,CONSTANT_UNKNOWN_THEN_ONE_HOT,TRAIN_ONLY,UNKNOWN,0,0,0,Future gerçek missing kategori için explicit unknown; v1.2'de categorical NULL yok
+chronic_risk_tier,CATEGORICAL,0,0,0,CONSTANT_UNKNOWN_THEN_ONE_HOT,TRAIN_ONLY,UNKNOWN,0,0,0,Future gerçek missing kategori için explicit unknown; v1.2'de categorical NULL yok

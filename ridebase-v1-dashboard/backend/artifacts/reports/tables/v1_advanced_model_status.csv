@@ -1,0 +1,15 @@
+﻿target,model,available,trained,reason
+DAYS,HistGradientBoostingRegressor,True,True,Temporal RandomizedSearchCV complete
+DAYS,ExtraTreesRegressor,True,True,Temporal RandomizedSearchCV complete
+DAYS,RandomForestRegressor,True,True,Temporal RandomizedSearchCV complete
+DAYS,GradientBoostingRegressor,True,True,Temporal RandomizedSearchCV complete
+DAYS,XGBRegressor,True,True,Temporal RandomizedSearchCV complete
+DAYS,LGBMRegressor,True,True,Temporal RandomizedSearchCV complete
+DAYS,CatBoostRegressor,True,True,Temporal RandomizedSearchCV complete
+KM,HistGradientBoostingRegressor,True,True,Temporal RandomizedSearchCV complete
+KM,ExtraTreesRegressor,True,True,Temporal RandomizedSearchCV complete
+KM,RandomForestRegressor,True,True,Temporal RandomizedSearchCV complete
+KM,GradientBoostingRegressor,True,True,Temporal RandomizedSearchCV complete
+KM,XGBRegressor,True,True,Temporal RandomizedSearchCV complete
+KM,LGBMRegressor,True,True,Temporal RandomizedSearchCV complete
+KM,CatBoostRegressor,True,True,Temporal RandomizedSearchCV complete

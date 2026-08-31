@@ -1,0 +1,10 @@
+﻿check,status,evidence
+dataset_guard,PASS,1.2.0
+split_integrity,PASS,"{'TEST': 2622, 'TRAIN': 20679, 'VALIDATION': 1932}"
+observed_only_contract,PASS,ANY: v1_regression_eligible; PERIODIC: <=label_cutoff
+standardized_model,PASS,HistGradientBoostingRegressor(default) for target-to-target
+target_leakage_audit,PASS,8/8 PASS
+test_discipline,PASS,finalists chosen on VALIDATION before TEST cell
+no_test_selection,PASS,recommended_target from validation + coverage rule
+source_data_immutable,PASS,source_tables opened read-only
+production_validation,BLOCKED,No production extract

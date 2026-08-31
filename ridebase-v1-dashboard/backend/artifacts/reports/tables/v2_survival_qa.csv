@@ -1,0 +1,23 @@
+﻿check,value,expected,status,notes
+dataset_version,1.3.0,1.3.0,PASS,
+split_unchanged,"{'TRAIN': 32203, 'VALIDATION': 4845, 'TEST': 4470}","{'TRAIN': 32203, 'VALIDATION': 4845, 'TEST': 4470}",PASS,
+duplicate_snapshot,0,0,PASS,
+censoring_boundary_valid,True,True,PASS,one admin censor date per split
+survival_eligible_rows,41518,41518,PASS,every snapshot is a usable episode
+negative_duration,0,0,PASS,
+zero_duration,0,0,PASS,"audited, not silently bumped"
+missing_duration_modeling,0,0,PASS,
+missing_event_observed,0,0,PASS,
+snapshot_after_censor,0,0,PASS,
+event_before_snapshot,0,0,PASS,
+observed_target_match,max|diff|=0.000000d,0 (or sub-rounding),PASS,0 semantic mismatches vs days_to_next_service
+event_subset_of_full,0,0,PASS,every strict-temporal event is a real observed service
+event_equals_v1_observed,True,True,PASS,V2 observed set == V1 regression usable set
+temporal_label_overlap_in_primary,0,0,PASS,primary(B) has no event past its admin censor
+future_feature_leakage,0,0,PASS,145 features all PASS
+modeling_table_no_future_cols,0,0,PASS,
+split_changed_rows,0,0,PASS,
+reproducibility_event,0,0,PASS,event_observed re-derives identically
+orphan_motorcycle_id,0,0,PASS,
+invalid_split,0,0,PASS,
+output_hash,1284a4781646d677,deterministic,PASS,sha256[:16] of modeling table target

@@ -1,0 +1,4 @@
+﻿split,total_snapshots,v1_regression_eligible,v2_survival_eligible,v3_multilabel_eligible,survival_events,survival_censored
+TRAIN,27428,20679,27428,20679,20679,6749
+VALIDATION,6399,1932,6399,1932,1932,4467
+TEST,7691,2622,7691,2622,2622,5069

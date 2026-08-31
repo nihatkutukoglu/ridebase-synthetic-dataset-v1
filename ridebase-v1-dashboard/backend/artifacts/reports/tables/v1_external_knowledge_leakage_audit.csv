@@ -1,0 +1,55 @@
+﻿feature_name,source_table,uses_actual_next_service,uses_future_actual_service,available_at_snapshot,manufacturer_source_only,derived_from,leakage_status
+mk_manufacturer_policy_available,manufacturer_maintenance_policies.csv,NO,NO,YES,YES,KB metadata / mapping (static),PASS
+mk_manufacturer_service_interval_km,manufacturer_maintenance_policies.csv,NO,NO,YES,YES,KB metadata / mapping (static),PASS
+mk_manufacturer_service_interval_months,manufacturer_maintenance_policies.csv,NO,NO,YES,YES,KB metadata / mapping (static),PASS
+mk_manufacturer_first_service_km,manufacturer_maintenance_policies.csv,NO,NO,YES,YES,KB metadata / mapping (static),PASS
+mk_manufacturer_service_rule_type,manufacturer_maintenance_policies.csv,NO,NO,YES,YES,KB metadata / mapping (static),PASS
+mk_km_to_next_manufacturer_service,manufacturer_maintenance_policies.csv,NO,NO,YES,YES,snapshot_odometer_km + age + KB schedule,PASS
+mk_km_since_previous_manufacturer_service_grid,manufacturer_maintenance_policies.csv,NO,NO,YES,YES,snapshot_odometer_km + age + KB schedule,PASS
+mk_manufacturer_service_grid_index,manufacturer_maintenance_policies.csv,NO,NO,YES,YES,snapshot_odometer_km + age + KB schedule,PASS
+mk_manufacturer_service_stage,manufacturer_maintenance_policies.csv,NO,NO,YES,YES,snapshot_odometer_km + age + KB schedule,PASS
+mk_manufacturer_overdue_km,manufacturer_maintenance_policies.csv,NO,NO,YES,YES,snapshot_odometer_km + age + KB schedule,PASS
+mk_manufacturer_due_now_flag,manufacturer_maintenance_policies.csv,NO,NO,YES,YES,snapshot_odometer_km + age + KB schedule,PASS
+mk_months_to_next_manufacturer_service,manufacturer_maintenance_policies.csv,NO,NO,YES,YES,snapshot_odometer_km + age + KB schedule,PASS
+mk_days_to_next_manufacturer_service,manufacturer_maintenance_policies.csv,NO,NO,YES,YES,snapshot_odometer_km + age + KB schedule,PASS
+mk_manufacturer_due_pressure,manufacturer_maintenance_policies.csv,NO,NO,YES,YES,snapshot_odometer_km + age + KB schedule,PASS
+mk_manufacturer_task_knowledge_available,manufacturer_maintenance_tasks.csv,NO,NO,YES,YES,KB metadata / mapping (static),PASS
+mk_km_to_next_ENGINE_OIL,manufacturer_maintenance_tasks.csv,NO,NO,YES,YES,snapshot_odometer_km + age + KB schedule,PASS
+mk_km_to_next_ENGINE_OIL_FILTER,manufacturer_maintenance_tasks.csv,NO,NO,YES,YES,snapshot_odometer_km + age + KB schedule,PASS
+mk_km_to_next_AIR_FILTER_replace,manufacturer_maintenance_tasks.csv,NO,NO,YES,YES,snapshot_odometer_km + age + KB schedule,PASS
+mk_km_to_next_AIR_FILTER_clean,manufacturer_maintenance_tasks.csv,NO,NO,YES,YES,snapshot_odometer_km + age + KB schedule,PASS
+mk_km_to_next_SPARK_PLUG_replace,manufacturer_maintenance_tasks.csv,NO,NO,YES,YES,snapshot_odometer_km + age + KB schedule,PASS
+mk_km_to_next_SPARK_PLUG_inspect,manufacturer_maintenance_tasks.csv,NO,NO,YES,YES,snapshot_odometer_km + age + KB schedule,PASS
+mk_km_to_next_BRAKE_FLUID,manufacturer_maintenance_tasks.csv,NO,NO,YES,YES,snapshot_odometer_km + age + KB schedule,PASS
+mk_km_to_next_DRIVE_CHAIN,manufacturer_maintenance_tasks.csv,NO,NO,YES,YES,snapshot_odometer_km + age + KB schedule,PASS
+mk_km_to_next_COOLANT,manufacturer_maintenance_tasks.csv,NO,NO,YES,YES,snapshot_odometer_km + age + KB schedule,PASS
+mk_km_to_next_VALVE_CLEARANCE,manufacturer_maintenance_tasks.csv,NO,NO,YES,YES,snapshot_odometer_km + age + KB schedule,PASS
+mk_km_to_next_FINAL_DRIVE,manufacturer_maintenance_tasks.csv,NO,NO,YES,YES,snapshot_odometer_km + age + KB schedule,PASS
+mk_km_to_next_FRONT_BRAKE,manufacturer_maintenance_tasks.csv,NO,NO,YES,YES,snapshot_odometer_km + age + KB schedule,PASS
+mk_km_to_next_TYRES,manufacturer_maintenance_tasks.csv,NO,NO,YES,YES,snapshot_odometer_km + age + KB schedule,PASS
+mk_km_to_next_FUEL_SYSTEM,manufacturer_maintenance_tasks.csv,NO,NO,YES,YES,snapshot_odometer_km + age + KB schedule,PASS
+mk_tasks_due_next_250km,manufacturer_maintenance_tasks.csv,NO,NO,YES,YES,snapshot_odometer_km + age + KB schedule,PASS
+mk_tasks_due_next_500km,manufacturer_maintenance_tasks.csv,NO,NO,YES,YES,snapshot_odometer_km + age + KB schedule,PASS
+mk_tasks_due_next_1000km,manufacturer_maintenance_tasks.csv,NO,NO,YES,YES,snapshot_odometer_km + age + KB schedule,PASS
+mk_tasks_due_next_2000km,manufacturer_maintenance_tasks.csv,NO,NO,YES,YES,snapshot_odometer_km + age + KB schedule,PASS
+mk_tasks_due_next_5000km,manufacturer_maintenance_tasks.csv,NO,NO,YES,YES,snapshot_odometer_km + age + KB schedule,PASS
+mk_tasks_overdue_count,manufacturer_maintenance_tasks.csv,NO,NO,YES,YES,snapshot_odometer_km + age + KB schedule,PASS
+mk_safety_tasks_due_next_1000km,manufacturer_maintenance_tasks.csv,NO,NO,YES,YES,snapshot_odometer_km + age + KB schedule,PASS
+mk_replace_tasks_due_next_1000km,manufacturer_maintenance_tasks.csv,NO,NO,YES,YES,snapshot_odometer_km + age + KB schedule,PASS
+mk_inspect_tasks_due_next_1000km,manufacturer_maintenance_tasks.csv,NO,NO,YES,YES,snapshot_odometer_km + age + KB schedule,PASS
+mk_km_to_next_major_maintenance,manufacturer_maintenance_tasks.csv,NO,NO,YES,YES,snapshot_odometer_km + age + KB schedule,PASS
+mk_major_tasks_due_count,manufacturer_maintenance_tasks.csv,NO,NO,YES,YES,snapshot_odometer_km + age + KB schedule,PASS
+mk_months_to_next_BRAKE_FLUID,manufacturer_maintenance_tasks.csv,NO,NO,YES,YES,snapshot_odometer_km + age + KB schedule,PASS
+mk_months_to_next_COOLANT,manufacturer_maintenance_tasks.csv,NO,NO,YES,YES,snapshot_odometer_km + age + KB schedule,PASS
+mk_months_to_next_SERVICE,manufacturer_maintenance_tasks.csv,NO,NO,YES,YES,snapshot_odometer_km + age + KB schedule,PASS
+mk_manufacturer_knowledge_available,model_mapping.csv / model_coverage.csv / source_conflicts.csv,NO,NO,YES,YES,KB metadata / mapping (static),PASS
+mk_manufacturer_task_coverage_count,model_mapping.csv / model_coverage.csv / source_conflicts.csv,NO,NO,YES,YES,KB metadata / mapping (static),PASS
+mk_manufacturer_high_confidence_task_count,model_mapping.csv / model_coverage.csv / source_conflicts.csv,NO,NO,YES,YES,KB metadata / mapping (static),PASS
+mk_manufacturer_medium_confidence_task_count,model_mapping.csv / model_coverage.csv / source_conflicts.csv,NO,NO,YES,YES,KB metadata / mapping (static),PASS
+mk_manufacturer_low_confidence_task_count,model_mapping.csv / model_coverage.csv / source_conflicts.csv,NO,NO,YES,YES,KB metadata / mapping (static),PASS
+mk_manufacturer_has_conflict,model_mapping.csv / model_coverage.csv / source_conflicts.csv,NO,NO,YES,YES,KB metadata / mapping (static),PASS
+mk_manufacturer_task_conflict_count,model_mapping.csv / model_coverage.csv / source_conflicts.csv,NO,NO,YES,YES,KB metadata / mapping (static),PASS
+mk_manufacturer_market_match_exact,model_mapping.csv / model_coverage.csv / source_conflicts.csv,NO,NO,YES,YES,KB metadata / mapping (static),PASS
+mk_manufacturer_year_match_exact,model_mapping.csv / model_coverage.csv / source_conflicts.csv,NO,NO,YES,YES,KB metadata / mapping (static),PASS
+mk_manufacturer_variant_match_exact,model_mapping.csv / model_coverage.csv / source_conflicts.csv,NO,NO,YES,YES,KB metadata / mapping (static),PASS
+mk_manufacturer_mapping_confidence_score,model_mapping.csv / model_coverage.csv / source_conflicts.csv,NO,NO,YES,YES,KB metadata / mapping (static),PASS

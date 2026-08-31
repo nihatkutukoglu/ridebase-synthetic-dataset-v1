@@ -1,0 +1,13 @@
+﻿check,status,evidence
+dataset_version_guard,PASS,1.3.0
+regression_calibration_flag,PASS,true
+split_integrity,PASS,"{'TRAIN': 32203, 'VALIDATION': 4845, 'TEST': 4470}"
+observed_only_mask,PASS,"{'TRAIN': 25442, 'VALIDATION': 1429, 'TEST': 1282}"
+feature_leakage_audit,PASS,"146 used, 0 leak"
+train_only_preprocessing,PASS,encoder fit on TRAIN only
+baseline_reproduction,PASS,"{'DAYS': 'OK', 'KM': 'OK'}"
+temporal_inner_cv,PASS,3 expanding folds
+validation_selection,PASS,final chosen on VALIDATION MAE
+test_isolation,PASS,"TEST opened once, after freeze"
+reproducibility,PASS,"{'DAYS': 'PASS', 'KM': 'PASS'}"
+production_validation,BLOCKED,no production extract

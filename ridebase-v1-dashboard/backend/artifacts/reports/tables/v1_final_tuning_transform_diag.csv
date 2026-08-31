@@ -1,0 +1,3 @@
+﻿target,model,raw_val_mae,log1p_val_mae,chosen
+DAYS,LGBM,9.297719208066699,9.329180855581246,raw
+KM,HGB,600.8434583318499,598.327841059304,log1p

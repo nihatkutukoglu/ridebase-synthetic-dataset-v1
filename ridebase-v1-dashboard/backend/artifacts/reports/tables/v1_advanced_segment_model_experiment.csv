@@ -1,0 +1,3 @@
+﻿target,base_candidate,fitted_segments,global_validation_mae,segmented_validation_mae,relative_improvement_pct,selected,notes
+DAYS,GradientBoostingRegressor__RAW,2,21.754273100649925,22.05978263709205,-1.4043656390109218,False,Diagnostic only; global fallback. Final selection remains common pipeline.
+KM,GradientBoostingRegressor__RAW,2,1473.6927806375961,1523.5270652872314,-3.3815925072303306,False,Diagnostic only; global fallback. Final selection remains common pipeline.

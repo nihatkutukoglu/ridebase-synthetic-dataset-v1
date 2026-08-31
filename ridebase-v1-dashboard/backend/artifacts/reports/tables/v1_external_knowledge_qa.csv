@@ -1,0 +1,16 @@
+﻿check,status,evidence
+dataset_v1_3_guard,PASS,"{'TRAIN': 32203, 'VALIDATION': 4845, 'TEST': 4470}"
+knowledge_base_guard,PASS,policy 23 task 432 source 24
+quality_report,PASS,0 duplicate/negative/missing
+mapping_integrity,PASS,"23 bridged, 0 UNRESOLVED used"
+source_integrity,PASS,no orphan source_id
+no_unresolved_fake_values,PASS,0 non-covered due values
+no_LOW_in_primary,PASS,primary = HIGH+MEDIUM
+conflict_handling,PASS,"1 conflicted task feature(s) nulled, 0 forced"
+train_only_preprocessing,PASS,encoder fit on TRAIN observed only
+split_integrity,PASS,"{'TRAIN': 25442, 'VALIDATION': 1429, 'TEST': 1282}"
+test_isolation,PASS,config frozen on VALIDATION; TEST opened once
+leakage_audit,PASS,"54 knowledge features, odometer/age + schedule only"
+observed_only_contract,PASS,censored never pseudo-labelled
+reproducibility,PASS,"{'BASE': 'PASS', 'KNOWLEDGE': 'PASS'}"
+notebook_errors,PASS,0

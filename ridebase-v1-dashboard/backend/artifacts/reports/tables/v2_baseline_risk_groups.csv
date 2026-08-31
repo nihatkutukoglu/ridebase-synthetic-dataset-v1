@@ -1,0 +1,4 @@
+﻿risk_group,n,events,event_rate_by_90d,km_median_days
+LOW,2278,254,0.0023,226.1
+MEDIUM,1385,527,0.1825,159.4
+HIGH,807,501,0.6957,63.1

@@ -1,0 +1,4 @@
+﻿model_family,features,target,row_mask,censored_usage
+V1_STATISTICAL,shared preprocessed X,observed days/km,v1_regression_eligible=True,EXCLUDED
+V2_SURVIVAL,shared preprocessed X,survival_duration_days + event_observed,v2_survival_eligible=True,INCLUDED WITH event_observed=0
+V3_MULTI_LABEL,shared preprocessed X,98 canonical task columns,v3_multilabel_eligible=True,EXCLUDED; labels remain NULL

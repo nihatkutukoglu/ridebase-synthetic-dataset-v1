@@ -1,0 +1,293 @@
+﻿column,source,available_at_snapshot,future_information,leakage_risk,action,reason
+snapshot_id,ml_maintenance_snapshots,True,False,NONE,AUDITED_CANDIDATE,Snapshot-time or historical field
+source_service_id,ml_maintenance_snapshots,True,False,NONE,AUDITED_CANDIDATE,Snapshot-time or historical field
+snapshot_at,ml_maintenance_snapshots,True,False,NONE,AUDITED_CANDIDATE,Snapshot-time or historical field
+snapshot_date,ml_maintenance_snapshots,True,False,NONE,AUDITED_CANDIDATE,Snapshot-time or historical field
+service_sequence,ml_maintenance_snapshots,True,False,NONE,AUDITED_CANDIDATE,Snapshot-time or historical field
+snapshot_year,ml_maintenance_snapshots,True,False,NONE,AUDITED_CANDIDATE,Snapshot-time or historical field
+snapshot_month,ml_maintenance_snapshots,True,False,NONE,AUDITED_CANDIDATE,Snapshot-time or historical field
+snapshot_quarter,ml_maintenance_snapshots,True,False,NONE,AUDITED_CANDIDATE,Snapshot-time or historical field
+snapshot_day_of_year,ml_maintenance_snapshots,True,False,NONE,AUDITED_CANDIDATE,Snapshot-time or historical field
+snapshot_month_sin,ml_maintenance_snapshots,True,False,NONE,AUDITED_CANDIDATE,Snapshot-time or historical field
+snapshot_month_cos,ml_maintenance_snapshots,True,False,NONE,AUDITED_CANDIDATE,Snapshot-time or historical field
+motorcycle_id,ml_maintenance_snapshots,True,False,NONE,AUDITED_CANDIDATE,Snapshot-time or historical field
+customer_id,ml_maintenance_snapshots,True,False,NONE,AUDITED_CANDIDATE,Snapshot-time or historical field
+workshop_id,ml_maintenance_snapshots,True,False,NONE,AUDITED_CANDIDATE,Snapshot-time or historical field
+model_id,ml_maintenance_snapshots,True,False,NONE,AUDITED_CANDIDATE,Snapshot-time or historical field
+brand,ml_maintenance_snapshots,True,False,NONE,AUDITED_CANDIDATE,Snapshot-time or historical field
+model_name,ml_maintenance_snapshots,True,False,NONE,AUDITED_CANDIDATE,Snapshot-time or historical field
+category,ml_maintenance_snapshots,True,False,NONE,AUDITED_CANDIDATE,Snapshot-time or historical field
+powertrain_type,ml_maintenance_snapshots,True,False,NONE,AUDITED_CANDIDATE,Snapshot-time or historical field
+engine_displacement_cc,ml_maintenance_snapshots,True,False,NONE,AUDITED_CANDIDATE,Snapshot-time or historical field
+cylinder_count,ml_maintenance_snapshots,True,False,NONE,AUDITED_CANDIDATE,Snapshot-time or historical field
+cooling_type,ml_maintenance_snapshots,True,False,NONE,AUDITED_CANDIDATE,Snapshot-time or historical field
+final_drive_type,ml_maintenance_snapshots,True,False,NONE,AUDITED_CANDIDATE,Snapshot-time or historical field
+transmission_type,ml_maintenance_snapshots,True,False,NONE,AUDITED_CANDIDATE,Snapshot-time or historical field
+engine_oil_service_qty_l,ml_maintenance_snapshots,True,False,NONE,AUDITED_CANDIDATE,Snapshot-time or historical field
+spark_plug_count,ml_maintenance_snapshots,True,False,NONE,AUDITED_CANDIDATE,Snapshot-time or historical field
+fuel_type,ml_maintenance_snapshots,True,False,NONE,AUDITED_CANDIDATE,Snapshot-time or historical field
+policy_group,ml_maintenance_snapshots,True,False,NONE,AUDITED_CANDIDATE,Snapshot-time or historical field
+policy_ready,ml_maintenance_snapshots,True,False,NONE,AUDITED_CANDIDATE,Snapshot-time or historical field
+spec_confidence,ml_maintenance_snapshots,True,False,NONE,AUDITED_CANDIDATE,Snapshot-time or historical field
+production_year,ml_maintenance_snapshots,True,False,NONE,AUDITED_CANDIDATE,Snapshot-time or historical field
+motorcycle_age_years,ml_maintenance_snapshots,True,False,NONE,AUDITED_CANDIDATE,Snapshot-time or historical field
+ownership_months,ml_maintenance_snapshots,True,False,NONE,AUDITED_CANDIDATE,Snapshot-time or historical field
+initial_mileage_km,ml_maintenance_snapshots,True,False,NONE,AUDITED_CANDIDATE,Snapshot-time or historical field
+is_left_truncated,ml_maintenance_snapshots,True,False,NONE,AUDITED_CANDIDATE,Snapshot-time or historical field
+days_observed,ml_maintenance_snapshots,True,False,NONE,AUDITED_CANDIDATE,Snapshot-time or historical field
+customer_type,ml_maintenance_snapshots,True,False,NONE,AUDITED_CANDIDATE,Snapshot-time or historical field
+is_fleet_customer,ml_maintenance_snapshots,True,False,NONE,AUDITED_CANDIDATE,Snapshot-time or historical field
+acquisition_channel,ml_maintenance_snapshots,True,False,NONE,AUDITED_CANDIDATE,Snapshot-time or historical field
+usage_type,ml_maintenance_snapshots,True,False,NONE,AUDITED_CANDIDATE,Snapshot-time or historical field
+annual_km_baseline,ml_maintenance_snapshots,True,False,NONE,AUDITED_CANDIDATE,Snapshot-time or historical field
+city_ratio,ml_maintenance_snapshots,True,False,NONE,AUDITED_CANDIDATE,Snapshot-time or historical field
+highway_ratio,ml_maintenance_snapshots,True,False,NONE,AUDITED_CANDIDATE,Snapshot-time or historical field
+offroad_ratio,ml_maintenance_snapshots,True,False,NONE,AUDITED_CANDIDATE,Snapshot-time or historical field
+track_ratio,ml_maintenance_snapshots,True,False,NONE,AUDITED_CANDIDATE,Snapshot-time or historical field
+avg_ride_days_per_week,ml_maintenance_snapshots,True,False,NONE,AUDITED_CANDIDATE,Snapshot-time or historical field
+daily_active_probability,ml_maintenance_snapshots,True,False,NONE,AUDITED_CANDIDATE,Snapshot-time or historical field
+avg_km_per_active_day,ml_maintenance_snapshots,True,False,NONE,AUDITED_CANDIDATE,Snapshot-time or historical field
+riding_intensity,ml_maintenance_snapshots,True,False,NONE,AUDITED_CANDIDATE,Snapshot-time or historical field
+seasonality_strength,ml_maintenance_snapshots,True,False,NONE,AUDITED_CANDIDATE,Snapshot-time or historical field
+winter_usage_factor,ml_maintenance_snapshots,True,False,NONE,AUDITED_CANDIDATE,Snapshot-time or historical field
+weather_sensitivity,ml_maintenance_snapshots,True,False,NONE,AUDITED_CANDIDATE,Snapshot-time or historical field
+storage_condition,ml_maintenance_snapshots,True,False,NONE,AUDITED_CANDIDATE,Snapshot-time or historical field
+load_severity_factor,ml_maintenance_snapshots,True,False,NONE,AUDITED_CANDIDATE,Snapshot-time or historical field
+climate_zone,ml_maintenance_snapshots,True,False,NONE,AUDITED_CANDIDATE,Snapshot-time or historical field
+workshop_city,ml_maintenance_snapshots,True,False,NONE,AUDITED_CANDIDATE,Snapshot-time or historical field
+workshop_region,ml_maintenance_snapshots,True,False,NONE,AUDITED_CANDIDATE,Snapshot-time or historical field
+workshop_climate_zone,ml_maintenance_snapshots,True,False,NONE,AUDITED_CANDIDATE,Snapshot-time or historical field
+price_level,ml_maintenance_snapshots,True,False,NONE,AUDITED_CANDIDATE,Snapshot-time or historical field
+service_bay_count,ml_maintenance_snapshots,True,False,NONE,AUDITED_CANDIDATE,Snapshot-time or historical field
+technician_count,ml_maintenance_snapshots,True,False,NONE,AUDITED_CANDIDATE,Snapshot-time or historical field
+daily_service_capacity,ml_maintenance_snapshots,True,False,NONE,AUDITED_CANDIDATE,Snapshot-time or historical field
+appointment_rate,ml_maintenance_snapshots,True,False,NONE,AUDITED_CANDIDATE,Snapshot-time or historical field
+avg_parts_lead_days,ml_maintenance_snapshots,True,False,NONE,AUDITED_CANDIDATE,Snapshot-time or historical field
+same_day_parts_rate,ml_maintenance_snapshots,True,False,NONE,AUDITED_CANDIDATE,Snapshot-time or historical field
+labor_rate_index,ml_maintenance_snapshots,True,False,NONE,AUDITED_CANDIDATE,Snapshot-time or historical field
+customer_volume_index,ml_maintenance_snapshots,True,False,NONE,AUDITED_CANDIDATE,Snapshot-time or historical field
+courier_customer_share,ml_maintenance_snapshots,True,False,NONE,AUDITED_CANDIDATE,Snapshot-time or historical field
+snapshot_odometer_km,ml_maintenance_snapshots,True,False,NONE,AUDITED_CANDIDATE,Snapshot-time or historical field
+current_mileage_source,ml_maintenance_snapshots,True,False,NONE,AUDITED_CANDIDATE,Snapshot-time or historical field
+current_mileage_quality_flag,ml_maintenance_snapshots,True,False,NONE,AUDITED_CANDIDATE,Snapshot-time or historical field
+current_mileage_estimated,ml_maintenance_snapshots,True,False,NONE,AUDITED_CANDIDATE,Snapshot-time or historical field
+current_service_type_code,ml_maintenance_snapshots,True,False,NONE,AUDITED_CANDIDATE,Snapshot-time or historical field
+current_arrival_mode,ml_maintenance_snapshots,True,False,NONE,AUDITED_CANDIDATE,Snapshot-time or historical field
+current_primary_trigger_task,ml_maintenance_snapshots,True,False,NONE,AUDITED_CANDIDATE,Snapshot-time or historical field
+current_service_delay_days,ml_maintenance_snapshots,True,False,NONE,AUDITED_CANDIDATE,Snapshot-time or historical field
+current_is_breakdown,ml_maintenance_snapshots,True,False,NONE,AUDITED_CANDIDATE,Snapshot-time or historical field
+current_is_warranty,ml_maintenance_snapshots,True,False,NONE,AUDITED_CANDIDATE,Snapshot-time or historical field
+current_service_timestamp_repaired,ml_maintenance_snapshots,True,False,NONE,AUDITED_CANDIDATE,Snapshot-time or historical field
+current_labor_total,ml_maintenance_snapshots,True,False,NONE,AUDITED_CANDIDATE,Snapshot-time or historical field
+current_parts_total,ml_maintenance_snapshots,True,False,NONE,AUDITED_CANDIDATE,Snapshot-time or historical field
+current_grand_total,ml_maintenance_snapshots,True,False,NONE,AUDITED_CANDIDATE,Snapshot-time or historical field
+current_task_count,ml_maintenance_snapshots,True,False,NONE,AUDITED_CANDIDATE,Snapshot-time or historical field
+current_completed_task_count,ml_maintenance_snapshots,True,False,NONE,AUDITED_CANDIDATE,Snapshot-time or historical field
+current_declined_task_count,ml_maintenance_snapshots,True,False,NONE,AUDITED_CANDIDATE,Snapshot-time or historical field
+current_policy_due_task_count,ml_maintenance_snapshots,True,False,NONE,AUDITED_CANDIDATE,Snapshot-time or historical field
+current_fault_task_count,ml_maintenance_snapshots,True,False,NONE,AUDITED_CANDIDATE,Snapshot-time or historical field
+current_inspection_finding_task_count,ml_maintenance_snapshots,True,False,NONE,AUDITED_CANDIDATE,Snapshot-time or historical field
+current_replace_task_count,ml_maintenance_snapshots,True,False,NONE,AUDITED_CANDIDATE,Snapshot-time or historical field
+current_parts_line_count,ml_maintenance_snapshots,True,False,NONE,AUDITED_CANDIDATE,Snapshot-time or historical field
+current_supplier_parts_line_count,ml_maintenance_snapshots,True,False,NONE,AUDITED_CANDIDATE,Snapshot-time or historical field
+days_since_previous_service,ml_maintenance_snapshots,True,False,NONE,AUDITED_CANDIDATE,Snapshot-time or historical field
+km_since_previous_service,ml_maintenance_snapshots,True,False,NONE,AUDITED_CANDIDATE,Snapshot-time or historical field
+avg_km_per_day_since_previous_service,ml_maintenance_snapshots,True,False,NONE,AUDITED_CANDIDATE,Snapshot-time or historical field
+avg_service_interval_days,ml_maintenance_snapshots,True,False,NONE,AUDITED_CANDIDATE,Snapshot-time or historical field
+avg_service_interval_km,ml_maintenance_snapshots,True,False,NONE,AUDITED_CANDIDATE,Snapshot-time or historical field
+rolling3_interval_days,ml_maintenance_snapshots,True,False,NONE,AUDITED_CANDIDATE,Snapshot-time or historical field
+rolling3_interval_km,ml_maintenance_snapshots,True,False,NONE,AUDITED_CANDIDATE,Snapshot-time or historical field
+service_odometer_regression_count_to_date,ml_maintenance_snapshots,True,False,NONE,AUDITED_CANDIDATE,Snapshot-time or historical field
+periodic_service_count,ml_maintenance_snapshots,True,False,NONE,AUDITED_CANDIDATE,Snapshot-time or historical field
+repair_service_count,ml_maintenance_snapshots,True,False,NONE,AUDITED_CANDIDATE,Snapshot-time or historical field
+breakdown_service_count,ml_maintenance_snapshots,True,False,NONE,AUDITED_CANDIDATE,Snapshot-time or historical field
+warranty_service_count,ml_maintenance_snapshots,True,False,NONE,AUDITED_CANDIDATE,Snapshot-time or historical field
+appointment_service_count,ml_maintenance_snapshots,True,False,NONE,AUDITED_CANDIDATE,Snapshot-time or historical field
+walkin_service_count,ml_maintenance_snapshots,True,False,NONE,AUDITED_CANDIDATE,Snapshot-time or historical field
+services_last_90d,ml_maintenance_snapshots,True,False,NONE,AUDITED_CANDIDATE,Snapshot-time or historical field
+services_last_365d,ml_maintenance_snapshots,True,False,NONE,AUDITED_CANDIDATE,Snapshot-time or historical field
+cumulative_service_spend,ml_maintenance_snapshots,True,False,NONE,AUDITED_CANDIDATE,Snapshot-time or historical field
+avg_service_spend,ml_maintenance_snapshots,True,False,NONE,AUDITED_CANDIDATE,Snapshot-time or historical field
+total_task_count,ml_maintenance_snapshots,True,False,NONE,AUDITED_CANDIDATE,Snapshot-time or historical field
+total_completed_task_count,ml_maintenance_snapshots,True,False,NONE,AUDITED_CANDIDATE,Snapshot-time or historical field
+total_declined_task_count,ml_maintenance_snapshots,True,False,NONE,AUDITED_CANDIDATE,Snapshot-time or historical field
+total_policy_due_task_count,ml_maintenance_snapshots,True,False,NONE,AUDITED_CANDIDATE,Snapshot-time or historical field
+total_fault_task_count,ml_maintenance_snapshots,True,False,NONE,AUDITED_CANDIDATE,Snapshot-time or historical field
+total_inspection_finding_task_count,ml_maintenance_snapshots,True,False,NONE,AUDITED_CANDIDATE,Snapshot-time or historical field
+total_replace_task_count,ml_maintenance_snapshots,True,False,NONE,AUDITED_CANDIDATE,Snapshot-time or historical field
+days_since_engine_task,ml_maintenance_snapshots,True,False,NONE,AUDITED_CANDIDATE,Snapshot-time or historical field
+km_since_engine_task,ml_maintenance_snapshots,True,False,NONE,AUDITED_CANDIDATE,Snapshot-time or historical field
+days_since_brakes_task,ml_maintenance_snapshots,True,False,NONE,AUDITED_CANDIDATE,Snapshot-time or historical field
+km_since_brakes_task,ml_maintenance_snapshots,True,False,NONE,AUDITED_CANDIDATE,Snapshot-time or historical field
+days_since_final_drive_task,ml_maintenance_snapshots,True,False,NONE,AUDITED_CANDIDATE,Snapshot-time or historical field
+km_since_final_drive_task,ml_maintenance_snapshots,True,False,NONE,AUDITED_CANDIDATE,Snapshot-time or historical field
+days_since_tires_wheels_task,ml_maintenance_snapshots,True,False,NONE,AUDITED_CANDIDATE,Snapshot-time or historical field
+km_since_tires_wheels_task,ml_maintenance_snapshots,True,False,NONE,AUDITED_CANDIDATE,Snapshot-time or historical field
+days_since_electrical_task,ml_maintenance_snapshots,True,False,NONE,AUDITED_CANDIDATE,Snapshot-time or historical field
+km_since_electrical_task,ml_maintenance_snapshots,True,False,NONE,AUDITED_CANDIDATE,Snapshot-time or historical field
+days_since_transmission_task,ml_maintenance_snapshots,True,False,NONE,AUDITED_CANDIDATE,Snapshot-time or historical field
+km_since_transmission_task,ml_maintenance_snapshots,True,False,NONE,AUDITED_CANDIDATE,Snapshot-time or historical field
+days_since_cooling_task,ml_maintenance_snapshots,True,False,NONE,AUDITED_CANDIDATE,Snapshot-time or historical field
+km_since_cooling_task,ml_maintenance_snapshots,True,False,NONE,AUDITED_CANDIDATE,Snapshot-time or historical field
+days_since_intake_task,ml_maintenance_snapshots,True,False,NONE,AUDITED_CANDIDATE,Snapshot-time or historical field
+km_since_intake_task,ml_maintenance_snapshots,True,False,NONE,AUDITED_CANDIDATE,Snapshot-time or historical field
+feature_version,ml_maintenance_snapshots,True,False,NONE,AUDITED_CANDIDATE,Snapshot-time or historical field
+data_origin,ml_maintenance_snapshots,True,False,NONE,AUDITED_CANDIDATE,Snapshot-time or historical field
+generator_version,ml_maintenance_snapshots,True,False,NONE,AUDITED_CANDIDATE,Snapshot-time or historical field
+random_seed,ml_maintenance_snapshots,True,False,NONE,AUDITED_CANDIDATE,Snapshot-time or historical field
+scenario_id,ml_maintenance_snapshots,True,False,NONE,AUDITED_CANDIDATE,Snapshot-time or historical field
+maintenance_overdue_days_pre_service,ml_maintenance_snapshots,True,False,NONE,AUDITED_CANDIDATE,Snapshot-time or historical field
+maintenance_overdue_km_pre_service,ml_maintenance_snapshots,True,False,NONE,AUDITED_CANDIDATE,Snapshot-time or historical field
+previous_failure_count,ml_maintenance_snapshots,True,False,NONE,AUDITED_CANDIDATE,Snapshot-time or historical field
+failure_hazard_score,ml_maintenance_snapshots,True,False,NONE,AUDITED_CANDIDATE,Snapshot-time or historical field
+chronic_risk_tier,ml_maintenance_snapshots,True,False,NONE,AUDITED_CANDIDATE,Snapshot-time or historical field
+snapshot_at,ml_next_service_targets,False,True,HIGH,TARGET/EVALUATION_ONLY,Snapshot sonrasındaki sonuç veya censoring bilgisi; X'e giremez
+snapshot_odometer_km,ml_next_service_targets,False,True,HIGH,TARGET/EVALUATION_ONLY,Snapshot sonrasındaki sonuç veya censoring bilgisi; X'e giremez
+target_event_observed,ml_next_service_targets,False,True,HIGH,TARGET/EVALUATION_ONLY,Snapshot sonrasındaki sonuç veya censoring bilgisi; X'e giremez
+is_right_censored,ml_next_service_targets,False,True,HIGH,TARGET/EVALUATION_ONLY,Snapshot sonrasındaki sonuç veya censoring bilgisi; X'e giremez
+next_service_id,ml_next_service_targets,False,True,HIGH,TARGET/EVALUATION_ONLY,Snapshot sonrasındaki sonuç veya censoring bilgisi; X'e giremez
+next_service_received_at_raw,ml_next_service_targets,False,True,HIGH,TARGET/EVALUATION_ONLY,Snapshot sonrasındaki sonuç veya censoring bilgisi; X'e giremez
+target_next_service_at,ml_next_service_targets,False,True,HIGH,TARGET/EVALUATION_ONLY,Snapshot sonrasındaki sonuç veya censoring bilgisi; X'e giremez
+next_service_delivered_at,ml_next_service_targets,False,True,HIGH,TARGET/EVALUATION_ONLY,Snapshot sonrasındaki sonuç veya censoring bilgisi; X'e giremez
+days_to_next_service_raw,ml_next_service_targets,False,True,HIGH,TARGET/EVALUATION_ONLY,Snapshot sonrasındaki sonuç veya censoring bilgisi; X'e giremez
+days_to_next_service,ml_next_service_targets,False,True,HIGH,TARGET/EVALUATION_ONLY,Snapshot sonrasındaki sonuç veya censoring bilgisi; X'e giremez
+target_time_repaired,ml_next_service_targets,False,True,HIGH,TARGET/EVALUATION_ONLY,Snapshot sonrasındaki sonuç veya censoring bilgisi; X'e giremez
+next_service_odometer_km,ml_next_service_targets,False,True,HIGH,TARGET/EVALUATION_ONLY,Snapshot sonrasındaki sonuç veya censoring bilgisi; X'e giremez
+km_to_next_service_raw,ml_next_service_targets,False,True,HIGH,TARGET/EVALUATION_ONLY,Snapshot sonrasındaki sonuç veya censoring bilgisi; X'e giremez
+km_to_next_service,ml_next_service_targets,False,True,HIGH,TARGET/EVALUATION_ONLY,Snapshot sonrasındaki sonuç veya censoring bilgisi; X'e giremez
+target_km_valid,ml_next_service_targets,False,True,HIGH,TARGET/EVALUATION_ONLY,Snapshot sonrasındaki sonuç veya censoring bilgisi; X'e giremez
+next_service_mileage_source,ml_next_service_targets,False,True,HIGH,TARGET/EVALUATION_ONLY,Snapshot sonrasındaki sonuç veya censoring bilgisi; X'e giremez
+next_service_mileage_quality_flag,ml_next_service_targets,False,True,HIGH,TARGET/EVALUATION_ONLY,Snapshot sonrasındaki sonuç veya censoring bilgisi; X'e giremez
+next_service_is_mileage_estimated,ml_next_service_targets,False,True,HIGH,TARGET/EVALUATION_ONLY,Snapshot sonrasındaki sonuç veya censoring bilgisi; X'e giremez
+next_service_type_code,ml_next_service_targets,False,True,HIGH,TARGET/EVALUATION_ONLY,Snapshot sonrasındaki sonuç veya censoring bilgisi; X'e giremez
+next_service_primary_trigger_task,ml_next_service_targets,False,True,HIGH,TARGET/EVALUATION_ONLY,Snapshot sonrasındaki sonuç veya censoring bilgisi; X'e giremez
+next_service_arrival_mode,ml_next_service_targets,False,True,HIGH,TARGET/EVALUATION_ONLY,Snapshot sonrasındaki sonuç veya censoring bilgisi; X'e giremez
+next_service_is_breakdown,ml_next_service_targets,False,True,HIGH,TARGET/EVALUATION_ONLY,Snapshot sonrasındaki sonuç veya censoring bilgisi; X'e giremez
+next_service_is_warranty,ml_next_service_targets,False,True,HIGH,TARGET/EVALUATION_ONLY,Snapshot sonrasındaki sonuç veya censoring bilgisi; X'e giremez
+censor_at,ml_next_service_targets,False,True,HIGH,TARGET/EVALUATION_ONLY,Snapshot sonrasındaki sonuç veya censoring bilgisi; X'e giremez
+censor_days,ml_next_service_targets,False,True,HIGH,TARGET/EVALUATION_ONLY,Snapshot sonrasındaki sonuç veya censoring bilgisi; X'e giremez
+days_to_event_or_censor,ml_next_service_targets,False,True,HIGH,TARGET/EVALUATION_ONLY,Snapshot sonrasındaki sonuç veya censoring bilgisi; X'e giremez
+censor_source,ml_next_service_targets,False,True,HIGH,TARGET/EVALUATION_ONLY,Snapshot sonrasındaki sonuç veya censoring bilgisi; X'e giremez
+censor_time_repaired,ml_next_service_targets,False,True,HIGH,TARGET/EVALUATION_ONLY,Snapshot sonrasındaki sonuç veya censoring bilgisi; X'e giremez
+target_version,ml_next_service_targets,False,True,HIGH,TARGET/EVALUATION_ONLY,Snapshot sonrasındaki sonuç veya censoring bilgisi; X'e giremez
+data_origin,ml_next_service_targets,False,True,HIGH,TARGET/EVALUATION_ONLY,Snapshot sonrasındaki sonuç veya censoring bilgisi; X'e giremez
+generator_version,ml_next_service_targets,False,True,HIGH,TARGET/EVALUATION_ONLY,Snapshot sonrasındaki sonuç veya censoring bilgisi; X'e giremez
+random_seed,ml_next_service_targets,False,True,HIGH,TARGET/EVALUATION_ONLY,Snapshot sonrasındaki sonuç veya censoring bilgisi; X'e giremez
+scenario_id,ml_next_service_targets,False,True,HIGH,TARGET/EVALUATION_ONLY,Snapshot sonrasındaki sonuç veya censoring bilgisi; X'e giremez
+next_service_id,ml_next_task_targets,False,True,HIGH,TARGET/EVALUATION_ONLY,Snapshot sonrasındaki sonuç veya censoring bilgisi; X'e giremez
+target_event_observed,ml_next_task_targets,False,True,HIGH,TARGET/EVALUATION_ONLY,Snapshot sonrasındaki sonuç veya censoring bilgisi; X'e giremez
+is_right_censored,ml_next_task_targets,False,True,HIGH,TARGET/EVALUATION_ONLY,Snapshot sonrasındaki sonuç veya censoring bilgisi; X'e giremez
+task__ENGINE_OIL_CHECK,ml_next_task_targets,False,True,HIGH,TARGET/EVALUATION_ONLY,Snapshot sonrasındaki sonuç veya censoring bilgisi; X'e giremez
+task__ENGINE_OIL_CHANGE,ml_next_task_targets,False,True,HIGH,TARGET/EVALUATION_ONLY,Snapshot sonrasındaki sonuç veya censoring bilgisi; X'e giremez
+task__OIL_FILTER_CHANGE,ml_next_task_targets,False,True,HIGH,TARGET/EVALUATION_ONLY,Snapshot sonrasındaki sonuç veya censoring bilgisi; X'e giremez
+task__OIL_LEAK_INSPECTION,ml_next_task_targets,False,True,HIGH,TARGET/EVALUATION_ONLY,Snapshot sonrasındaki sonuç veya censoring bilgisi; X'e giremez
+task__ENGINE_COMPRESSION_TEST,ml_next_task_targets,False,True,HIGH,TARGET/EVALUATION_ONLY,Snapshot sonrasındaki sonuç veya censoring bilgisi; X'e giremez
+task__VALVE_CLEARANCE_INSPECTION,ml_next_task_targets,False,True,HIGH,TARGET/EVALUATION_ONLY,Snapshot sonrasındaki sonuç veya censoring bilgisi; X'e giremez
+task__VALVE_CLEARANCE_ADJUST,ml_next_task_targets,False,True,HIGH,TARGET/EVALUATION_ONLY,Snapshot sonrasındaki sonuç veya censoring bilgisi; X'e giremez
+task__CAM_CHAIN_INSPECTION,ml_next_task_targets,False,True,HIGH,TARGET/EVALUATION_ONLY,Snapshot sonrasındaki sonuç veya censoring bilgisi; X'e giremez
+task__CAM_CHAIN_TENSIONER_SERVICE,ml_next_task_targets,False,True,HIGH,TARGET/EVALUATION_ONLY,Snapshot sonrasındaki sonuç veya censoring bilgisi; X'e giremez
+task__AIR_FILTER_INSPECTION,ml_next_task_targets,False,True,HIGH,TARGET/EVALUATION_ONLY,Snapshot sonrasındaki sonuç veya censoring bilgisi; X'e giremez
+task__AIR_FILTER_CLEAN,ml_next_task_targets,False,True,HIGH,TARGET/EVALUATION_ONLY,Snapshot sonrasındaki sonuç veya censoring bilgisi; X'e giremez
+task__AIR_FILTER_CHANGE,ml_next_task_targets,False,True,HIGH,TARGET/EVALUATION_ONLY,Snapshot sonrasındaki sonuç veya censoring bilgisi; X'e giremez
+task__THROTTLE_BODY_CLEAN,ml_next_task_targets,False,True,HIGH,TARGET/EVALUATION_ONLY,Snapshot sonrasındaki sonuç veya censoring bilgisi; X'e giremez
+task__INTAKE_LEAK_INSPECTION,ml_next_task_targets,False,True,HIGH,TARGET/EVALUATION_ONLY,Snapshot sonrasındaki sonuç veya censoring bilgisi; X'e giremez
+task__SPARK_PLUG_INSPECTION,ml_next_task_targets,False,True,HIGH,TARGET/EVALUATION_ONLY,Snapshot sonrasındaki sonuç veya censoring bilgisi; X'e giremez
+task__SPARK_PLUG_CHANGE,ml_next_task_targets,False,True,HIGH,TARGET/EVALUATION_ONLY,Snapshot sonrasındaki sonuç veya censoring bilgisi; X'e giremez
+task__FUEL_FILTER_INSPECTION,ml_next_task_targets,False,True,HIGH,TARGET/EVALUATION_ONLY,Snapshot sonrasındaki sonuç veya censoring bilgisi; X'e giremez
+task__FUEL_FILTER_CHANGE,ml_next_task_targets,False,True,HIGH,TARGET/EVALUATION_ONLY,Snapshot sonrasındaki sonuç veya censoring bilgisi; X'e giremez
+task__FUEL_INJECTOR_CLEAN,ml_next_task_targets,False,True,HIGH,TARGET/EVALUATION_ONLY,Snapshot sonrasındaki sonuç veya censoring bilgisi; X'e giremez
+task__FUEL_SYSTEM_DIAGNOSTIC,ml_next_task_targets,False,True,HIGH,TARGET/EVALUATION_ONLY,Snapshot sonrasındaki sonuç veya censoring bilgisi; X'e giremez
+task__COOLANT_LEVEL_CHECK,ml_next_task_targets,False,True,HIGH,TARGET/EVALUATION_ONLY,Snapshot sonrasındaki sonuç veya censoring bilgisi; X'e giremez
+task__COOLANT_CHANGE,ml_next_task_targets,False,True,HIGH,TARGET/EVALUATION_ONLY,Snapshot sonrasındaki sonuç veya censoring bilgisi; X'e giremez
+task__COOLING_SYSTEM_INSPECTION,ml_next_task_targets,False,True,HIGH,TARGET/EVALUATION_ONLY,Snapshot sonrasındaki sonuç veya censoring bilgisi; X'e giremez
+task__RADIATOR_CLEAN,ml_next_task_targets,False,True,HIGH,TARGET/EVALUATION_ONLY,Snapshot sonrasındaki sonuç veya censoring bilgisi; X'e giremez
+task__THERMOSTAT_DIAGNOSTIC,ml_next_task_targets,False,True,HIGH,TARGET/EVALUATION_ONLY,Snapshot sonrasındaki sonuç veya censoring bilgisi; X'e giremez
+task__CLUTCH_FREE_PLAY_CHECK,ml_next_task_targets,False,True,HIGH,TARGET/EVALUATION_ONLY,Snapshot sonrasındaki sonuç veya censoring bilgisi; X'e giremez
+task__CLUTCH_ADJUST,ml_next_task_targets,False,True,HIGH,TARGET/EVALUATION_ONLY,Snapshot sonrasındaki sonuç veya censoring bilgisi; X'e giremez
+task__CLUTCH_PLATE_INSPECTION,ml_next_task_targets,False,True,HIGH,TARGET/EVALUATION_ONLY,Snapshot sonrasındaki sonuç veya censoring bilgisi; X'e giremez
+task__CLUTCH_PLATE_CHANGE,ml_next_task_targets,False,True,HIGH,TARGET/EVALUATION_ONLY,Snapshot sonrasındaki sonuç veya censoring bilgisi; X'e giremez
+task__GEARBOX_OIL_CHANGE,ml_next_task_targets,False,True,HIGH,TARGET/EVALUATION_ONLY,Snapshot sonrasındaki sonuç veya censoring bilgisi; X'e giremez
+task__CVT_CASE_INSPECTION,ml_next_task_targets,False,True,HIGH,TARGET/EVALUATION_ONLY,Snapshot sonrasındaki sonuç veya censoring bilgisi; X'e giremez
+task__CVT_BELT_INSPECTION,ml_next_task_targets,False,True,HIGH,TARGET/EVALUATION_ONLY,Snapshot sonrasındaki sonuç veya censoring bilgisi; X'e giremez
+task__CVT_BELT_CHANGE,ml_next_task_targets,False,True,HIGH,TARGET/EVALUATION_ONLY,Snapshot sonrasındaki sonuç veya censoring bilgisi; X'e giremez
+task__CVT_ROLLER_INSPECTION,ml_next_task_targets,False,True,HIGH,TARGET/EVALUATION_ONLY,Snapshot sonrasındaki sonuç veya censoring bilgisi; X'e giremez
+task__CVT_ROLLER_CHANGE,ml_next_task_targets,False,True,HIGH,TARGET/EVALUATION_ONLY,Snapshot sonrasındaki sonuç veya censoring bilgisi; X'e giremez
+task__FINAL_GEAR_OIL_CHANGE,ml_next_task_targets,False,True,HIGH,TARGET/EVALUATION_ONLY,Snapshot sonrasındaki sonuç veya censoring bilgisi; X'e giremez
+task__CHAIN_INSPECTION,ml_next_task_targets,False,True,HIGH,TARGET/EVALUATION_ONLY,Snapshot sonrasındaki sonuç veya censoring bilgisi; X'e giremez
+task__CHAIN_CLEAN,ml_next_task_targets,False,True,HIGH,TARGET/EVALUATION_ONLY,Snapshot sonrasındaki sonuç veya censoring bilgisi; X'e giremez
+task__CHAIN_LUBRICATE,ml_next_task_targets,False,True,HIGH,TARGET/EVALUATION_ONLY,Snapshot sonrasındaki sonuç veya censoring bilgisi; X'e giremez
+task__CHAIN_ADJUST,ml_next_task_targets,False,True,HIGH,TARGET/EVALUATION_ONLY,Snapshot sonrasındaki sonuç veya censoring bilgisi; X'e giremez
+task__CHAIN_SPROCKET_REPLACE,ml_next_task_targets,False,True,HIGH,TARGET/EVALUATION_ONLY,Snapshot sonrasındaki sonuç veya censoring bilgisi; X'e giremez
+task__DRIVE_BELT_INSPECTION,ml_next_task_targets,False,True,HIGH,TARGET/EVALUATION_ONLY,Snapshot sonrasındaki sonuç veya censoring bilgisi; X'e giremez
+task__DRIVE_BELT_CHANGE,ml_next_task_targets,False,True,HIGH,TARGET/EVALUATION_ONLY,Snapshot sonrasındaki sonuç veya censoring bilgisi; X'e giremez
+task__SHAFT_DRIVE_OIL_CHANGE,ml_next_task_targets,False,True,HIGH,TARGET/EVALUATION_ONLY,Snapshot sonrasındaki sonuç veya censoring bilgisi; X'e giremez
+task__SHAFT_DRIVE_INSPECTION,ml_next_task_targets,False,True,HIGH,TARGET/EVALUATION_ONLY,Snapshot sonrasındaki sonuç veya censoring bilgisi; X'e giremez
+task__FRONT_BRAKE_PAD_INSPECTION,ml_next_task_targets,False,True,HIGH,TARGET/EVALUATION_ONLY,Snapshot sonrasındaki sonuç veya censoring bilgisi; X'e giremez
+task__FRONT_BRAKE_PAD_CHANGE,ml_next_task_targets,False,True,HIGH,TARGET/EVALUATION_ONLY,Snapshot sonrasındaki sonuç veya censoring bilgisi; X'e giremez
+task__REAR_BRAKE_PAD_INSPECTION,ml_next_task_targets,False,True,HIGH,TARGET/EVALUATION_ONLY,Snapshot sonrasındaki sonuç veya censoring bilgisi; X'e giremez
+task__REAR_BRAKE_PAD_CHANGE,ml_next_task_targets,False,True,HIGH,TARGET/EVALUATION_ONLY,Snapshot sonrasındaki sonuç veya censoring bilgisi; X'e giremez
+task__BRAKE_DISC_INSPECTION,ml_next_task_targets,False,True,HIGH,TARGET/EVALUATION_ONLY,Snapshot sonrasındaki sonuç veya censoring bilgisi; X'e giremez
+task__BRAKE_DISC_CHANGE,ml_next_task_targets,False,True,HIGH,TARGET/EVALUATION_ONLY,Snapshot sonrasındaki sonuç veya censoring bilgisi; X'e giremez
+task__BRAKE_FLUID_CHECK,ml_next_task_targets,False,True,HIGH,TARGET/EVALUATION_ONLY,Snapshot sonrasındaki sonuç veya censoring bilgisi; X'e giremez
+task__BRAKE_FLUID_CHANGE,ml_next_task_targets,False,True,HIGH,TARGET/EVALUATION_ONLY,Snapshot sonrasındaki sonuç veya censoring bilgisi; X'e giremez
+task__BRAKE_SYSTEM_BLEED,ml_next_task_targets,False,True,HIGH,TARGET/EVALUATION_ONLY,Snapshot sonrasındaki sonuç veya censoring bilgisi; X'e giremez
+task__ABS_DIAGNOSTIC,ml_next_task_targets,False,True,HIGH,TARGET/EVALUATION_ONLY,Snapshot sonrasındaki sonuç veya censoring bilgisi; X'e giremez
+task__FRONT_TIRE_INSPECTION,ml_next_task_targets,False,True,HIGH,TARGET/EVALUATION_ONLY,Snapshot sonrasındaki sonuç veya censoring bilgisi; X'e giremez
+task__FRONT_TIRE_CHANGE,ml_next_task_targets,False,True,HIGH,TARGET/EVALUATION_ONLY,Snapshot sonrasındaki sonuç veya censoring bilgisi; X'e giremez
+task__REAR_TIRE_INSPECTION,ml_next_task_targets,False,True,HIGH,TARGET/EVALUATION_ONLY,Snapshot sonrasındaki sonuç veya censoring bilgisi; X'e giremez
+task__REAR_TIRE_CHANGE,ml_next_task_targets,False,True,HIGH,TARGET/EVALUATION_ONLY,Snapshot sonrasındaki sonuç veya censoring bilgisi; X'e giremez
+task__WHEEL_BALANCE,ml_next_task_targets,False,True,HIGH,TARGET/EVALUATION_ONLY,Snapshot sonrasındaki sonuç veya censoring bilgisi; X'e giremez
+task__WHEEL_BEARING_INSPECTION,ml_next_task_targets,False,True,HIGH,TARGET/EVALUATION_ONLY,Snapshot sonrasındaki sonuç veya censoring bilgisi; X'e giremez
+task__WHEEL_BEARING_CHANGE,ml_next_task_targets,False,True,HIGH,TARGET/EVALUATION_ONLY,Snapshot sonrasındaki sonuç veya censoring bilgisi; X'e giremez
+task__FORK_INSPECTION,ml_next_task_targets,False,True,HIGH,TARGET/EVALUATION_ONLY,Snapshot sonrasındaki sonuç veya censoring bilgisi; X'e giremez
+task__FORK_OIL_CHANGE,ml_next_task_targets,False,True,HIGH,TARGET/EVALUATION_ONLY,Snapshot sonrasındaki sonuç veya censoring bilgisi; X'e giremez
+task__FORK_SEAL_CHANGE,ml_next_task_targets,False,True,HIGH,TARGET/EVALUATION_ONLY,Snapshot sonrasındaki sonuç veya censoring bilgisi; X'e giremez
+task__REAR_SHOCK_INSPECTION,ml_next_task_targets,False,True,HIGH,TARGET/EVALUATION_ONLY,Snapshot sonrasındaki sonuç veya censoring bilgisi; X'e giremez
+task__STEERING_BEARING_INSPECTION,ml_next_task_targets,False,True,HIGH,TARGET/EVALUATION_ONLY,Snapshot sonrasındaki sonuç veya censoring bilgisi; X'e giremez
+task__STEERING_BEARING_ADJUST,ml_next_task_targets,False,True,HIGH,TARGET/EVALUATION_ONLY,Snapshot sonrasındaki sonuç veya censoring bilgisi; X'e giremez
+task__STEERING_BEARING_CHANGE,ml_next_task_targets,False,True,HIGH,TARGET/EVALUATION_ONLY,Snapshot sonrasındaki sonuç veya censoring bilgisi; X'e giremez
+task__BATTERY_TEST,ml_next_task_targets,False,True,HIGH,TARGET/EVALUATION_ONLY,Snapshot sonrasındaki sonuç veya censoring bilgisi; X'e giremez
+task__BATTERY_CHANGE,ml_next_task_targets,False,True,HIGH,TARGET/EVALUATION_ONLY,Snapshot sonrasındaki sonuç veya censoring bilgisi; X'e giremez
+task__CHARGING_SYSTEM_TEST,ml_next_task_targets,False,True,HIGH,TARGET/EVALUATION_ONLY,Snapshot sonrasındaki sonuç veya censoring bilgisi; X'e giremez
+task__LIGHTING_SYSTEM_INSPECTION,ml_next_task_targets,False,True,HIGH,TARGET/EVALUATION_ONLY,Snapshot sonrasındaki sonuç veya censoring bilgisi; X'e giremez
+task__ECU_DIAGNOSTIC_SCAN,ml_next_task_targets,False,True,HIGH,TARGET/EVALUATION_ONLY,Snapshot sonrasındaki sonuç veya censoring bilgisi; X'e giremez
+task__EV_TRACTION_BATTERY_HEALTH_CHECK,ml_next_task_targets,False,True,HIGH,TARGET/EVALUATION_ONLY,Snapshot sonrasındaki sonuç veya censoring bilgisi; X'e giremez
+task__EV_CHARGING_PORT_INSPECTION,ml_next_task_targets,False,True,HIGH,TARGET/EVALUATION_ONLY,Snapshot sonrasındaki sonuç veya censoring bilgisi; X'e giremez
+task__EV_DRIVE_MOTOR_DIAGNOSTIC,ml_next_task_targets,False,True,HIGH,TARGET/EVALUATION_ONLY,Snapshot sonrasındaki sonuç veya censoring bilgisi; X'e giremez
+task__EV_HIGH_VOLTAGE_SYSTEM_INSPECTION,ml_next_task_targets,False,True,HIGH,TARGET/EVALUATION_ONLY,Snapshot sonrasındaki sonuç veya censoring bilgisi; X'e giremez
+task__GENERAL_SAFETY_INSPECTION,ml_next_task_targets,False,True,HIGH,TARGET/EVALUATION_ONLY,Snapshot sonrasındaki sonuç veya censoring bilgisi; X'e giremez
+task__FASTENER_TORQUE_INSPECTION,ml_next_task_targets,False,True,HIGH,TARGET/EVALUATION_ONLY,Snapshot sonrasındaki sonuç veya censoring bilgisi; X'e giremez
+task__CABLE_CONTROL_LUBRICATION,ml_next_task_targets,False,True,HIGH,TARGET/EVALUATION_ONLY,Snapshot sonrasındaki sonuç veya censoring bilgisi; X'e giremez
+target_definition,ml_next_task_targets,False,True,HIGH,TARGET/EVALUATION_ONLY,Snapshot sonrasındaki sonuç veya censoring bilgisi; X'e giremez
+taxonomy_target_class_count,ml_next_task_targets,False,True,HIGH,TARGET/EVALUATION_ONLY,Snapshot sonrasındaki sonuç veya censoring bilgisi; X'e giremez
+observed_positive_class_count,ml_next_task_targets,False,True,HIGH,TARGET/EVALUATION_ONLY,Snapshot sonrasındaki sonuç veya censoring bilgisi; X'e giremez
+eligible_but_unobserved_class_count,ml_next_task_targets,False,True,HIGH,TARGET/EVALUATION_ONLY,Snapshot sonrasındaki sonuç veya censoring bilgisi; X'e giremez
+taxonomy_version,ml_next_task_targets,False,True,HIGH,TARGET/EVALUATION_ONLY,Snapshot sonrasındaki sonuç veya censoring bilgisi; X'e giremez
+target_version,ml_next_task_targets,False,True,HIGH,TARGET/EVALUATION_ONLY,Snapshot sonrasındaki sonuç veya censoring bilgisi; X'e giremez
+data_origin,ml_next_task_targets,False,True,HIGH,TARGET/EVALUATION_ONLY,Snapshot sonrasındaki sonuç veya censoring bilgisi; X'e giremez
+generator_version,ml_next_task_targets,False,True,HIGH,TARGET/EVALUATION_ONLY,Snapshot sonrasındaki sonuç veya censoring bilgisi; X'e giremez
+random_seed,ml_next_task_targets,False,True,HIGH,TARGET/EVALUATION_ONLY,Snapshot sonrasındaki sonuç veya censoring bilgisi; X'e giremez
+scenario_id,ml_next_task_targets,False,True,HIGH,TARGET/EVALUATION_ONLY,Snapshot sonrasındaki sonuç veya censoring bilgisi; X'e giremez
+next_task_codes,ml_next_task_targets,False,True,HIGH,TARGET/EVALUATION_ONLY,Snapshot sonrasındaki sonuç veya censoring bilgisi; X'e giremez
+next_completed_task_codes,ml_next_task_targets,False,True,HIGH,TARGET/EVALUATION_ONLY,Snapshot sonrasındaki sonuç veya censoring bilgisi; X'e giremez
+next_task_count,ml_next_task_targets,False,True,HIGH,TARGET/EVALUATION_ONLY,Snapshot sonrasındaki sonuç veya censoring bilgisi; X'e giremez
+next_completed_task_count,ml_next_task_targets,False,True,HIGH,TARGET/EVALUATION_ONLY,Snapshot sonrasındaki sonuç veya censoring bilgisi; X'e giremez
+next_declined_task_count,ml_next_task_targets,False,True,HIGH,TARGET/EVALUATION_ONLY,Snapshot sonrasındaki sonuç veya censoring bilgisi; X'e giremez
+next_declined_task_codes,ml_next_task_targets,False,True,HIGH,TARGET/EVALUATION_ONLY,Snapshot sonrasındaki sonuç veya censoring bilgisi; X'e giremez
+task__BRAKE_FAULT_DIAGNOSTIC,ml_next_task_targets,False,True,HIGH,TARGET/EVALUATION_ONLY,Snapshot sonrasındaki sonuç veya censoring bilgisi; X'e giremez
+task__CENTER_STAND_INSPECTION,ml_next_task_targets,False,True,HIGH,TARGET/EVALUATION_ONLY,Snapshot sonrasındaki sonuç veya censoring bilgisi; X'e giremez
+task__CHAIN_DRIVE_DIAGNOSTIC,ml_next_task_targets,False,True,HIGH,TARGET/EVALUATION_ONLY,Snapshot sonrasındaki sonuç veya censoring bilgisi; X'e giremez
+task__COOLING_FAULT_DIAGNOSTIC,ml_next_task_targets,False,True,HIGH,TARGET/EVALUATION_ONLY,Snapshot sonrasındaki sonuç veya censoring bilgisi; X'e giremez
+task__CVT_BELT_FAILURE_DIAGNOSTIC,ml_next_task_targets,False,True,HIGH,TARGET/EVALUATION_ONLY,Snapshot sonrasındaki sonuç veya censoring bilgisi; X'e giremez
+task__ELECTRICAL_FAULT_DIAGNOSTIC,ml_next_task_targets,False,True,HIGH,TARGET/EVALUATION_ONLY,Snapshot sonrasındaki sonuç veya censoring bilgisi; X'e giremez
+task__ENGINE_FAULT_DIAGNOSTIC,ml_next_task_targets,False,True,HIGH,TARGET/EVALUATION_ONLY,Snapshot sonrasındaki sonuç veya censoring bilgisi; X'e giremez
+task__FINAL_DRIVE_FAULT_INSPECTION,ml_next_task_targets,False,True,HIGH,TARGET/EVALUATION_ONLY,Snapshot sonrasındaki sonuç veya censoring bilgisi; X'e giremez
+task__INTAKE_FAULT_DIAGNOSTIC,ml_next_task_targets,False,True,HIGH,TARGET/EVALUATION_ONLY,Snapshot sonrasındaki sonuç veya censoring bilgisi; X'e giremez
+task__SIDE_STAND_INSPECTION,ml_next_task_targets,False,True,HIGH,TARGET/EVALUATION_ONLY,Snapshot sonrasındaki sonuç veya censoring bilgisi; X'e giremez
+task__STEERING_FAULT_INSPECTION,ml_next_task_targets,False,True,HIGH,TARGET/EVALUATION_ONLY,Snapshot sonrasındaki sonuç veya censoring bilgisi; X'e giremez
+task__SUSPENSION_FAULT_INSPECTION,ml_next_task_targets,False,True,HIGH,TARGET/EVALUATION_ONLY,Snapshot sonrasındaki sonuç veya censoring bilgisi; X'e giremez
+task__THROTTLE_FREE_PLAY_CHECK,ml_next_task_targets,False,True,HIGH,TARGET/EVALUATION_ONLY,Snapshot sonrasındaki sonuç veya censoring bilgisi; X'e giremez
+task__TIRE_PRESSURE_CHECK,ml_next_task_targets,False,True,HIGH,TARGET/EVALUATION_ONLY,Snapshot sonrasındaki sonuç veya censoring bilgisi; X'e giremez
+task__TIRE_WHEEL_FAULT_INSPECTION,ml_next_task_targets,False,True,HIGH,TARGET/EVALUATION_ONLY,Snapshot sonrasındaki sonuç veya censoring bilgisi; X'e giremez
+task__TRANSMISSION_FAULT_DIAGNOSTIC,ml_next_task_targets,False,True,HIGH,TARGET/EVALUATION_ONLY,Snapshot sonrasındaki sonuç veya censoring bilgisi; X'e giremez
+task__WASH_AND_GENERAL_CLEANING,ml_next_task_targets,False,True,HIGH,TARGET/EVALUATION_ONLY,Snapshot sonrasındaki sonuç veya censoring bilgisi; X'e giremez

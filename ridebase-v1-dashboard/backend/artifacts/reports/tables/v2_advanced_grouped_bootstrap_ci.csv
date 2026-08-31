@@ -1,0 +1,6 @@
+﻿metric,estimate,ci_low,ci_high,bootstrap_unit,n_replicates
+ipcw_c_index,0.9131,0.9052,0.9204,motorcycle_id,500
+ibs,0.0412,0.0379,0.0447,motorcycle_id,500
+brier_90,0.0501,0.0454,0.0547,motorcycle_id,500
+auc_90,0.9508,0.9439,0.9585,motorcycle_id,500
+cal_error_90,0.0641,0.0499,0.0788,motorcycle_id,500

@@ -1,0 +1,14 @@
+﻿check,pass
+dataset_version==1.3,True
+split unchanged,True
+observed regression contract,True
+test isolated until freeze,True
+temporal CV no shuffle,True
+optuna uses no TEST,True
+feature selection uses no TEST,True
+ensemble weights use no TEST,True
+final config frozen before TEST,True
+train-only preprocessing,True
+observed-only regression (no censored),True
+reproducibility,True
+no target/generator/noise change,True

@@ -1,0 +1,13 @@
+﻿column,dominant_value,dominant_rate,unique_count,decision,reason
+powertrain_type,ICE,0.9989426863059647,2,KEEP_AND_FLAG,Nadir fakat önemli olay olabilir; otomatik çıkarılmadı
+cylinder_count,1,0.9932915269068106,3,KEEP_AND_FLAG,Nadir fakat önemli olay olabilir; otomatik çıkarılmadı
+fuel_type,GASOLINE,0.9989426863059647,2,KEEP_AND_FLAG,Nadir fakat önemli olay olabilir; otomatik çıkarılmadı
+is_left_truncated,1,0.9956978270380633,2,KEEP_AND_FLAG,Nadir fakat önemli olay olabilir; otomatik çıkarılmadı
+current_is_breakdown,0,0.9901560449176025,2,KEEP_AND_FLAG,Nadir fakat önemli olay olabilir; otomatik çıkarılmadı
+current_is_warranty,0,0.9936925769286861,2,KEEP_AND_FLAG,Nadir fakat önemli olay olabilir; otomatik çıkarılmadı
+service_odometer_regression_count_to_date,0,0.999854163628409,2,KEEP_AND_FLAG,Nadir fakat önemli olay olabilir; otomatik çıkarılmadı
+feature_version,1.2.0,1.0,1,DROP,TRAIN'de sabit; bilgi taşımaz
+data_origin,SYNTHETIC,1.0,1,DROP,TRAIN'de sabit; bilgi taşımaz
+generator_version,1.2.0,1.0,1,DROP,TRAIN'de sabit; bilgi taşımaz
+random_seed,42,1.0,1,DROP,TRAIN'de sabit; bilgi taşımaz
+scenario_id,MAINTENANCE_EVENT_SIM_V1,1.0,1,DROP,TRAIN'de sabit; bilgi taşımaz

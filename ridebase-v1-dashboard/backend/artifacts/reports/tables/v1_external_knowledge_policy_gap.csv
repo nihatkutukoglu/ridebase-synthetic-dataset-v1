@@ -1,0 +1,10 @@
+﻿,value
+n,15847.0
+spearman_r,0.2645
+spearman_p,6.343639166371771e-252
+pearson_r,0.2693
+policy_gap_median_km,1581.0
+policy_gap_mean_km,1588.4
+policy_gap_p10_km,-853.4
+policy_gap_p90_km,3995.0
+abs_policy_gap_median_km,1796.0

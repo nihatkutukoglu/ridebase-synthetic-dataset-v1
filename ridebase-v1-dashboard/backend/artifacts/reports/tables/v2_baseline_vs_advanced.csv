@@ -1,0 +1,6 @@
+﻿metric,cox_baseline,advanced_champion,absolute_delta,relative_delta,verdict
+ipcw_c_index,0.895,0.9131,0.0181,0.0203,better
+ibs,0.057,0.0488,-0.0083,0.1449,better
+brier_90,0.0617,0.0503,-0.0114,0.1847,better
+auc_90,0.936,0.9507,0.0147,0.0157,better
+cal_error_90,0.0683,0.0612,-0.0071,0.1043,better

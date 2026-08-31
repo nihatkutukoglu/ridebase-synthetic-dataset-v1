@@ -1,0 +1,118 @@
+﻿model_feature,synthetic_source,expected_real_source,transformation,status,notes
+split,n/a — data-partition label,none,constant sentinel at inference; contributes ~0; drop in real-data retrain,INERT,inert — remove when retraining on real data
+snapshot_year,snapshot timestamp + registration date,"snapshot_date, first_seen_date",compute at request time from dates,DERIVABLE,needs history/derivation pipeline
+snapshot_month,snapshot timestamp + registration date,"snapshot_date, first_seen_date",compute at request time from dates,DERIVABLE,needs history/derivation pipeline
+snapshot_month_sin,snapshot timestamp + registration date,"snapshot_date, first_seen_date",compute at request time from dates,DERIVABLE,needs history/derivation pipeline
+snapshot_month_cos,snapshot timestamp + registration date,"snapshot_date, first_seen_date",compute at request time from dates,DERIVABLE,needs history/derivation pipeline
+brand,spec,spec,direct field,READY,1:1 field
+category,spec,spec,direct field,READY,1:1 field
+powertrain_type,spec,spec,direct field,READY,1:1 field
+engine_displacement_cc,spec,spec,direct field,READY,1:1 field
+cylinder_count,spec,spec,direct field,READY,1:1 field
+cooling_type,spec,spec,direct field,READY,1:1 field
+final_drive_type,spec,spec,direct field,READY,1:1 field
+transmission_type,spec,spec,direct field,READY,1:1 field
+spark_plug_count,spec,spec,direct field,READY,1:1 field
+fuel_type,spec,spec,direct field,READY,1:1 field
+policy_group,policy,policy,direct field,READY,1:1 field
+policy_ready,policy,policy,direct field,READY,1:1 field
+spec_confidence,policy,policy,direct field,READY,1:1 field
+production_year,spec,spec,direct field,READY,1:1 field
+motorcycle_age_years,snapshot timestamp + registration date,"snapshot_date, first_seen_date",compute at request time from dates,DERIVABLE,needs history/derivation pipeline
+ownership_months,snapshot timestamp + registration date,"snapshot_date, first_seen_date",compute at request time from dates,DERIVABLE,needs history/derivation pipeline
+initial_mileage_km,odometer/mileage history,odometer/mileage history,direct field,READY,1:1 field
+is_left_truncated,snapshot timestamp + registration date,"snapshot_date, first_seen_date",compute at request time from dates,DERIVABLE,needs history/derivation pipeline
+days_observed,snapshot timestamp + registration date,"snapshot_date, first_seen_date",compute at request time from dates,DERIVABLE,needs history/derivation pipeline
+customer_type,customer,customer,direct field,READY,1:1 field
+is_fleet_customer,customer,customer,direct field,READY,1:1 field
+acquisition_channel,customer,customer,direct field,READY,1:1 field
+usage_type,customer,customer,direct field,READY,1:1 field
+annual_km_baseline,telematics/usage,telematics/usage,direct field,READY,1:1 field
+city_ratio,telematics/usage,telematics/usage,direct field,READY,1:1 field
+highway_ratio,telematics/usage,telematics/usage,direct field,READY,1:1 field
+offroad_ratio,telematics/usage,telematics/usage,direct field,READY,1:1 field
+track_ratio,mixed,RideBase core tables,derive per mapping table,DERIVABLE,needs history/derivation pipeline
+avg_ride_days_per_week,mixed,RideBase core tables,derive per mapping table,DERIVABLE,needs history/derivation pipeline
+avg_km_per_active_day,service + odometer history,"service_events, odometer_readings",rolling / windowed aggregation over history,DERIVABLE,needs history/derivation pipeline
+riding_intensity,telematics/usage,telematics/usage,direct field,READY,1:1 field
+seasonality_strength,mixed,RideBase core tables,derive per mapping table,DERIVABLE,needs history/derivation pipeline
+winter_usage_factor,mixed,RideBase core tables,derive per mapping table,DERIVABLE,needs history/derivation pipeline
+weather_sensitivity,mixed,RideBase core tables,derive per mapping table,DERIVABLE,needs history/derivation pipeline
+storage_condition,telematics/usage,telematics/usage,direct field,READY,1:1 field
+load_severity_factor,telematics/usage,telematics/usage,direct field,READY,1:1 field
+climate_zone,telematics/usage,telematics/usage,direct field,READY,1:1 field
+workshop_city,workshop,workshop,direct field,READY,1:1 field
+workshop_region,workshop,workshop,direct field,READY,1:1 field
+workshop_climate_zone,workshop,workshop,direct field,READY,1:1 field
+price_level,spec,spec,direct field,READY,1:1 field
+service_bay_count,mixed,RideBase core tables,derive per mapping table,DERIVABLE,needs history/derivation pipeline
+appointment_rate,mixed,RideBase core tables,derive per mapping table,DERIVABLE,needs history/derivation pipeline
+avg_parts_lead_days,mixed,RideBase core tables,derive per mapping table,DERIVABLE,needs history/derivation pipeline
+customer_volume_index,mixed,RideBase core tables,derive per mapping table,DERIVABLE,needs history/derivation pipeline
+courier_customer_share,mixed,RideBase core tables,derive per mapping table,DERIVABLE,needs history/derivation pipeline
+current_mileage_source,odometer/mileage history,odometer/mileage history,direct field,READY,1:1 field
+current_mileage_quality_flag,odometer/mileage history,odometer/mileage history,direct field,READY,1:1 field
+current_mileage_estimated,odometer/mileage history,odometer/mileage history,direct field,READY,1:1 field
+current_service_type_code,service history,service history,direct field,READY,1:1 field
+current_arrival_mode,service history,service history,direct field,READY,1:1 field
+current_primary_trigger_task,service history,service history,direct field,READY,1:1 field
+current_service_delay_days,service history,service history,direct field,READY,1:1 field
+current_is_breakdown,mixed,RideBase core tables,derive per mapping table,DERIVABLE,needs history/derivation pipeline
+current_is_warranty,mixed,RideBase core tables,derive per mapping table,DERIVABLE,needs history/derivation pipeline
+current_service_timestamp_repaired,mixed,RideBase core tables,derive per mapping table,DERIVABLE,needs history/derivation pipeline
+current_labor_total,mixed,RideBase core tables,derive per mapping table,DERIVABLE,needs history/derivation pipeline
+current_parts_total,mixed,RideBase core tables,derive per mapping table,DERIVABLE,needs history/derivation pipeline
+current_grand_total,mixed,RideBase core tables,derive per mapping table,DERIVABLE,needs history/derivation pipeline
+current_task_count,last service record,service_events (most recent),fields of the last closed service,READY,1:1 field
+current_declined_task_count,last service record,service_events (most recent),fields of the last closed service,READY,1:1 field
+current_policy_due_task_count,last service record,service_events (most recent),fields of the last closed service,READY,1:1 field
+current_fault_task_count,last service record,service_events (most recent),fields of the last closed service,READY,1:1 field
+current_inspection_finding_task_count,last service record,service_events (most recent),fields of the last closed service,READY,1:1 field
+current_replace_task_count,last service record,service_events (most recent),fields of the last closed service,READY,1:1 field
+current_parts_line_count,mixed,RideBase core tables,derive per mapping table,DERIVABLE,needs history/derivation pipeline
+current_supplier_parts_line_count,mixed,RideBase core tables,derive per mapping table,DERIVABLE,needs history/derivation pipeline
+days_since_previous_service,service history,service history,direct field,READY,1:1 field
+km_since_previous_service,service history,service history,direct field,READY,1:1 field
+avg_km_per_day_since_previous_service,service + odometer history,"service_events, odometer_readings",rolling / windowed aggregation over history,DERIVABLE,needs history/derivation pipeline
+avg_service_interval_km,service + odometer history,"service_events, odometer_readings",rolling / windowed aggregation over history,DERIVABLE,needs history/derivation pipeline
+service_odometer_regression_count_to_date,service + odometer history,"service_events, odometer_readings",rolling / windowed aggregation over history,DERIVABLE,needs history/derivation pipeline
+periodic_service_count,mixed,RideBase core tables,derive per mapping table,DERIVABLE,needs history/derivation pipeline
+repair_service_count,mixed,RideBase core tables,derive per mapping table,DERIVABLE,needs history/derivation pipeline
+breakdown_service_count,mixed,RideBase core tables,derive per mapping table,DERIVABLE,needs history/derivation pipeline
+warranty_service_count,mixed,RideBase core tables,derive per mapping table,DERIVABLE,needs history/derivation pipeline
+appointment_service_count,mixed,RideBase core tables,derive per mapping table,DERIVABLE,needs history/derivation pipeline
+walkin_service_count,mixed,RideBase core tables,derive per mapping table,DERIVABLE,needs history/derivation pipeline
+services_last_90d,service + odometer history,"service_events, odometer_readings",rolling / windowed aggregation over history,DERIVABLE,needs history/derivation pipeline
+services_last_365d,service + odometer history,"service_events, odometer_readings",rolling / windowed aggregation over history,DERIVABLE,needs history/derivation pipeline
+cumulative_service_spend,mixed,RideBase core tables,derive per mapping table,DERIVABLE,needs history/derivation pipeline
+avg_service_spend,mixed,RideBase core tables,derive per mapping table,DERIVABLE,needs history/derivation pipeline
+total_declined_task_count,last service record,service_events (most recent),fields of the last closed service,READY,1:1 field
+total_fault_task_count,last service record,service_events (most recent),fields of the last closed service,READY,1:1 field
+total_inspection_finding_task_count,last service record,service_events (most recent),fields of the last closed service,READY,1:1 field
+days_since_engine_task,service + odometer history,"service_events, odometer_readings",rolling / windowed aggregation over history,DERIVABLE,needs history/derivation pipeline
+km_since_engine_task,service + odometer history,"service_events, odometer_readings",rolling / windowed aggregation over history,DERIVABLE,needs history/derivation pipeline
+days_since_brakes_task,service + odometer history,"service_events, odometer_readings",rolling / windowed aggregation over history,DERIVABLE,needs history/derivation pipeline
+km_since_brakes_task,service + odometer history,"service_events, odometer_readings",rolling / windowed aggregation over history,DERIVABLE,needs history/derivation pipeline
+days_since_final_drive_task,service + odometer history,"service_events, odometer_readings",rolling / windowed aggregation over history,DERIVABLE,needs history/derivation pipeline
+km_since_final_drive_task,service + odometer history,"service_events, odometer_readings",rolling / windowed aggregation over history,DERIVABLE,needs history/derivation pipeline
+days_since_tires_wheels_task,service + odometer history,"service_events, odometer_readings",rolling / windowed aggregation over history,DERIVABLE,needs history/derivation pipeline
+km_since_tires_wheels_task,service + odometer history,"service_events, odometer_readings",rolling / windowed aggregation over history,DERIVABLE,needs history/derivation pipeline
+days_since_electrical_task,service + odometer history,"service_events, odometer_readings",rolling / windowed aggregation over history,DERIVABLE,needs history/derivation pipeline
+km_since_electrical_task,service + odometer history,"service_events, odometer_readings",rolling / windowed aggregation over history,DERIVABLE,needs history/derivation pipeline
+days_since_transmission_task,service + odometer history,"service_events, odometer_readings",rolling / windowed aggregation over history,DERIVABLE,needs history/derivation pipeline
+km_since_transmission_task,service + odometer history,"service_events, odometer_readings",rolling / windowed aggregation over history,DERIVABLE,needs history/derivation pipeline
+days_since_cooling_task,service + odometer history,"service_events, odometer_readings",rolling / windowed aggregation over history,DERIVABLE,needs history/derivation pipeline
+km_since_cooling_task,service + odometer history,"service_events, odometer_readings",rolling / windowed aggregation over history,DERIVABLE,needs history/derivation pipeline
+days_since_intake_task,service + odometer history,"service_events, odometer_readings",rolling / windowed aggregation over history,DERIVABLE,needs history/derivation pipeline
+km_since_intake_task,service + odometer history,"service_events, odometer_readings",rolling / windowed aggregation over history,DERIVABLE,needs history/derivation pipeline
+maintenance_overdue_days_pre_service,service + odometer history,"service_events, odometer_readings",rolling / windowed aggregation over history,DERIVABLE,needs history/derivation pipeline
+maintenance_overdue_km_pre_service,service + odometer history,"service_events, odometer_readings",rolling / windowed aggregation over history,DERIVABLE,needs history/derivation pipeline
+previous_failure_count,mixed,RideBase core tables,derive per mapping table,DERIVABLE,needs history/derivation pipeline
+historical_interval_days_std,service + odometer history,"service_events, odometer_readings",rolling / windowed aggregation over history,DERIVABLE,needs history/derivation pipeline
+historical_interval_km_std,service + odometer history,"service_events, odometer_readings",rolling / windowed aggregation over history,DERIVABLE,needs history/derivation pipeline
+historical_policy_delay_median_days,mixed,RideBase core tables,derive per mapping table,DERIVABLE,needs history/derivation pipeline
+historical_policy_delay_mean_days,mixed,RideBase core tables,derive per mapping table,DERIVABLE,needs history/derivation pipeline
+historical_on_time_rate,mixed,RideBase core tables,derive per mapping table,DERIVABLE,needs history/derivation pipeline
+recent_180d_km,service + odometer history,"service_events, odometer_readings",rolling / windowed aggregation over history,DERIVABLE,needs history/derivation pipeline
+policy_interval_km,policy,policy,direct field,READY,1:1 field
+recent_vs_long_term_usage_ratio,service + odometer history,"service_events, odometer_readings",rolling / windowed aggregation over history,DERIVABLE,needs history/derivation pipeline

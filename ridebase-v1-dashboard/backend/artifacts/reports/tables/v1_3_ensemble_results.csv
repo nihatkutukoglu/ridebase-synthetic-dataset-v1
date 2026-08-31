@@ -1,0 +1,9 @@
+﻿target,ensemble,members,weights,val_mae,val_r2
+DAYS,best_single,AutoGluon_best,-,7.312145203125532,0.8961531848626395
+DAYS,simple_average,AutoGluon_best | XGBRegressor | LGBMRegressor | HistGradientBoostingRegressor,equal,8.624797200362483,0.8479978497666608
+DAYS,weighted_mae_blend,AutoGluon_best | XGBRegressor | LGBMRegressor | HistGradientBoostingRegressor,"{""AutoGluon_best"": 1.0, ""XGBRegressor"": 0.0, ""LGBMRegressor"": 0.0, ""HistGradientBoostingRegressor"": 0.0}",7.3121452031255325,0.8961531848626395
+DAYS,r2_focused_blend(diagnostic),AutoGluon_best | XGBRegressor | LGBMRegressor | HistGradientBoostingRegressor,"{""AutoGluon_best"": 1.0, ""XGBRegressor"": 0.0, ""LGBMRegressor"": 0.0, ""HistGradientBoostingRegressor"": 0.0}",7.3121452031255325,0.8961531848626395
+KM,best_single,AutoGluon_best,-,465.4602246401275,0.8011216868780738
+KM,simple_average,AutoGluon_best | LGBMRegressor | HistGradientBoostingRegressor | XGBRegressor,equal,562.3579420104938,0.6984713724056935
+KM,weighted_mae_blend,AutoGluon_best | LGBMRegressor | HistGradientBoostingRegressor | XGBRegressor,"{""AutoGluon_best"": 1.0, ""LGBMRegressor"": 0.0, ""HistGradientBoostingRegressor"": 0.0, ""XGBRegressor"": 0.0}",465.46022464898516,0.8011216868696156
+KM,r2_focused_blend(diagnostic),AutoGluon_best | LGBMRegressor | HistGradientBoostingRegressor | XGBRegressor,"{""AutoGluon_best"": 1.0, ""LGBMRegressor"": 0.0, ""HistGradientBoostingRegressor"": 0.0, ""XGBRegressor"": 0.0}",465.4602246401275,0.8011216868780738

@@ -1,0 +1,4 @@
+﻿split,observed_rows,knowledge_rows,knowledge_row_pct,exact_match_rows,exact_match_row_pct
+TRAIN,25442,14426,0.567,11777,0.4629
+VALIDATION,1429,717,0.5017,549,0.3842
+TEST,1282,704,0.5491,560,0.4368
