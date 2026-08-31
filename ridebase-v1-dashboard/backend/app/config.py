@@ -5,8 +5,18 @@ from __future__ import annotations
 import os
 from pathlib import Path
 
-# backend/app/config.py -> repo root is 3 parents up from this file
-_REPO_ROOT = Path(__file__).resolve().parents[3]
+def _find_repo_root() -> Path:
+    """Local-dev fallback only. Production sets MODEL_DIR/... explicitly, so this
+    never needs to be correct there — it just must not raise (the container has
+    config.py at /app/app/config.py, i.e. fewer than 3 parents)."""
+    here = Path(__file__).resolve()
+    for parent in here.parents:
+        if (parent / "ridebase-ml").is_dir() or (parent / ".git").exists():
+            return parent
+    return Path.cwd()
+
+
+_REPO_ROOT = _find_repo_root()
 _ML_ROOT = _REPO_ROOT / "ridebase-ml"
 
 
