@@ -1,0 +1,35 @@
+# Inference-only production image. Build context = repo root.
+#   docker build -f ridebase-v1-dashboard/backend/Dockerfile.prod -t ridebase-api .
+# Requires ridebase-v1-dashboard/backend/artifacts/ (run scripts/collect_prod_artifacts.sh first)
+# OR mount a volume at /artifacts and leave the COPY line's target empty.
+FROM python:3.11-slim
+
+ENV PYTHONUNBUFFERED=1 \
+    PYTHONDONTWRITEBYTECODE=1 \
+    PIP_NO_CACHE_DIR=1 \
+    APP_ENV=production \
+    MODEL_DIR=/artifacts/models \
+    REPORTS_DIR=/artifacts/reports \
+    OUTPUTS_DIR=/artifacts/outputs \
+    DATASET_DIR=/artifacts/dataset
+
+WORKDIR /app
+
+RUN apt-get update && apt-get install -y --no-install-recommends libgomp1 curl \
+    && rm -rf /var/lib/apt/lists/*
+
+COPY ridebase-v1-dashboard/backend/requirements-prod.txt .
+RUN pip install -r requirements-prod.txt
+
+# V2 inference package (ridebase_ml.v2.V2SurvivalPredictor) — importable via site .pth
+COPY ridebase-ml/ridebase_ml /opt/ridebase_ml/ridebase_ml
+RUN echo "/opt/ridebase_ml" > "$(python -c 'import site;print(site.getsitepackages()[0])')/ridebase_ml.pth"
+
+COPY ridebase-v1-dashboard/backend/app ./app
+# curated ~50 MB artifact subset; comment out if mounting a volume at /artifacts
+COPY ridebase-v1-dashboard/backend/artifacts /artifacts
+
+EXPOSE 8000
+HEALTHCHECK --interval=30s --timeout=5s --start-period=40s --retries=3 \
+    CMD curl -fsS http://localhost:8000/health || exit 1
+CMD ["sh", "-c", "uvicorn app.main:app --host 0.0.0.0 --port ${PORT:-8000}"]

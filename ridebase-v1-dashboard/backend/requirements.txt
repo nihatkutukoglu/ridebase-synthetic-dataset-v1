@@ -1,0 +1,24 @@
+# Web
+fastapi>=0.110,<1.0
+uvicorn[standard]>=0.27,<1.0
+pydantic>=2.6,<3.0
+
+# Data / ML
+# scikit-survival needs scikit-learn 1.5.x, so the whole app runs on 1.5.2. The V1
+# nb12 artifacts were saved with 1.6.1 — they still unpickle and predict correctly
+# under 1.5.2 (only an InconsistentVersionWarning; verified). scikit-survival is
+# required to unpickle the V2 CoxNet model.
+scikit-learn==1.5.2
+scikit-survival==0.23.1
+lightgbm==4.6.0
+xgboost==2.1.4
+catboost==1.2.10
+pandas==2.3.3
+numpy==2.0.2
+scipy==1.13.1
+joblib==1.5.3
+pyarrow==21.0.0
+
+# Tests
+httpx>=0.27
+pytest>=8.0

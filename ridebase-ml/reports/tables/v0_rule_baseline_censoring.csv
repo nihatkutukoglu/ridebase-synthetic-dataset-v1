@@ -1,0 +1,4 @@
+﻿primary_time_split,total_snapshots,observed_targets,censored_targets,timing_prediction_coverage_all,censoring_rate,prediction_coverage_on_observed,prediction_coverage_on_censored
+TRAIN,27428,25726,1702,1.0,0.06205337611200233,1.0,1.0
+VALIDATION,6399,4728,1671,1.0,0.2611345522737928,1.0,1.0
+TEST,7691,2622,5069,1.0,0.659082043947471,1.0,1.0

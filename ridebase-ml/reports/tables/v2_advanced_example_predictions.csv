@@ -1,0 +1,7 @@
+﻿risk_band,brand,category,recent_90d_km,prior_services,P30,P60,P90,P120,median_days,outcome
+LOW,TVS,SCOOTER,2922.0,6,0.0,0.0,0.0,0.0,,censored d40
+LOW,CFMOTO,ADVENTURE,704.0,6,0.0,0.0,0.0,0.0,,censored d1
+MEDIUM,Honda,SCOOTER,1769.0,1,0.0,0.0,0.0,0.011,,censored d1
+MEDIUM,Mondial,SCOOTER,1463.0,0,0.0,0.002,0.013,0.081,306.0,censored d129
+HIGH,Honda,SCOOTER,6257.0,5,0.007,0.324,0.79,0.901,67.0,event d61
+HIGH,RKS,CUB,6312.0,3,0.042,0.817,0.928,0.949,52.0,event d31

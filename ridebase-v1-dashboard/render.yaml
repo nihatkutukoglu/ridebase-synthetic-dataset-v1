@@ -1,0 +1,37 @@
+# Render.com blueprint — RideBase V1/V2 inference API (public HTTPS).
+# Commit this file at the REPO ROOT as render.yaml, or move it there — Render
+# Blueprint paths are resolved from the repo root.
+#
+#   1. bash ridebase-v1-dashboard/scripts/collect_prod_artifacts.sh   # ~50 MB subset
+#   2. commit ridebase-v1-dashboard/backend/artifacts/ (or use a Render disk at /artifacts)
+#   3. Render dashboard → New → Blueprint → point at this file
+#   4. set ALLOWED_ORIGINS to the Control Center origin(s)
+#
+# The 5 GB of AutoML experiment artifacts in ridebase-ml/models/ are NOT needed
+# at inference — collect_prod_artifacts.sh leaves them out.
+services:
+  - type: web
+    name: ridebase-inference-api
+    runtime: docker
+    dockerfilePath: ./ridebase-v1-dashboard/backend/Dockerfile.prod
+    dockerContext: .
+    plan: starter                     # 512 MB RAM is enough for the frozen models
+    healthCheckPath: /health
+    autoDeploy: false
+    envVars:
+      - key: APP_ENV
+        value: production             # disables /admin/reload (403)
+      - key: MODEL_DIR
+        value: /artifacts/models
+      - key: REPORTS_DIR
+        value: /artifacts/reports
+      - key: OUTPUTS_DIR
+        value: /artifacts/outputs
+      - key: DATASET_DIR
+        value: /artifacts/dataset
+      - key: ALLOWED_ORIGINS
+        # Claude artifacts are served from claude.ai / claudeusercontent.com.
+        # Replace with your exact Control Center origin(s), comma-separated. No wildcard.
+        value: https://claude.ai,https://claudeusercontent.com
+      - key: MAX_REQUEST_BYTES
+        value: "1000000"

@@ -1,0 +1,11 @@
+﻿check,status,evidence
+dataset_guard,PASS,1.2.0
+observed_masks,PASS,"{'TEST': 2622, 'TRAIN': 20679, 'VALIDATION': 1932}"
+feature_leakage_audit,PASS,51/51
+train_only_advanced_preprocessing,PASS,fit on TRAIN features only
+temporal_cv,PASS,2 expanding TRAIN folds
+test_excluded_from_selection,PASS,selection locked before TEST cell
+reproducibility_days,PASS,VALIDATION allclose 1e-7
+reproducibility_km,PASS,VALIDATION allclose 1e-7
+source_data_immutable,PASS,source paths opened read-only
+production_validation,BLOCKED,No production extract

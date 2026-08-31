@@ -1,0 +1,4 @@
+﻿split,rows,events,censored,event_rate,censoring_rate,duration_mean,duration_median,duration_p25,duration_p75,duration_p90,unique_motorcycles,unique_workshops
+TRAIN,32203,25442,6761,0.7901,0.2099,149.54,103.36,54.28,194.3,332.59,6761,10
+VALIDATION,4845,1429,3416,0.2949,0.7051,76.33,66.59,37.12,112.01,151.47,3416,10
+TEST,4470,1282,3188,0.2868,0.7132,92.77,82.3,27.57,156.58,202.53,3188,10

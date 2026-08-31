@@ -1,0 +1,52 @@
+﻿feature_name,feature_group,source_tables,calculation_window,uses_future_data,available_at_snapshot,leakage_status,notes
+adv_previous_service_count,SERVICE_HISTORY,ml_maintenance_snapshots,service rows <= snapshot_at,False,True,PASS,
+adv_previous_2_interval_days_mean,SERVICE_HISTORY,ml_maintenance_snapshots,last 2 completed intervals <= snapshot_at,False,True,PASS,
+adv_previous_2_interval_km_mean,SERVICE_HISTORY,ml_maintenance_snapshots,last 2 completed intervals <= snapshot_at,False,True,PASS,
+adv_previous_5_interval_days_mean,SERVICE_HISTORY,ml_maintenance_snapshots,last 5 completed intervals <= snapshot_at,False,True,PASS,
+adv_previous_5_interval_km_mean,SERVICE_HISTORY,ml_maintenance_snapshots,last 5 completed intervals <= snapshot_at,False,True,PASS,
+adv_rolling_median_interval_days,SERVICE_HISTORY,ml_maintenance_snapshots,all completed intervals <= snapshot_at,False,True,PASS,
+adv_rolling_median_interval_km,SERVICE_HISTORY,ml_maintenance_snapshots,all completed intervals <= snapshot_at,False,True,PASS,
+adv_rolling_std_interval_days,SERVICE_HISTORY,ml_maintenance_snapshots,all completed intervals <= snapshot_at,False,True,PASS,
+adv_rolling_std_interval_km,SERVICE_HISTORY,ml_maintenance_snapshots,all completed intervals <= snapshot_at,False,True,PASS,
+adv_rolling_min_interval_days,SERVICE_HISTORY,ml_maintenance_snapshots,all completed intervals <= snapshot_at,False,True,PASS,
+adv_rolling_min_interval_km,SERVICE_HISTORY,ml_maintenance_snapshots,all completed intervals <= snapshot_at,False,True,PASS,
+adv_rolling_max_interval_days,SERVICE_HISTORY,ml_maintenance_snapshots,all completed intervals <= snapshot_at,False,True,PASS,
+adv_rolling_max_interval_km,SERVICE_HISTORY,ml_maintenance_snapshots,all completed intervals <= snapshot_at,False,True,PASS,
+adv_previous_interval_days_cv,SERVICE_HISTORY,ml_maintenance_snapshots,all completed intervals <= snapshot_at,False,True,PASS,CV=std/mean
+adv_previous_interval_km_cv,SERVICE_HISTORY,ml_maintenance_snapshots,all completed intervals <= snapshot_at,False,True,PASS,CV=std/mean
+adv_recent_30d_km,USAGE_TRENDS,mileage_timeline_monthly,period_end_date <= snapshot_at,False,True,PASS,
+adv_recent_60d_km,USAGE_TRENDS,mileage_timeline_monthly,period_end_date <= snapshot_at,False,True,PASS,
+adv_recent_90d_km,USAGE_TRENDS,mileage_timeline_monthly,period_end_date <= snapshot_at,False,True,PASS,
+adv_recent_180d_km,USAGE_TRENDS,mileage_timeline_monthly,period_end_date <= snapshot_at,False,True,PASS,
+adv_months_observed,USAGE_TRENDS,mileage_timeline_monthly,period_end_date <= snapshot_at,False,True,PASS,
+adv_mileage_growth_slope_6m,USAGE_TRENDS,mileage_timeline_monthly,period_end_date <= snapshot_at,False,True,PASS,
+adv_usage_volatility_6m,USAGE_TRENDS,mileage_timeline_monthly,period_end_date <= snapshot_at,False,True,PASS,
+adv_avg_km_per_day_30d,USAGE_TRENDS,mileage_timeline_monthly,completed monthly rows in prior 30d,False,True,PASS,
+adv_avg_km_per_day_90d,USAGE_TRENDS,mileage_timeline_monthly,completed monthly rows in prior 90d,False,True,PASS,
+adv_avg_km_per_day_180d,USAGE_TRENDS,mileage_timeline_monthly,completed monthly rows in prior 180d,False,True,PASS,
+adv_recent_vs_longterm_usage_ratio,USAGE_TRENDS,mileage_timeline_monthly;ml_maintenance_snapshots,completed prior 90d / baseline expectation,False,True,PASS,
+adv_repair_rate,MAINTENANCE_FAILURE,ml_maintenance_snapshots,cumulative history <= snapshot_at,False,True,PASS,
+adv_breakdown_rate,MAINTENANCE_FAILURE,ml_maintenance_snapshots,cumulative history <= snapshot_at,False,True,PASS,
+adv_periodic_rate,MAINTENANCE_FAILURE,ml_maintenance_snapshots,cumulative history <= snapshot_at,False,True,PASS,
+adv_failure_rate,MAINTENANCE_FAILURE,ml_maintenance_snapshots,cumulative history <= snapshot_at,False,True,PASS,
+adv_fault_task_rate,MAINTENANCE_FAILURE,ml_maintenance_snapshots,cumulative history <= snapshot_at,False,True,PASS,
+adv_declined_task_rate,MAINTENANCE_FAILURE,ml_maintenance_snapshots,cumulative task history <= snapshot_at,False,True,PASS,
+adv_completed_task_rate,MAINTENANCE_FAILURE,ml_maintenance_snapshots,cumulative task history <= snapshot_at,False,True,PASS,
+adv_days_since_last_failure,MAINTENANCE_FAILURE,ml_maintenance_snapshots,latest failure/fault service <= snapshot_at,False,True,PASS,
+adv_km_since_last_failure,MAINTENANCE_FAILURE,ml_maintenance_snapshots,latest failure/fault service <= snapshot_at,False,True,PASS,
+adv_policy_nearest_due_days,MAINTENANCE_FAILURE,maintenance_policies;v0_rule_baseline_next_service_predictions,policy calculation from state available at snapshot,False,True,PASS,Policy due != actual future service
+adv_policy_nearest_due_km,MAINTENANCE_FAILURE,maintenance_policies;v0_rule_baseline_next_service_predictions,policy calculation from state available at snapshot,False,True,PASS,Policy due != actual future service
+adv_policy_overdue_days,MAINTENANCE_FAILURE,maintenance_policies;v0_rule_baseline_next_service_predictions,policy calculation from state available at snapshot,False,True,PASS,Policy due != actual future service
+adv_policy_overdue_km,MAINTENANCE_FAILURE,maintenance_policies;v0_rule_baseline_next_service_predictions,policy calculation from state available at snapshot,False,True,PASS,Policy due != actual future service
+adv_policy_count_considered,MAINTENANCE_FAILURE,maintenance_policies;v0_rule_baseline_next_service_predictions,policy calculation from state available at snapshot,False,True,PASS,Policy due != actual future service
+adv_policy_is_overdue,MAINTENANCE_FAILURE,maintenance_policies;v0_rule_baseline_next_service_predictions,policy calculation from state available at snapshot,False,True,PASS,Policy due != actual future service
+adv_policy_due_within_30d,MAINTENANCE_FAILURE,maintenance_policies;v0_rule_baseline_next_service_predictions,policy calculation from state available at snapshot,False,True,PASS,Policy due != actual future service
+adv_policy_due_within_60d,MAINTENANCE_FAILURE,maintenance_policies;v0_rule_baseline_next_service_predictions,policy calculation from state available at snapshot,False,True,PASS,Policy due != actual future service
+adv_age_x_annual_km,INTERACTIONS,ml_maintenance_snapshots,snapshot-time interaction,False,True,PASS,
+adv_age_x_odometer,INTERACTIONS,ml_maintenance_snapshots,snapshot-time interaction,False,True,PASS,
+adv_usage_x_load,INTERACTIONS,ml_maintenance_snapshots,snapshot-time interaction,False,True,PASS,
+adv_history_depth_x_age,INTERACTIONS,ml_maintenance_snapshots,snapshot-time interaction,False,True,PASS,
+adv_km_last_over_daily_usage,INTERACTIONS,ml_maintenance_snapshots,completed last interval / historical daily rate,False,True,PASS,
+adv_days_last_over_rolling_median,INTERACTIONS,ml_maintenance_snapshots,completed last interval / past median,False,True,PASS,
+adv_failure_rate_x_load,INTERACTIONS,ml_maintenance_snapshots,snapshot-time interaction,False,True,PASS,
+adv_policy_due_x_recent_usage,INTERACTIONS,maintenance_policies;mileage_timeline_monthly,policy due / completed prior usage,False,True,PASS,

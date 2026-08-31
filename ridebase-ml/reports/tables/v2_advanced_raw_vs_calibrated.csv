@@ -1,0 +1,9 @@
+﻿model,horizon,raw_brier,calibrated_brier,raw_cal_error,calibrated_cal_error,ranking_changed
+XGB_COX,30,0.0174,0.0163,0.0011,0.0005,False
+XGB_COX,60,0.0397,0.0378,0.0146,0.0061,False
+XGB_COX,90,0.0443,0.0421,0.038,0.0203,False
+XGB_COX,120,0.0411,0.0387,0.0482,0.0463,False
+COXNET,30,0.0242,0.0194,0.0246,0.0007,False
+COXNET,60,0.0515,0.0425,0.0734,0.0069,False
+COXNET,90,0.0517,0.0428,0.0954,0.0223,False
+COXNET,120,0.0461,0.0391,0.0973,0.0456,False

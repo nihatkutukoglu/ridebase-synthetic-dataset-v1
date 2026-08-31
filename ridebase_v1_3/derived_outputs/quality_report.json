@@ -1,0 +1,198 @@
+{
+  "report": {
+    "name": "RideBase Synthetic Dataset v1.3 Quality Report",
+    "dataset_version": "1.3.0",
+    "report_version": "QUALITY_REPORT_V1_3",
+    "report_date": "2026-08-25",
+    "random_seed": 42,
+    "release_gate": "PASS"
+  },
+  "executive_summary": {
+    "total_checks": 14,
+    "pass_checks": 14,
+    "fail_checks": 0,
+    "failed_high_severity_checks": []
+  },
+  "regression_learnability_checks": {
+    "target_distribution_drift": {
+      "status": "DIAGNOSTIC",
+      "classification": {
+        "DAYS": "HIGH",
+        "KM": "LOW"
+      }
+    },
+    "signal_noise_balance": {
+      "status": "PASS",
+      "metrics": {
+        "DAYS": {
+          "signal_variance": 10496.519526149681,
+          "noise_variance": 571.168837017641,
+          "signal_to_noise_ratio": 18.377262283701043
+        },
+        "KM": {
+          "signal_variance": 1924217.7161880983,
+          "noise_variance": 2443208.2434350527,
+          "signal_to_noise_ratio": 0.7875782677790598
+        }
+      }
+    },
+    "history_target_association": {
+      "status": "DIAGNOSTIC",
+      "days_spearman": 0.7741128285885749,
+      "km_spearman": 0.5001485719703271
+    },
+    "recent_usage_target_association": {
+      "status": "DIAGNOSTIC",
+      "days_spearman": 0.8807687733008402,
+      "km_spearman": 0.07633754077552844
+    },
+    "policy_target_association": {
+      "status": "DIAGNOSTIC",
+      "days_spearman": 0.0,
+      "km_spearman": 0.5032764057123646
+    },
+    "observed_censored_shift": {
+      "status": "DIAGNOSTIC"
+    },
+    "over_determinism_check": {
+      "status": "PASS",
+      "test_r2": {
+        "DAYS": 0.6398080714525669,
+        "KM": 0.41338919156038734
+      },
+      "warning": null
+    }
+  },
+  "reliability_realism_checks": {
+    "riding": {
+      "LOW": 0.036100453435647016,
+      "MEDIUM": 0.04340451777041092,
+      "HIGH": 0.06268355762065489
+    },
+    "riding_pass": true,
+    "load": {
+      "LOW": 0.04000889086463658,
+      "MEDIUM": 0.04648167033438892,
+      "HIGH": 0.06562587641394783,
+      "VERY_HIGH": 0.08521303258145363
+    },
+    "load_pass": true,
+    "warranty": {
+      "0-2": 0.020002768549280178,
+      "3-4": 0.0013825220112057047,
+      "5-7": 0.0,
+      "8-11": 0.0
+    },
+    "warranty_pass": true,
+    "fault_task_coverage": "2200/2200",
+    "fault_task_pass": true,
+    "final_drive": 168,
+    "adjusted_brand_spread": 1.3415877210855436
+  },
+  "quality_checks": [
+    {
+      "check": "pk_duplicates",
+      "status": "PASS",
+      "severity": "HIGH",
+      "metrics": {
+        "duplicates": 0
+      }
+    },
+    {
+      "check": "foreign_key_orphans",
+      "status": "PASS",
+      "severity": "HIGH",
+      "metrics": {
+        "orphans": 0
+      }
+    },
+    {
+      "check": "timestamp_order",
+      "status": "PASS",
+      "severity": "HIGH",
+      "metrics": {
+        "violations": 0
+      }
+    },
+    {
+      "check": "mileage_chronology",
+      "status": "PASS",
+      "severity": "HIGH",
+      "metrics": {
+        "regressions": 0
+      }
+    },
+    {
+      "check": "snapshot_target_alignment",
+      "status": "PASS",
+      "severity": "HIGH",
+      "metrics": {
+        "key_difference": 0
+      }
+    },
+    {
+      "check": "nullable_semantics",
+      "status": "PASS",
+      "severity": "HIGH",
+      "metrics": {
+        "censored_future_nonnull": 0
+      }
+    },
+    {
+      "check": "split_integrity",
+      "status": "PASS",
+      "severity": "HIGH",
+      "metrics": {
+        "boundary_eligible": 0
+      }
+    },
+    {
+      "check": "no_leakage",
+      "status": "PASS",
+      "severity": "HIGH",
+      "metrics": {
+        "forbidden_features": []
+      }
+    },
+    {
+      "check": "riding_intensity_direction",
+      "status": "PASS",
+      "severity": "HIGH",
+      "metrics": {}
+    },
+    {
+      "check": "load_failure_direction",
+      "status": "PASS",
+      "severity": "HIGH",
+      "metrics": {}
+    },
+    {
+      "check": "warranty_monotonicity",
+      "status": "PASS",
+      "severity": "HIGH",
+      "metrics": {}
+    },
+    {
+      "check": "fault_task_coverage",
+      "status": "PASS",
+      "severity": "HIGH",
+      "metrics": {}
+    },
+    {
+      "check": "final_drive_presence",
+      "status": "PASS",
+      "severity": "HIGH",
+      "metrics": {
+        "count": 168
+      }
+    },
+    {
+      "check": "brand_adjusted_spread",
+      "status": "PASS",
+      "severity": "HIGH",
+      "metrics": {
+        "ratio": 1.3415877210855436
+      }
+    }
+  ]
+}

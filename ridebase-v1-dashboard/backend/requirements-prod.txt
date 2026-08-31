@@ -1,0 +1,18 @@
+# RideBase inference-only runtime (V1 + V2). No training / notebook stack.
+# Use for the production image:  pip install -r requirements-prod.txt
+
+fastapi>=0.110,<1.0
+uvicorn[standard]>=0.27,<1.0
+pydantic>=2.6,<3.0
+
+# model runtimes actually touched at inference
+scikit-learn==1.5.2
+scikit-survival==0.23.1     # unpickle + score the V2 CoxNet model
+xgboost==2.1.4              # V1 boosting + V2 survival:cox
+lightgbm==4.6.0             # V1 DAYS model
+catboost==1.2.10            # V1 ensemble member
+pandas==2.3.3
+numpy==2.0.2
+scipy==1.13.1
+joblib==1.5.3
+pyarrow==21.0.0

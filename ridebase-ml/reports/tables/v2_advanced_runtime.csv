@@ -1,0 +1,4 @@
+﻿model,fit_seconds,note,predict_1_ms,predict_100_ms,predict_1000_ms,production_inference_feasible
+XGB_COX,,tuned 120 trials,,,,
+XGB_AFT,,tuned 120 trials,,,,
+ENSEMBLE[XGB_COX+COXNET],,,3.66,115.73,1144.99,True

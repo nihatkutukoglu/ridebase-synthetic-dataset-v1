@@ -1,0 +1,240 @@
+﻿dataset_version,raw_title,normalized_title,count,task_code,canonical_name_tr,component_group,mapping_conflict
+1.2.0,Motor Yağı Değişimi,motor yagi degisimi,12707,ENGINE_OIL_CHANGE,Motor Yağı Değişimi,ENGINE,False
+1.2.0,Motor Yağı Değiştirildi,motor yagi degistirildi,12622,ENGINE_OIL_CHANGE,Motor Yağı Değişimi,ENGINE,False
+1.2.0,Motor Yağı Değişimi Yapıldı,motor yagi degisimi yapildi,12602,ENGINE_OIL_CHANGE,Motor Yağı Değişimi,ENGINE,False
+1.2.0,Akü Test Edildi,aku test edildi,8194,BATTERY_TEST,Akü Testi,ELECTRICAL,False
+1.2.0,Akü Testi,aku testi,8141,BATTERY_TEST,Akü Testi,ELECTRICAL,False
+1.2.0,Zincir Temizlendi,zincir temizlendi,5518,CHAIN_CLEAN,Zincir Temizliği,FINAL_DRIVE,False
+1.2.0,Zincir Temizliği,zincir temizligi,5470,CHAIN_CLEAN,Zincir Temizliği,FINAL_DRIVE,False
+1.2.0,Hava Filtresi Kontrol Edildi,hava filtresi kontrol edildi,5333,AIR_FILTER_INSPECTION,Hava Filtresi Kontrolü,INTAKE,False
+1.2.0,Hava Filtresi Kontrolü ve genel durum değerlendirmesi,hava filtresi kontrolu ve genel durum degerlendirmesi,5259,AIR_FILTER_INSPECTION,Hava Filtresi Kontrolü,INTAKE,False
+1.2.0,Hava Filtresi Kontrolü,hava filtresi kontrolu,5216,AIR_FILTER_INSPECTION,Hava Filtresi Kontrolü,INTAKE,False
+1.2.0,Fren Hidroliği Kontrol Edildi,fren hidroligi kontrol edildi,4715,BRAKE_FLUID_CHECK,Fren Hidroliği Kontrolü,BRAKES,False
+1.2.0,Fren Hidroliği Kontrolü,fren hidroligi kontrolu,4672,BRAKE_FLUID_CHECK,Fren Hidroliği Kontrolü,BRAKES,False
+1.2.0,Fren Hidroliği Kontrolü ve genel durum değerlendirmesi,fren hidroligi kontrolu ve genel durum degerlendirmesi,4576,BRAKE_FLUID_CHECK,Fren Hidroliği Kontrolü,BRAKES,False
+1.2.0,Zincir Yağlama,zincir yaglama,4450,CHAIN_LUBRICATE,Zincir Yağlama,FINAL_DRIVE,False
+1.2.0,Zincir Yağlandı,zincir yaglandi,4438,CHAIN_LUBRICATE,Zincir Yağlama,FINAL_DRIVE,False
+1.2.0,Genel Güvenlik Kontrol Edildi,genel guvenlik kontrol edildi,4391,GENERAL_SAFETY_INSPECTION,Genel Güvenlik Kontrolü,GENERAL,False
+1.2.0,Hava Filtresi Değişimi,hava filtresi degisimi,4391,AIR_FILTER_CHANGE,Hava Filtresi Değişimi,INTAKE,False
+1.2.0,Hava Filtresi Değişimi Yapıldı,hava filtresi degisimi yapildi,4391,AIR_FILTER_CHANGE,Hava Filtresi Değişimi,INTAKE,False
+1.2.0,Hava Filtresi Değiştirildi,hava filtresi degistirildi,4309,AIR_FILTER_CHANGE,Hava Filtresi Değişimi,INTAKE,False
+1.2.0,Genel Güvenlik Kontrolü,genel guvenlik kontrolu,4305,GENERAL_SAFETY_INSPECTION,Genel Güvenlik Kontrolü,GENERAL,False
+1.2.0,Genel Güvenlik Kontrolü ve genel durum değerlendirmesi,genel guvenlik kontrolu ve genel durum degerlendirmesi,4229,GENERAL_SAFETY_INSPECTION,Genel Güvenlik Kontrolü,GENERAL,False
+1.2.0,Fren Hidroliği Değiştirildi,fren hidroligi degistirildi,2629,BRAKE_FLUID_CHANGE,Fren Hidroliği Değişimi,BRAKES,False
+1.2.0,Fren Hidroliği Değişimi,fren hidroligi degisimi,2516,BRAKE_FLUID_CHANGE,Fren Hidroliği Değişimi,BRAKES,False
+1.2.0,Zincir Kontrolü ve genel durum değerlendirmesi,zincir kontrolu ve genel durum degerlendirmesi,1846,CHAIN_INSPECTION,Zincir Kontrolü,FINAL_DRIVE,False
+1.2.0,Zincir Kontrolü,zincir kontrolu,1742,CHAIN_INSPECTION,Zincir Kontrolü,FINAL_DRIVE,False
+1.2.0,Ön Amortisör Kontrolü,on amortisor kontrolu,1715,FORK_INSPECTION,Ön Amortisör Kontrolü,SUSPENSION,False
+1.2.0,Zincir Kontrol Edildi,zincir kontrol edildi,1705,CHAIN_INSPECTION,Zincir Kontrolü,FINAL_DRIVE,False
+1.2.0,CVT Kutu Kontrol Edildi,cvt kutu kontrol edildi,1703,CVT_CASE_INSPECTION,CVT Kutu Kontrolü,TRANSMISSION,False
+1.2.0,Ön Amortisör Kontrolü ve genel durum değerlendirmesi,on amortisor kontrolu ve genel durum degerlendirmesi,1681,FORK_INSPECTION,Ön Amortisör Kontrolü,SUSPENSION,False
+1.2.0,CVT Kayışı Kontrol Edildi,cvt kayisi kontrol edildi,1676,CVT_BELT_INSPECTION,CVT Kayışı Kontrolü,TRANSMISSION,False
+1.2.0,CVT Kayışı Kontrolü,cvt kayisi kontrolu,1672,CVT_BELT_INSPECTION,CVT Kayışı Kontrolü,TRANSMISSION,False
+1.2.0,Ön Amortisör Kontrol Edildi,on amortisor kontrol edildi,1671,FORK_INSPECTION,Ön Amortisör Kontrolü,SUSPENSION,False
+1.2.0,CVT Kutu Kontrolü,cvt kutu kontrolu,1664,CVT_CASE_INSPECTION,CVT Kutu Kontrolü,TRANSMISSION,False
+1.2.0,CVT Kutu Kontrolü ve genel durum değerlendirmesi,cvt kutu kontrolu ve genel durum degerlendirmesi,1646,CVT_CASE_INSPECTION,CVT Kutu Kontrolü,TRANSMISSION,False
+1.2.0,CVT Kayışı Kontrolü ve genel durum değerlendirmesi,cvt kayisi kontrolu ve genel durum degerlendirmesi,1643,CVT_BELT_INSPECTION,CVT Kayışı Kontrolü,TRANSMISSION,False
+1.2.0,Varyatör Ruloları Kontrolü ve genel durum değerlendirmesi,varyator rulolari kontrolu ve genel durum degerlendirmesi,1262,CVT_ROLLER_INSPECTION,Varyatör Ruloları Kontrolü,TRANSMISSION,False
+1.2.0,Ön Fren Balatası Kontrolü,on fren balatasi kontrolu,1261,FRONT_BRAKE_PAD_INSPECTION,Ön Fren Balatası Kontrolü,BRAKES,False
+1.2.0,Ön Fren Balatası Kontrolü ve genel durum değerlendirmesi,on fren balatasi kontrolu ve genel durum degerlendirmesi,1256,FRONT_BRAKE_PAD_INSPECTION,Ön Fren Balatası Kontrolü,BRAKES,False
+1.2.0,Varyatör Ruloları Kontrol Edildi,varyator rulolari kontrol edildi,1254,CVT_ROLLER_INSPECTION,Varyatör Ruloları Kontrolü,TRANSMISSION,False
+1.2.0,Ön Fren Balatası Kontrol Edildi,on fren balatasi kontrol edildi,1229,FRONT_BRAKE_PAD_INSPECTION,Ön Fren Balatası Kontrolü,BRAKES,False
+1.2.0,Supap Boşluğu Kontrol Edildi,supap boslugu kontrol edildi,1163,VALVE_CLEARANCE_INSPECTION,Supap Boşluğu Kontrolü,ENGINE,False
+1.2.0,Varyatör Ruloları Kontrolü,varyator rulolari kontrolu,1144,CVT_ROLLER_INSPECTION,Varyatör Ruloları Kontrolü,TRANSMISSION,False
+1.2.0,Supap Boşluğu Kontrolü,supap boslugu kontrolu,1126,VALVE_CLEARANCE_INSPECTION,Supap Boşluğu Kontrolü,ENGINE,False
+1.2.0,Supap Boşluğu Kontrolü ve genel durum değerlendirmesi,supap boslugu kontrolu ve genel durum degerlendirmesi,1091,VALVE_CLEARANCE_INSPECTION,Supap Boşluğu Kontrolü,ENGINE,False
+1.2.0,Teker Rulmanı Kontrolü,teker rulmani kontrolu,1054,WHEEL_BEARING_INSPECTION,Teker Rulmanı Kontrolü,TIRES_WHEELS,False
+1.2.0,Buji Kontrolü ve genel durum değerlendirmesi,buji kontrolu ve genel durum degerlendirmesi,982,SPARK_PLUG_INSPECTION,Buji Kontrolü,IGNITION,False
+1.2.0,Teker Rulmanı Kontrol Edildi,teker rulmani kontrol edildi,959,WHEEL_BEARING_INSPECTION,Teker Rulmanı Kontrolü,TIRES_WHEELS,False
+1.2.0,Teker Rulmanı Kontrolü ve genel durum değerlendirmesi,teker rulmani kontrolu ve genel durum degerlendirmesi,941,WHEEL_BEARING_INSPECTION,Teker Rulmanı Kontrolü,TIRES_WHEELS,False
+1.2.0,CVT Kayışı Değiştirildi,cvt kayisi degistirildi,940,CVT_BELT_CHANGE,CVT Kayışı Değişimi,TRANSMISSION,False
+1.2.0,Ön Lastik Kontrolü,on lastik kontrolu,937,FRONT_TIRE_INSPECTION,Ön Lastik Kontrolü,TIRES_WHEELS,False
+1.2.0,Buji Kontrolü,buji kontrolu,933,SPARK_PLUG_INSPECTION,Buji Kontrolü,IGNITION,False
+1.2.0,Soğutma Sıvısı Seviye Kontrol Edildi,sogutma sivisi seviye kontrol edildi,918,COOLANT_LEVEL_CHECK,Soğutma Sıvısı Seviye Kontrolü,COOLING,False
+1.2.0,Ön Lastik Kontrol Edildi,on lastik kontrol edildi,918,FRONT_TIRE_INSPECTION,Ön Lastik Kontrolü,TIRES_WHEELS,False
+1.2.0,Ön Lastik Kontrolü ve genel durum değerlendirmesi,on lastik kontrolu ve genel durum degerlendirmesi,914,FRONT_TIRE_INSPECTION,Ön Lastik Kontrolü,TIRES_WHEELS,False
+1.2.0,CVT Kayışı Değişimi,cvt kayisi degisimi,900,CVT_BELT_CHANGE,CVT Kayışı Değişimi,TRANSMISSION,False
+1.2.0,Buji Kontrol Edildi,buji kontrol edildi,896,SPARK_PLUG_INSPECTION,Buji Kontrolü,IGNITION,False
+1.2.0,Soğutma Sıvısı Seviye Kontrolü ve genel durum değerlendirmesi,sogutma sivisi seviye kontrolu ve genel durum degerlendirmesi,858,COOLANT_LEVEL_CHECK,Soğutma Sıvısı Seviye Kontrolü,COOLING,False
+1.2.0,CVT Kayışı Değişimi Yapıldı,cvt kayisi degisimi yapildi,857,CVT_BELT_CHANGE,CVT Kayışı Değişimi,TRANSMISSION,False
+1.2.0,ECU Arıza Taraması,ecu ariza taramasi,832,ECU_DIAGNOSTIC_SCAN,ECU Arıza Taraması,ELECTRICAL,False
+1.2.0,Soğutma Sıvısı Seviye Kontrolü,sogutma sivisi seviye kontrolu,831,COOLANT_LEVEL_CHECK,Soğutma Sıvısı Seviye Kontrolü,COOLING,False
+1.2.0,Son Dişli Yağı Değişimi,son disli yagi degisimi,757,FINAL_GEAR_OIL_CHANGE,Son Dişli Yağı Değişimi,TRANSMISSION,False
+1.2.0,Buji Değişimi Yapıldı,buji degisimi yapildi,743,SPARK_PLUG_CHANGE,Buji Değişimi,IGNITION,False
+1.2.0,Son Dişli Yağı Değişimi Yapıldı,son disli yagi degisimi yapildi,726,FINAL_GEAR_OIL_CHANGE,Son Dişli Yağı Değişimi,TRANSMISSION,False
+1.2.0,Buji Değişimi,buji degisimi,691,SPARK_PLUG_CHANGE,Buji Değişimi,IGNITION,False
+1.2.0,Son Dişli Yağı Değiştirildi,son disli yagi degistirildi,686,FINAL_GEAR_OIL_CHANGE,Son Dişli Yağı Değişimi,TRANSMISSION,False
+1.2.0,Buji Değiştirildi,buji degistirildi,667,SPARK_PLUG_CHANGE,Buji Değişimi,IGNITION,False
+1.2.0,Arka Lastik Kontrolü ve genel durum değerlendirmesi,arka lastik kontrolu ve genel durum degerlendirmesi,565,REAR_TIRE_INSPECTION,Arka Lastik Kontrolü,TIRES_WHEELS,False
+1.2.0,Arka Lastik Kontrolü,arka lastik kontrolu,550,REAR_TIRE_INSPECTION,Arka Lastik Kontrolü,TIRES_WHEELS,False
+1.2.0,Arka Lastik Kontrol Edildi,arka lastik kontrol edildi,549,REAR_TIRE_INSPECTION,Arka Lastik Kontrolü,TIRES_WHEELS,False
+1.2.0,Arka Fren Balatası Kontrol Edildi,arka fren balatasi kontrol edildi,493,REAR_BRAKE_PAD_INSPECTION,Arka Fren Balatası Kontrolü,BRAKES,False
+1.2.0,Soğutma Sıvısı Değişimi,sogutma sivisi degisimi,485,COOLANT_CHANGE,Soğutma Sıvısı Değişimi,COOLING,False
+1.2.0,Arka Fren Balatası Kontrolü ve genel durum değerlendirmesi,arka fren balatasi kontrolu ve genel durum degerlendirmesi,479,REAR_BRAKE_PAD_INSPECTION,Arka Fren Balatası Kontrolü,BRAKES,False
+1.2.0,Arka Fren Balatası Kontrolü,arka fren balatasi kontrolu,459,REAR_BRAKE_PAD_INSPECTION,Arka Fren Balatası Kontrolü,BRAKES,False
+1.2.0,Gidon Rulmanı Kontrol Edildi,gidon rulmani kontrol edildi,457,STEERING_BEARING_INSPECTION,Gidon Rulmanı Kontrolü,STEERING,False
+1.2.0,Soğutma Sıvısı Değiştirildi,sogutma sivisi degistirildi,454,COOLANT_CHANGE,Soğutma Sıvısı Değişimi,COOLING,False
+1.2.0,Gidon Rulmanı Kontrolü,gidon rulmani kontrolu,438,STEERING_BEARING_INSPECTION,Gidon Rulmanı Kontrolü,STEERING,False
+1.2.0,Gidon Rulmanı Kontrolü ve genel durum değerlendirmesi,gidon rulmani kontrolu ve genel durum degerlendirmesi,436,STEERING_BEARING_INSPECTION,Gidon Rulmanı Kontrolü,STEERING,False
+1.2.0,Debriyaj Boşluğu Kontrolü ve genel durum değerlendirmesi,debriyaj boslugu kontrolu ve genel durum degerlendirmesi,386,CLUTCH_FREE_PLAY_CHECK,Debriyaj Boşluğu Kontrolü,TRANSMISSION,False
+1.2.0,Debriyaj Boşluğu Kontrolü,debriyaj boslugu kontrolu,375,CLUTCH_FREE_PLAY_CHECK,Debriyaj Boşluğu Kontrolü,TRANSMISSION,False
+1.2.0,Fren Sisteminin Havasını Alma,fren sisteminin havasini alma,373,BRAKE_SYSTEM_BLEED,Fren Sisteminin Havasını Alma,BRAKES,False
+1.2.0,Motor Arıza Teşhisi,motor ariza teshisi,373,ENGINE_FAULT_DIAGNOSTIC,Motor Arıza Teşhisi,ENGINE,False
+1.2.0,Debriyaj Boşluğu Kontrol Edildi,debriyaj boslugu kontrol edildi,365,CLUTCH_FREE_PLAY_CHECK,Debriyaj Boşluğu Kontrolü,TRANSMISSION,False
+1.2.0,Motor Yagi Değişimi,motor yagi degisimi,329,ENGINE_OIL_CHANGE,Motor Yağı Değişimi,ENGINE,False
+1.2.0,Elektrik Sistemi Arıza Teşhisi,elektrik sistemi ariza teshisi,318,ELECTRICAL_FAULT_DIAGNOSTIC,Elektrik Sistemi Arıza Teşhisi,ELECTRICAL,False
+1.2.0,Motor Yagi Değişimi Yapıldı,motor yagi degisimi yapildi,318,ENGINE_OIL_CHANGE,Motor Yağı Değişimi,ENGINE,False
+1.2.0,Motor Yagi Değiştirildi,motor yagi degistirildi,304,ENGINE_OIL_CHANGE,Motor Yağı Değişimi,ENGINE,False
+1.2.0,Fren Sistemi Arıza Teşhisi,fren sistemi ariza teshisi,289,BRAKE_FAULT_DIAGNOSTIC,Fren Sistemi Arıza Teşhisi,BRAKES,False
+1.2.0,Yakıt Sistemi Arıza Teşhisi,yakit sistemi ariza teshisi,287,FUEL_SYSTEM_DIAGNOSTIC,Yakıt Sistemi Arıza Teşhisi,FUEL,False
+1.2.0,Teker Balans Ayar Yapıldı,teker balans ayar yapildi,226,WHEEL_BALANCE,Teker Balans Ayarı,TIRES_WHEELS,False
+1.2.0,Teker Balans Ayarı,teker balans ayari,209,WHEEL_BALANCE,Teker Balans Ayarı,TIRES_WHEELS,False
+1.2.0,Supap Boşluğu Ayar Yapıldı,supap boslugu ayar yapildi,208,VALVE_CLEARANCE_ADJUST,Supap Boşluğu Ayarı,ENGINE,False
+1.2.0,Enjektör Temizlendi,enjektor temizlendi,203,FUEL_INJECTOR_CLEAN,Enjektör Temizliği,FUEL,False
+1.2.0,Şanzıman Arıza Teşhisi,sanziman ariza teshisi,201,TRANSMISSION_FAULT_DIAGNOSTIC,Şanzıman Arıza Teşhisi,TRANSMISSION,False
+1.2.0,Gaz Kelebeği Temizlendi,gaz kelebegi temizlendi,196,THROTTLE_BODY_CLEAN,Gaz Kelebeği Temizliği,INTAKE,False
+1.2.0,Gaz Kelebeği Temizliği,gaz kelebegi temizligi,187,THROTTLE_BODY_CLEAN,Gaz Kelebeği Temizliği,INTAKE,False
+1.2.0,Supap Boşluğu Ayarı,supap boslugu ayari,179,VALVE_CLEARANCE_ADJUST,Supap Boşluğu Ayarı,ENGINE,False
+1.2.0,Soğutma Sistemi Arıza Teşhisi,sogutma sistemi ariza teshisi,178,COOLING_FAULT_DIAGNOSTIC,Soğutma Sistemi Arıza Teşhisi,COOLING,False
+1.2.0,Enjektör Temizliği,enjektor temizligi,170,FUEL_INJECTOR_CLEAN,Enjektör Temizliği,FUEL,False
+1.2.0,Hava Filtresi Kntrlü,hava filtresi kntrlu,155,AIR_FILTER_INSPECTION,Hava Filtresi Kontrolü,INTAKE,False
+1.2.0,Akü Değişimi Yapıldı,aku degisimi yapildi,151,BATTERY_CHANGE,Akü Değişimi,ELECTRICAL,False
+1.2.0,Amortisör Keçesi Değiştirildi,amortisor kecesi degistirildi,151,FORK_SEAL_CHANGE,Amortisör Keçesi Değişimi,SUSPENSION,False
+1.2.0,Emme Sistemi Arıza Teşhisi,emme sistemi ariza teshisi,147,INTAKE_FAULT_DIAGNOSTIC,Emme Sistemi Arıza Teşhisi,INTAKE,False
+1.2.0,Teker Rulmanı Değişimi,teker rulmani degisimi,146,WHEEL_BEARING_CHANGE,Teker Rulmanı Değişimi,TIRES_WHEELS,False
+1.2.0,Fren Diski Değişimi Yapıldı,fren diski degisimi yapildi,145,BRAKE_DISC_CHANGE,Fren Diski Değişimi,BRAKES,False
+1.2.0,Hava Filtresi Temizlendi,hava filtresi temizlendi,145,AIR_FILTER_CLEAN,Hava Filtresi Temizliği,INTAKE,False
+1.2.0,Teker Rulmanı Değişimi Yapıldı,teker rulmani degisimi yapildi,144,WHEEL_BEARING_CHANGE,Teker Rulmanı Değişimi,TIRES_WHEELS,False
+1.2.0,Süspansiyon Arıza Kontrolü,suspansiyon ariza kontrolu,141,SUSPENSION_FAULT_INSPECTION,Süspansiyon Arıza Kontrolü,SUSPENSION,False
+1.2.0,Amortisör Keçesi Değişimi,amortisor kecesi degisimi,140,FORK_SEAL_CHANGE,Amortisör Keçesi Değişimi,SUSPENSION,False
+1.2.0,Akü Değiştirildi,aku degistirildi,139,BATTERY_CHANGE,Akü Değişimi,ELECTRICAL,False
+1.2.0,Gidon Rulmanı Değiştirildi,gidon rulmani degistirildi,137,STEERING_BEARING_CHANGE,Gidon Rulmanı Değişimi,STEERING,False
+1.2.0,Arka Lastik Değişimi,arka lastik degisimi,135,REAR_TIRE_CHANGE,Arka Lastik Değişimi,TIRES_WHEELS,False
+1.2.0,Hava Filtresi Kntrl Edildi,hava filtresi kntrl edildi,133,AIR_FILTER_INSPECTION,Hava Filtresi Kontrolü,INTAKE,False
+1.2.0,Fren Diski Değişimi,fren diski degisimi,132,BRAKE_DISC_CHANGE,Fren Diski Değişimi,BRAKES,False
+1.2.0,Fren Hidroliği Kntrl Edildi,fren hidroligi kntrl edildi,132,BRAKE_FLUID_CHECK,Fren Hidroliği Kontrolü,BRAKES,False
+1.2.0,Genel Güvenlik Kntrlü ve genel durum değerlendirmesi,genel guvenlik kntrlu ve genel durum degerlendirmesi,128,GENERAL_SAFETY_INSPECTION,Genel Güvenlik Kontrolü,GENERAL,False
+1.2.0,Hava Filtresi Kntrlü ve genel durum değerlendirmesi,hava filtresi kntrlu ve genel durum degerlendirmesi,128,AIR_FILTER_INSPECTION,Hava Filtresi Kontrolü,INTAKE,False
+1.2.0,Gidon Rulmanı Değişimi Yapıldı,gidon rulmani degisimi yapildi,126,STEERING_BEARING_CHANGE,Gidon Rulmanı Değişimi,STEERING,False
+1.2.0,Lastik ve Teker Arıza Kontrolü,lastik ve teker ariza kontrolu,125,TIRE_WHEEL_FAULT_INSPECTION,Lastik ve Teker Arıza Kontrolü,TIRES_WHEELS,False
+1.2.0,Fren Hidroliği Kntrlü ve genel durum değerlendirmesi,fren hidroligi kntrlu ve genel durum degerlendirmesi,124,BRAKE_FLUID_CHECK,Fren Hidroliği Kontrolü,BRAKES,False
+1.2.0,Gidon Rulmanı Değişimi,gidon rulmani degisimi,124,STEERING_BEARING_CHANGE,Gidon Rulmanı Değişimi,STEERING,False
+1.2.0,Hava Filtresi Temizliği,hava filtresi temizligi,124,AIR_FILTER_CLEAN,Hava Filtresi Temizliği,INTAKE,False
+1.2.0,Teker Rulmanı Değiştirildi,teker rulmani degistirildi,124,WHEEL_BEARING_CHANGE,Teker Rulmanı Değişimi,TIRES_WHEELS,False
+1.2.0,Amortisör Keçesi Değişimi Yapıldı,amortisor kecesi degisimi yapildi,121,FORK_SEAL_CHANGE,Amortisör Keçesi Değişimi,SUSPENSION,False
+1.2.0,Motor Kompresyon Test Edildi,motor kompresyon test edildi,118,ENGINE_COMPRESSION_TEST,Motor Kompresyon Testi,ENGINE,False
+1.2.0,Arka Lastik Değiştirildi,arka lastik degistirildi,117,REAR_TIRE_CHANGE,Arka Lastik Değişimi,TIRES_WHEELS,False
+1.2.0,Fren Diski Değiştirildi,fren diski degistirildi,114,BRAKE_DISC_CHANGE,Fren Diski Değişimi,BRAKES,False
+1.2.0,Şarj Sistemi Testi,sarj sistemi testi,114,CHARGING_SYSTEM_TEST,Şarj Sistemi Testi,ELECTRICAL,False
+1.2.0,Arka Lastik Değişimi Yapıldı,arka lastik degisimi yapildi,113,REAR_TIRE_CHANGE,Arka Lastik Değişimi,TIRES_WHEELS,False
+1.2.0,CVT Kayışı Arıza Teşhisi,cvt kayisi ariza teshisi,110,CVT_BELT_FAILURE_DIAGNOSTIC,CVT Kayışı Arıza Teşhisi,FINAL_DRIVE,False
+1.2.0,Fren Hidroliği Kntrlü,fren hidroligi kntrlu,110,BRAKE_FLUID_CHECK,Fren Hidroliği Kontrolü,BRAKES,False
+1.2.0,Akü Değişimi,aku degisimi,109,BATTERY_CHANGE,Akü Değişimi,ELECTRICAL,False
+1.2.0,ABS Sistem Arıza Teşhisi,abs sistem ariza teshisi,104,ABS_DIAGNOSTIC,ABS Sistem Teşhisi,BRAKES,False
+1.2.0,ABS Sistem Teşhisi,abs sistem teshisi,103,ABS_DIAGNOSTIC,ABS Sistem Teşhisi,BRAKES,False
+1.2.0,Genel Güvenlik Kntrl Edildi,genel guvenlik kntrl edildi,103,GENERAL_SAFETY_INSPECTION,Genel Güvenlik Kontrolü,GENERAL,False
+1.2.0,Şarj Sistemi Test Edildi,sarj sistemi test edildi,103,CHARGING_SYSTEM_TEST,Şarj Sistemi Testi,ELECTRICAL,False
+1.2.0,Motor Kompresyon Testi,motor kompresyon testi,102,ENGINE_COMPRESSION_TEST,Motor Kompresyon Testi,ENGINE,False
+1.2.0,Yakıt Sistemi Arıza Arıza Teşhisi,yakit sistemi ariza ariza teshisi,98,FUEL_SYSTEM_DIAGNOSTIC,Yakıt Sistemi Arıza Teşhisi,FUEL,False
+1.2.0,Genel Güvenlik Kntrlü,genel guvenlik kntrlu,90,GENERAL_SAFETY_INSPECTION,Genel Güvenlik Kontrolü,GENERAL,False
+1.2.0,Direksiyon Sistemi Arıza Kontrolü,direksiyon sistemi ariza kontrolu,79,STEERING_FAULT_INSPECTION,Direksiyon Sistemi Arıza Kontrolü,STEERING,False
+1.2.0,Motor Yağ Kaçağı Kontrolü,motor yag kacagi kontrolu,73,OIL_LEAK_INSPECTION,Motor Yağ Kaçağı Kontrolü,ENGINE,False
+1.2.0,Emme Sistemi Kaçak Kontrolü,emme sistemi kacak kontrolu,72,INTAKE_LEAK_INSPECTION,Emme Sistemi Kaçak Kontrolü,INTAKE,False
+1.2.0,Fren Diski Kontrol Edildi,fren diski kontrol edildi,71,BRAKE_DISC_INSPECTION,Fren Diski Kontrolü,BRAKES,False
+1.2.0,Emme Sistemi Kaçak Kontrol Edildi,emme sistemi kacak kontrol edildi,69,INTAKE_LEAK_INSPECTION,Emme Sistemi Kaçak Kontrolü,INTAKE,False
+1.2.0,Fren Diski Kontrolü ve genel durum değerlendirmesi,fren diski kontrolu ve genel durum degerlendirmesi,69,BRAKE_DISC_INSPECTION,Fren Diski Kontrolü,BRAKES,False
+1.2.0,Emme Sistemi Kaçak Kontrolü ve genel durum değerlendirmesi,emme sistemi kacak kontrolu ve genel durum degerlendirmesi,68,INTAKE_LEAK_INSPECTION,Emme Sistemi Kaçak Kontrolü,INTAKE,False
+1.2.0,Motor Yağ Kaçağı Kontrol Edildi,motor yag kacagi kontrol edildi,68,OIL_LEAK_INSPECTION,Motor Yağ Kaçağı Kontrolü,ENGINE,False
+1.2.0,Motor Yağ Kaçağı Kontrolü ve genel durum değerlendirmesi,motor yag kacagi kontrolu ve genel durum degerlendirmesi,68,OIL_LEAK_INSPECTION,Motor Yağ Kaçağı Kontrolü,ENGINE,False
+1.2.0,Ön Lastik Değişimi,on lastik degisimi,67,FRONT_TIRE_CHANGE,Ön Lastik Değişimi,TIRES_WHEELS,False
+1.2.0,Fren Diski Kontrolü,fren diski kontrolu,64,BRAKE_DISC_INSPECTION,Fren Diski Kontrolü,BRAKES,False
+1.2.0,Ön Lastik Değişimi Yapıldı,on lastik degisimi yapildi,64,FRONT_TIRE_CHANGE,Ön Lastik Değişimi,TIRES_WHEELS,False
+1.2.0,Debriyaj Ayar Yapıldı,debriyaj ayar yapildi,63,CLUTCH_ADJUST,Debriyaj Ayarı,TRANSMISSION,False
+1.2.0,Ön Lastik Değiştirildi,on lastik degistirildi,61,FRONT_TIRE_CHANGE,Ön Lastik Değişimi,TIRES_WHEELS,False
+1.2.0,Zincir Aktarma Arıza Teşhisi,zincir aktarma ariza teshisi,57,CHAIN_DRIVE_DIAGNOSTIC,Zincir Aktarma Arıza Teşhisi,FINAL_DRIVE,False
+1.2.0,Zincir Kntrlü ve genel durum değerlendirmesi,zincir kntrlu ve genel durum degerlendirmesi,55,CHAIN_INSPECTION,Zincir Kontrolü,FINAL_DRIVE,False
+1.2.0,Debriyaj Ayarı,debriyaj ayari,49,CLUTCH_ADJUST,Debriyaj Ayarı,TRANSMISSION,False
+1.2.0,CVT Kutu Kntrlü,cvt kutu kntrlu,48,CVT_CASE_INSPECTION,CVT Kutu Kontrolü,TRANSMISSION,False
+1.2.0,CVT Kutu Kntrlü ve genel durum değerlendirmesi,cvt kutu kntrlu ve genel durum degerlendirmesi,47,CVT_CASE_INSPECTION,CVT Kutu Kontrolü,TRANSMISSION,False
+1.2.0,Supap Boşluğu Kntrlü ve genel durum değerlendirmesi,supap boslugu kntrlu ve genel durum degerlendirmesi,47,VALVE_CLEARANCE_INSPECTION,Supap Boşluğu Kontrolü,ENGINE,False
+1.2.0,Termostat Kontrol Edildi,termostat kontrol edildi,46,THERMOSTAT_DIAGNOSTIC,Termostat Kontrolü,COOLING,False
+1.2.0,CVT Kutu Kntrl Edildi,cvt kutu kntrl edildi,45,CVT_CASE_INSPECTION,CVT Kutu Kontrolü,TRANSMISSION,False
+1.2.0,Ön Amortisör Kntrl Edildi,on amortisor kntrl edildi,45,FORK_INSPECTION,Ön Amortisör Kontrolü,SUSPENSION,False
+1.2.0,Ön Amortisör Kntrlü,on amortisor kntrlu,44,FORK_INSPECTION,Ön Amortisör Kontrolü,SUSPENSION,False
+1.2.0,CVT Kayışı Kntrlü ve genel durum değerlendirmesi,cvt kayisi kntrlu ve genel durum degerlendirmesi,43,CVT_BELT_INSPECTION,CVT Kayışı Kontrolü,TRANSMISSION,False
+1.2.0,Debriyaj Balata Değişimi Yapıldı,debriyaj balata degisimi yapildi,40,CLUTCH_PLATE_CHANGE,Debriyaj Balata Değişimi,TRANSMISSION,False
+1.2.0,CVT Kayışı Kntrlü,cvt kayisi kntrlu,39,CVT_BELT_INSPECTION,CVT Kayışı Kontrolü,TRANSMISSION,False
+1.2.0,Varyatör Ruloları Kntrl Edildi,varyator rulolari kntrl edildi,39,CVT_ROLLER_INSPECTION,Varyatör Ruloları Kontrolü,TRANSMISSION,False
+1.2.0,Ön Amortisör Kntrlü ve genel durum değerlendirmesi,on amortisor kntrlu ve genel durum degerlendirmesi,39,FORK_INSPECTION,Ön Amortisör Kontrolü,SUSPENSION,False
+1.2.0,CVT Kayışı Kntrl Edildi,cvt kayisi kntrl edildi,38,CVT_BELT_INSPECTION,CVT Kayışı Kontrolü,TRANSMISSION,False
+1.2.0,Zincir Kntrlü,zincir kntrlu,38,CHAIN_INSPECTION,Zincir Kontrolü,FINAL_DRIVE,False
+1.2.0,Debriyaj Balata Değiştirildi,debriyaj balata degistirildi,36,CLUTCH_PLATE_CHANGE,Debriyaj Balata Değişimi,TRANSMISSION,False
+1.2.0,Debriyaj Balata Değişimi,debriyaj balata degisimi,35,CLUTCH_PLATE_CHANGE,Debriyaj Balata Değişimi,TRANSMISSION,False
+1.2.0,Supap Boşluğu Kntrl Edildi,supap boslugu kntrl edildi,35,VALVE_CLEARANCE_INSPECTION,Supap Boşluğu Kontrolü,ENGINE,False
+1.2.0,Varyatör Ruloları Kntrlü,varyator rulolari kntrlu,35,CVT_ROLLER_INSPECTION,Varyatör Ruloları Kontrolü,TRANSMISSION,False
+1.2.0,Zincir Kntrl Edildi,zincir kntrl edildi,35,CHAIN_INSPECTION,Zincir Kontrolü,FINAL_DRIVE,False
+1.2.0,Termostat Kontrolü,termostat kontrolu,34,THERMOSTAT_DIAGNOSTIC,Termostat Kontrolü,COOLING,False
+1.2.0,Debriyaj Balata Kontrol Edildi,debriyaj balata kontrol edildi,31,CLUTCH_PLATE_INSPECTION,Debriyaj Balata Kontrolü,TRANSMISSION,False
+1.2.0,Supap Boşluğu Kntrlü,supap boslugu kntrlu,31,VALVE_CLEARANCE_INSPECTION,Supap Boşluğu Kontrolü,ENGINE,False
+1.2.0,Teker Rulmanı Kntrl Edildi,teker rulmani kntrl edildi,30,WHEEL_BEARING_INSPECTION,Teker Rulmanı Kontrolü,TIRES_WHEELS,False
+1.2.0,Ön Lastik Kntrlü ve genel durum değerlendirmesi,on lastik kntrlu ve genel durum degerlendirmesi,29,FRONT_TIRE_INSPECTION,Ön Lastik Kontrolü,TIRES_WHEELS,False
+1.2.0,Yağ Filtresi Değiştirildi,yag filtresi degistirildi,28,OIL_FILTER_CHANGE,Yağ Filtresi Değişimi,ENGINE,False
+1.2.0,Ön Fren Balatası Kntrlü,on fren balatasi kntrlu,28,FRONT_BRAKE_PAD_INSPECTION,Ön Fren Balatası Kontrolü,BRAKES,False
+1.2.0,Debriyaj Balata Kontrolü,debriyaj balata kontrolu,25,CLUTCH_PLATE_INSPECTION,Debriyaj Balata Kontrolü,TRANSMISSION,False
+1.2.0,Soğutma Sıvısı Seviye Kntrlü ve genel durum değerlendirmesi,sogutma sivisi seviye kntrlu ve genel durum degerlendirmesi,25,COOLANT_LEVEL_CHECK,Soğutma Sıvısı Seviye Kontrolü,COOLING,False
+1.2.0,Teker Rulmanı Kntrlü ve genel durum değerlendirmesi,teker rulmani kntrlu ve genel durum degerlendirmesi,25,WHEEL_BEARING_INSPECTION,Teker Rulmanı Kontrolü,TIRES_WHEELS,False
+1.2.0,Buji Kntrlü ve genel durum değerlendirmesi,buji kntrlu ve genel durum degerlendirmesi,24,SPARK_PLUG_INSPECTION,Buji Kontrolü,IGNITION,False
+1.2.0,Varyatör Ruloları Kntrlü ve genel durum değerlendirmesi,varyator rulolari kntrlu ve genel durum degerlendirmesi,24,CVT_ROLLER_INSPECTION,Varyatör Ruloları Kontrolü,TRANSMISSION,False
+1.2.0,Ön Lastik Kntrl Edildi,on lastik kntrl edildi,24,FRONT_TIRE_INSPECTION,Ön Lastik Kontrolü,TIRES_WHEELS,False
+1.2.0,Son Dişli Yagi Değiştirildi,son disli yagi degistirildi,23,FINAL_GEAR_OIL_CHANGE,Son Dişli Yağı Değişimi,TRANSMISSION,False
+1.2.0,Soğutma Sıvısı Seviye Kntrl Edildi,sogutma sivisi seviye kntrl edildi,23,COOLANT_LEVEL_CHECK,Soğutma Sıvısı Seviye Kontrolü,COOLING,False
+1.2.0,Buji Kntrl Edildi,buji kntrl edildi,22,SPARK_PLUG_INSPECTION,Buji Kontrolü,IGNITION,False
+1.2.0,Teker Rulmanı Kntrlü,teker rulmani kntrlu,22,WHEEL_BEARING_INSPECTION,Teker Rulmanı Kontrolü,TIRES_WHEELS,False
+1.2.0,Yağ Filtresi Değişimi,yag filtresi degisimi,22,OIL_FILTER_CHANGE,Yağ Filtresi Değişimi,ENGINE,False
+1.2.0,Ön Fren Balatası Kntrl Edildi,on fren balatasi kntrl edildi,21,FRONT_BRAKE_PAD_INSPECTION,Ön Fren Balatası Kontrolü,BRAKES,False
+1.2.0,Buji Kntrlü,buji kntrlu,20,SPARK_PLUG_INSPECTION,Buji Kontrolü,IGNITION,False
+1.2.0,Ön Lastik Kntrlü,on lastik kntrlu,20,FRONT_TIRE_INSPECTION,Ön Lastik Kontrolü,TIRES_WHEELS,False
+1.2.0,Ön Fren Balatası Kntrlü ve genel durum değerlendirmesi,on fren balatasi kntrlu ve genel durum degerlendirmesi,19,FRONT_BRAKE_PAD_INSPECTION,Ön Fren Balatası Kontrolü,BRAKES,False
+1.2.0,Arka Lastik Kntrlü,arka lastik kntrlu,18,REAR_TIRE_INSPECTION,Arka Lastik Kontrolü,TIRES_WHEELS,False
+1.2.0,Son Dişli Yagi Değişimi Yapıldı,son disli yagi degisimi yapildi,18,FINAL_GEAR_OIL_CHANGE,Son Dişli Yağı Değişimi,TRANSMISSION,False
+1.2.0,Soğutma Sıvısı Seviye Kntrlü,sogutma sivisi seviye kntrlu,18,COOLANT_LEVEL_CHECK,Soğutma Sıvısı Seviye Kontrolü,COOLING,False
+1.2.0,Yağ Filtresi Değişimi Yapıldı,yag filtresi degisimi yapildi,17,OIL_FILTER_CHANGE,Yağ Filtresi Değişimi,ENGINE,False
+1.2.0,Arka Fren Balatası Kntrl Edildi,arka fren balatasi kntrl edildi,16,REAR_BRAKE_PAD_INSPECTION,Arka Fren Balatası Kontrolü,BRAKES,False
+1.2.0,Debriyaj Balata Kontrolü ve genel durum değerlendirmesi,debriyaj balata kontrolu ve genel durum degerlendirmesi,15,CLUTCH_PLATE_INSPECTION,Debriyaj Balata Kontrolü,TRANSMISSION,False
+1.2.0,Son Dişli Yagi Değişimi,son disli yagi degisimi,15,FINAL_GEAR_OIL_CHANGE,Son Dişli Yağı Değişimi,TRANSMISSION,False
+1.2.0,Arka Fren Balatası Kntrlü,arka fren balatasi kntrlu,14,REAR_BRAKE_PAD_INSPECTION,Arka Fren Balatası Kontrolü,BRAKES,False
+1.2.0,Gidon Rulmanı Kntrlü,gidon rulmani kntrlu,14,STEERING_BEARING_INSPECTION,Gidon Rulmanı Kontrolü,STEERING,False
+1.2.0,Arka Lastik Kntrl Edildi,arka lastik kntrl edildi,12,REAR_TIRE_INSPECTION,Arka Lastik Kontrolü,TIRES_WHEELS,False
+1.2.0,Arka Lastik Kntrlü ve genel durum değerlendirmesi,arka lastik kntrlu ve genel durum degerlendirmesi,12,REAR_TIRE_INSPECTION,Arka Lastik Kontrolü,TIRES_WHEELS,False
+1.2.0,Gidon Rulmanı Kntrlü ve genel durum değerlendirmesi,gidon rulmani kntrlu ve genel durum degerlendirmesi,12,STEERING_BEARING_INSPECTION,Gidon Rulmanı Kontrolü,STEERING,False
+1.2.0,Debriyaj Boşluğu Kntrlü ve genel durum değerlendirmesi,debriyaj boslugu kntrlu ve genel durum degerlendirmesi,11,CLUTCH_FREE_PLAY_CHECK,Debriyaj Boşluğu Kontrolü,TRANSMISSION,False
+1.2.0,Yüksek Voltaj Sistemi Kontrol Edildi,yuksek voltaj sistemi kontrol edildi,11,EV_HIGH_VOLTAGE_SYSTEM_INSPECTION,Yüksek Voltaj Sistemi Kontrolü,EV_POWERTRAIN,False
+1.2.0,Çekiş Bataryası Sağlık Kontrolü,cekis bataryasi saglik kontrolu,11,EV_TRACTION_BATTERY_HEALTH_CHECK,Çekiş Bataryası Sağlık Kontrolü,EV_POWERTRAIN,False
+1.2.0,Şarj Soketi Kontrolü,sarj soketi kontrolu,11,EV_CHARGING_PORT_INSPECTION,Şarj Soketi Kontrolü,EV_POWERTRAIN,False
+1.2.0,Yakıt Filtresi Değişimi,yakit filtresi degisimi,10,FUEL_FILTER_CHANGE,Yakıt Filtresi Değişimi,FUEL,False
+1.2.0,Yüksek Voltaj Sistemi Kontrolü,yuksek voltaj sistemi kontrolu,10,EV_HIGH_VOLTAGE_SYSTEM_INSPECTION,Yüksek Voltaj Sistemi Kontrolü,EV_POWERTRAIN,False
+1.2.0,Şarj Soketi Kontrol Edildi,sarj soketi kontrol edildi,10,EV_CHARGING_PORT_INSPECTION,Şarj Soketi Kontrolü,EV_POWERTRAIN,False
+1.2.0,Arka Fren Balatası Kntrlü ve genel durum değerlendirmesi,arka fren balatasi kntrlu ve genel durum degerlendirmesi,9,REAR_BRAKE_PAD_INSPECTION,Arka Fren Balatası Kontrolü,BRAKES,False
+1.2.0,Yakıt Filtresi Kontrol Edildi,yakit filtresi kontrol edildi,9,FUEL_FILTER_INSPECTION,Yakıt Filtresi Kontrolü,FUEL,False
+1.2.0,Yüksek Voltaj Sistemi Kontrolü ve genel durum değerlendirmesi,yuksek voltaj sistemi kontrolu ve genel durum degerlendirmesi,9,EV_HIGH_VOLTAGE_SYSTEM_INSPECTION,Yüksek Voltaj Sistemi Kontrolü,EV_POWERTRAIN,False
+1.2.0,Gidon Rulmanı Kntrl Edildi,gidon rulmani kntrl edildi,8,STEERING_BEARING_INSPECTION,Gidon Rulmanı Kontrolü,STEERING,False
+1.2.0,Yakıt Filtresi Değiştirildi,yakit filtresi degistirildi,8,FUEL_FILTER_CHANGE,Yakıt Filtresi Değişimi,FUEL,False
+1.2.0,Debriyaj Boşluğu Kntrlü,debriyaj boslugu kntrlu,7,CLUTCH_FREE_PLAY_CHECK,Debriyaj Boşluğu Kontrolü,TRANSMISSION,False
+1.2.0,Çekiş Bataryası Sağlık Kontrol Edildi,cekis bataryasi saglik kontrol edildi,7,EV_TRACTION_BATTERY_HEALTH_CHECK,Çekiş Bataryası Sağlık Kontrolü,EV_POWERTRAIN,False
+1.2.0,Şarj Soketi Kontrolü ve genel durum değerlendirmesi,sarj soketi kontrolu ve genel durum degerlendirmesi,6,EV_CHARGING_PORT_INSPECTION,Şarj Soketi Kontrolü,EV_POWERTRAIN,False
+1.2.0,Yakıt Filtresi Değişimi Yapıldı,yakit filtresi degisimi yapildi,5,FUEL_FILTER_CHANGE,Yakıt Filtresi Değişimi,FUEL,False
+1.2.0,Debriyaj Boşluğu Kntrl Edildi,debriyaj boslugu kntrl edildi,4,CLUTCH_FREE_PLAY_CHECK,Debriyaj Boşluğu Kontrolü,TRANSMISSION,False
+1.2.0,Fren Diski Kntrlü,fren diski kntrlu,3,BRAKE_DISC_INSPECTION,Fren Diski Kontrolü,BRAKES,False
+1.2.0,Motor Yağ Kaçağı Kntrlü ve genel durum değerlendirmesi,motor yag kacagi kntrlu ve genel durum degerlendirmesi,3,OIL_LEAK_INSPECTION,Motor Yağ Kaçağı Kontrolü,ENGINE,False
+1.2.0,Yakıt Filtresi Kontrolü,yakit filtresi kontrolu,3,FUEL_FILTER_INSPECTION,Yakıt Filtresi Kontrolü,FUEL,False
+1.2.0,Elektrik Motoru Teşhisi,elektrik motoru teshisi,2,EV_DRIVE_MOTOR_DIAGNOSTIC,Elektrik Motoru Teşhisi,EV_POWERTRAIN,False
+1.2.0,Fren Diski Kntrlü ve genel durum değerlendirmesi,fren diski kntrlu ve genel durum degerlendirmesi,2,BRAKE_DISC_INSPECTION,Fren Diski Kontrolü,BRAKES,False
+1.2.0,Tahrik Kayışı Kontrolü ve genel durum değerlendirmesi,tahrik kayisi kontrolu ve genel durum degerlendirmesi,2,DRIVE_BELT_INSPECTION,Tahrik Kayışı Kontrolü,FINAL_DRIVE,False
+1.2.0,Yakıt Filtresi Kontrolü ve genel durum değerlendirmesi,yakit filtresi kontrolu ve genel durum degerlendirmesi,2,FUEL_FILTER_INSPECTION,Yakıt Filtresi Kontrolü,FUEL,False
+1.2.0,Emme Sistemi Kaçak Kntrlü,emme sistemi kacak kntrlu,1,INTAKE_LEAK_INSPECTION,Emme Sistemi Kaçak Kontrolü,INTAKE,False
+1.2.0,Emme Sistemi Kaçak Kntrlü ve genel durum değerlendirmesi,emme sistemi kacak kntrlu ve genel durum degerlendirmesi,1,INTAKE_LEAK_INSPECTION,Emme Sistemi Kaçak Kontrolü,INTAKE,False
+1.2.0,Fren Diski Kntrl Edildi,fren diski kntrl edildi,1,BRAKE_DISC_INSPECTION,Fren Diski Kontrolü,BRAKES,False
+1.2.0,Son Aktarma Arıza Kontrolü,son aktarma ariza kontrolu,1,FINAL_DRIVE_FAULT_INSPECTION,Son Aktarma Arıza Kontrolü,FINAL_DRIVE,False
+1.2.0,Termostat Kntrl Edildi,termostat kntrl edildi,1,THERMOSTAT_DIAGNOSTIC,Termostat Kontrolü,COOLING,False
+1.2.0,Çekiş Bataryası Sağlık Kntrlü,cekis bataryasi saglik kntrlu,1,EV_TRACTION_BATTERY_HEALTH_CHECK,Çekiş Bataryası Sağlık Kontrolü,EV_POWERTRAIN,False
+1.2.0,Şarj Soketi Kntrl Edildi,sarj soketi kntrl edildi,1,EV_CHARGING_PORT_INSPECTION,Şarj Soketi Kontrolü,EV_POWERTRAIN,False

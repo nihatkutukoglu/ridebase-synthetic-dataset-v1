@@ -1,0 +1,4 @@
+﻿join,before_rows,after_rows,matched,left_unmatched,right_unmatched,left_duplicates,right_duplicates,status
+snapshots ↔ next_service_targets,41518,41518,41518,0,0,0,0,PASS
+snapshots ↔ next_task_targets,41518,41518,41518,0,0,0,0,PASS
+snapshots ↔ split_manifest,41518,41518,41518,0,0,0,0,PASS

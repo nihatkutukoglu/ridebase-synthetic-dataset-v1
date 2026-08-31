@@ -1,0 +1,28 @@
+{
+  "dataset_version": "1.2.0",
+  "rule_version": "V0_RULE_BASELINE_1.0.0",
+  "trained_model": false,
+  "deterministic": true,
+  "policy_source": "ridebase_v1_2/source_tables/maintenance_policies.csv",
+  "taxonomy_source": "ridebase_v1_2/source_tables/maintenance_tasks.csv",
+  "date_km_logic": "WHICHEVER_FIRST; km converted with snapshot-safe historical km/day then usage-profile annual baseline",
+  "month_days": 30.4375,
+  "overdue_logic": {
+    "raw": "negative retained",
+    "main_evaluation": "ACTIONABLE max(remaining, 0)"
+  },
+  "task_ranking_logic": "overdue > due by predicted horizon > safety component > precedence > proximity > task_code",
+  "thresholds": {
+    "near_due_days": 30.0,
+    "near_due_km": 1000.0,
+    "offroad_ratio": 0.1,
+    "minimum_segment_n": 50
+  },
+  "fallback_behavior": {
+    "no_task_history": "observation_start_date + initial_mileage_km baseline",
+    "no_historical_km_day": "annual_km_baseline / 365.25",
+    "no_applicable_deterministic_policy": "prediction_available=False",
+    "condition_only": "not assigned a fabricated due date"
+  },
+  "target_usage": "evaluation only; never passed to prediction engine"
+}

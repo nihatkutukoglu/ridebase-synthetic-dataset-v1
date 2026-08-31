@@ -1,0 +1,33 @@
+{
+  "dataset_version": "1.3.0",
+  "notebook": "14_v2_survival_baseline",
+  "fast_mode": true,
+  "input": "outputs/v2_survival_modeling_table.parquet",
+  "input_hash": "dfc4ee1b266850dd",
+  "n_features": "17",
+  "encoded_dims": 51,
+  "split_contract": "authoritative TRAIN/VALIDATION/TEST (unchanged)",
+  "target_contract": "duration_days + event_observed (strict-temporal admin censoring, nb13)",
+  "champion": "COX",
+  "feature_set": "SET_A_COMPACT",
+  "cox_variant": "CoxPH(alpha=1.0 ridge)",
+  "rsf_config": {
+    "n_estimators": 25,
+    "min_samples_leaf": 150,
+    "max_depth": 6,
+    "max_features": "sqrt",
+    "max_samples": 0.35,
+    "random_state": 42
+  },
+  "horizons": [
+    30,
+    60,
+    90,
+    120
+  ],
+  "diag_horizons": [
+    180
+  ],
+  "random_seed": 42,
+  "training_date": "2026-08-30T15:37:35.158449+00:00"
+}

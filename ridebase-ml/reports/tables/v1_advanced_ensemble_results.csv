@@ -1,0 +1,5 @@
+﻿target,ensemble_name,members,weights,validation_mae,validation_r2,selected
+DAYS,SIMPLE_AVERAGE,GradientBoostingRegressor__RAW | LGBMRegressor__RAW | HistGradientBoostingRegressor__RAW,"[0.333333, 0.333333, 0.333333]",21.729250526397653,0.3170029869066975,False
+DAYS,INVERSE_VALIDATION_MAE_BLEND,GradientBoostingRegressor__RAW | LGBMRegressor__RAW | HistGradientBoostingRegressor__RAW,"[0.347257, 0.332021, 0.320723]",21.696520801389987,0.31700226862195136,True
+KM,SIMPLE_AVERAGE,GradientBoostingRegressor__RAW | HistGradientBoostingRegressor__RAW | LGBMRegressor__RAW,"[0.333333, 0.333333, 0.333333]",1486.052906097071,0.13929293816561328,False
+KM,INVERSE_VALIDATION_MAE_BLEND,GradientBoostingRegressor__RAW | HistGradientBoostingRegressor__RAW | LGBMRegressor__RAW,"[0.341848, 0.333315, 0.324837]",1485.3901197789523,0.14019417772266785,False

@@ -1,0 +1,12 @@
+check,status,evidence
+target_fields_absent_from_X,PASS,Notebook assertion / explicit configuration
+future_fields_absent_from_X,PASS,Notebook assertion / explicit configuration
+test_absent_from_fit,PASS,Notebook assertion / explicit configuration
+test_absent_from_weight_selection,PASS,Notebook assertion / explicit configuration
+preprocessing_statistics_train_only,PASS,Notebook assertion / explicit configuration
+validation_selection_only,PASS,Notebook assertion / explicit configuration
+censored_targets_not_imputed,PASS,Notebook assertion / explicit configuration
+authoritative_temporal_validation,PASS,Notebook assertion / explicit configuration
+bagging_disabled,PASS,Notebook assertion / explicit configuration
+stacking_disabled_except_weighted_L2,PASS,Notebook assertion / explicit configuration
+all_used_raw_features_pass,PASS,Notebook assertion / explicit configuration

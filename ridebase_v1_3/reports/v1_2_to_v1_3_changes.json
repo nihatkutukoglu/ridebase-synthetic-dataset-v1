@@ -1,0 +1,138 @@
+{
+  "dataset_version": "1.3.0",
+  "source_files_changed": [
+    "mileage_timeline_monthly.csv",
+    "services.csv",
+    "services_enriched.csv",
+    "appointments.csv",
+    "service_tasks.csv"
+  ],
+  "generator_functions_changed": [
+    "regenerate_mileage",
+    "regenerate_services",
+    "service_history_features",
+    "rebuild_snapshots_targets"
+  ],
+  "service_events_changed": "timestamps/odometers/causal intervals; IDs and event-type mix preserved",
+  "mileage_timeline_changed": "AR(1) persistent usage + profile-conditioned seasonality + bounded innovations",
+  "snapshot_features_added": [
+    "previous_service_count",
+    "previous_interval_days",
+    "previous_interval_km",
+    "historical_interval_days_median",
+    "historical_interval_days_std",
+    "historical_interval_km_median",
+    "historical_interval_km_std",
+    "historical_policy_delay_median_days",
+    "historical_policy_delay_mean_days",
+    "historical_on_time_rate",
+    "previous_policy_delay_days",
+    "recent_30d_km",
+    "recent_60d_km",
+    "recent_90d_km",
+    "recent_180d_km",
+    "recent_km_per_day",
+    "long_term_km_per_day",
+    "policy_interval_days",
+    "policy_interval_km",
+    "recent_vs_long_term_usage_ratio"
+  ],
+  "derived_files_regenerated": [
+    "service_status_history.csv",
+    "noise_audit.csv",
+    "ml_maintenance_snapshots.parquet",
+    "ml_next_service_targets.parquet",
+    "ml_next_task_targets.parquet",
+    "split_manifest.csv",
+    "dataset_metadata.json",
+    "quality_report.json"
+  ],
+  "noise_calibration": {
+    "main_scale": 0.14,
+    "irregular_scale": 0.19,
+    "bounded_factor": [
+      0.67,
+      1.43
+    ]
+  },
+  "service_count_change": 0,
+  "observed_censored_change": {
+    "observed": 0,
+    "censored": 0
+  },
+  "failure_mix_change": "none; v1.2 calibrated failure identities retained",
+  "target_distribution_changes": [
+    {
+      "target": "DAYS",
+      "split": "TEST",
+      "count": 1282,
+      "mean": 104.6733963497428,
+      "median": 88.87304398148149,
+      "std": 60.44895865937155,
+      "p25": 53.79428240740741,
+      "p75": 153.779609375,
+      "p95": 215.41370717592594,
+      "p99": 231.53985347222223
+    },
+    {
+      "target": "DAYS",
+      "split": "TRAIN",
+      "count": 25442,
+      "mean": 127.755930805398,
+      "median": 94.88369791666668,
+      "std": 99.89443135335652,
+      "p25": 52.538952546296294,
+      "p75": 169.72735821759258,
+      "p95": 349.87882638888885,
+      "p99": 431.9828743055556
+    },
+    {
+      "target": "DAYS",
+      "split": "VALIDATION",
+      "count": 1429,
+      "mean": 63.630458872754794,
+      "median": 55.3221875,
+      "std": 32.587882554601265,
+      "p25": 39.052256944444444,
+      "p75": 83.62190972222223,
+      "p95": 129.401875,
+      "p99": 155.51307222222223
+    },
+    {
+      "target": "KM",
+      "split": "TEST",
+      "count": 1282,
+      "mean": 3502.9165366614666,
+      "median": 3177.5,
+      "std": 1728.519231103499,
+      "p25": 2308.75,
+      "p75": 4491.75,
+      "p95": 6656.700000000001,
+      "p99": 8980.210000000003
+    },
+    {
+      "target": "KM",
+      "split": "TRAIN",
+      "count": 25442,
+      "mean": 3566.332638943479,
+      "median": 3213.0,
+      "std": 1776.0082883888665,
+      "p25": 2321.0,
+      "p75": 4523.0,
+      "p95": 6841.949999999997,
+      "p99": 9019.59
+    },
+    {
+      "target": "KM",
+      "split": "VALIDATION",
+      "count": 1429,
+      "mean": 3446.07977606718,
+      "median": 3176.0,
+      "std": 1378.1791881260228,
+      "p25": 2463.0,
+      "p75": 4238.0,
+      "p95": 6138.199999999999,
+      "p99": 7430.88
+    }
+  ]
+}

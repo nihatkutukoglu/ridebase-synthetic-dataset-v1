@@ -1,0 +1,10 @@
+﻿check,status,evidence
+05 preprocessing QA,PASS,ml_preprocessing_qa.csv
+No target/future/next columns in X,PASS,127 raw feature audited
+Target tables excluded from X,PASS,X source = snapshots only
+TRAIN-only fit,PASS,05 preprocessor + final estimators fit on TRAIN
+TEST excluded from selection,PASS,LazyPredict received TRAIN/VALIDATION only
+Censored excluded from regression,PASS,"{'TEST': 2622, 'TRAIN': 20679, 'VALIDATION': 1932}"
+Temporal split preserved,PASS,"{'TRAIN': 27428, 'TEST': 7691, 'VALIDATION': 6399}"
+Reproducibility DAYS,PASS,rtol=atol=1e-7
+Reproducibility KM,PASS,rtol=atol=1e-7

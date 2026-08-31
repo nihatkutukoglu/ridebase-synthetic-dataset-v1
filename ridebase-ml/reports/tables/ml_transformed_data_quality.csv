@@ -1,0 +1,4 @@
+﻿split,row_count,expected_rows,column_count,nan_count,inf_count,sparse,status
+TRAIN,27428,27428,277,0,0,True,PASS
+VALIDATION,6399,6399,277,0,0,True,PASS
+TEST,7691,7691,277,0,0,True,PASS

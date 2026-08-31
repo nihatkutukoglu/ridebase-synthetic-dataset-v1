@@ -1,0 +1,27 @@
+canonical_task_code,models_covered,task_rows,models
+ENGINE_OIL,21,32,250NK | 390 Duke | 50 UAG | 650NK | Apache RTR 200 4V | Dominar 250 | Exon 50 | Hunter 350 | Jet X 125 | Jupiter 125 | NMAX 125 | Pulsar NS125 | Pulsar NS200 | Raider 125 | SFC MINI 50ec | SH125i | Turismo 50i | Wing 50i | X-Town CT 250 | XMAX 250 | XSR125
+ENGINE_OIL_FILTER,12,12,250NK | 390 Duke | 650NK | Apache RTR 200 4V | Dominar 250 | Hunter 350 | Jet X 125 | Pulsar NS125 | Pulsar NS200 | X-Town CT 250 | XMAX 250 | XSR125
+AIR_FILTER,23,41,250NK | 390 Duke | 50 UAG | 650NK | Apache RTR 200 4V | CB125F | Dominar 250 | Exon 50 | Hunter 350 | Jet X 125 | Jupiter 125 | NMAX 125 | PCX125 | Pulsar NS125 | Pulsar NS200 | Raider 125 | SFC MINI 50ec | SH125i | Turismo 50i | Wing 50i | X-Town CT 250 | XMAX 250 | XSR125
+SPARK_PLUG,20,26,250NK | 390 Duke | 50 UAG | 650NK | Apache RTR 200 4V | Dominar 250 | Exon 50 | Hunter 350 | Jet X 125 | Jupiter 125 | NMAX 125 | Pulsar NS125 | Pulsar NS200 | Raider 125 | SFC MINI 50ec | Turismo 50i | Wing 50i | X-Town CT 250 | XMAX 250 | XSR125
+COOLANT,15,23,250NK | 390 Duke | 650NK | Dominar 250 | Exon 50 | Jet X 125 | NMAX 125 | PCX125 | Pulsar NS200 | SH125i | Turismo 50i | Wing 50i | X-Town CT 250 | XMAX 250 | XSR125
+BRAKE_FLUID,22,32,250NK | 390 Duke | 50 UAG | 650NK | Apache RTR 200 4V | CB125F | Dominar 250 | Exon 50 | Hunter 350 | Jupiter 125 | NMAX 125 | PCX125 | Pulsar NS125 | Pulsar NS200 | Raider 125 | SFC MINI 50ec | SH125i | Turismo 50i | Wing 50i | X-Town CT 250 | XMAX 250 | XSR125
+FRONT_BRAKE,15,18,250NK | 390 Duke | 50 UAG | 650NK | Apache RTR 200 4V | Dominar 250 | Exon 50 | Hunter 350 | NMAX 125 | Pulsar NS125 | SFC MINI 50ec | Turismo 50i | Wing 50i | XMAX 250 | XSR125
+REAR_BRAKE,5,5,390 Duke | Hunter 350 | NMAX 125 | XMAX 250 | XSR125
+BRAKE_PADS,13,13,250NK | 50 UAG | 650NK | Apache RTR 200 4V | Exon 50 | Jet X 125 | Jupiter 125 | Pulsar NS200 | Raider 125 | SFC MINI 50ec | Turismo 50i | Wing 50i | X-Town CT 250
+BRAKE_SHOES,0,0,
+DRIVE_CHAIN,13,20,250NK | 390 Duke | 50 UAG | 650NK | Apache RTR 200 4V | CB125F | Dominar 250 | Hunter 350 | Pulsar NS125 | Pulsar NS200 | Raider 125 | SFC MINI 50ec | XSR125
+FINAL_DRIVE,7,14,Jet X 125 | Jupiter 125 | NMAX 125 | PCX125 | SH125i | X-Town CT 250 | XMAX 250
+CLUTCH,12,13,250NK | 50 UAG | 650NK | Apache RTR 200 4V | Dominar 250 | Exon 50 | Hunter 350 | Raider 125 | SFC MINI 50ec | Turismo 50i | Wing 50i | XSR125
+THROTTLE,16,18,250NK | 390 Duke | 50 UAG | 650NK | Dominar 250 | Exon 50 | Hunter 350 | Jet X 125 | Jupiter 125 | NMAX 125 | SFC MINI 50ec | Turismo 50i | Wing 50i | X-Town CT 250 | XMAX 250 | XSR125
+VALVE_CLEARANCE,19,19,250NK | 390 Duke | 50 UAG | 650NK | Apache RTR 200 4V | Dominar 250 | Exon 50 | Hunter 350 | Jet X 125 | Jupiter 125 | NMAX 125 | Pulsar NS125 | Raider 125 | SFC MINI 50ec | Turismo 50i | Wing 50i | X-Town CT 250 | XMAX 250 | XSR125
+FUEL_FILTER,7,7,Apache RTR 200 4V | Exon 50 | Jet X 125 | Pulsar NS125 | Pulsar NS200 | Turismo 50i | Wing 50i
+FUEL_SYSTEM,14,17,250NK | 390 Duke | 50 UAG | Exon 50 | Jupiter 125 | NMAX 125 | Pulsar NS200 | Raider 125 | SFC MINI 50ec | Turismo 50i | Wing 50i | X-Town CT 250 | XMAX 250 | XSR125
+BATTERY,9,9,50 UAG | 650NK | Apache RTR 200 4V | Exon 50 | Jupiter 125 | Raider 125 | SFC MINI 50ec | Turismo 50i | Wing 50i
+TYRES,18,18,250NK | 390 Duke | 50 UAG | 650NK | Apache RTR 200 4V | Dominar 250 | Exon 50 | Jet X 125 | Jupiter 125 | NMAX 125 | Pulsar NS125 | Raider 125 | SFC MINI 50ec | Turismo 50i | Wing 50i | X-Town CT 250 | XMAX 250 | XSR125
+WHEEL_BEARINGS,5,5,390 Duke | 650NK | Hunter 350 | XMAX 250 | XSR125
+STEERING,15,15,250NK | 390 Duke | 650NK | Apache RTR 200 4V | Dominar 250 | Hunter 350 | Jet X 125 | Jupiter 125 | NMAX 125 | Pulsar NS125 | Pulsar NS200 | Raider 125 | X-Town CT 250 | XMAX 250 | XSR125
+SUSPENSION,19,21,250NK | 390 Duke | 50 UAG | 650NK | Apache RTR 200 4V | Dominar 250 | Exon 50 | Hunter 350 | Jet X 125 | Jupiter 125 | NMAX 125 | Pulsar NS125 | Pulsar NS200 | Raider 125 | SFC MINI 50ec | Turismo 50i | Wing 50i | XMAX 250 | XSR125
+FASTENERS,20,20,250NK | 390 Duke | 50 UAG | 650NK | Apache RTR 200 4V | Dominar 250 | Exon 50 | Hunter 350 | Jet X 125 | Jupiter 125 | NMAX 125 | Pulsar NS125 | Pulsar NS200 | Raider 125 | SFC MINI 50ec | Turismo 50i | Wing 50i | X-Town CT 250 | XMAX 250 | XSR125
+LIGHTS,8,8,390 Duke | 50 UAG | Exon 50 | Jupiter 125 | Raider 125 | SFC MINI 50ec | Turismo 50i | Wing 50i
+ELECTRICAL,0,0,
+GENERAL_INSPECTION,20,26,250NK | 390 Duke | 50 UAG | 650NK | Apache RTR 200 4V | CB125F | Dominar 250 | Exon 50 | Hunter 350 | NMAX 125 | PCX125 | Pulsar NS125 | Pulsar NS200 | Raider 125 | SFC MINI 50ec | SH125i | Turismo 50i | Wing 50i | XMAX 250 | XSR125

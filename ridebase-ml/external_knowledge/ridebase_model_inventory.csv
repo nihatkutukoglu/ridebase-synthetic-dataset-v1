@@ -1,0 +1,40 @@
+model_id,brand,model,variant,category,powertrain_type,engine_cc,cooling_type,final_drive_type,transmission_type,model_year_from,model_year_to,spec_reference_year,policy_group,spec_confidence,local_source_type,local_primary_source_url
+HONDA_PCX125,Honda,PCX125,current TR listing,SCOOTER,ICE,125.0,LIQUID,V_BELT,CVT,2015.0,2026.0,,ICE_125_LIQUID_BELT,HIGH,OFFICIAL,https://www.honda.com.tr/motosiklet/modeller/scooter/honda-pcx125/ozellikler
+HONDA_ACTIVA125,Honda,Activa 125,TR listing,SCOOTER,ICE,124.0,AIR,V_BELT,CVT,2015.0,2026.0,,ICE_125_SCOOTER_BELT,MEDIUM,OFFICIAL,https://www.honda.com.tr/motosiklet/modeller/scooter/lp/honda-activa-125-one-cikan-ozellikler
+TVS_JUPITER125,TVS,Jupiter 125,current,SCOOTER,ICE,124.8,AIR,V_BELT,CVT,2015.0,2026.0,,ICE_125_AIR_BELT,HIGH,OFFICIAL,https://www.tvsmotor.com/tvs-jupiter-125/disc
+KUBA_CG50_PRO,Kuba,CG50 Pro,current,CUB,ICE,50.0,AIR,CHAIN,MANUAL_5,2015.0,2026.0,,ICE_50_AIR_CHAIN,MEDIUM,SECONDARY,https://www.epey.com/motosiklet/kuba-cg50-pro.html
+MONDIAL_WING50I,Mondial,Wing 50i,current,SCOOTER,ICE,49.6,AIR,V_BELT,AUTOMATIC,2015.0,2026.0,,ICE_50_AIR_BELT,HIGH,OFFICIAL,https://www.mondialmotor.com.tr/model/wing-50-i
+MONDIAL_50_UAG,Mondial,50 UAG,current,CUB,ICE,50.0,AIR,CHAIN,MANUAL_5,2015.0,2026.0,,ICE_50_AIR_CHAIN,HIGH,OFFICIAL,https://www.mondialmotor.com.tr/model/50-uag
+RKS_NEW_LIGHT_PRO,RKS,New Light Pro,current,CUB,ICE,125.0,AIR,CHAIN,MANUAL,2015.0,2026.0,,ICE_125_AIR_CHAIN,LOW,SECONDARY,https://yandex.com.tr/video/preview/4409228331509346138
+HONDA_DIO110,Honda,Dio 110,TR listing,SCOOTER,ICE,,AIR,V_BELT,CVT,2015.0,2026.0,,ICE_SMALL_SCOOTER_BELT,MEDIUM,OFFICIAL,https://www.honda.com.tr/motosiklet/modeller/scooter/lp/honda-dio-one-cikan-ozellikler
+MONDIAL_SFC_MINI_50EC,Mondial,SFC MINI 50ec,current,CUB,ICE,49.0,AIR,CHAIN,SEMI_AUTO_4,2015.0,2026.0,,ICE_50_AIR_CHAIN,HIGH,OFFICIAL,https://www.mondialmotor.com.tr/model/sfc-mini-50ec
+KUBA_BLUEBERRY50,Kuba,Blueberry 50,current,SCOOTER,ICE,50.0,AIR,V_BELT,CVT,2015.0,2026.0,,ICE_50_AIR_BELT,MEDIUM,SECONDARY,https://www.moto11.com/blog/icerik/kuba-blueberry-50-teknik-ozellikleri-ve-inceleme
+YAMAHA_NMAX125,Yamaha,NMAX 125,2026 EU spec,SCOOTER,ICE,125.0,LIQUID,V_BELT,CVT,2015.0,2026.0,2026.0,ICE_125_LIQUID_BELT,HIGH,OFFICIAL,https://www.yamaha-motor.eu/al/en/scooters/sport/pdp/nmax-125/
+HONDA_CB125F,Honda,CB125F,current TR listing,NAKED,ICE,124.0,AIR,CHAIN,MANUAL_5,2016.0,2026.0,,ICE_125_AIR_CHAIN,HIGH,OFFICIAL,https://www.honda.com.tr/motosiklet/modeller/naked/honda-cb125f/ozellikler
+HONDA_FORZA250,Honda,Forza 250,current TR listing,BIG_SCOOTER,ICE,249.0,LIQUID,V_BELT,CVT,2016.0,2025.0,2025.0,ICE_250_LIQUID_BELT,HIGH,OFFICIAL,https://www.honda.com.tr/motosiklet/modeller/big-scooter/honda-forza-250/ozellikler
+YAMAHA_XMAX250,Yamaha,XMAX 250,2025 TR fact sheet,BIG_SCOOTER,ICE,249.0,LIQUID,V_BELT,CVT,2016.0,2025.0,2025.0,ICE_250_LIQUID_BELT,HIGH,OFFICIAL,https://cdn2.yamaha-motor.eu/prod/product-assets/2025/XMAX250A/Factsheets/2025-XMAX250A_tr-TR.pdf
+BAJAJ_NS125,Bajaj,Pulsar NS125,current TR listing,NAKED,ICE,124.45,AIR,CHAIN,MANUAL_5,2016.0,2026.0,,ICE_125_AIR_CHAIN,HIGH,OFFICIAL,https://bajajturkiye.com.tr/pulsar-ns-125/
+BAJAJ_NS200,Bajaj,Pulsar NS200 UG2,current TR listing,NAKED,ICE,199.5,LIQUID,CHAIN,MANUAL_6,2016.0,2026.0,,ICE_200_LIQUID_CHAIN,MEDIUM,OFFICIAL,https://bajajturkiye.com.tr/pulsar-ns-200/
+TVS_RAIDER125,TVS,Raider 125,current,NAKED,ICE,124.8,OIL,CHAIN,MANUAL_5,2016.0,2026.0,,ICE_125_OIL_CHAIN,HIGH,OFFICIAL,https://turkiye.tvsmotor.com/tr/p/our-products/tvs-raider-tr
+SYM_JETX125,SYM,Jet X 125 TCS ABS,current TR listing,SCOOTER,ICE,125.0,LIQUID,V_BELT,CVT,2015.0,2026.0,,ICE_125_LIQUID_BELT,HIGH,OFFICIAL,https://www.sym-tr.com/jet-x-tcs-abs-liquid-cooling/
+HONDA_SH125I,Honda,SH125i,current TR listing,SCOOTER,ICE,125.0,LIQUID,V_BELT,CVT,2016.0,2026.0,,ICE_125_LIQUID_BELT,HIGH,OFFICIAL,https://www.honda.com.tr/motosiklet/modeller/scooter/honda-sh125i
+HONDA_ADV350,Honda,ADV350,current TR listing,BIG_SCOOTER,ICE,330.0,LIQUID,V_BELT,CVT,2017.0,2026.0,,ICE_350_LIQUID_BELT,HIGH,OFFICIAL,https://www.honda.com.tr/assets/files/2NedW1EnX71707825166477.pdf
+CFMOTO_250NK,CFMOTO,250NK,current TR listing,NAKED,ICE,249.0,LIQUID,CHAIN,MANUAL_6,2016.0,2026.0,,ICE_250_LIQUID_CHAIN,HIGH,OFFICIAL,https://www.cfmoto.com.tr/urunler/250-nk
+CFMOTO_250SR,CFMOTO,250SR,current TR listing,SUPERSPORT,ICE,249.0,LIQUID,CHAIN,MANUAL_6,2017.0,2026.0,,ICE_250_LIQUID_CHAIN,HIGH,OFFICIAL,https://www.cfmoto.com.tr/urunler/250-sr
+HONDA_CL250,Honda,CL250,current TR brochure,SCRAMBLER,ICE,249.0,LIQUID,CHAIN,MANUAL_6,2017.0,2026.0,,ICE_250_LIQUID_CHAIN,HIGH,OFFICIAL,https://www.honda.com.tr/assets/files/ktQm2lsfBG1690448554904.pdf
+KYMCO_XTOWN_CT250,KYMCO,X-Town CT 250,current TR listing,BIG_SCOOTER,ICE,249.0,LIQUID,V_BELT,CVT,2017.0,2026.0,,ICE_250_LIQUID_BELT,HIGH,OFFICIAL,https://www.kymco.com.tr/tr/x-town-ct-250.html
+TVS_APACHE_RTR200_4V,TVS,Apache RTR 200 4V FI,current,NAKED,ICE,197.75,OIL,CHAIN,MANUAL_5,2016.0,2026.0,,ICE_200_OIL_CHAIN,HIGH,OFFICIAL,https://turkiye.tvsmotor.com/tr/p/our-products/apache-rtr-200-4v-fi-tr
+YAMAHA_XSR125,Yamaha,XSR125,2024 EU spec,NAKED,ICE,124.0,LIQUID,CHAIN,MANUAL_6,2017.0,2024.0,2024.0,ICE_125_LIQUID_CHAIN,HIGH,OFFICIAL,https://www.yamaha-motor.eu/is/en/motorcycles/sport-heritage/pdp/xsr125-2024/
+BAJAJ_DOMINAR250,Bajaj,Dominar D250,current TR listing,TOURING,ICE,248.77,LIQUID,CHAIN,MANUAL_6,2017.0,2025.0,,ICE_250_LIQUID_CHAIN,MEDIUM,OFFICIAL,https://bajajturkiye.com.tr/product/dominar-d-250/
+MONDIAL_EXON50,Mondial,Exon 50,current,SCOOTER,ICE,49.6,AIR,V_BELT,AUTOMATIC,2016.0,2026.0,,ICE_50_AIR_BELT,HIGH,OFFICIAL,https://www.mondialmotor.com.tr/model/exon-50
+ROYALENFIELD_HUNTER350,Royal Enfield,Hunter 350,current spec,ROADSTER,ICE,349.0,OIL,CHAIN,MANUAL_5,2016.0,2026.0,,ICE_350_OIL_CHAIN,MEDIUM,OFFICIAL,https://www.royalenfield.com/content/dam/royal-enfield/usa/motorcycles/hunter-350/royal-enfield-hunter-350-technical-specifications-english.pdf
+CFMOTO_250CLX,CFMOTO,250CL-X,current TR listing,ROADSTER,ICE,249.0,LIQUID,CHAIN,MANUAL_6,2017.0,2025.0,,ICE_250_LIQUID_CHAIN,HIGH,OFFICIAL,https://www.cfmoto.com.tr/urunler/250cl-x
+CFMOTO_250DUAL,CFMOTO,250 DUAL,current TR listing,ADVENTURE,ICE,249.0,LIQUID,CHAIN,MANUAL_6,2017.0,2026.0,,ICE_250_LIQUID_CHAIN,HIGH,OFFICIAL,https://www.cfmoto.com.tr/urunler/250-dual
+KTM_390_DUKE,KTM,390 Duke,2026 TR spec,NAKED,ICE,398.7,LIQUID,CHAIN,MANUAL_6,2018.0,2025.0,2026.0,ICE_400_LIQUID_CHAIN,HIGH,OFFICIAL,https://www.ktm.com/en-tr/models/naked-bike/2026-ktm-390-duke/technical-specifications.html
+MONDIAL_TURISMO50I,Mondial,Turismo 50i,current,SCOOTER,ICE,49.6,AIR,V_BELT,AUTOMATIC,2016.0,2026.0,,ICE_50_AIR_BELT,HIGH,OFFICIAL,https://www.mondialmotor.com.tr/model/turismo-50
+CFMOTO_450NK,CFMOTO,450NK,current TR listing,NAKED,ICE,449.5,LIQUID,CHAIN,MANUAL_6,2017.0,2026.0,,ICE_450_TWIN_LIQUID_CHAIN,HIGH,OFFICIAL,https://www.cfmoto.com.tr/urunler/450-nk
+KYMCO_DOWNTOWN250I,KYMCO,Downtown 250i,current TR listing,BIG_SCOOTER,ICE,246.0,LIQUID,V_BELT,CVT,2016.0,2026.0,,ICE_250_LIQUID_BELT,HIGH,OFFICIAL,https://www.kymco.com.tr/tr/downtown-250i.html
+HONDA_MONKEY,Honda,Monkey,current TR listing,MINI_BIKE,ICE,124.0,AIR,CHAIN,MANUAL_5,2018.0,2024.0,,ICE_125_AIR_CHAIN,HIGH,OFFICIAL,https://www.honda.com.tr/motosiklet/modeller/naked/honda-monkey/ozellikler
+CFMOTO_450CLC,CFMOTO,450 CL-C,current TR listing,CRUISER,ICE,449.0,LIQUID,BELT,MANUAL_6,2019.0,2025.0,,ICE_450_TWIN_LIQUID_BELT,MEDIUM,OFFICIAL,https://www.cfmoto.com.tr/urunler/450cl-c
+CFMOTO_650NK,CFMOTO,650NK,current TR listing,NAKED,ICE,649.0,LIQUID,CHAIN,MANUAL_6,2017.0,2025.0,,ICE_650_TWIN_LIQUID_CHAIN,HIGH,OFFICIAL,https://www.cfmoto.com.tr/urunler/650-nk
+HONDA_EM1E,Honda,EM1 e:,current TR listing,EV_SCOOTER,EV,,NONE,DIRECT,DIRECT_DRIVE,2021.0,2023.0,2023.0,EV_HUB_MOTOR,HIGH,OFFICIAL,https://www.honda.com.tr/motosiklet/modeller/scooter/honda-em1-e/ozellikler

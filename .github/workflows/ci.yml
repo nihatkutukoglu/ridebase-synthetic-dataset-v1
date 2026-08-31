@@ -1,0 +1,82 @@
+name: ridebase-v1-dashboard CI
+
+on:
+  push:
+    paths:
+      - "ridebase-v1-dashboard/**"
+      - "ridebase-ml/ridebase_ml/**"
+      - "ridebase-ml/pyproject.toml"
+      - ".github/workflows/ci.yml"
+  pull_request:
+    paths:
+      - "ridebase-v1-dashboard/**"
+      - "ridebase-ml/ridebase_ml/**"
+      - "ridebase-ml/pyproject.toml"
+      - ".github/workflows/ci.yml"
+
+defaults:
+  run:
+    working-directory: ridebase-v1-dashboard
+
+jobs:
+  backend:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: pip
+          cache-dependency-path: ridebase-v1-dashboard/backend/requirements.txt
+      - name: Install
+        working-directory: ridebase-v1-dashboard/backend
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+          pip install -e ../../ridebase-ml    # makes ridebase_ml.v2 importable
+      - name: Pytest
+        working-directory: ridebase-v1-dashboard/backend
+        # Tests marked `needs_models` and the whole test_v2_api.py file self-skip
+        # when the notebook artifacts (ridebase-ml/models/v1_final_* /
+        # v2_advanced_config.json status==FINAL) are absent. Commit via Git LFS or
+        # add a download step to exercise the full prediction + golden-parity path.
+        run: python -m pytest -q
+      - name: E2E smoke (in-process)
+        working-directory: ridebase-v1-dashboard/backend
+        run: python scripts/smoke_e2e.py --inproc
+      - name: V2 inference smoke (only if the FINAL bundle is present)
+        working-directory: ridebase-v1-dashboard/backend
+        run: |
+          if python -c "import json,sys,pathlib; c=pathlib.Path('../../ridebase-ml/models/v2_advanced_config.json'); sys.exit(0 if c.exists() and json.loads(c.read_text()).get('status')=='FINAL' else 1)"; then
+            python scripts/smoke_v2_inference.py
+          else
+            echo "V2 FINAL bundle not present — skipping V2 smoke (production lane should FAIL here)."
+          fi
+
+  frontend:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: npm
+          cache-dependency-path: ridebase-v1-dashboard/frontend/package-lock.json
+      - name: Install
+        working-directory: ridebase-v1-dashboard/frontend
+        run: npm ci || npm install
+      - name: Typecheck
+        working-directory: ridebase-v1-dashboard/frontend
+        run: npm run typecheck
+      - name: Lint
+        working-directory: ridebase-v1-dashboard/frontend
+        run: npm run lint
+      - name: Unit / smoke tests
+        working-directory: ridebase-v1-dashboard/frontend
+        run: npx vitest run
+      - name: Build
+        working-directory: ridebase-v1-dashboard/frontend
+        env:
+          NEXT_PUBLIC_API_BASE_URL: http://localhost:8000
+          NEXT_TELEMETRY_DISABLED: "1"
+        run: npm run build

@@ -1,0 +1,32 @@
+{
+  "dataset_version": "1.2.0",
+  "preprocessing_version": "ML_PREPROCESSING_V1_2_1.0.0",
+  "model_version": "V1_REGRESSION_1.0.0",
+  "python_version": "3.11.15",
+  "sklearn_version": "1.8.0",
+  "days_model_class": "HistGradientBoostingRegressor",
+  "km_model_class": "HistGradientBoostingRegressor",
+  "validation_selection_metric": "ACTIONABLE_MAE_then_Median_AE",
+  "feature_dimension": 277,
+  "train_rows": {
+    "days": 20679,
+    "km": 20678
+  },
+  "validation_rows": {
+    "days": 1932,
+    "km": 1931
+  },
+  "test_rows": {
+    "days": 2622,
+    "km": 2622
+  },
+  "censoring_policy": "Observed-only; censored excluded; km additionally valid-only",
+  "preprocessor_path": "models/ml_preprocessor_v1_2.joblib",
+  "random_state": 42,
+  "limitations": [
+    "Synthetic v1.2 offline benchmark only",
+    "No production performance claim",
+    "V1 excludes censored rows",
+    "Feature importance is not causality"
+  ]
+}

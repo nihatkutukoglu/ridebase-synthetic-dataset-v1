@@ -1,0 +1,11 @@
+﻿feature_or_input,source,available_at_snapshot,used_by_v0,leakage_status
+snapshot_at,ml_maintenance_snapshots,True,True,PASS
+snapshot_odometer_km,ml_maintenance_snapshots,True,True,PASS
+model/category/powertrain/policy_group,snapshot + motorcycle model master,True,True,PASS
+annual_km_baseline,usage_profiles,True,True,PASS
+historical km/day,snapshot prior-service feature,True,True,PASS
+completed task history <= snapshot_at,service_tasks + services,True,True,PASS
+maintenance policy/taxonomy,maintenance_policies + maintenance_tasks,True,True,PASS
+actual next service date/mileage,ml_next_service_targets,False,False,PASS — evaluation only
+future next-service task labels,ml_next_task_targets,False,False,PASS — evaluation only
+future service/task/status/mileage,future operational rows,False,False,PASS — excluded

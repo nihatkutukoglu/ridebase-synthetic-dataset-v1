@@ -1,0 +1,3 @@
+﻿target,members,weights,blend_val_mae,best_single_val_mae,improvement_pct,max_resid_corr,accepted,stack_val_mae
+DAYS,LGBM | XGB | HGB,"[np.float64(0.5), np.float64(0.4), np.float64(0.1)]",9.231707913675553,9.297719208066704,0.71,0.9812945488701208,True,
+KM,HGB | XGB | LGBM,"[np.float64(0.6), np.float64(0.4), np.float64(0.0)]",598.1607922351984,600.8434583318509,0.446,0.9782079928015744,False,

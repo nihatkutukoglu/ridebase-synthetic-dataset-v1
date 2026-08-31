@@ -3,4 +3,12 @@ numpy
 pyarrow
 jupyter
 matplotlib
-scikit-learn
+scikit-learn==1.8.0
+lazypredict==0.3.0
+xgboost==3.2.0
+lightgbm==4.6.0
+catboost==1.2.10
+seaborn
+scipy
+joblib
+tabulate

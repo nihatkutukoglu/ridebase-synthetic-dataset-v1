@@ -1,0 +1,8 @@
+﻿model,metric,estimate,ci_low,ci_high,bootstrap_unit,n_replicates
+KM_REFERENCE,c_index,0.5,0.5,0.5,motorcycle_id,40
+KM_REFERENCE,ibs,0.1058,0.1017,0.1106,motorcycle_id,40
+KM_REFERENCE,brier_90,0.1376,0.1323,0.1418,motorcycle_id,40
+COX,c_index,0.8603,0.8511,0.871,motorcycle_id,40
+COX,ibs,0.0502,0.0456,0.0536,motorcycle_id,40
+COX,brier_90,0.0604,0.0554,0.0647,motorcycle_id,40
+RSF,c_index,0.8684,0.8621,0.8747,motorcycle_id,40

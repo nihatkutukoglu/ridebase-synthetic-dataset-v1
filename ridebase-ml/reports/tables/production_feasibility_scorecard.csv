@@ -1,0 +1,10 @@
+﻿dimension,status,reason
+service_history,FAIL,BLOCKED — Production extract not available
+mileage_quality,FAIL,BLOCKED — Production extract not available
+censoring_readiness,FAIL,BLOCKED — Production extract not available
+todo_label_quality,FAIL,BLOCKED — Production extract not available
+category_mapping_readiness,FAIL,BLOCKED — Production extract not available
+tenant_balance,FAIL,BLOCKED — Production extract not available
+cold_start,FAIL,BLOCKED — Production extract not available
+next_service_target_readiness,FAIL,BLOCKED — Production extract not available
+next_task_target_readiness,FAIL,BLOCKED — Production extract not available

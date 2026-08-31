@@ -1,0 +1,9 @@
+﻿target_name,target_family,future_info_used_to_define_target,future_info_used_as_feature,feature_matrix,leakage_status,notes
+RAW_ANY,ANY,actual_next_service timing/mileage,NONE,"SET_A_BASE_05 (05 preprocessor, 277 encoded, TRAIN-fit)",PASS,Gelecek bilgisi yalniz target tanimlamak icin; feature olarak kullanilmadi.
+LOG_ANY,ANY,actual_next_service timing/mileage,NONE,"SET_A_BASE_05 (05 preprocessor, 277 encoded, TRAIN-fit)",PASS,Gelecek bilgisi yalniz target tanimlamak icin; feature olarak kullanilmadi.
+V0_RESIDUAL_ANY,ANY,actual_next_service; V0 anchor snapshot-time policy hesabi (gelecek degil),NONE,"SET_A_BASE_05 (05 preprocessor, 277 encoded, TRAIN-fit)",PASS,Gelecek bilgisi yalniz target tanimlamak icin; feature olarak kullanilmadi.
+POLICY_RATIO_ANY,ANY,actual_next_service; policy beklenen interval snapshot-time bilgisi,NONE,"SET_A_BASE_05 (05 preprocessor, 277 encoded, TRAIN-fit)",PASS,Gelecek bilgisi yalniz target tanimlamak icin; feature olarak kullanilmadi.
+HISTORY_DEVIATION_ANY,ANY,actual_next_service; gecmis ortalama interval snapshot feature'i,NONE,"SET_A_BASE_05 (05 preprocessor, 277 encoded, TRAIN-fit)",PASS,Gelecek bilgisi yalniz target tanimlamak icin; feature olarak kullanilmadi.
+RAW_PERIODIC,PERIODIC,first future PERIODIC service timing/mileage (target tanimi icin gelecege bakis normaldir),NONE,"SET_A_BASE_05 (05 preprocessor, 277 encoded, TRAIN-fit)",PASS,Gelecek bilgisi yalniz target tanimlamak icin; feature olarak kullanilmadi.
+LOG_PERIODIC,PERIODIC,first future PERIODIC service timing/mileage,NONE,"SET_A_BASE_05 (05 preprocessor, 277 encoded, TRAIN-fit)",PASS,Gelecek bilgisi yalniz target tanimlamak icin; feature olarak kullanilmadi.
+V0_RESIDUAL_PERIODIC,PERIODIC,first future PERIODIC service; V0 anchor snapshot-time policy hesabi,NONE,"SET_A_BASE_05 (05 preprocessor, 277 encoded, TRAIN-fit)",PASS,Gelecek bilgisi yalniz target tanimlamak icin; feature olarak kullanilmadi.

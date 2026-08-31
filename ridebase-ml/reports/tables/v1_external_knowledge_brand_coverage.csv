@@ -1,0 +1,13 @@
+﻿brand,observed_snapshots,knowledge_available,coverage_pct,test_observed,test_knowledge
+Mondial,7973,7973,1.0,351,351
+Honda,7305,2381,0.326,321,95
+Kuba,5664,0,0.0,211,0
+Yamaha,2567,2567,1.0,127,127
+TVS,1715,1715,1.0,58,58
+RKS,1448,0,0.0,125,0
+Bajaj,524,524,1.0,29,29
+CFMOTO,392,176,0.449,20,8
+SYM,350,350,1.0,33,33
+KYMCO,141,87,0.617,7,3
+KTM,53,53,1.0,0,0
+Royal Enfield,21,21,1.0,0,0

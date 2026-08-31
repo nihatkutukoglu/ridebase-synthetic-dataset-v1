@@ -1,0 +1,83 @@
+{
+  "dataset_version": "1.2.0",
+  "eligible_counts": {
+    "DAYS": {
+      "TRAIN": 20679,
+      "VALIDATION": 1932,
+      "TEST": 2622
+    },
+    "KM": {
+      "TRAIN": 20678,
+      "VALIDATION": 1931,
+      "TEST": 2622
+    }
+  },
+  "raw_feature_count": 127,
+  "encoded_feature_count": 277,
+  "framework": "AutoGluon 1.6.1",
+  "ag_model_counts": {
+    "DAYS": 10,
+    "KM": 10
+  },
+  "ag_runtime_seconds": {
+    "DAYS": 113.75517566600001,
+    "KM": 96.79909741700021
+  },
+  "best_single": {
+    "DAYS": "Manual::CatBoost",
+    "KM": "AutoGluon::CatBoostD6"
+  },
+  "selection": {
+    "DAYS": "Manual::WeightedBlend",
+    "KM": "AutoGluon::WeightedEnsemble_L2"
+  },
+  "test_metrics": {
+    "DAYS": {
+      "mae": 20.80525528644605,
+      "median_ae": 14.15703017162496,
+      "r2": 0.4378646519191093,
+      "within_30": 0.8012967200610221,
+      "within_60": 0.9336384439359268
+    },
+    "KM": {
+      "mae": 1402.564641630986,
+      "median_ae": 656.8043212890625,
+      "r2": 0.13862135225672878,
+      "within_1000": 0.6174675819984744,
+      "within_2000": 0.7742181540808543
+    }
+  },
+  "advanced": {
+    "DAYS": {
+      "mae": 22.205754257969563,
+      "r2": 0.4348909015225443,
+      "median_ae": 16.55511119409106,
+      "within_30": 0.7833714721586575,
+      "within_60": 0.9420289855072465
+    },
+    "KM": {
+      "mae": 1510.1756083987357,
+      "r2": 0.2481438988050031,
+      "median_ae": 1091.4747835047751,
+      "within_1000": 0.463768115942029,
+      "within_2000": 0.7536231884057971
+    }
+  },
+  "representation_winner": {
+    "DAYS": "RAW_NATIVE_CATEGORICAL",
+    "KM": "RAW_NATIVE_CATEGORICAL"
+  },
+  "manual_best": {
+    "CatBoost": "DAYS MAE=20.900; KM MAE=1509.215",
+    "LightGBM": "DAYS MAE=22.159; KM MAE=1456.357",
+    "XGBoost": "DAYS MAE=21.629; KM MAE=1432.138"
+  },
+  "autogluon_weighted": {
+    "DAYS": "AutoGluon::WeightedEnsemble_L2: MAE=20.929, R2=0.2819",
+    "KM": "AutoGluon::WeightedEnsemble_L2: MAE=1406.367, R2=0.0942"
+  },
+  "verdict": "AUTOML FOUND MODERATE HEADROOM",
+  "leakage": "PASS",
+  "split_integrity": "PASS",
+  "reproducibility": "PASS"
+}

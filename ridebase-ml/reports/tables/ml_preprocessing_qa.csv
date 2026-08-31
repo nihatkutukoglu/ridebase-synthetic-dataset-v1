@@ -1,0 +1,11 @@
+﻿check,status,evidence
+imputer fit source = TRAIN,PASS,fit(X_train) single call; config fit_split=TRAIN
+scaler fit source = TRAIN,PASS,learned mean matches TRAIN=True
+encoder categories learned from TRAIN,PASS,all category sets match TRAIN=True
+test statistics never used for fit,PASS,validation/test only transform calls
+target columns not in X,PASS,[]
+future columns not in X,PASS,[]
+censored targets not imputed,PASS,"{'censored_next_service_values_nonnull': 0, 'censored_task_label_values_nonnull': 0, 'observed_task_label_nulls': 0}"
+split integrity preserved,PASS,temporal=True; keys=True
+processed matrices finite and aligned,PASS,"[{'split': 'TRAIN', 'row_count': 27428, 'expected_rows': 27428, 'column_count': 277, 'nan_count': 0, 'inf_count': 0, 'sparse': True, 'status': 'PASS'}, {'split': 'VALIDATION', 'row_count': 6399, 'expected_rows': 6399, 'column_count': 277, 'nan_count': 0, 'inf_count': 0, 'sparse': True, 'status': 'PASS'}, {'split': 'TEST', 'row_count': 7691, 'expected_rows': 7691, 'column_count': 277, 'nan_count': 0, 'inf_count': 0, 'sparse': True, 'status': 'PASS'}]"
+saved preprocessor reload,PASS,same 100-row transform=True

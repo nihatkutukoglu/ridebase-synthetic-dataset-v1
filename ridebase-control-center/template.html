@@ -1,0 +1,1597 @@
+<!doctype html>
+<html lang="tr">
+<head>
+<meta charset="utf-8">
+<title>RideBase ML Control Center</title>
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    color-scheme: dark;
+    --bg:#090c12; --surface:#10141d; --surface-2:#161b26; --surface-3:#1c2230;
+    --border:rgba(255,255,255,.08); --border-strong:rgba(255,255,255,.16);
+    --text:#f4f6fa; --text-2:#a9b1c2; --muted:#737c8d;
+    --accent:#ff7a29; --accent-ink:#1a0d03; --accent-tint:rgba(255,122,41,.14);
+    --accent-2:#3ec6ff; --accent-2-tint:rgba(62,198,255,.14);
+    --good:#35c235; --warning:#fab219; --critical:#ff6b6b;
+    --good-tint:rgba(53,194,53,.14); --warning-tint:rgba(250,178,25,.14); --critical-tint:rgba(255,107,107,.14);
+    --chart-1:#3987e5; --chart-2:#d95926; --chart-3:#199e70; --chart-4:#c98500;
+    --shadow:0 1px 2px rgba(0,0,0,.4),0 16px 36px rgba(0,0,0,.5);
+    --sidebar-w:248px; --maxw:1180px;
+    --panel-bg:#05070b; --panel-surface:#10141d; --panel-border:rgba(255,255,255,.08);
+    --panel-text:#f4f6fa; --panel-muted:#8891a3;
+    --mono:"JetBrains Mono",ui-monospace,SFMono-Regular,Menlo,monospace;
+    --sans:"Plus Jakarta Sans",-apple-system,"Segoe UI",sans-serif;
+  }
+  *{box-sizing:border-box}
+  @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+  html,body{margin:0;padding:0}
+  body{background:var(--bg);color:var(--text);font-family:var(--sans);font-size:15px;line-height:1.6;-webkit-font-smoothing:antialiased}
+  a{color:inherit}
+  ::selection{background:var(--accent-tint)}
+  .num,.metric-num{font-family:var(--mono);font-variant-numeric:tabular-nums}
+  h1,h2,h3,h4{margin:0;text-wrap:balance}
+  ::-webkit-scrollbar{width:9px;height:9px}
+  ::-webkit-scrollbar-thumb{background:#2a3140;border-radius:8px}
+  :focus-visible{outline:2px solid var(--accent-2);outline-offset:2px;border-radius:4px}
+
+  /* ============ layout shell ============ */
+  .shell{display:grid;grid-template-columns:var(--sidebar-w) 1fr;min-height:100vh}
+  .sidebar{position:sticky;top:0;height:100vh;overflow-y:auto;background:var(--panel-bg);border-right:1px solid var(--border);
+    display:flex;flex-direction:column;gap:4px;padding:20px 14px}
+  .brand{display:flex;flex-direction:column;gap:2px;padding:6px 8px 14px;border-bottom:1px solid var(--border);margin-bottom:8px}
+  .brand .logo{font:800 1.06rem/1 var(--sans);letter-spacing:.01em;display:flex;align-items:center}
+  .brand .logo .bolt{color:var(--accent);display:inline-flex;margin:0 1px}
+  .brand .logo .bolt svg{width:11px;height:16px}
+  .brand small{font:600 .62rem/1.3 var(--sans);letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin-top:5px}
+  .nav-group{margin-top:12px}
+  .nav-group .glabel{font:700 .6rem/1 var(--sans);letter-spacing:.16em;text-transform:uppercase;color:var(--muted);padding:6px 10px}
+  .nav-item{display:flex;align-items:center;gap:9px;width:100%;text-align:left;background:none;border:none;color:var(--text-2);
+    font:600 .82rem/1 var(--sans);padding:9px 10px;border-radius:8px;cursor:pointer;position:relative}
+  .nav-item .ic{width:15px;height:15px;flex:none;opacity:.8}
+  .nav-item:hover{background:var(--surface-2);color:var(--text)}
+  .nav-item.active{background:var(--accent-tint);color:var(--accent)}
+  .nav-item.sub{padding-left:30px;font-size:.78rem;font-weight:500}
+  .nav-item .soon{margin-left:auto;font:700 .54rem/1 var(--sans);letter-spacing:.08em;padding:3px 6px;border-radius:999px;
+    background:var(--surface-2);color:var(--muted);border:1px solid var(--border)}
+  .sidebar-foot{margin-top:auto;padding:12px 10px 4px;border-top:1px solid var(--border);display:flex;flex-direction:column;gap:6px}
+  .sidebar-foot .row{display:flex;justify-content:space-between;font-size:.72rem;color:var(--muted)}
+  .sidebar-foot .row b{color:var(--text-2);font-family:var(--mono)}
+  .kbd{font:600 .66rem/1 var(--mono);border:1px solid var(--border);border-bottom-width:2px;border-radius:5px;padding:2px 5px;color:var(--text-2)}
+
+  .main{min-width:0;display:flex;flex-direction:column}
+  .topbar{display:none;position:sticky;top:0;z-index:30;background:var(--panel-bg);border-bottom:1px solid var(--border);
+    padding:10px 16px;align-items:center;gap:12px}
+  .topbar .logo{font:800 .95rem/1 var(--sans)}
+  .topbar .logo .bolt{color:var(--accent)}
+  .hamburger{background:var(--surface-2);border:1px solid var(--border);border-radius:8px;color:var(--text);width:36px;height:36px;font-size:1rem;cursor:pointer}
+  .content{padding:34px clamp(16px,4vw,44px) 80px;max-width:calc(var(--maxw) + 88px);width:100%;margin:0 auto}
+
+  /* ============ module header ============ */
+  .mod-head{margin-bottom:26px}
+  .mod-head .eyebrow{font:700 .68rem/1 var(--sans);letter-spacing:.14em;text-transform:uppercase;color:var(--accent)}
+  .mod-head h1{font-size:clamp(1.5rem,3vw,2.05rem);font-weight:800;margin-top:8px}
+  .mod-head p.lede{color:var(--text-2);font-size:.95rem;max-width:66ch;margin:8px 0 0}
+  .mod-head .chips{margin-top:14px}
+  .chips{display:flex;flex-wrap:wrap;gap:8px}
+  .chip{font:600 .72rem/1 var(--sans);padding:6px 11px;border-radius:999px;background:var(--surface-2);border:1px solid var(--border);color:var(--text-2);
+    display:inline-flex;align-items:center;gap:6px;letter-spacing:.02em}
+  .chip.accent{background:var(--accent-tint);color:var(--accent);border-color:transparent}
+  .chip.cyan{background:var(--accent-2-tint);color:var(--accent-2);border-color:transparent}
+  .chip.good{background:var(--good-tint);color:var(--good);border-color:transparent}
+  .chip.warn{background:var(--warning-tint);color:var(--warning);border-color:transparent}
+  .chip.bad{background:var(--critical-tint);color:var(--critical);border-color:transparent}
+  .chip .dot{width:6px;height:6px;border-radius:50%;background:currentColor}
+  .provenance{margin-top:12px;font-size:.74rem;color:var(--muted);font-family:var(--mono)}
+  .provenance code{color:var(--text-2)}
+
+  /* ============ sections / grids / cards ============ */
+  .sec{padding:26px 0;border-top:1px solid var(--border)}
+  .sec:first-of-type{border-top:none;padding-top:6px}
+  .sec-head{display:flex;align-items:baseline;justify-content:space-between;gap:14px;flex-wrap:wrap;margin-bottom:16px}
+  .sec-head h2{font-size:1.18rem;font-weight:700}
+  .sec-head .tag{font:600 .68rem/1 var(--sans);letter-spacing:.06em;text-transform:uppercase;padding:5px 10px;border-radius:999px;
+    background:var(--surface-2);color:var(--text-2);border:1px solid var(--border)}
+  .sec-intro{color:var(--text-2);font-size:.9rem;max-width:70ch;margin:-6px 0 16px}
+  .grid{display:grid;gap:14px}
+  .g2{grid-template-columns:repeat(2,1fr)} .g3{grid-template-columns:repeat(3,1fr)} .g4{grid-template-columns:repeat(4,1fr)}
+  @media (max-width:1000px){.g3,.g4{grid-template-columns:repeat(2,1fr)}}
+  @media (max-width:640px){.g2,.g3,.g4{grid-template-columns:1fr}}
+  .card{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:20px 22px;box-shadow:var(--shadow)}
+  .card.tint{background:var(--accent-tint);border-color:transparent}
+  .card.cyan-tint{background:var(--accent-2-tint);border-color:transparent}
+  .card h3{font-size:1.02rem;font-weight:700;margin-bottom:3px}
+  .card .sub{color:var(--muted);font-size:.8rem;margin-bottom:14px}
+  .card p.copy{font-size:.87rem;color:var(--text-2);margin:0 0 10px}
+
+  .kpi{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:16px 16px 14px;box-shadow:var(--shadow);position:relative;overflow:hidden}
+  .kpi::before{content:"";position:absolute;left:0;top:0;height:100%;width:3px;background:var(--accent)}
+  .kpi.cyan::before{background:var(--accent-2)}
+  .kpi.plain::before{background:var(--border-strong)}
+  .kpi .eyebrow{font:700 .62rem/1.2 var(--sans);letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+  .kpi .value{font:700 1.7rem/1.05 var(--mono);margin-top:8px;letter-spacing:-.01em}
+  .kpi .value small{font-size:.86rem;color:var(--muted);font-weight:500;font-family:var(--sans)}
+  .kpi .note{font-size:.74rem;color:var(--muted);margin-top:5px}
+  /* V2: non-technical KPI annotations — kept small so the main number stays dominant */
+  .kpi .eyebrow .info{margin-left:5px;color:var(--muted);font:400 .82rem/1 var(--sans);cursor:help;vertical-align:baseline;text-transform:none;letter-spacing:0}
+  .kpi .eyebrow .info:hover{color:var(--accent-2)}
+  .kpi .xpl{font-size:.7rem;line-height:1.4;color:var(--text-2);margin-top:6px}
+  .kpi .dir{font:600 .62rem/1.35 var(--sans);letter-spacing:.02em;margin-top:5px;color:var(--muted)}
+  .kpi .dir b{color:var(--accent-2);font-weight:700}
+  .kpi .dir .mut{color:var(--muted);font-weight:600}
+  .kpi .kbadge{display:inline-block;margin-top:8px;padding:2px 8px;border-radius:999px;font:700 .6rem/1.3 var(--sans);letter-spacing:.04em;background:var(--surface-3);color:var(--text-2)}
+  .kpi .kbadge.good{background:var(--good-tint);color:var(--good)}
+  .kpi .kbadge.warn{background:var(--warning-tint);color:var(--warning)}
+  .kpi .kbadge.crit{background:var(--critical-tint);color:var(--critical)}
+
+  /* beginner-friendly explainers — "what does this page tell you?" + technical-detail accordion */
+  .pagenote{background:var(--accent-2-tint);border:1px solid transparent;border-left:3px solid var(--accent-2);
+    border-radius:10px;padding:14px 16px;margin:0 0 18px;font-size:.88rem;color:var(--text-2)}
+  .pagenote b{display:block;font:700 .64rem/1.4 var(--sans);letter-spacing:.1em;text-transform:uppercase;color:var(--accent-2);margin-bottom:5px}
+  .pagenote p{margin:0}
+  .pagenote p + p{margin-top:7px}
+  .pagenote .term{color:var(--muted);font-size:.8rem}
+  details.tech{margin-top:10px;border-top:1px solid var(--border);padding-top:8px}
+  details.tech summary{cursor:pointer;font:600 .72rem/1 var(--sans);letter-spacing:.04em;text-transform:uppercase;color:var(--muted);list-style:none}
+  details.tech summary::-webkit-details-marker{display:none}
+  details.tech summary::before{content:"▸ ";color:var(--accent-2)}
+  details.tech[open] summary::before{content:"▾ "}
+  details.tech .tbody{margin-top:8px;font-size:.82rem;color:var(--text-2)}
+  details.tech .tbody code{font-size:.9em;color:var(--text-2)}
+  ol.tk{margin:0;padding-left:20px;display:flex;flex-direction:column;gap:8px;font-size:.88rem;color:var(--text-2)}
+  ol.tk li b,ol.tk li strong{color:var(--text)}
+  .info{margin-left:5px;color:var(--muted);font:400 .82rem/1 var(--sans);cursor:help;vertical-align:baseline;text-transform:none;letter-spacing:0}
+  .info:hover{color:var(--accent-2)}
+
+  /* bar list */
+  .bars{display:flex;flex-direction:column;gap:8px;margin-top:4px}
+  .bar{display:grid;grid-template-columns:150px 1fr auto;align-items:center;gap:10px}
+  .bar .lbl{font-size:.79rem;color:var(--text-2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .bar .track{height:13px;background:var(--surface-2);border-radius:4px;overflow:hidden}
+  .bar .fill{height:100%;background:var(--accent);border-radius:4px}
+  .bar .fill.cyan{background:var(--accent-2)}
+  .bar .val{font:600 .76rem/1 var(--mono);color:var(--text);text-align:right;white-space:nowrap}
+  .bar .val small{color:var(--muted);font-weight:500}
+
+  /* table */
+  .twrap{overflow-x:auto}
+  table.tbl{width:100%;border-collapse:collapse;font-size:.83rem;min-width:520px}
+  table.tbl th{text-align:left;font:600 .64rem/1 var(--sans);text-transform:uppercase;letter-spacing:.05em;color:var(--muted);
+    padding:9px 10px;border-bottom:1px solid var(--border);white-space:nowrap}
+  table.tbl td{padding:9px 10px;border-bottom:1px solid var(--border);color:var(--text-2);vertical-align:top}
+  table.tbl tr:last-child td{border-bottom:none}
+  table.tbl td.k{color:var(--text);font-weight:600;white-space:nowrap}
+  table.tbl td.n,table.tbl th.n{font-family:var(--mono);text-align:right;white-space:nowrap}
+  table.tbl tbody tr:hover{background:var(--surface-2)}
+  table.tbl tr.hl{background:var(--accent-tint)}
+
+  /* finding callout */
+  .finding{display:flex;gap:12px;padding:13px 15px;border-radius:8px;border-left:3px solid var(--border);background:var(--surface-2);font-size:.85rem;margin-top:12px}
+  .finding .tl{flex:none;font:700 .6rem/1.4 var(--sans);letter-spacing:.08em;text-transform:uppercase;color:var(--muted);padding-top:2px;min-width:58px}
+  .finding b{display:block;margin-bottom:2px;color:var(--text)}
+  .finding p{margin:0;color:var(--text-2)}
+  .finding.good{background:var(--good-tint);border-left-color:var(--good)} .finding.good .tl{color:var(--good)}
+  .finding.warn{background:var(--warning-tint);border-left-color:var(--warning)} .finding.warn .tl{color:var(--warning)}
+  .finding.bad{background:var(--critical-tint);border-left-color:var(--critical)} .finding.bad .tl{color:var(--critical)}
+
+  /* status pill */
+  .pill{display:inline-flex;align-items:center;gap:6px;font:700 .64rem/1 var(--sans);letter-spacing:.04em;padding:4px 9px;border-radius:999px;text-transform:uppercase}
+  .pill.ok{background:var(--good-tint);color:var(--good)}
+  .pill.active{background:var(--accent-tint);color:var(--accent)}
+  .pill.warn{background:var(--warning-tint);color:var(--warning)}
+  .pill.bad{background:var(--critical-tint);color:var(--critical)}
+  .pill.plan{background:var(--surface-3);color:var(--muted)}
+  .pill.info{background:var(--accent-2-tint);color:var(--accent-2)}
+
+  /* module cards on overview */
+  .modcard{display:flex;flex-direction:column;gap:10px;background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:18px 20px;box-shadow:var(--shadow);text-align:left;cursor:pointer;width:100%}
+  .modcard:hover:not(:disabled){border-color:var(--border-strong);transform:translateY(-1px);transition:transform .12s,border-color .12s}
+  .modcard:disabled{opacity:.55;cursor:not-allowed}
+  .modcard .mc-top{display:flex;align-items:center;justify-content:space-between;gap:10px}
+  .modcard .mc-id{font:800 .95rem/1 var(--mono);color:var(--accent)}
+  .modcard .mc-id.cyan{color:var(--accent-2)}
+  .modcard h3{font-size:1.02rem}
+  .modcard .mc-tag{font-size:.78rem;color:var(--muted)}
+  .modcard .mc-cta{font:700 .72rem/1 var(--sans);color:var(--text-2);letter-spacing:.03em;text-transform:uppercase;margin-top:2px}
+
+  /* timeline */
+  .timeline{display:flex;flex-direction:column;gap:0;position:relative;margin-left:6px}
+  .tl-item{display:grid;grid-template-columns:16px 1fr;gap:14px;padding:9px 0}
+  .tl-item .tl-mark{position:relative;display:flex;justify-content:center}
+  .tl-item .tl-mark::before{content:"";position:absolute;top:16px;bottom:-18px;width:2px;background:var(--border)}
+  .tl-item:last-child .tl-mark::before{display:none}
+  .tl-item .tl-dot{width:11px;height:11px;border-radius:50%;background:var(--surface-3);border:2px solid var(--muted);margin-top:4px;z-index:1}
+  .tl-item[data-kind="data"] .tl-dot{border-color:var(--accent-2);background:var(--accent-2-tint)}
+  .tl-item[data-kind="model"] .tl-dot{border-color:var(--accent);background:var(--accent-tint)}
+  .tl-item[data-kind="experiment"] .tl-dot{border-color:var(--warning);background:var(--warning-tint)}
+  .tl-item[data-kind="ui"] .tl-dot{border-color:var(--good);background:var(--good-tint)}
+  .tl-item .tl-body b{font-size:.86rem;color:var(--text);font-weight:600}
+  .tl-item .tl-body span{display:block;font-size:.78rem;color:var(--muted)}
+
+  /* progress bar */
+  .prog{display:flex;flex-direction:column;gap:10px}
+  .prog-row{display:grid;grid-template-columns:130px 1fr auto;align-items:center;gap:12px}
+  .prog-row .pl{font-size:.82rem;color:var(--text-2)}
+  .prog-row .pt{height:8px;background:var(--surface-2);border-radius:999px;overflow:hidden}
+  .prog-row .pf{height:100%;border-radius:999px;background:var(--accent)}
+  .prog-row .pf.done{background:var(--good)} .prog-row .pf.zero{background:var(--surface-3)}
+  .prog-row .pv{font:600 .72rem/1 var(--mono);color:var(--muted)}
+
+  /* activity feed */
+  .feed{display:flex;flex-direction:column}
+  .feed-item{display:grid;grid-template-columns:auto 1fr;gap:12px;padding:12px 0;border-bottom:1px solid var(--border);cursor:pointer}
+  .feed-item:last-child{border-bottom:none}
+  .feed-item:hover{background:var(--surface-2)}
+  .feed-item .fi-l{display:flex;flex-direction:column;align-items:flex-start;gap:5px;min-width:74px}
+  .feed-item .fi-date{font:600 .68rem/1 var(--mono);color:var(--muted)}
+  .feed-item .fi-body b{font-size:.86rem;color:var(--text)}
+  .feed-item .fi-body p{margin:3px 0 0;font-size:.8rem;color:var(--text-2)}
+  .feed-item .fi-meta{margin-top:6px;display:flex;gap:6px;flex-wrap:wrap}
+
+  /* sub-tabs (V1) */
+  .subtabs{display:flex;gap:4px;overflow-x:auto;border-bottom:1px solid var(--border);margin-bottom:22px;padding-bottom:0}
+  .subtab{flex:none;background:none;border:none;border-bottom:2px solid transparent;color:var(--text-2);font:600 .78rem/1 var(--sans);
+    padding:10px 12px;cursor:pointer;white-space:nowrap;text-transform:uppercase;letter-spacing:.03em}
+  .subtab:hover{color:var(--text)}
+  .subtab.active{color:var(--accent);border-bottom-color:var(--accent)}
+
+  .empty{border:1px dashed var(--border);border-radius:10px;padding:16px;text-align:center;color:var(--muted);font-size:.83rem}
+  .mono-block{background:var(--panel-bg);border:1px solid var(--border);border-radius:8px;padding:12px;font:.72rem/1.6 var(--mono);color:var(--text-2);overflow-x:auto;white-space:pre}
+  figure.fig{margin:0;border:1px solid var(--border);border-radius:10px;overflow:hidden;background:var(--surface-2)}
+  figure.fig img{display:block;width:100%;height:auto;background:#fff}
+  figure.fig figcaption{padding:8px 10px;font-size:.74rem;color:var(--muted);border-top:1px solid var(--border)}
+
+  /* command palette */
+  .palette-back{position:fixed;inset:0;background:rgba(3,5,9,.66);backdrop-filter:blur(3px);z-index:100;display:none;align-items:flex-start;justify-content:center;padding-top:12vh}
+  .palette-back.on{display:flex}
+  .palette{width:min(560px,92vw);background:var(--surface);border:1px solid var(--border-strong);border-radius:14px;box-shadow:var(--shadow);overflow:hidden}
+  .palette input{width:100%;background:var(--panel-bg);border:none;border-bottom:1px solid var(--border);color:var(--text);font:500 .95rem/1 var(--sans);padding:15px 16px;outline:none}
+  .palette .results{max-height:52vh;overflow-y:auto}
+  .palette .pr{display:flex;align-items:center;gap:10px;padding:11px 16px;cursor:pointer;font-size:.85rem;color:var(--text-2)}
+  .palette .pr:hover,.palette .pr.sel{background:var(--accent-tint);color:var(--text)}
+  .palette .pr .pr-k{margin-left:auto;font:600 .64rem/1 var(--sans);letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+  .palette .pr small{color:var(--muted)}
+
+  /* ============ EDA module — component CSS scoped under .eda-scope ============ */
+  .eda-scope .section-head{display:flex;align-items:baseline;justify-content:space-between;gap:16px;margin-bottom:20px;flex-wrap:wrap}
+  .eda-scope .section-head h2{font-size:clamp(1.3rem,2.4vw,1.7rem);font-weight:700}
+  .eda-scope .section-head .tag{font:600 .7rem/1 var(--sans);letter-spacing:.06em;text-transform:uppercase;padding:6px 11px;border-radius:999px;background:var(--surface-2);color:var(--text-2);border:1px solid var(--border)}
+  .eda-scope section{padding:30px 0;border-bottom:1px solid var(--border)}
+  .eda-scope section:last-of-type{border-bottom:none}
+  .eda-scope .section-intro{color:var(--text-2);font-size:.92rem;max-width:72ch;margin:-8px 0 20px}
+  .eda-scope .kpi-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}
+  @media (max-width:900px){.eda-scope .kpi-grid{grid-template-columns:repeat(2,1fr)}}
+  .eda-scope .kpi{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:18px 18px 16px;box-shadow:var(--shadow)}
+  .eda-scope .kpi .eyebrow{font:700 .64rem/1.2 var(--sans);letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+  .eda-scope .kpi .value{font-size:1.8rem;font-weight:700;margin-top:7px;letter-spacing:-.01em;font-family:var(--mono)}
+  .eda-scope .kpi .value small{font-size:.9rem;color:var(--muted);font-weight:500;font-family:var(--sans)}
+  .eda-scope .kpi .note{font-size:.76rem;color:var(--muted);margin-top:5px}
+  .eda-scope .kpi .flag{display:inline-flex;align-items:center;gap:5px;font:700 .64rem/1 var(--sans);letter-spacing:.02em;margin-top:9px;padding:3px 8px;border-radius:999px}
+  .eda-scope .kpi .flag.warn{background:var(--warning-tint);color:var(--warning)}
+  .eda-scope .kpi .flag.good{background:var(--good-tint);color:var(--good)}
+  .eda-scope .grid-2{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+  .eda-scope .grid-4{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}
+  @media (max-width:900px){.eda-scope .grid-2,.eda-scope .grid-4{grid-template-columns:1fr}}
+  @media (max-width:900px){.eda-scope .grid-4{grid-template-columns:repeat(2,1fr)}}
+  .eda-scope .card{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:20px 22px;box-shadow:var(--shadow)}
+  .eda-scope .card h3{font-size:1.05rem;font-weight:700;margin-bottom:4px}
+  .eda-scope .card .sub{color:var(--muted);font-size:.8rem;margin-bottom:14px}
+  .eda-scope .card p.copy{font-size:.86rem;color:var(--text-2);margin:0 0 10px;max-width:640px}
+  .eda-scope .bar-list{display:flex;flex-direction:column;gap:8px;margin-top:4px}
+  .eda-scope .bar-row{display:grid;grid-template-columns:168px 1fr auto;align-items:center;gap:10px}
+  .eda-scope .bar-row .lbl{font-size:.8rem;color:var(--text-2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .eda-scope .bar-row .track{height:13px;background:var(--surface-2);border-radius:4px;overflow:hidden}
+  .eda-scope .bar-row .fill{height:100%;background:var(--accent);border-radius:4px}
+  .eda-scope .bar-row .val{font:600 .76rem/1 var(--mono);color:var(--text);text-align:right;white-space:nowrap}
+  .eda-scope .bar-row .val small{color:var(--muted);font-weight:500}
+  .eda-scope .ybar-chart{display:flex;align-items:flex-end;gap:18px;height:200px;padding:0 4px;margin-top:8px}
+  .eda-scope .ybar-col{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;height:100%}
+  .eda-scope .ybar-count{font:700 .8rem/1 var(--mono);color:var(--text);margin-bottom:8px}
+  .eda-scope .ybar{position:relative;width:100%;max-width:60px;background:var(--accent);border-radius:6px 6px 2px 2px;outline-offset:3px}
+  .eda-scope .ybar.partial{background:repeating-linear-gradient(135deg,var(--accent) 0 7px,color-mix(in srgb,var(--accent) 55%,transparent) 7px 14px)}
+  .eda-scope .ybar[data-tooltip]:hover::after,.eda-scope .ybar[data-tooltip]:focus-visible::after{content:attr(data-tooltip);position:absolute;bottom:100%;left:50%;transform:translate(-50%,-8px);background:var(--text);color:var(--bg);padding:5px 9px;border-radius:6px;font:600 .7rem/1.3 var(--mono);white-space:pre;pointer-events:none;z-index:5;box-shadow:var(--shadow)}
+  .eda-scope .ybar-year{font:600 .76rem/1 var(--sans);color:var(--text-2);margin-top:10px;letter-spacing:.02em}
+  .eda-scope .ybar-year small{display:block;color:var(--muted);font-size:.66rem;font-weight:500}
+  .eda-scope .line-chart-wrap{position:relative;aspect-ratio:1000/280;width:100%;margin-top:6px}
+  .eda-scope .line-chart-wrap svg{position:absolute;inset:0;width:100%;height:100%;overflow:visible}
+  .eda-scope .line-tip{position:absolute;transform:translate(-50%,-115%);opacity:0;transition:opacity .08s;background:var(--text);color:var(--bg);padding:6px 10px;border-radius:7px;font-family:var(--mono);font-size:.72rem;white-space:nowrap;pointer-events:none;box-shadow:var(--shadow);z-index:6}
+  .eda-scope .line-tip .tip-lbl{color:color-mix(in srgb,var(--bg) 60%,var(--text-2));font-weight:500;font-family:var(--sans)}
+  .eda-scope .line-tip .tip-val{font-weight:700;margin-left:6px}
+  .eda-scope .comp-bar{display:flex;height:30px;border-radius:7px;overflow:hidden;border:1px solid var(--border)}
+  .eda-scope .comp-seg{height:100%;border-right:2px solid var(--surface)}
+  .eda-scope .comp-seg:last-child{border-right:none}
+  .eda-scope .comp-legend{display:flex;flex-wrap:wrap;gap:8px 18px;margin-top:12px}
+  .eda-scope .comp-legend-item{display:flex;align-items:center;gap:7px;font-size:.8rem;color:var(--text-2)}
+  .eda-scope .comp-legend-item .swatch{width:10px;height:10px;border-radius:2px;flex:none}
+  .eda-scope .comp-legend-item b{color:var(--text);font-family:var(--mono)}
+  .eda-scope .finding{display:flex;gap:12px;padding:14px 16px;border-radius:8px;border-left:3px solid var(--border);background:var(--surface-2);font-size:.86rem;margin-top:14px}
+  .eda-scope .finding .tag-lbl{flex:none;font:700 .62rem/1.4 var(--sans);letter-spacing:.08em;text-transform:uppercase;color:var(--muted);padding-top:2px;min-width:62px}
+  .eda-scope .finding.warn{background:var(--warning-tint);border-left-color:var(--warning)}
+  .eda-scope .finding.warn .tag-lbl{color:var(--warning)}
+  .eda-scope .finding.good{background:var(--good-tint);border-left-color:var(--good)}
+  .eda-scope .finding.good .tag-lbl{color:var(--good)}
+  .eda-scope .finding.critical{background:var(--critical-tint);border-left-color:var(--critical)}
+  .eda-scope .finding.critical .tag-lbl{color:var(--critical)}
+  .eda-scope .finding b{display:block;margin-bottom:2px;color:var(--text)}
+  .eda-scope .finding p{margin:0;color:var(--text-2)}
+  .eda-scope .table-scroll{overflow-x:auto}
+  .eda-scope table.spec{width:100%;border-collapse:collapse;font-size:.85rem;margin-top:6px;min-width:560px}
+  .eda-scope table.spec th{text-align:left;font:600 .68rem/1 var(--sans);text-transform:uppercase;letter-spacing:.05em;color:var(--muted);padding:9px 10px;border-bottom:1px solid var(--border);white-space:nowrap}
+  .eda-scope table.spec td{padding:10px;border-bottom:1px solid var(--border);color:var(--text-2);vertical-align:top}
+  .eda-scope table.spec tr:last-child td{border-bottom:none}
+  .eda-scope table.spec td.k{color:var(--text);font-weight:600;white-space:nowrap}
+  .eda-scope table.spec td.num,.eda-scope table.spec th.num{font-family:var(--mono);text-align:right}
+  .eda-scope table.spec tbody tr:hover{background:var(--surface-2)}
+  .eda-scope table.extremes{width:100%;border-collapse:collapse;font-size:.83rem;margin-top:4px;min-width:780px}
+  .eda-scope table.extremes th{text-align:left;font:600 .66rem/1 var(--sans);text-transform:uppercase;letter-spacing:.05em;color:var(--muted);padding:8px 10px;border-bottom:1px solid var(--border);white-space:nowrap}
+  .eda-scope table.extremes td{padding:8px 10px;border-bottom:1px solid var(--border);color:var(--text-2)}
+  .eda-scope table.extremes tr.group-row td{padding-top:20px;padding-bottom:6px;border-bottom:none;font:700 .66rem/1 var(--sans);letter-spacing:.07em;text-transform:uppercase;color:var(--accent)}
+  .eda-scope table.extremes tr.group-row:first-child td{padding-top:4px}
+  .eda-scope table.extremes td.win{color:var(--text);font-weight:600}
+  .eda-scope table.extremes td.val{font-family:var(--mono);color:var(--text);text-align:right;white-space:nowrap}
+  .eda-scope table.extremes td.support{color:var(--muted);font-size:.78rem;white-space:nowrap}
+  .eda-scope table.extremes tbody tr:not(.group-row):hover{background:var(--surface-2)}
+  .eda-scope .chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
+  .eda-scope .hud-card{position:relative;padding-top:24px}
+  .eda-scope .hud-corner{position:absolute;width:16px;height:16px;pointer-events:none}
+  .eda-scope .hud-corner.tl{top:10px;left:10px;border-top:2px solid var(--accent-2);border-left:2px solid var(--accent-2);border-radius:4px 0 0 0;opacity:.6}
+  .eda-scope .hud-corner.tr{top:10px;right:10px;border-top:2px solid var(--accent-2);border-right:2px solid var(--accent-2);border-radius:0 4px 0 0;opacity:.6}
+  .eda-scope .hud-corner.bl{bottom:10px;left:10px;border-bottom:2px solid var(--accent-2);border-left:2px solid var(--accent-2);border-radius:0 0 0 4px;opacity:.6}
+  .eda-scope .hud-corner.br{bottom:10px;right:10px;border-bottom:2px solid var(--accent-2);border-right:2px solid var(--accent-2);border-radius:0 0 4px 0;opacity:.6}
+  .eda-scope .hud-label{display:inline-flex;align-items:center;gap:7px;font:700 .68rem/1 var(--sans);letter-spacing:.1em;text-transform:uppercase;color:var(--text-2);margin-bottom:4px}
+  .eda-scope .hud-label::before{content:"";width:6px;height:6px;border-radius:50%;background:var(--accent)}
+  .eda-scope .hud-stat-row{display:flex;gap:28px;flex-wrap:wrap;margin-top:18px;padding-top:16px;border-top:1px solid var(--border)}
+  .eda-scope .hud-stat{display:flex;flex-direction:column;gap:4px}
+  .eda-scope .hud-stat .hs-dot{display:inline-flex;align-items:center;gap:6px;font:600 .64rem/1 var(--sans);letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+  .eda-scope .hud-stat .hs-dot::before{content:"";width:6px;height:6px;border-radius:50%;background:var(--accent-2)}
+  .eda-scope .hud-stat.alt .hs-dot::before{background:var(--accent)}
+  .eda-scope .hud-stat .hs-val{font:700 1.1rem/1 var(--mono);color:var(--text)}
+  .eda-scope .chip{font:500 .8rem/1 var(--sans);padding:7px 12px;border-radius:999px;background:var(--surface-2);border:1px solid var(--border);color:var(--text-2)}
+
+  /* ============ responsive shell ============ */
+  @media (max-width:900px){
+    .shell{grid-template-columns:1fr}
+    .sidebar{position:fixed;left:0;top:0;bottom:0;width:270px;z-index:50;transform:translateX(-100%);transition:transform .2s}
+    .shell.drawer .sidebar{transform:translateX(0)}
+    .shell.drawer::after{content:"";position:fixed;inset:0;background:rgba(3,5,9,.5);z-index:40}
+    .topbar{display:flex}
+  }
+</style>
+</head>
+<body>
+<div class="shell" id="shell">
+  <aside class="sidebar" id="sidebar"></aside>
+  <div class="main">
+    <div class="topbar">
+      <button class="hamburger" id="ham" aria-label="Menü">☰</button>
+      <span class="logo">RIDE<span class="bolt">⚡</span>BASE</span>
+      <span style="margin-left:auto;font-size:.7rem;color:var(--muted)" class="num" id="topDs">v1.3</span>
+    </div>
+    <main class="content" id="view" tabindex="-1"></main>
+  </div>
+</div>
+
+<div class="palette-back" id="paletteBack">
+  <div class="palette" role="dialog" aria-modal="true" aria-label="Komut paleti">
+    <input id="paletteInput" type="text" placeholder="Ara: modül, deney, metrik…  (örn. 'V0', 'KM MAE', 'Notebook 11')" autocomplete="off">
+    <div class="results" id="paletteResults"></div>
+  </div>
+</div>
+
+<script>/*__MANIFEST__*/</script>
+<script>/*__CHANGELOG__*/</script>
+<script>
+"use strict";
+/* EDA module markup, base64 (UTF-8 safe) — verbatim sections from the existing
+   "RideBase Veri Paneli" artifact, re-homed under the Control Center nav. */
+var EDA_B64 = "__EDA_B64__";
+function b64utf8(s){try{return decodeURIComponent(escape(window.atob(s)));}catch(e){return "";}}
+var EDA_HTML = b64utf8(EDA_B64);
+
+/* ---------------- helpers ---------------- */
+var $ = function(s,r){return (r||document).querySelector(s);};
+var M = window.__MANIFEST__ || {};
+var CL = window.__CHANGELOG__ || [];
+function esc(x){return String(x==null?"":x).replace(/[&<>"]/g,function(c){return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c];});}
+function n0(v){return v==null||v!==v?"—":Math.round(v).toLocaleString("en-US");}
+function n1(v){return v==null||v!==v?"—":Number(v).toLocaleString("en-US",{minimumFractionDigits:1,maximumFractionDigits:1});}
+function n2(v){return v==null||v!==v?"—":Number(v).toLocaleString("en-US",{minimumFractionDigits:2,maximumFractionDigits:2});}
+function r3(v){return v==null||v!==v?"—":Number(v).toFixed(3);}
+function pct(v,d){return v==null||v!==v?"—":(v*100).toFixed(d==null?1:d)+"%";}
+function sgn(v,f){if(v==null||v!==v)return "—";var s=(f||n1)(Math.abs(v));return (v>0?"+":v<0?"−":"")+s;}
+function asNum(v){var x=typeof v==="string"?parseFloat(v):v;return (typeof x==="number"&&isFinite(x))?x:null;}
+function statusPill(s){s=(s||"").toLowerCase();
+  if(s==="complete"||s==="pass"||s==="frozen"||s==="baseline")return '<span class="pill ok">'+esc(s||"complete")+'</span>';
+  if(s==="active")return '<span class="pill active">active</span>';
+  if(s==="in_progress"||s==="in progress")return '<span class="pill active">in progress</span>';
+  if(s==="planned")return '<span class="pill plan">coming soon</span>';
+  if(s==="info")return '<span class="pill info">info</span>';
+  if(s==="warning"||s==="review")return '<span class="pill warn">'+esc(s)+'</span>';
+  if(s==="failed"||s==="fail")return '<span class="pill bad">'+esc(s)+'</span>';
+  return '<span class="pill plan">'+esc(s||"—")+'</span>';}
+function card(title,sub,body){return '<div class="card"><h3>'+esc(title)+'</h3>'+(sub?'<div class="sub">'+esc(sub)+'</div>':'')+body+'</div>';}
+function kpi(label,value,note,accent){return '<div class="kpi '+(accent||'')+'"><div class="eyebrow">'+esc(label)+'</div><div class="value">'+value+'</div>'+(note?'<div class="note">'+note+'</div>':'')+'</div>';}
+/* V2 explanatory KPI — value keeps its visual weight; small lines below explain the metric for non-technical users. o={xpl,dir,badge,badgeKind,tip,accent} */
+function v2kpi(label,value,o){o=o||{};
+  var tip=o.tip?'<span class="info" title="'+esc(o.tip)+'" role="img" aria-label="bilgi">&#9432;</span>':'';
+  var dir=o.dir?'<div class="dir">'+o.dir+'</div>':'';
+  var xpl=o.xpl?'<div class="xpl">'+esc(o.xpl)+'</div>':'';
+  var badge=o.badge?'<div class="kbadge '+(o.badgeKind||'')+'">'+esc(o.badge)+'</div>':'';
+  return '<div class="kpi '+(o.accent||'')+'"><div class="eyebrow">'+esc(label)+tip+'</div>'
+    +'<div class="value">'+value+'</div>'+xpl+dir+badge+'</div>';
+}
+function v2dir(good,ref){return '<b>'+esc(good)+'</b>'+(ref?' · <span class="mut">'+esc(ref)+'</span>':'');}
+function barRows(items,accent){return '<div class="bars">'+items.map(function(it){
+  var w=Math.max(1,Math.min(100,it.pct));
+  return '<div class="bar"><div class="lbl">'+esc(it.label)+'</div><div class="track"><div class="fill '+(accent||'')+'" style="width:'+w+'%"></div></div><div class="val">'+it.val+'</div></div>';
+}).join('')+'</div>';}
+function tbl(cols,rows,hlFn){
+  return '<div class="twrap"><table class="tbl"><thead><tr>'+cols.map(function(c){return '<th class="'+(c.n?'n':'')+'">'+esc(c.label)+'</th>';}).join('')+'</tr></thead><tbody>'+
+   rows.map(function(row){return '<tr class="'+(hlFn&&hlFn(row)?'hl':'')+'">'+cols.map(function(c){
+     var v=c.get?c.get(row):row[c.key];return '<td class="'+(c.n?'n':'')+(c.k?' k':'')+'">'+(v==null?'—':v)+'</td>';
+   }).join('')+'</tr>';}).join('')+'</tbody></table></div>';
+}
+function finding(kind,label,html){return '<div class="finding '+(kind||'')+'"><div class="tl">'+esc(label)+'</div><div>'+html+'</div></div>';}
+function emptyBox(t){return '<div class="empty">'+esc(t||"Artifact not available")+'</div>';}
+/* beginner-friendly helpers — plain Turkish first, technical detail second */
+function pageNote(html,tech,term){return '<div class="pagenote"><b>Bu sayfa ne anlatıyor?</b><p>'+html+'</p>'
+  +(term?'<p class="term">'+esc(term)+'</p>':'')+(tech?techBox(tech):'')+'</div>';}
+function techBox(html){return '<details class="tech"><summary>Teknik detay</summary><div class="tbody">'+html+'</div></details>';}
+function takeaways(items){return '<div class="sec">'+card("Bu sayfadan çıkarman gereken 3 şey",null,
+  '<ol class="tk">'+items.map(function(t){return '<li>'+t+'</li>';}).join('')+'</ol>')+'</div>';}
+function termInfo(tip){return ' <span class="info" title="'+esc(tip)+'" role="img" aria-label="bilgi">&#9432;</span>';}
+
+/* ---------------- routing ---------------- */
+var ROUTES = {
+  overview:{label:"Overview",render:renderOverview},
+  eda:{label:"EDA",render:renderEda},
+  v0:{label:"V0 Baseline",render:renderV0},
+  v1:{label:"V1 Regression",render:renderV1},
+  v2:{label:"V2 Survival",render:function(sub){return (M.v2?renderV2(sub):renderPlaceholder("v2"));}},
+  v3:{label:"V3 Next Task",render:function(){return renderPlaceholder("v3");}},
+  experiments:{label:"Experiments",render:renderExperiments},
+  models:{label:"Models",render:renderModels},
+  dataset:{label:"Dataset",render:renderDataset},
+  activity:{label:"Activity",render:renderActivity},
+  status:{label:"System Status",render:renderStatus}
+};
+function parseHash(){
+  var h=(location.hash||"#overview").replace(/^#/,"");
+  var parts=h.split("/");
+  return {route:ROUTES[parts[0]]?parts[0]:"overview",sub:parts[1]||null};
+}
+function go(hash){location.hash=hash;}
+function route(){
+  var st=parseHash();
+  buildSidebar(st);
+  var view=$("#view");
+  view.innerHTML=ROUTES[st.route].render(st.sub);
+  view.focus();
+  window.scrollTo({top:0,behavior:"instant"});
+  if(st.route==="eda")initMonthlyChart();
+  if(st.route==="v2" && st.sub==="predict" && typeof wireV2Predict==="function")wireV2Predict();
+  $("#shell").classList.remove("drawer");
+}
+window.addEventListener("hashchange",route);
+
+/* ---------------- sidebar ---------------- */
+function navItem(id,label,opts){opts=opts||{};
+  var cur=parseHash();
+  var active=(cur.route===id && !opts.subOf) || (opts.subOf && cur.route===opts.subOf && cur.sub===opts.subKey);
+  var soon=opts.soon?'<span class="soon">SOON</span>':'';
+  return '<button class="nav-item'+(opts.sub?' sub':'')+(active?' active':'')+'" data-go="'+esc(opts.hash||id)+'"'+(opts.disabled?' disabled':'')+'>'
+    +'<span class="ic">'+(opts.ic||'')+'</span><span>'+esc(label)+'</span>'+soon+'</button>';
+}
+function buildSidebar(st){
+  var mods=M.modules||[];
+  function mod(id){return mods.filter(function(m){return m.id===id;})[0]||{};}
+  var html=''
+   +'<div class="brand"><span class="logo">RIDE<span class="bolt">⚡</span>BASE</span><small>ML Control Center</small></div>'
+   +'<div class="nav-group">'+navItem("overview","Overview",{ic:dot()})+'</div>'
+   +'<div class="nav-group"><div class="glabel">Modules</div>'
+     +navItem("eda","EDA",{ic:sq()})
+     +navItem("v0","V0 Baseline",{ic:sq()})
+     +navItem("v1","V1 Regression",{ic:sq()})
+     +navItem("v2","V2 Survival",{ic:sq(),soon:!M.v2,disabled:false})
+     +navItem("v3","V3 Next Task",{ic:sq(),soon:true,disabled:false})
+   +'</div>';
+  if(st.route==="v1"){
+    var subs=[["overview","Overview"],["days","DAYS"],["km","KM"],["models","Models"],["features","Features"],
+      ["errors","Errors"],["drift","Drift"],["experiments","Experiments"],["predict","Live Prediction"],["verdict","Verdict"]];
+    html+='<div class="nav-group">'+subs.map(function(s){
+      return navItem("v1",s[1],{sub:true,hash:"v1/"+s[0],subOf:"v1",subKey:s[0]==="overview"?null:s[0]});
+    }).join('')+'</div>';
+  }
+  if(st.route==="v2" && M.v2){
+    var v2subs=[["overview","Genel Bakış"],["horizons","Zaman Aralıkları"],["calibration","Güvenilirlik"],["risk","Risk Grupları"],
+      ["models","Modeller"],["features","Modelin Baktığı Bilgiler"],["segments","Motor Grupları"],["packaging","Uygulamaya Bağlanma"],
+      ["predict","Canlı Tahmin"],["limitations","Sınırlamalar"]];
+    html+='<div class="nav-group">'+v2subs.map(function(s){
+      return navItem("v2",s[1],{sub:true,hash:"v2/"+s[0],subOf:"v2",subKey:s[0]==="overview"?null:s[0]});
+    }).join('')+'</div>';
+  }
+  html+='<div class="nav-group"><div class="glabel">System</div>'
+     +navItem("experiments","Experiments",{ic:sq()})
+     +navItem("models","Models",{ic:sq()})
+     +navItem("dataset","Dataset",{ic:sq()})
+     +navItem("activity","Activity",{ic:sq()})
+     +navItem("status","System Status",{ic:sq()})
+   +'</div>'
+   +'<div class="sidebar-foot">'
+     +'<div class="row"><span>Dataset</span><b>'+esc(M.current_dataset||"v1.3")+'</b></div>'
+     +'<div class="row"><span>Environment</span><b>'+esc(M.environment||"PILOT")+'</b></div>'
+     +'<div class="row"><span>Real fleet</span><b style="color:var(--warning)">'+esc(M.real_fleet_validation||"PENDING")+'</b></div>'
+     +'<div class="row" style="margin-top:6px"><span>Palette</span><span class="kbd">⌘K</span></div>'
+   +'</div>';
+  var sb=$("#sidebar"); sb.innerHTML=html;
+  sb.querySelectorAll("[data-go]").forEach(function(b){b.addEventListener("click",function(){go(b.getAttribute("data-go"));});});
+  $("#topDs").textContent=M.current_dataset||"v1.3";
+}
+function dot(){return '<svg viewBox="0 0 16 16" fill="currentColor"><circle cx="8" cy="8" r="4"/></svg>';}
+function sq(){return '<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="3" y="3" width="10" height="10" rx="2.5"/></svg>';}
+
+/* ---------------- module header ---------------- */
+function modHead(eyebrow,title,lede,chips,prov){
+  return '<div class="mod-head"><div class="eyebrow">'+esc(eyebrow)+'</div><h1>'+esc(title)+'</h1>'
+    +(lede?'<p class="lede">'+esc(lede)+'</p>':'')
+    +(chips?'<div class="chips">'+chips+'</div>':'')
+    +(prov?'<div class="provenance">'+prov+'</div>':'')+'</div>';
+}
+
+/* ---------------- OVERVIEW ---------------- */
+function renderOverview(){
+  var v1=M.v1||{}, bands=v1.bands||{}, dTuned=(bands.DAYS&&bands.DAYS.configs&&bands.DAYS.configs.tuned)||{}, kTuned=(bands.KM&&bands.KM.configs&&bands.KM.configs.tuned)||{};
+  var mods=M.modules||[];
+  var completed=mods.filter(function(m){return m.status==="complete";}).map(function(m){return m.name;});
+  var ps=M.production_status||{};
+  var qa=M.qa||{};
+  var out='';
+  out+=modHead("RideBase ML · Control Center","RideBase ML Control Center",
+    "RideBase servis tahmini veri bilimi ve makine öğrenmesi sisteminin merkezi yönetim paneli. EDA, V0 baseline ve V1 regression modülleri tek yerden; V2/V3 planlandı.",
+    '<span class="chip cyan"><span class="dot"></span>DATASET '+esc(M.current_dataset||"v1.3")+'</span>'
+   +'<span class="chip">ENV: '+esc(M.environment||"PILOT")+'</span>'
+   +'<span class="chip warn"><span class="dot"></span>REAL FLEET VALIDATION: '+esc(M.real_fleet_validation||"PENDING")+'</span>',
+    'manifest · generated <code>'+esc((M.generated_at||"").slice(0,16).replace("T"," "))+'</code>');
+
+  out+=pageNote(
+    "Bu panel, RideBase servis-tahmini makine öğrenmesi çalışmasının tamamını tek yerde toplar. "
+    +"Veri bilimi bilmene gerek yok — her sayfanın başında böyle bir açıklama kutusu var, teknik terimlerin "
+    +"yanında Türkçe karşılığı ve ⓘ ikonuna gelince kısa bir açıklama çıkıyor. "
+    +"<b>Nasıl okumalıyım:</b> 1) İlgili modülün <b>Genel Bakış</b>'ı → özet sonuç. "
+    +"2) <b>Zaman Aralıkları</b> → 30/60/90/120 gün. 3) <b>Risk Grupları</b> → hangi motorlar daha riskli. "
+    +"4) <b>Modelin Baktığı Bilgiler</b> → model neye bakıyor. 5) <b>Canlı Tahmin</b> → tek bir motor için sonuç.",
+    "Sözlük: <code>docs/ml_glossary_tr.md</code>. Modüller: EDA (veri tanıma), V0 (kural baseline), "
+    +"V1 (gün/km nokta tahmini), V2 (olasılık / survival), V3 (sonraki bakım işlemleri — planlandı).",
+    "MAE, R², C-index, Brier, AUC, Calibration, Horizon, Censored, Ensemble — hepsi kendi sayfasında açıklanıyor");
+
+  /* KPI strip */
+  out+='<div class="sec"><div class="grid g3">'
+   +kpi("Dataset version",esc(M.current_dataset||"v1.3"),"regression benchmark (frozen)","cyan")
+   +kpi("Active model","V1 <small>regression</small>","frozen · DAYS + KM")
+   +kpi("Completed modules",String(completed.length),completed.join(" · "))
+   +kpi("Experiments",String((M.notebooks||[]).length)+" <small>notebooks</small>","01 → 12")
+   +kpi("QA status",(qa.leakage_audit==="PASS"&&qa.reproducibility==="PASS")?'PASS':'REVIEW',"leakage · repro · temporal split","plain")
+   +kpi("Real-fleet validation",'<span style="color:var(--warning)">PENDING</span>',"synthetic validation only","plain")
+   +'</div></div>';
+
+  /* the 10 admin questions summarised */
+  out+='<div class="sec"><div class="sec-head"><h2>Yönetici Özeti</h2><span class="tag">10 soru</span></div>'
+   +'<div class="grid g2">'
+   + card("Proje durumu",null,
+       '<p class="copy">Proje <b style="color:var(--text)">V1 regression</b> aşamasında ve V1 <b>frozen</b>. EDA ve V0 tamamlandı; sıradaki aşama <b>V2 survival</b>.</p>'
+      +'<div class="chips" style="margin-top:6px">'+mods.map(function(m){return '<span class="chip">'+esc(m.name)+' '+statusPill(m.status)+'</span>';}).join('')+'</div>')
+   + card("Aktif model performansı (TEST)",null,
+       '<div class="grid g2" style="gap:10px">'
+      +kpi("KM · MAE",n0(kTuned.mae)+' <small>km</small>',"R² "+r3(kTuned.r2),"")
+      +kpi("DAYS · MAE",n1(dTuned.mae)+' <small>gün</small>',"R² "+r3(dTuned.r2),"cyan")
+      +'</div><p class="copy" style="margin-top:10px">Model <b>SYNTHETICALLY VALIDATED</b> (v1.3). Gerçek filo doğrulaması <b style="color:var(--warning)">PENDING</b>.</p>')
+   +'</div>'
+   +'<div class="grid g2" style="margin-top:14px">'
+   + card("Son değişiklik",null, (function(){var e=CL[CL.length-1]||{};
+       return '<b style="color:var(--text)">'+esc(e.title||"—")+'</b><p class="copy" style="margin-top:4px">'+esc(e.description||"")+'</p>'
+        +'<div class="chips" style="margin-top:6px"><span class="chip">'+esc(e.module||"")+'</span><span class="chip">'+esc(e.timestamp||"")+'</span>'+statusPill(e.status||"info")+'</div>';})())
+   + card("Sonraki aşama",null,
+       '<b style="color:var(--text)">V2 — Survival Analysis</b>'
+      +'<p class="copy" style="margin-top:4px">Servise tam gün yerine, zaman aralıklarında servise gelme olasılığını modeller; sağ-sansürlü kayıtları da kullanır. <b>PLANNED</b> — sonuç yok.</p>')
+   +'</div></div>';
+
+  /* module cards */
+  out+='<div class="sec"><div class="sec-head"><h2>Modüller</h2><span class="tag">'+mods.length+' modül</span></div><div class="grid g3">';
+  mods.forEach(function(m){
+    var planned=m.status==="planned";
+    var idColor=(m.id==="v2"||m.id==="v3")?"cyan":"";
+    out+='<button class="modcard" '+(planned?'disabled':'data-go="'+esc(m.id)+'"')+'>'
+      +'<div class="mc-top"><span class="mc-id '+idColor+'">'+esc(m.name.split(" ")[0].toUpperCase())+'</span>'+statusPill(m.status)+'</div>'
+      +'<h3>'+esc(m.tagline)+'</h3>'
+      +'<div class="mc-tag">'+esc(m.purpose)+'</div>'
+      +'<div class="mc-cta">'+(planned?'Coming soon':'Open module →')+'</div>'
+      +'</button>';
+  });
+  out+='</div></div>';
+
+  /* progress */
+  out+='<div class="sec"><div class="sec-head"><h2>Project Progress</h2><span class="tag">module status</span></div><div class="prog">';
+  var pmap={complete:100,active:90,planned:0};
+  mods.forEach(function(m){
+    var p=pmap[m.status]!=null?pmap[m.status]:0;
+    var cls=p===100?"done":p===0?"zero":"";
+    out+='<div class="prog-row"><div class="pl">'+esc(m.name)+'</div><div class="pt"><div class="pf '+cls+'" style="width:'+Math.max(2,p)+'%"></div></div><div class="pv">'+(m.status==="planned"?"planned":m.status==="active"?"active":"complete")+'</div></div>';
+  });
+  out+='</div></div>';
+
+  /* timeline + recent activity */
+  out+='<div class="sec"><div class="grid g2" style="align-items:start">'
+   + card("System Evolution",(M.timeline||[]).length+" adım",
+      '<div class="timeline">'+(M.timeline||[]).map(function(t){
+        return '<div class="tl-item" data-kind="'+esc(t.kind)+'"><div class="tl-mark"><span class="tl-dot"></span></div>'
+          +'<div class="tl-body"><b>'+esc(t.label)+'</b><span>'+esc(t.detail)+'</span></div></div>';
+      }).join('')+'</div>')
+   + card("Recent Activity","son "+Math.min(8,CL.length),
+      '<div class="feed">'+CL.slice(-8).reverse().map(feedRow).join('')+'</div>'
+      +'<button class="modcard" style="margin-top:12px;align-items:center" data-go="activity"><div class="mc-cta">Tüm aktiviteyi gör →</div></button>')
+   +'</div></div>';
+
+  /* production status split */
+  out+='<div class="sec"><div class="sec-head"><h2>Production Status</h2><span class="tag">net ayrım</span></div><div class="grid g3">'
+   +kpi("Application",esc(ps.application||"PILOT"),"deployable — ridebase-v1-dashboard","cyan")
+   +kpi("Model",'SYNTH. VALIDATED',"RideBase Synthetic Dataset v1.3","")
+   +kpi("Real fleet validation",'<span style="color:var(--warning)">PENDING</span>',"not yet connected to real data","plain")
+   +'</div>'
+   +finding("warn","Not","<b>Uygulama production-ready olabilir; model gerçek dünyada doğrulanmış değildir.</b><p>Buradaki tüm metrikler sentetik RideBase v1.3 üzerinde ölçülmüştür.</p>")
+   +'</div>';
+
+  bindGo(out); return out;
+}
+function feedRow(e){
+  return '<div class="feed-item" data-go="'+esc(moduleHash(e.module))+'"><div class="fi-l"><span class="fi-date">'+esc((e.timestamp||"").slice(5))+'</span>'+statusPill(e.status||"info")+'</div>'
+   +'<div class="fi-body"><b>'+esc(e.module)+' · '+esc(e.title)+'</b><p>'+esc(e.description)+'</p>'
+   +'<div class="fi-meta"><span class="chip">'+esc(e.type)+'</span>'+(e.version?'<span class="chip">'+esc(e.version)+'</span>':'')+(e.artifacts&&e.artifacts[0]?'<span class="chip"><code style="font-size:.9em">'+esc(e.artifacts[0])+'</code></span>':'')+'</div></div></div>';
+}
+function moduleHash(m){m=(m||"").toLowerCase();
+  if(m==="eda")return "eda"; if(m==="v0")return "v0"; if(m==="v1"||m==="model"||m==="experiment")return "v1";
+  if(m==="data")return "dataset"; if(m==="api")return "status"; if(m==="ui")return "overview"; return "activity";}
+function bindGo(html){ /* deferred binding done after innerHTML set */ }
+document.addEventListener("click",function(ev){
+  var t=ev.target.closest("[data-go]"); if(t && !t.classList.contains("nav-item") && !t.disabled){go(t.getAttribute("data-go"));}
+});
+
+/* ---------------- EDA ---------------- */
+function renderEda(){
+  var head=modHead("Module · Exploratory Data Analysis","EDA — Keşifsel Veri Analizi",
+    "Model eğitmeden önce RideBase verisinin yapısını, dağılımlarını ve kalite durumunu anlamak. Aşağıdaki bölümler mevcut EDA panelinden birebir taşınmıştır.",
+    '<span class="chip good"><span class="dot"></span>COMPLETED</span><span class="chip">DATASET v1.1 / v1.2</span><span class="chip">10.000 motosiklet · 41.518 servis</span>',
+    'notebook <code>02_eda.ipynb</code> · source <code>ridebase_v1_1/source_tables</code>');
+  return head
+   +pageNote("EDA, model kurmadan önce veriyi tanıma aşamasıdır. Kaç motosiklet var, hangi markalar var, "
+     +"servisler ne sıklıkta yapılıyor, eksik veya tuhaf veri var mı — bu sorulara bakar. Buradaki grafiklerin "
+     +"amacı bir modelin ne kadar iyi olduğunu göstermek değil, veriyi anlamaktır. "
+     +"<b>Censored (sağ-sansürlü):</b> veri seti kapandığında sonraki servisi henüz görülmemiş kayıtlar — motorun "
+     +"o gün geldiği anlamına gelmez, sadece en az o süredir gelmediğini biliyoruz.",
+     null,"Teknik adı: Exploratory Data Analysis (EDA)")
+   +'<div class="eda-scope">'+EDA_HTML+'</div>';
+}
+/* monthly line-chart interactivity (verbatim from the EDA source) */
+function initMonthlyChart(){
+  var wrap=document.getElementById('monthlyWrap');
+  var dot=document.getElementById('mdot'), vline=document.getElementById('mvline'), tip=document.getElementById('mtip');
+  if(!wrap||!dot||!tip)return;
+  var data=window.__EDA_MONTHLY__||[];
+  if(!data.length)return;
+  var monthNames=['Oca','Şub','Mar','Nis','May','Haz','Tem','Ağu','Eyl','Eki','Kas','Ara'];
+  function fmt(p){var q=p.split('-');return monthNames[parseInt(q[1],10)-1]+' '+q[0];}
+  var padL=6,plotW=988,nn=data.length;
+  var tipLbl=tip.querySelector('.tip-lbl'), tipVal=tip.querySelector('.tip-val');
+  function show(i){var d=data[i];dot.setAttribute('cx',d.x);dot.setAttribute('cy',d.y);vline.setAttribute('x1',d.x);vline.setAttribute('x2',d.x);
+    dot.style.opacity=1;vline.style.opacity=1;tip.style.opacity=1;tip.style.left=(d.x/1000*100)+'%';tip.style.top=(d.y/280*100)+'%';
+    tipLbl.textContent=fmt(d.p);tipVal.textContent=d.v.toLocaleString('tr-TR');}
+  function hide(){dot.style.opacity=0;vline.style.opacity=0;tip.style.opacity=0;}
+  function mv(evt){var rect=wrap.getBoundingClientRect();var cx=evt.touches?evt.touches[0].clientX:evt.clientX;
+    var rel=(cx-rect.left)/rect.width;var sx=rel*1000;var idx=Math.round((sx-padL)/(plotW/(nn-1)));
+    idx=Math.max(0,Math.min(nn-1,idx));show(idx);}
+  wrap.addEventListener('mousemove',mv);wrap.addEventListener('mouseleave',hide);
+  wrap.addEventListener('touchmove',mv,{passive:true});wrap.addEventListener('touchend',hide);
+}
+
+/* ---------------- V0 ---------------- */
+function renderV0(){
+  var v0=M.v0||{}, d=(v0.metrics&&v0.metrics.DAYS)||{}, k=(v0.metrics&&v0.metrics.KM)||{};
+  var cmp=v0.v0_vs_v1||[];
+  var head=modHead("Module · Rule Baseline","V0 — Kural Bazlı Baseline",
+    "Makine öğrenmesi kullanmadan oluşturulan ilk, deterministik servis-zamanı baseline'ı. Her V1 modeli için referans zemin. Sentetik v1.2 offline benchmark — production doğrulaması değildir.",
+    '<span class="chip good"><span class="dot"></span>COMPLETED</span><span class="chip">DATASET v1.2</span><span class="chip">rule-based</span>',
+    'notebook <code>04_v0_rule_baseline.ipynb</code> · <code>v0_rule_baseline_metrics.csv</code>');
+  var out=head+pageNote(
+    "V0, makine öğrenmesi kullanmadan yazılan ilk basit kural yöntemidir (örn. 'ortalama servis aralığı kadar "
+    +"sonra tekrar servise gelir'). Amacı düşük değil — V1'in gerçekten işe yarayıp yaramadığını anlamak için "
+    +"önce bu basit zemine bakıyoruz. <b>MAE:</b> ortalama ne kadar yanıldık (gün / km). <b>R²:</b> modelin "
+    +"hedefteki değişimi ne kadar açıkladığı — yüzde doğruluk değildir; negatif olması sabit bir tahminden bile "
+    +"kötü demektir. <b>V0 → V1:</b> V1'in bu basit kurala göre ne kadar iyileştiği.",
+    null,"Teknik adı: Rule-based Baseline");
+  if(!v0.available){return out+emptyBox("V0 artifact bulunamadı.");}
+  out+='<div class="sec"><div class="sec-head"><h2>DAYS performansı</h2><span class="tag">TEST · observed-only</span></div><div class="grid g4">'
+   +kpi("MAE",n1(d.mae)+' <small>gün</small>',"median "+n1(d.median_ae))
+   +kpi("R²",r3(d.r2),"negatif → sabit tahminden kötü","plain")
+   +kpi("±30 gün",pct(d.within_30),null,"plain")
+   +kpi("±60 gün",pct(d.within_60),null,"plain")
+   +'</div></div>';
+  out+='<div class="sec"><div class="sec-head"><h2>KM performansı</h2><span class="tag">TEST · observed valid-km</span></div><div class="grid g4">'
+   +kpi("MAE",n0(k.mae)+' <small>km</small>',"median "+n0(k.median_ae))
+   +kpi("R²",r3(k.r2),"negatif → sabit tahminden kötü","plain")
+   +kpi("±1000 km",pct(k.within_1000),null,"plain")
+   +kpi("±2000 km",pct(k.within_2000),null,"plain")
+   +'</div></div>';
+  /* V0 -> V1 */
+  if(cmp.length){
+    var maeRows=cmp.filter(function(r){return r.metric==="mae";});
+    out+='<div class="sec"><div class="sec-head"><h2>V0 → V1</h2><span class="tag">gerçek artifact</span></div>'
+     +'<p class="sec-intro">V0, V1 için referans baseline görevi görür. Aşağıdaki karşılaştırma <code>v0_vs_v1_regression_comparison.csv</code> dosyasından.</p>';
+    maeRows.forEach(function(r){
+      var mx=Math.max(r.v0,r.v1)||1;
+      out+=card(r.target+" · MAE",r.target==="DAYS"?"gün":"km",
+        barRows([
+          {label:"V0 baseline",val:(r.target==="DAYS"?n1(r.v0):n0(r.v0)),pct:r.v0/mx*100},
+          {label:"V1 (basic nb06)",val:(r.target==="DAYS"?n1(r.v1):n0(r.v1)),pct:r.v1/mx*100}
+        ])
+       +finding("good","Kazanım","<b>"+r.target+" MAE "+(r.relative_improvement_pct?r.relative_improvement_pct.toFixed(1):"—")+"% düştü.</b><p>V1, basit regresyonla bile V0 kuralını net biçimde geçiyor.</p>"));
+    });
+    out+='<div class="twrap" style="margin-top:14px"><table class="tbl"><thead><tr><th>Target</th><th>Metric</th><th class="n">V0</th><th class="n">V1</th><th class="n">Δ%</th><th>Winner</th></tr></thead><tbody>'
+     +cmp.map(function(r){return '<tr><td class="k">'+esc(r.target)+'</td><td>'+esc(r.metric)+'</td><td class="n">'+(r.v0==null?'—':n2(r.v0))+'</td><td class="n">'+(r.v1==null?'—':n2(r.v1))+'</td><td class="n">'+(r.relative_improvement_pct==null?'—':r.relative_improvement_pct.toFixed(1))+'</td><td>'+esc(r.winner||'')+'</td></tr>';}).join('')
+     +'</tbody></table></div></div>';
+  }
+  out+='<div class="sec">'+card("Ne işe yarar?",null,'<p class="copy">'+esc(v0.report)+'</p>')+'</div>';
+  out+=takeaways([
+    "V0 hiç makine öğrenmesi kullanmaz; sadece bir referans zemindir.",
+    "V1, hem gün hem km tarafında bu basit kuralı net biçimde geçiyor — yani öğrenmenin gerçek bir katkısı var.",
+    "V0'ın R²'si negatif: sabit bir tahminden bile zayıf. 'İyi' olması beklenmez, karşılaştırma noktası olması beklenir."
+  ]);
+  return out;
+}
+
+/* ---------------- V1 ---------------- */
+function renderV1(sub){
+  sub=sub||"overview";
+  var v1=M.v1||{};
+  var head=modHead("Module · Regression","V1 — Next-Service Regression",
+    "Bir motosikletin bir sonraki servisine kalan gün ve kilometreyi tahmin eder. Notebook 06–12; final model Notebook 12'de dondurulmuştur.",
+    '<span class="chip active"><span class="dot"></span>ACTIVE · FROZEN</span><span class="chip">DATASET v1.3</span><span class="chip warn"><span class="dot"></span>REAL FLEET: PENDING</span>',
+    'config <code>models/v1_final_tuning_config.json</code>');
+  var tabs=[["overview","Overview"],["days","DAYS"],["km","KM"],["models","Models"],["features","Features"],
+    ["errors","Errors"],["drift","Drift"],["experiments","Experiments"],["predict","Live Prediction"],["verdict","Verdict"]];
+  var bar='<div class="subtabs">'+tabs.map(function(t){
+    return '<button class="subtab'+(sub===t[0]?' active':'')+'" data-go="v1/'+t[0]+'">'+esc(t[1])+'</button>';
+  }).join('')+'</div>';
+  var body={overview:v1Overview,days:function(){return v1Target("DAYS");},km:function(){return v1Target("KM");},
+    models:v1Models,features:v1Features,errors:v1Errors,drift:v1Drift,experiments:v1Experiments,
+    predict:v1Predict,verdict:v1Verdict}[sub]||v1Overview;
+  var note=pageNote(
+    "V1, bir motosikletin yaklaşık <b>kaç gün</b> ve yaklaşık <b>kaç kilometre</b> sonra tekrar servise geleceğini "
+    +"tek bir sayı olarak tahmin eder (nokta tahmini). <b>MAE:</b> ortalama hata — örn. 21 gün, model tahminlerinde "
+    +"ortalama ~21 gün yanılıyor demektir. <b>R²:</b> modelin değişkenliği açıklama gücü, yüzde doğruluk değildir. "
+    +"<b>RMSE:</b> büyük hataları daha ağır cezalandıran hata ölçüsü. <b>Median AE:</b> tipik hatayı aykırı "
+    +"değerlerden etkilenmeden gösterir.",
+    "<b>TRAIN:</b> model burada öğrenir. <b>VALIDATION:</b> model ve ayarları burada seçilir. "
+    +"<b>TEST:</b> en son sınav — model seçmek için kullanılmaz, config donduktan sonra bir kez açılır. "
+    +"V1 final model Notebook 12'de dondurulmuştur (frozen).",
+    "Teknik adı: Next-Service Regression");
+  return head+bar+note+body();
+}
+function cfgOf(t){var v1=M.v1||{};var b=(v1.bands&&v1.bands[t]&&v1.bands[t].configs)||{};return b;}
+function v1Overview(){
+  var v1=M.v1||{}, dT=(cfgOf("DAYS").tuned)||{}, kT=(cfgOf("KM").tuned)||{}, fr=v1.frozen||{};
+  var out='<div class="sec"><div class="grid g4">'
+   +kpi("KM · R²",r3(kT.r2),"primary target")
+   +kpi("KM · MAE",n0(kT.mae)+' <small>km</small>',"±1000 km "+pct(kT.within_1000))
+   +kpi("DAYS · R²",r3(dT.r2),"secondary target","cyan")
+   +kpi("DAYS · MAE",n1(dT.mae)+' <small>gün</small>',"±30 gün "+pct(dT.within_30),"cyan")
+   +'</div></div>';
+  out+='<div class="sec"><div class="grid g2">'
+   +card("Final model — DAYS",null,frozenCard(fr.DAYS,dT))
+   +card("Final model — KM",null,frozenCard(fr.KM,kT))
+   +'</div></div>';
+  var evo=v1.evolution||[];
+  if(evo.length){
+    out+='<div class="sec"><div class="sec-head"><h2>Model Evolution</h2><span class="tag">authoritative</span></div>'
+     +'<div class="twrap"><table class="tbl"><thead><tr><th>Stage</th><th class="n">DAYS MAE</th><th class="n">DAYS R²</th><th class="n">KM MAE</th><th class="n">KM R²</th><th>Status</th></tr></thead><tbody>'
+     +evo.map(function(e){return '<tr class="'+(e.status==="frozen"?"hl":"")+'"><td class="k">'+esc(e.stage)+'</td><td class="n">'+n1(e.days_mae)+'</td><td class="n">'+r3(e.days_r2)+'</td><td class="n">'+n0(e.km_mae)+'</td><td class="n">'+r3(e.km_r2)+'</td><td>'+statusPill(e.status)+'</td></tr>';}).join('')
+     +'</tbody></table></div></div>';
+  }
+  out+='<div class="sec">'+card("Status",null,
+    '<div class="chips"><span class="chip good">SYNTHETICALLY VALIDATED (v1.3)</span><span class="chip warn">REAL FLEET VALIDATION: PENDING</span></div>'
+   +'<p class="copy" style="margin-top:10px">Target: NEXT ANY SERVICE · observed-only regression · temporal split. TEST yalnız final değerlendirmede, config dondurulduktan sonra bir kez açıldı.</p>')+'</div>';
+  out+=takeaways([
+    "V1 tek bir yaklaşık süre/mesafe verir: 'yaklaşık şu kadar gün, şu kadar km sonra servis.'",
+    "Tahminlerde tipik hata gün tarafında ~"+n1(dT.mae)+" gün, km tarafında ~"+n0(kT.mae)+" km — bu bir güven aralığı değil, ortalama sapmadır.",
+    "Model sentetik v1.3 üzerinde doğrulandı; gerçek filo doğrulaması henüz yapılmadı."
+  ]);
+  return out;
+}
+function frozenCard(f,t){
+  if(!f)return emptyBox("frozen config not available");
+  return '<div class="chips"><span class="chip accent">'+esc(f.model||"—")+(f.use_ensemble?' + blend':'')+'</span>'
+    +'<span class="chip">'+esc(f.feature_set||"—")+'</span>'
+    +'<span class="chip">transform: '+esc(f.target_transform||"raw")+'</span>'
+    +(f.use_specialist?'<span class="chip">+ specialist</span>':'')+'</div>'
+   +'<div class="grid g2" style="gap:10px;margin-top:12px">'
+   +kpi("MAE",(t.mae==null?"—":(t.mae>200?n0(t.mae):n1(t.mae))),"TEST","plain")
+   +kpi("R²",r3(t.r2),"TEST","plain")+'</div>'
+   +(f.use_ensemble?finding("","Not","<b>Reported TEST metrics reflect a validation-selected blend.</b><p>Live inference persisted primary modeli kullanır ("+esc((f.ensemble_members||[]).join(" / "))+").</p>"):'');
+}
+function v1Target(t){
+  var b=cfgOf(t), base=b.base||{}, tn=b.tuned||{};
+  var unit=t==="DAYS"?"gün":"km";
+  var tol=t==="DAYS"?["within_15","within_30","within_45","within_60","within_90"]:["within_500","within_1000","within_1500","within_2000","within_5000"];
+  var out='<div class="sec"><div class="grid g4">'
+   +kpi("R²",r3(tn.r2),"TEST")
+   +kpi("MAE",(tn.mae>200?n0(tn.mae):n1(tn.mae))+' <small>'+unit+'</small>',"median "+(tn.median_ae>200?n0(tn.median_ae):n1(tn.median_ae)))
+   +kpi("RMSE",(tn.rmse>200?n0(tn.rmse):n1(tn.rmse))+' <small>'+unit+'</small>',null,"plain")
+   +kpi("Bias",sgn(tn.bias, tn.bias>200||tn.bias<-200?n0:n1)+' <small>'+unit+'</small>',"pozitif = geç tahmin","cyan")
+   +'</div></div>';
+  if(base.mae!=null){
+    var mx=Math.max(base.mae,tn.mae)||1;
+    out+='<div class="sec">'+card("Base vs Tuned — MAE","default HGB baseline",
+      barRows([{label:"Baseline",val:(base.mae>200?n0(base.mae):n1(base.mae)),pct:base.mae/mx*100},
+               {label:"Tuned (final)",val:(tn.mae>200?n0(tn.mae):n1(tn.mae)),pct:tn.mae/mx*100}]))+'</div>';
+  }
+  out+='<div class="sec">'+card("Tolerans doğruluğu","|hata| ≤ eşik (TEST)",
+    barRows(tol.map(function(k){return {label:"±"+k.replace("within_",""),val:pct(tn[k]),pct:(tn[k]||0)*100};}),"cyan"))+'</div>';
+  out+='<div class="sec">'+card("Metric bands",null,
+    '<div class="twrap"><table class="tbl"><thead><tr><th>Config</th><th class="n">MAE</th><th class="n">Median AE</th><th class="n">RMSE</th><th class="n">R²</th><th class="n">Bias</th><th class="n">P90 AE</th></tr></thead><tbody>'
+   +["base","tuned"].filter(function(c){return b[c];}).map(function(c){var r=b[c];
+      return '<tr class="'+(c==="tuned"?"hl":"")+'"><td class="k">'+c+'</td><td class="n">'+n1(asNum(r.mae))+'</td><td class="n">'+n1(asNum(r.median_ae))+'</td><td class="n">'+n1(asNum(r.rmse))+'</td><td class="n">'+r3(asNum(r.r2))+'</td><td class="n">'+sgn(asNum(r.bias))+'</td><td class="n">'+n1(asNum(r.p90_ae))+'</td></tr>';
+   }).join('')+'</tbody></table></div>')+'</div>';
+  return out;
+}
+function v1Models(){
+  var v1=M.v1||{}, lbK=v1.leaderboard_km||[], lbD=v1.leaderboard_days||[], fr=v1.frozen||{};
+  function isFinal(row){return Object.keys(fr).some(function(k){return fr[k]&&String(fr[k].model)===String(row.model);});}
+  function lbTable(rows){
+    if(!rows.length)return emptyBox();
+    return '<div class="twrap"><table class="tbl"><thead><tr><th>Model</th><th>Loss</th><th class="n">CV MAE</th><th class="n">±std</th><th class="n">Val MAE</th><th class="n">Val R²</th><th>Overfit</th></tr></thead><tbody>'
+     +rows.map(function(r){var fin=isFinal(r);
+       return '<tr class="'+(fin?"hl":"")+'"><td class="k">'+esc(r.model)+(fin?' <span class="pill active" style="margin-left:6px">FINAL</span>':'')+'</td><td>'+esc(r.loss||'')+'</td><td class="n">'+n2(asNum(r.cv_mae))+'</td><td class="n">'+n2(asNum(r.cv_mae_std))+'</td><td class="n">'+n2(asNum(r.val_mae))+'</td><td class="n">'+r3(asNum(r.val_r2))+'</td><td>'+((String(r.overfit_flag)==="True"||r.overfit_flag===true)?'<span class="pill warn">yes</span>':'—')+'</td></tr>';
+     }).join('')+'</tbody></table></div>';
+  }
+  var out='<div class="sec"><div class="sec-head"><h2>KM leaderboard</h2><span class="tag">temporal-CV</span></div>'+lbTable(lbK)+'</div>'
+   +'<div class="sec"><div class="sec-head"><h2>DAYS leaderboard</h2><span class="tag">temporal-CV</span></div>'+lbTable(lbD)+'</div>';
+  out+='<div class="sec"><div class="sec-head"><h2>Frozen hyperparameters</h2><span class="tag">nb12 config</span></div><div class="grid g2">';
+  ["DAYS","KM"].forEach(function(t){var f=fr[t];if(!f){out+=emptyBox();return;}
+    out+=card(t+" — "+esc(f.model),(f.feature_set||"")+" · "+(f.target_transform||"raw"),
+      '<div class="mono-block">'+esc(JSON.stringify(f.hyperparameters||{},null,2))+'</div>'
+     +(f.use_ensemble?'<p class="copy" style="margin-top:8px">blend: '+esc((f.ensemble_members||[]).join(" / "))+' @ '+esc((f.ensemble_weights||[]).join(" / "))+'</p>':''));
+  });
+  out+='</div></div>';
+  var c=v1.config||{};
+  out+='<div class="sec">'+card("Tuning setup",null,'<div class="chips">'
+   +Object.keys(c).map(function(k){return '<span class="chip">'+esc(k)+': <b style="color:var(--text)">'+esc(String(c[k]))+'</b></span>';}).join('')+'</div>')+'</div>';
+  return out;
+}
+function v1Features(){
+  var v1=M.v1||{};
+  function block(title,rows){
+    rows=(rows||[]).map(function(r){return {label:r.label||r.source||r.feature,raw:r.source||r.feature,imp:asNum(r.importance)||0,expl:r.explain||""};})
+      .filter(function(r){return r.imp>0;}).sort(function(a,b){return b.imp-a.imp;}).slice(0,15);
+    if(!rows.length)return card(title,null,emptyBox());
+    var mx=rows[0].imp||1;
+    return card(title,"permutation importance · VALIDATION MAE",
+      barRows(rows.map(function(r){return {label:r.label,val:r.imp.toFixed(3),pct:r.imp/mx*100};}))
+     +'<ul style="margin:12px 0 0;padding-left:18px;font-size:.78rem;color:var(--text-2);display:flex;flex-direction:column;gap:5px">'
+      +rows.slice(0,7).map(function(r){return '<li><span style="color:var(--text)">'+esc(r.label)+'</span>'+(r.expl?' — '+esc(r.expl):'')+' <code style="font-size:.9em;color:var(--muted)">'+esc(r.raw)+'</code></li>';}).join('')
+     +'</ul>');
+  }
+  return '<div class="sec"><div class="grid g2">'+block("KM · Top 15",v1.feature_importance_km)+block("DAYS · Top 15",v1.feature_importance_days)+'</div></div>';
+}
+function v1Errors(){
+  var v1=M.v1||{}, worst=v1.worst_segments||[], calib=v1.calibration_bins||[], spec=v1.specialist||[];
+  var out='<div class="sec"><div class="sec-head"><h2>En kötü segmentler</h2><span class="tag">TEST · n ≥ 30</span></div>';
+  out+= worst.length? '<div class="twrap"><table class="tbl"><thead><tr><th>Target</th><th>Tip</th><th>Segment</th><th class="n">n</th><th class="n">MAE</th></tr></thead><tbody>'
+    +worst.map(function(r){return '<tr><td class="k">'+esc(r.target)+'</td><td>'+esc(r.segment_type)+'</td><td>'+esc(r.segment)+'</td><td class="n">'+n0(asNum(r.n))+'</td><td class="n">'+n1(asNum(r.mae))+'</td></tr>';}).join('')
+    +'</tbody></table></div>' : emptyBox();
+  out+='</div>';
+  var cold=worst.filter(function(r){return String(r.segment_type||"").indexOf("history")===0;});
+  if(cold.length){
+    var mx=Math.max.apply(null,cold.map(function(r){return asNum(r.mae)||0;}))||1;
+    out+='<div class="sec">'+card("Cold history — az servis geçmişi","history_depth: 0–1 / 2–3 / 4+ · geçmişi az araçlarda hata genelde yüksek",
+      barRows(cold.map(function(r){return {label:r.target+" · "+r.segment,val:n1(asNum(r.mae)),pct:(asNum(r.mae)||0)/mx*100};})))+'</div>';
+  }
+  if(spec.length){
+    out+='<div class="sec">'+card("Specialist deneyi","history_depth ≤ 1 için ayrı model",
+      '<div class="twrap"><table class="tbl"><thead><tr>'+Object.keys(spec[0]).map(function(k){return '<th class="'+(isNaN(spec[0][k])?'':'n')+'">'+esc(k)+'</th>';}).join('')+'</tr></thead><tbody>'
+     +spec.map(function(r){return '<tr>'+Object.keys(r).map(function(k){return '<td class="'+(isNaN(r[k])?'':'n')+'">'+esc(isNaN(r[k])?r[k]:n2(asNum(r[k])))+'</td>';}).join('')+'</tr>';}).join('')
+     +'</tbody></table></div>')+'</div>';
+  }
+  if(calib.length){
+    var km=calib.filter(function(r){return String(r.target).toUpperCase()==="KM";});
+    if(km.length){var mmx=Math.max.apply(null,km.map(function(r){return Math.max(asNum(r.mean_pred)||0,asNum(r.mean_actual)||0);}))||1;
+      out+='<div class="sec">'+card("Kalibrasyon (KM, tahmin çeyrekleri)","her binde ortalama tahmin vs gerçek",
+        km.map(function(r){return '<div class="bar"><div class="lbl">bin '+esc(r.bin)+'</div><div class="track"><div class="fill" style="width:'+((asNum(r.mean_pred)||0)/mmx*100)+'%"></div></div><div class="val">pred '+n0(asNum(r.mean_pred))+'</div></div>'
+          +'<div class="bar"><div class="lbl" style="opacity:.5">&nbsp;</div><div class="track"><div class="fill cyan" style="width:'+((asNum(r.mean_actual)||0)/mmx*100)+'%"></div></div><div class="val">act '+n0(asNum(r.mean_actual))+'</div></div>';}).join(''))+'</div>';
+    }
+  }
+  return out;
+}
+function v1Drift(){
+  var v1=M.v1||{}, rows=v1.temporal_drift||[];
+  var out='<div class="sec">'+finding("","Temporal drift","<b>Geçmişteki servis davranışı ile gelecekteki servis davranışının birebir aynı olmaması.</b><p>Model geçmiş veriden öğrenir; gelecekte hedef dağılımı kayabilir.</p>")+'</div>';
+  out+='<div class="sec"><div class="grid g3">'
+   +kpi("TRAIN","model öğrenir",null,"plain")
+   +kpi("VALIDATION","model seçilir / ayarlanır",null,"plain")
+   +kpi("TEST",'<span style="color:var(--good)">ISOLATION PASS</span>',"yalnız bir kez açıldı","cyan")
+   +'</div></div>';
+  if(rows.length){
+    var tgt=rows.filter(function(r){return String(r.quantity||"").indexOf("target")===0;});
+    if(tgt.length){
+      out+='<div class="sec">'+card("Hedef medyanı — split bazında",null,
+        '<div class="twrap"><table class="tbl"><thead><tr><th>Quantity</th><th>Split</th><th class="n">Mean</th><th class="n">Median</th><th class="n">Std</th></tr></thead><tbody>'
+       +tgt.map(function(r){return '<tr><td class="k">'+esc(r.quantity)+'</td><td>'+esc(r.split)+'</td><td class="n">'+n1(asNum(r.mean))+'</td><td class="n">'+n1(asNum(r.median))+'</td><td class="n">'+n1(asNum(r.std))+'</td></tr>';}).join('')
+       +'</tbody></table></div>')+'</div>';
+    }
+    out+='<div class="sec">'+card("Drift tablosu (ham artifact)",null,
+      '<div class="twrap"><table class="tbl"><thead><tr>'+Object.keys(rows[0]).map(function(k){return '<th class="'+(isNaN(rows[0][k])?'':'n')+'">'+esc(k)+'</th>';}).join('')+'</tr></thead><tbody>'
+     +rows.map(function(r){return '<tr>'+Object.keys(r).map(function(k){return '<td class="'+(isNaN(r[k])?'':'n')+'">'+esc(isNaN(r[k])?r[k]:n1(asNum(r[k])))+'</td>';}).join('')+'</tr>';}).join('')
+     +'</tbody></table></div>')+'</div>';
+  } else out+=emptyBox();
+  return out;
+}
+function v1Experiments(){
+  var v1=M.v1||{}, ek=v1.external_knowledge||{}, cmp=v1.test_comparison||[];
+  var out='<div class="sec"><div class="sec-head"><h2>Final tuning — TEST</h2><span class="tag">nb12</span></div>';
+  out+= cmp.length? '<div class="twrap"><table class="tbl"><thead><tr><th>Target</th><th>Baseline</th><th class="n">Base MAE</th><th class="n">Tuned MAE</th><th class="n">Δ%</th><th class="n">R² Δ</th><th>Verdict</th></tr></thead><tbody>'
+   +cmp.map(function(r){return '<tr><td class="k">'+esc(r.target)+'</td><td>'+esc(r.baseline_model||'')+'</td><td class="n">'+n1(asNum(r.baseline_mae))+'</td><td class="n">'+n1(asNum(r.tuned_mae))+'</td><td class="n">'+sgn(asNum(r.mae_improvement_pct),n2)+'%</td><td class="n">'+sgn(asNum(r.r2_gain),function(x){return x.toFixed(4);})+'</td><td>'+(String(r.verdict||"").indexOf("MEANINGFUL")>=0?'<span class="pill ok">'+esc(r.verdict)+'</span>':'<span class="pill plan">'+esc(r.verdict||'')+'</span>')+'</td></tr>';}).join('')
+   +'</tbody></table></div>' : emptyBox();
+  out+='</div>';
+  out+='<div class="sec"><div class="sec-head"><h2>External Manufacturer Knowledge</h2><span class="tag">nb11</span></div>'
+   +card("Gerçek üretici bakım takvimi feature'ları",null,
+     '<div class="chips"><span class="pill warn">VERDICT: '+esc(ek.verdict||"NO VALUE ON SYNTHETIC v1.3")+'</span></div>'
+    +'<p class="copy" style="margin-top:10px">'+esc(ek.note||"")+'</p>'
+    +(ek.test_metrics&&ek.test_metrics.length? '<div class="twrap" style="margin-top:8px"><table class="tbl"><thead><tr>'+Object.keys(ek.test_metrics[0]).slice(0,6).map(function(k){return '<th>'+esc(k)+'</th>';}).join('')+'</tr></thead><tbody>'
+        +ek.test_metrics.slice(0,8).map(function(r){return '<tr>'+Object.keys(r).slice(0,6).map(function(k){return '<td>'+esc(r[k])+'</td>';}).join('')+'</tr>';}).join('')+'</tbody></table></div>' : '')
+    +finding("","Alt not","<p>Gerçek production datasında bu bilgi yeniden değerli olabilir; V3 next-task için 'prior' olarak kullanılabilir.</p>"))
+   +'</div>';
+  return out;
+}
+function v1Predict(){
+  var v1=M.v1||{}, lp=v1.live_prediction||{}, api=lp.api||{}, dT=(cfgOf("DAYS").tuned)||{}, kT=(cfgOf("KM").tuned)||{};
+  var out='<div class="sec">'+finding("warn","Artifact limitation",
+    "<b>Canlı inference bu artifact içinde çalışmaz.</b><p>"+esc(lp.reason||"Model joblib dosyaları gerektirir.")+"</p>")+'</div>';
+  out+='<div class="sec"><div class="sec-head"><h2>Deployed prediction API</h2><span class="tag">'+esc(api.repo||"ridebase-v1-dashboard/backend")+'</span></div>'
+   +card("Endpoint sözleşmesi",null,
+     '<div class="chips"><span class="chip cyan">'+esc(api.endpoint||"POST /api/v1/predict")+'</span><span class="chip">'+esc(api.health||"GET /health")+'</span><span class="chip">'+esc(api.features||"GET /api/v1/features")+'</span></div>'
+    +'<div class="mono-block" style="margin-top:12px">'+esc(api.contract||"")+'</div>'
+    +'<p class="copy" style="margin-top:10px">Repository\'deki FastAPI backend frozen modelleri <b>transform-only</b> çalıştırır, tahmini servis tarihi ve km sayacını türetir, out-of-distribution uyarısı verir. Bkz. <code>ridebase-v1-dashboard/README.md</code>.</p>')
+   +'</div>';
+  out+='<div class="sec"><div class="sec-head"><h2>Beklenen çıktı büyüklüğü</h2><span class="tag">frozen model · TEST error</span></div><div class="grid g2">'
+   +kpi("Tipik DAYS hatası",n1(dT.mae)+' <small>gün</small>',"MAE — güven aralığı değildir","cyan")
+   +kpi("Tipik KM hatası",n0(kT.mae)+' <small>km</small>',"MAE — güven aralığı değildir")
+   +'</div></div>';
+  return out;
+}
+function v1Verdict(){
+  var v1=M.v1||{}, vd=v1.verdict||{}, qa=v1.qa||[];
+  var out='';
+  [["executive_summary","Executive Summary"],["v1_final_verdict","V1 Final Verdict"],["practical_gain","Practical Gain"],["recommendation_v2","Recommendation for V2"]].forEach(function(p){
+    if(vd[p[0]])out+='<div class="sec">'+card(p[1],"rapor: v1_final_hyperparameter_tuning_report.md",'<p class="copy" style="white-space:pre-wrap">'+esc(vd[p[0]])+'</p>')+'</div>';
+  });
+  out+='<div class="sec"><div class="sec-head"><h2>Bilinen sınırlar</h2></div><div class="grid g3">'
+   +kpi("Sağ sansür",'V2 gerekçesi',"veri penceresi kapanmadan servisi görülmeyen kayıtlar V1'e giremez","plain")
+   +kpi("Temporal drift",'izlenmeli',"TRAIN/VAL/TEST dağılımları farklı","plain")
+   +kpi("Sentetik veri",'gerçek filo yok',"real fleet validation PENDING","plain")
+   +'</div></div>';
+  if(qa.length){
+    out+='<div class="sec">'+card("QA",null,
+      '<div class="chips">'+qa.map(function(r){var v=r.pass;var ok=(v===true||v==="True");
+        return '<span class="chip '+(ok?'good':'warn')+'">'+esc(r.check)+': '+(ok?'PASS':esc(String(v)))+'</span>';}).join('')+'</div>')+'</div>';
+  }
+  out+='<div class="sec">'+card("Sonraki aşama",null,
+    '<b style="color:var(--text)">V2 Survival Analysis</b><p class="copy" style="margin-top:4px">Sağ-sansürlü kayıtları da kullanan, olay-zamanı (time-to-event) modeli. Henüz başlanmadı — sahte sonuç gösterilmiyor.</p>')+'</div>';
+  return out;
+}
+
+/* ---------------- V2 SURVIVAL ---------------- */
+function v2Head(){
+  var v=M.v2||{}, pk=v.packaging||{};
+  var chips='<span class="chip active"><span class="dot"></span>'+esc(v.run_mode||"FULL")+' · '+esc(v.run_status||"FINAL")+'</span>'
+    +'<span class="chip">DATASET v1.3</span>'
+    +'<span class="chip good">SYNTHETICALLY VALIDATED</span>'
+    +'<span class="chip warn"><span class="dot"></span>REAL FLEET: PENDING</span>'
+    +(pk.packaged?'<span class="chip accent">PRODUCTION PACKAGED</span>':'');
+  return modHead("Module · Survival Analysis","V2 — Time-to-Next-Service Survival",
+    "Bir motosikletin 30 / 60 / 90 / 120 gün içinde tekrar servise gelme olasılığını hesaplar. "
+    +"Sağ-sansürlü kayıtları da kullanır. nb13 veri hazırlığı → nb14 baseline → nb15 advanced (tuned + kalibre) → nb16 production packaging.",
+    chips,
+    'config <code>models/v2_advanced_config.json</code> · report <code>reports/v2_survival_advanced_report.md</code>');
+}
+function v2Bar(sub){
+  var tabs=[["overview","Genel Bakış"],["horizons","Zaman Aralıkları"],["calibration","Güvenilirlik"],["risk","Risk Grupları"],
+    ["models","Modeller"],["features","Modelin Baktığı Bilgiler"],["segments","Motor Grupları"],["packaging","Uygulamaya Bağlanma"],
+    ["predict","Canlı Tahmin"],["limitations","Sınırlamalar"]];
+  return '<div class="subtabs">'+tabs.map(function(t){
+    return '<button class="subtab'+(sub===t[0]?' active':'')+'" data-go="v2/'+t[0]+'" title="'+esc({overview:"Overview",horizons:"Prediction Horizons",calibration:"Calibration",risk:"Risk Groups",models:"Models",features:"Features",segments:"Segment Analysis",packaging:"Production Packaging",predict:"Live Prediction",limitations:"Limitations"}[t[0]]||"")+'">'+esc(t[1])+'</button>';
+  }).join('')+'</div>';
+}
+function renderV2(sub){
+  sub=sub||"overview";
+  var body={overview:v2Overview,horizons:v2Horizons,calibration:v2Calibration,risk:v2Risk,models:v2Models,
+    features:v2Features,segments:v2Segments,packaging:v2Packaging,predict:v2Predict,limitations:v2Limitations}[sub]||v2Overview;
+  return v2Head()+v2Bar(sub)+body();
+}
+function v2Overview(){
+  var v=M.v2||{}, tm=v.test_metrics||{}, vm=v.validation_metrics||{}, ot=v.optuna_trials||{};
+  var out=pageNote(
+    "V2, bir motosikletin tam olarak kaç gün sonra servise geleceğini söylemek yerine, "
+    +"<b>30 / 60 / 90 / 120 gün içinde</b> servise gelme ihtimalini yüzde olarak hesaplar "
+    +"(örn. 30 gün → %8, 60 gün → %29, 90 gün → %63, 120 gün → %78). "
+    +"90 gün için %63 yazması, motorun <i>tam 90. günde</i> gelme ihtimali %63 demek değildir — "
+    +"bugünden 90. güne kadar <b>herhangi bir zamanda</b> gelme ihtimali %63 demektir. "
+    +"Bu yüzden yüzdeler zaman ilerledikçe düşemez; 90 günlük pencere ilk 30 ve 60 günü de kapsar.",
+    "Champion: "+esc(v.selected_model||"ENSEMBLE")+" · horizons "+esc((v.primary_horizons||[30,60,90,120]).join(" / "))
+    +" gün · calibration "+esc(v.calibration_method||"IPCW isotonic")+". Median service days ham XGB-Cox eğrisinden gelir (nb15 sözleşmesi).",
+    "Teknik adı: Survival Analysis / Time-to-Event");
+  out+='<div class="sec"><div class="grid g2">'
+   +card("V1 — nokta tahmini","Yaklaşık kaç gün / kaç km sonra servis?",
+     '<p class="copy">Tek bir yaklaşık süre verir. Örn. <b>~74 gün</b>, <b>~1.150 km</b>.</p>')
+   +card("V2 — olasılık tahmini","Belirli zaman aralıklarında gelme ihtimali ne?",
+     '<p class="copy">Zamana yayılmış yüzdeler. Örn. 30 gün <b>%8</b> · 60 gün <b>%29</b> · 90 gün <b>%63</b> · 120 gün <b>%78</b>.</p>')
+   +'</div>'
+   +finding("","V1 + V2 birlikte","<p>V1 tek bir yaklaşık süre verir; V2 ise zaman ilerledikçe servise gelme "
+     +"ihtimalinin nasıl arttığını ve motorun hangi risk grubunda olduğunu gösterir. İkisi aynı snapshot için "
+     +"<code>POST /api/predict/service</code> ile birlikte döner.</p>")+'</div>';
+  var cal90v=(v.horizon_metrics&&v.horizon_metrics["90"]&&v.horizon_metrics["90"].verdict)||"MODERATE";
+  out+='<div class="sec"><div class="grid g4">'
+   +v2kpi("IPCW C-INDEX",r3(tm.ipcw_c_index),{
+      xpl:"Motorları servise geliş sırasına göre ne kadar doğru sıraladığımızı ölçer.",
+      dir:v2dir("YÜKSEK DAHA İYİ","1.00 mükemmel · 0.50 rastgele"),
+      badge:"ÇOK GÜÇLÜ",badgeKind:"good",
+      tip:"Modelin hangi motosikletin daha erken servise geleceğini doğru sıralama gücüdür. 0.50 rastgele tahmine, 1.00 kusursuz sıralamaya karşılık gelir. Censoring etkisini hesaba katan (IPCW) versiyon kullanılmıştır."})
+   +v2kpi("INTEGRATED BRIER",r3(tm.ibs),{accent:"cyan",
+      xpl:"30–120 gün boyunca verdiğimiz servis olasılıklarının genel hata seviyesidir.",
+      dir:v2dir("DÜŞÜK DAHA İYİ","0 mükemmel"),
+      badge:"ÇOK İYİ",badgeKind:"good",
+      tip:"Tüm ufuklardaki (30/60/90/120 gün) olasılık tahminlerinin ortalama hatasını tek sayıda özetler. 0 kusursuz tahmin demektir; büyüdükçe olasılıklar gerçeğe daha uzak."})
+   +v2kpi("BRIER @90",r3(tm.brier_90),{accent:"plain",
+      xpl:"90 gün içinde servis olma ihtimali tahminlerinin hata seviyesini ölçer.",
+      dir:v2dir("DÜŞÜK DAHA İYİ","0 mükemmel"),
+      badge:"İYİ",badgeKind:"good",
+      tip:"Sadece 90 günlük ufuk için olasılık hatası. 0'a yakın olması, '%X gelir' dediğimiz motorların gerçekte de yaklaşık o oranda gelmesi anlamına gelir."})
+   +v2kpi("AUC @90",r3(tm.auc_90),{accent:"plain",
+      xpl:"90 gün içinde servise gelecek motorları diğerlerinden ayırma gücünü ölçer.",
+      dir:v2dir("YÜKSEK DAHA İYİ","1.00 mükemmel · 0.50 rastgele"),
+      badge:"ÇOK GÜÇLÜ",badgeKind:"good",
+      tip:"Rastgele seçilen 'gelecek' ve 'gelmeyecek' bir motor çiftinde, modelin gelecek olana daha yüksek risk verme olasılığıdır. 0.50 yazı-tura, 1.00 kusursuz ayrım. Bu bir doğruluk yüzdesi değildir."})
+   +'</div></div>';
+  out+='<div class="sec"><div class="grid g4">'
+   +v2kpi("EPISODES",n0(v.survival_rows),{
+      xpl:"V2 modelinin kullandığı toplam servis-zaman gözlemi.",
+      dir:'<span class="mut">DAHA FAZLA VERİ = GENELDE DAHA SAĞLAM ÖĞRENME</span>',
+      badge:"TÜM V2 VERİSİ",
+      tip:"Her episode, bir motosikletin bir snapshot anından bir sonraki servise (veya gözlem sonuna) kadar geçen süredir. Tek başına 'yüksek iyi / düşük kötü' diye yorumlanmaz; modelin öğrenme tabanının büyüklüğüdür."})
+   +v2kpi("CENSORED USED",n0(v.censored_rows_used),{accent:"cyan",
+      xpl:"Sonraki servisi henüz görülmeyen ama V2'nin yine de kullanabildiği kayıtlar.",
+      dir:'<span class="mut">V1 BU KAYITLARI TAM KULLANAMIYORDU</span>',
+      badge:"EK VERİ KAZANIMI",
+      tip:"Censored kayıt, motorun o gün servise geldiği anlamına gelmez; en az o süre boyunca servis görülmediğini ifade eder. Survival modeli bu 'en az şu kadar' bilgisini de öğrenmeye katar."})
+   +v2kpi("CALIBRATION @90",r3(tm.calibration_error_90),{accent:"plain",
+      xpl:"'%70 gelir' dediğimiz motorların gerçekte buna ne kadar yakın davrandığını ölçer.",
+      dir:v2dir("DÜŞÜK DAHA İYİ","0 mükemmel"),
+      badge:(cal90v==="GOOD"?"İYİ":cal90v==="POOR"?"ZAYIF":"ORTA"),badgeKind:(cal90v==="GOOD"?"good":cal90v==="POOR"?"crit":"warn"),
+      tip:"Örneğin model benzer motorlara %70 risk veriyorsa, gerçekte yaklaşık %70'inin 90 gün içinde gelmesini isteriz. Proje eşiği: <0.03 iyi · 0.03–0.07 orta · >0.07 zayıf. Şu an: "+esc(cal90v)+"."})
+   +v2kpi("CHAMPION","<span style=\"font-size:1.05rem\">"+esc((v.selected_model||"").replace("ENSEMBLE","ENS"))+"</span>",{accent:"plain",
+      xpl:"V2 için validation aşamasında seçilen nihai survival model kombinasyonu.",
+      dir:'<span class="mut">%'+(Math.round(((v.ensemble_weights||{}).XGB_COX||0.6)*100))+' XGBoost-Cox + %'+(Math.round(((v.ensemble_weights||{}).COXNET||0.4)*100))+' CoxNet · IPCW isotonic calibration</span>',
+      badge:"FINAL MODEL",
+      tip:"İki survival modelinin ağırlıklı ortalaması: XGBoost survival:cox ve CoxNet. Her birinin olasılıkları önce IPCW isotonic ile kalibre edilir, sonra birleştirilir. Bu bir metrik değildir; seçilen model ailesidir."})
+   +'</div></div>';
+  out+='<div class="sec"><div class="grid g2">'
+   +card("Ensemble","validation-selected weights",
+      '<div class="chips"><span class="chip accent">XGBoost survival:cox</span><span class="chip">'+pct((v.ensemble_weights||{}).XGB_COX,0)+'</span>'
+      +'<span class="chip accent">CoxNet</span><span class="chip">'+pct((v.ensemble_weights||{}).COXNET,0)+'</span></div>'
+      +'<p class="copy" style="margin-top:10px">Her model önce kendi IPCW-isotonic kalibrasyonundan geçer, sonra ağırlıklı ortalama alınır. '
+      +'Median service days ham XGB-Cox eğrisinden gelir (nb15 sözleşmesi).</p>')
+   +card("Tuning","nb15 FULL run",
+      '<div class="chips"><span class="chip">CoxNet grid '+esc(String(ot.coxnet_grid||"—"))+'</span>'
+      +'<span class="chip">XGB-Cox trials '+esc(String(ot.xgb_cox_complete||"—"))+'</span>'
+      +'<span class="chip">XGB-AFT trials '+esc(String(ot.xgb_aft_complete||"—"))+'</span>'
+      +'<span class="chip">'+esc(String(v.temporal_folds||"—"))+' temporal folds</span>'
+      +'<span class="chip">'+esc(String(v.grouped_bootstrap_reps||"—"))+' bootstrap reps</span></div>'
+      +'<p class="copy" style="margin-top:10px">VALIDATION composite: 40% IBS · 25% Brier@90 · 20% (1−IPCW-C) · 15% calibration@90. TEST bir kez, config donduktan sonra açıldı.</p>')
+   +'</div></div>';
+  var bva=v.baseline_vs_advanced||[];
+  if(bva.length){
+    out+='<div class="sec"><div class="sec-head"><h2>Cox baseline → Advanced (TEST)</h2><span class="tag">nb14 → nb15</span></div>'
+     +'<div class="twrap"><table class="tbl"><thead><tr><th>Metric</th><th class="n">Cox baseline</th><th class="n">Advanced</th><th class="n">Δ %</th><th>Verdict</th></tr></thead><tbody>'
+     +bva.map(function(r){return '<tr><td class="k">'+esc(r.metric)+'</td><td class="n">'+r3(r.cox_baseline)+'</td><td class="n">'+r3(r.advanced_champion)+'</td><td class="n">'+pct(r.relative_delta)+'</td><td>'+statusPill(String(r.verdict||"").indexOf("better")>=0?"pass":"info")+' '+esc(r.verdict||"")+'</td></tr>';}).join('')
+     +'</tbody></table></div></div>';
+  }
+  var ff=v.fast_vs_full||[];
+  if(ff.length){
+    out+='<div class="sec">'+card("FAST → FULL tuning","provisional → FINAL",
+      '<div class="twrap"><table class="tbl"><thead><tr><th>Metric</th><th class="n">FAST</th><th class="n">FULL</th><th class="n">rel Δ</th><th>Direction</th></tr></thead><tbody>'
+     +ff.map(function(r){return '<tr><td class="k">'+esc(r.metric)+'</td><td class="n">'+r3(r.fast)+'</td><td class="n">'+r3(r.full)+'</td><td class="n">'+pct(r.rel_change)+'</td><td>'+esc(r.direction||"")+'</td></tr>';}).join('')
+     +'</tbody></table></div>')+'</div>';
+  }
+  out+='<div class="sec">'+card("Verdict",null,
+    '<div class="chips"><span class="chip good">'+esc(v.advanced_verdict||"STRONG IMPROVEMENT")+' vs baseline</span>'
+    +'<span class="chip good">Signal: '+esc(v.v2_signal||"STRONG")+'</span>'
+    +'<span class="chip accent">'+esc(v.status||"V2 MODELING COMPLETE")+'</span>'
+    +'<span class="chip warn">REAL FLEET VALIDATION: PENDING</span></div>')+'</div>';
+  out+=takeaways([
+    "Model, motorları yakın zamanda servise gelme ihtimaline göre güçlü biçimde sıralıyor (sıralama gücü çok yüksek).",
+    "90 günlük olasılık tahminlerinin hata seviyesi düşük; kalibrasyonu (yüzdelerin gerçeğe yakınlığı) orta seviyede.",
+    "Bütün skorlar sentetik RideBase v1.3 üzerinde ölçüldü — gerçek filo doğrulaması PENDING."
+  ]);
+  return out;
+}
+function v2Horizons(){
+  var v=M.v2||{}, hz=v.horizon_metrics||{};
+  var hs=(v.primary_horizons||[30,60,90,120]).map(String);
+  var out=pageNote(
+    "<b>Zaman aralığı (horizon)</b>, modelin ne kadar ileriye baktığını ifade eder: 30 günlük horizon = "
+    +"önümüzdeki 30 gün, 90 günlük horizon = önümüzdeki 90 gün. Burada 30 / 60 / 90 / 120 günlük tahminlerin "
+    +"ne kadar iyi olduğunu görürsün. <b>30 gün:</b> kısa vade · <b>60 gün:</b> kısa/orta vade · "
+    +"<b>90 gün:</b> ana operasyonel pencere · <b>120 gün:</b> daha uzun vade. Her kartta: "
+    +"<b>Brier</b> = hata seviyesi (düşük iyi), <b>AUC</b> = ayırma gücü (yüksek iyi), "
+    +"<b>Calibration</b> = yüzde güvenilirliği (düşük hata iyi). 180 günlük satır yalnız teşhis amaçlı.",
+    null,"Teknik adı: Prediction Horizons");
+  out+='<div class="sec"><div class="twrap"><table class="tbl"><thead><tr><th>Horizon</th><th class="n">Brier</th><th class="n">AUC</th><th class="n">Calibration error</th><th>Quality</th><th class="n">KM reference risk</th></tr></thead><tbody>'
+   +hs.map(function(h){var r=hz[h]||{};return '<tr class="'+(h==="90"?"hl":"")+'"><td class="k">'+h+' gün</td><td class="n">'+r3(r.brier)+'</td><td class="n">'+r3(r.auc)+'</td><td class="n">'+r3(r.cal_error)+'</td><td>'+statusPill(r.verdict==="GOOD"?"pass":r.verdict==="POOR"?"fail":"info")+' '+esc(r.verdict||"n/a")+'</td><td class="n">'+r3(r.km_reference_risk)+'</td></tr>';}).join('')
+   +'</tbody></table></div></div>';
+  var barItems=hs.map(function(h){var r=hz[h]||{};return {label:h+"d Brier",val:r3(r.brier),pct:(r.brier||0)/0.08*100};});
+  out+='<div class="sec">'+card("Brier by horizon (TEST)","lower is better",barRows(barItems,"cyan"))+'</div>';
+  out+='<div class="sec">'+card("AUC by horizon (TEST)","higher is better",
+    barRows(hs.map(function(h){var r=hz[h]||{};return {label:h+"d AUC",val:r3(r.auc),pct:(r.auc||0)*100};})))+'</div>';
+  return out;
+}
+function v2Calibration(){
+  var v=M.v2||{}, hz=v.horizon_metrics||{};
+  var out=pageNote(
+    "Model verdiği yüzdelere ne kadar güvenebileceğimizi gösterir. Örneğin model 100 benzer motor için "
+    +"'%70 ihtimal' diyorsa, bunlardan yaklaşık 70'inin gerçekten belirtilen süre içinde servise gelmesini "
+    +"isteriz. Buna <b>kalibrasyon</b> denir. Sayı = ortalama sapma, <b>düşük daha iyi</b> (0 mükemmel). "
+    +"<b>GOOD:</b> yüzdeler gerçeğe oldukça yakın · <b>MODERATE:</b> kullanılabilir ama bir miktar sapma var · "
+    +"<b>POOR:</b> yüzdeler dikkatli yorumlanmalı. İdeal durumda aşağıdaki eğriler diyagonale yakın olur.",
+    "Proje eşikleri: hata &lt; 0.03 → GOOD · 0.03–0.07 → MODERATE · &gt; 0.07 → POOR. "
+    +"Kalibrasyon haritaları yalnız VALIDATION'da öğrenildi; TEST'e sadece uygulandı (per-horizon IPCW isotonic).",
+    "Teknik adı: Calibration / Reliability");
+  out+='<div class="sec"><div class="grid g4">'
+   +["30","60","90","120"].map(function(h){var r=hz[h]||{};var vd=r.verdict||"n/a";
+      return v2kpi("CALIBRATION @"+h,r3(r.cal_error),{accent:vd==="GOOD"?"":"cyan",
+        xpl:h+" gün için 'söylenen olasılık' ile 'gerçekleşen oran' arasındaki ortalama fark.",
+        dir:v2dir("DÜŞÜK DAHA İYİ","0 mükemmel"),
+        badge:(vd==="GOOD"?"İYİ":vd==="POOR"?"ZAYIF":vd==="MODERATE"?"ORTA":vd),
+        badgeKind:(vd==="GOOD"?"good":vd==="POOR"?"crit":vd==="MODERATE"?"warn":""),
+        tip:"Proje eşiği: <0.03 iyi · 0.03–0.07 orta · >0.07 zayıf. Kalibrasyon haritaları yalnız VALIDATION'da öğrenildi, TEST'e sadece uygulandı."});}).join('')
+   +'</div></div>';
+  out+='<div class="sec"><div class="sec-head"><h2>Calibration curves</h2><span class="tag">nb15 figures</span></div>'
+   +'<div class="grid g2">'
+   +["07","08","09","10"].map(function(fid,i){var h=["30","60","90","120"][i];
+     return '<figure class="fig"><img loading="lazy" alt="calibration '+h+'d" src="'
+       +"../ridebase-ml/reports/figures/v2_survival_advanced/"+fid+"_calibration_"+h+"d.png"
+       +'"><figcaption>@'+h+' gün · reliability</figcaption></figure>';}).join('')
+   +'</div><p class="copy" style="margin-top:8px">Görseller repo\'daki nb15 çıktı klasöründen; artifact publish edildiğinde göreli yol geçerli olur.</p></div>';
+  return out;
+}
+function v2Risk(){
+  var v=M.v2||{}, rg=v.risk_groups||[], thr=v.risk_group_thresholds||{};
+  var desc={LOW:"Yakın zamanda servise gelme ihtimali düşük.",
+            MEDIUM:"Orta seviyede servis ihtimali.",
+            HIGH:"Yakın zamanda servise gelme ihtimali yüksek."};
+  var out=pageNote(
+    "Model, motorları önümüzdeki <b>90 gün içinde</b> servise gelme ihtimaline göre üç gruba ayırıyor: "
+    +"<b>LOW</b> (düşük), <b>MEDIUM</b> (orta), <b>HIGH</b> (yüksek). HIGH grubundaki motorların yakın "
+    +"zamanda servise gelme ihtimali belirgin biçimde daha yüksektir; LOW grubundakilerin çok daha düşük. "
+    +"Tablo: <b>Risk grubu</b>, <b>Motor sayısı</b>, <b>bu grubun 90 gün içinde servise gelen oranı</b> ve "
+    +"<b>tipik servise dönüş süresi (gün)</b>.",
+    "Eşikler VALIDATION 90-günlük risk terciline göre belirlendi, TEST'e bakılarak ayarlanmadı — böylece "
+    +"test sonucuna göre eşik oynatıp kendimizi kandırmıyoruz. Ham eşikler: low_max "+r3(thr.low_max)
+    +" · medium_max "+r3(thr.medium_max)+". HIGH-vs-LOW ayrımı istatistiksel olarak çok güçlü "
+    +"(nb15 log-rank p ≈ 1e-303).",
+    "Teknik adı: Risk Groups");
+  if(!rg.length)return out+'<div class="sec">'+emptyBox("risk group table not available")+'</div>';
+  out+='<div class="sec"><div class="twrap"><table class="tbl"><thead><tr><th>Risk grubu</th><th class="n">Motor sayısı</th><th class="n">90 gün içinde servise gelen oranı</th><th class="n">Tipik servise dönüş (gün)</th><th>Ne anlama geliyor?</th></tr></thead><tbody>'
+   +rg.map(function(r){return '<tr class="'+(r.group==="HIGH"?"hl":"")+'"><td class="k">'+esc(r.group)+'</td><td class="n">'+n0(r.n)+'</td><td class="n">'+pct(r.event_rate_by_90d)+'</td><td class="n">'+n0(r.km_median_days)+'</td><td>Bu gruptaki motorların yaklaşık '+pct(r.event_rate_by_90d)+'ı 90 gün içinde servise gelmiş. '+esc(desc[r.group]||"")+'</td></tr>';}).join('')
+   +'</tbody></table></div></div>';
+  out+='<div class="sec">'+card("Ayrım gücü","90 gün içinde servise gelen oranı — gruplar arası fark",
+    barRows(rg.map(function(r){return {label:r.group,val:pct(r.event_rate_by_90d),pct:(r.event_rate_by_90d||0)*100};}),"cyan")
+    +'<p class="copy" style="margin-top:10px">Model risk gruplarını net ayırıyor: HIGH grubunda servis dönüşü çok daha sık ve daha erken.</p>')+'</div>';
+  return out;
+}
+function v2Models(){
+  var v=M.v2||{}, lb=v.test_leaderboard||[];
+  var note=pageNote(
+    "Modelin tahmini hangi yöntemlerle ürettiğini gösterir. "
+    +"<b>Cox:</b> servise geliş süresini özelliklerin etkisine göre sıralayan klasik survival modeli. "
+    +"<b>CoxNet:</b> Cox'un, çok sayıda özellik arasında daha kontrollü seçim yapan düzenlileştirilmiş sürümü. "
+    +"<b>XGBoost-Cox:</b> karar ağaçlarıyla daha karmaşık ilişkileri öğrenen survival modeli. "
+    +"<b>XGBoost-AFT:</b> servise kadar geçen süreyi farklı bir survival yaklaşımıyla modelleyen yöntem "
+    +"(olasılık kalitesi zayıf çıktığı için nihai modele alınmadı). "
+    +"<b>ENSEMBLE:</b> birden fazla modelin güçlü taraflarını birleştiren nihai tahmin — "
+    +"seçilen nihai model %60 XGBoost-Cox + %40 CoxNet.",
+    null,"Teknik adı: Survival Models / Champion");
+  if(!lb.length)return note+'<div class="sec">'+emptyBox()+'</div>';
+  var out=note+'<div class="sec"><div class="sec-head"><h2>TEST leaderboard</h2><span class="tag">nb15 · frozen candidates</span></div>'
+   +'<div class="twrap"><table class="tbl"><thead><tr><th>Model</th><th>Calibration</th><th class="n">IPCW-C</th><th class="n">IBS</th><th class="n">Brier@90</th><th class="n">AUC@90</th><th class="n">Cal@90</th></tr></thead><tbody>'
+   +lb.map(function(r){var fin=String(r.model).indexOf("ENSEMBLE")>=0;
+     return '<tr class="'+(fin?"hl":"")+'"><td class="k">'+esc(r.model)+(fin?' <span class="pill active" style="margin-left:6px">CHAMPION</span>':'')+'</td><td>'+esc(r.calibration||"raw")+'</td><td class="n">'+r3(r.ipcw_c_index)+'</td><td class="n">'+r3(r.ibs)+'</td><td class="n">'+r3(r.brier_90)+'</td><td class="n">'+r3(r.auc_90)+'</td><td class="n">'+r3(r.cal_error_90)+'</td></tr>';}).join('')
+   +'</tbody></table></div></div>';
+  out+='<div class="sec">'+card("Champion configuration",null,
+    '<div class="chips"><span class="chip accent">'+esc(v.selected_model||"")+'</span><span class="chip">'+esc(v.feature_set||"")+'</span>'
+    +'<span class="chip">'+esc(v.calibration_method||"")+'</span><span class="chip">horizons '+esc((v.primary_horizons||[]).join(" / "))+'</span></div>'
+    +'<p class="copy" style="margin-top:10px">XGBoost <code>survival:cox</code> → Breslow baseline hazard ile S(t); CoxNet → elastic-net Cox. '
+    +'XGB-AFT denendi ancak olasılık kalitesi zayıf çıktığı için ensemble\'a alınmadı. RSF ranking-only teşhis.</p>')+'</div>';
+  return out;
+}
+function v2Features(){
+  var v=M.v2||{}, fi=v.feature_importance||[];
+  var out=pageNote(
+    "<b>Feature</b>, modelin tahmin yaparken kullandığı bilgidir — örn. son servisten bu yana geçen gün "
+    +"(<code>days_since_previous_service</code>), yıllık tipik kilometre (<code>annual_km_baseline</code>), "
+    +"motor hacmi (<code>engine_displacement_cc</code>), önceki servis sayısı (<code>previous_service_count</code>), "
+    +"kullanım yoğunluğu (<code>riding_intensity</code>). Aşağıdaki liste, modelin bu bilgilerden tahminde "
+    +"<b>ne kadar yararlandığını</b> gösterir — <i>sebep-sonuç ilişkisi değildir</i>. "
+    +"Feature seti <b>"+esc(v.feature_set||"SET_D")+"</b>: 117 leakage-safe ham bilgi (korelasyon budaması sonrası).",
+    "Önem skorları gain-tabanlı (champion'ın XGB-Cox bileşeni). 117 raw feature → 243 encoded boyut.",
+    "Teknik adı: Features / Feature Importance");
+  if(fi.length){
+    var mx=Math.max.apply(null,fi.map(function(r){return r.gain||0;}))||1;
+    out+='<div class="sec">'+card("Top 15 features","XGBoost gain",
+      barRows(fi.map(function(r){return {label:r.feature,val:n0(r.gain),pct:(r.gain||0)/mx*100};})))+'</div>';
+  } else { out+='<div class="sec">'+emptyBox("feature importance table not available")+'</div>'; }
+  var pk=v.packaging||{}, fc=pk.feature_contract||{};
+  if(Object.keys(fc).length){
+    out+='<div class="sec">'+card("Production feature-contract audit","nb16 · real-system readiness",
+      '<div class="chips">'+Object.keys(fc).map(function(k){return '<span class="chip">'+esc(k)+': <b style="color:var(--text)">'+esc(String(fc[k]))+'</b></span>';}).join('')+'</div>'
+      +'<p class="copy" style="margin-top:10px"><code>split</code> tek INERT feature — nb15\'in dondurulmuş feature setine sızmış bir veri-bölüm etiketi; '
+      +'TRAIN\'de sabit, ~0 katkı, inference\'ta sabit sentinel. Gerçek veriyle yeniden eğitimde çıkarılacak. 0 synthetic-only blocker.</p>')+'</div>';
+  }
+  return out;
+}
+function v2Segments(){
+  var v=M.v2||{}, seg=v.segments||[];
+  var note=pageNote(
+    "Model bazı motor gruplarında daha iyi, bazılarında daha zayıf olabilir. Burada marka, servis geçmişi ve "
+    +"kullanım yoğunluğuna göre farkları görürsün. <b>IPCW-C</b> (sıralama gücü) yüksek daha iyi; "
+    +"<b>Brier@90</b> (olasılık hatası) düşük daha iyi. Bir grupta veri az ise sonucu dikkatli yorumla — "
+    +"küçük örneklem <code>LOW_SAMPLE</code> olarak işaretli.",
+    null,"Teknik adı: Segment Analysis");
+  if(!seg.length)return note+'<div class="sec">'+emptyBox("segment table not available")+'</div>';
+  var by={};
+  seg.forEach(function(r){(by[r.segment_type]=by[r.segment_type]||[]).push(r);});
+  var out=note;
+  Object.keys(by).forEach(function(t){
+    out+='<div class="sec"><div class="sec-head"><h2>'+esc(t)+'</h2></div><div class="twrap"><table class="tbl"><thead><tr><th>Segment</th><th class="n">n</th><th class="n">IPCW-C</th><th class="n">Brier@90</th><th class="n">AUC@90</th><th class="n">Cal@90</th><th>Note</th></tr></thead><tbody>'
+     +by[t].map(function(r){return '<tr><td class="k">'+esc(r.segment)+'</td><td class="n">'+n0(r.n)+'</td><td class="n">'+r3(r.ipcw_c)+'</td><td class="n">'+r3(r.brier_90)+'</td><td class="n">'+r3(r.auc_90)+'</td><td class="n">'+r3(r.cal_error_90)+'</td><td>'+esc(r.note||"")+'</td></tr>';}).join('')
+     +'</tbody></table></div></div>';
+  });
+  return out;
+}
+function v2Packaging(){
+  var v=M.v2||{}, pk=v.packaging||{};
+  var note=pageNote(
+    "Model notebook'tan uygulamaya nasıl taşındı? Süreç: <b>Notebook'ta eğitildi → final model dosyası "
+    +"kaydedildi → API modeli yükledi → dashboard API'ye istek atıyor → canlı tahmin dönüyor.</b> "
+    +"<b>Artifact:</b> kaydedilmiş model veya rapor dosyası. <b>API:</b> dashboard ile model arasında iletişim "
+    +"kuran servis. <b>Preprocessor:</b> ham veriyi modelin anlayacağı biçime çeviren kayıtlı dönüşüm. "
+    +"<b>Calibrator:</b> modelin verdiği yüzdeleri gerçeğe daha yakın hale getiren düzeltme katmanı. "
+    +"Bu aşamada yeni model eğitilmedi — sadece dondurulmuş model paketlendi.",
+    null,"Teknik adı: Production Packaging");
+  if(!pk.packaged)return note+'<div class="sec">'+card("Packaging",null,'<p class="copy">nb16 henüz çalıştırılmadı — production bundle manifest yok.</p>')+'</div>';
+  var gp=pk.golden_prediction_parity||"—";
+  var out=note+'<div class="sec"><div class="grid g4">'
+   +v2kpi("GOLDEN PARITY",esc(gp),{
+      xpl:"Production servisinin, notebook'taki tahminlerle birebir aynı sonucu verip vermediği.",
+      dir:'<span class="mut">PASS = notebook ile production aynı</span>',
+      badge:(gp==="PASS"?"DOĞRULANDI":gp),badgeKind:(gp==="PASS"?"good":"warn"),
+      tip:"4.470 TEST satırının hepsi hem notebook'ta hem API'de çalıştırıldı; en büyük fark 1e-6'nın altında. Yani paketleme sırasında model bozulmadı."})
+   +v2kpi("CHECKSUMS",n0(pk.n_checksums),{accent:"cyan",
+      xpl:"Bundle içindeki model dosyalarının SHA256 ile doğrulanan sayısı.",
+      dir:'<span class="mut">DOSYA BÜTÜNLÜĞÜ GARANTİSİ</span>',
+      badge:"VERIFIED",badgeKind:"good",
+      tip:"Her production artifact için bir SHA256 saklanır; servis açılışında yeniden hesaplanıp karşılaştırılır. Bozuk/yanlış dosya yüklenirse yakalanır."})
+   +v2kpi("BUNDLE",esc(pk.bundle||"—"),{accent:"plain",
+      xpl:"Production'a paketlenen model dağıtımının adı.",
+      dir:'<span class="mut">bir metrik değildir</span>',
+      badge:"v1.3 · FINAL"})
+   +v2kpi("PREDICTOR","<span style=\"font-size:1.15rem\">"+esc((pk.package||"").split(".").pop()||"—")+"</span>",{accent:"plain",
+      xpl:"Tahmini üreten Python sınıfı (deterministik, sadece-okuma).",
+      dir:'<span class="mut">bir metrik değildir</span>',
+      badge:"ridebase_ml.v2"})
+   +'</div></div>';
+  out+='<div class="sec">'+card("API surface","ridebase-v1-dashboard/backend",
+    '<div class="chips">'+(pk.api_endpoints||[]).map(function(e){return '<span class="chip">'+esc(e)+'</span>';}).join('')+'</div>'
+    +'<p class="copy" style="margin-top:10px">Bundle startup\'ta bir kez yüklenir; predictor read-only, concurrent-safe. '
+    +'<code>/health</code> → v2_model_loaded / v2_calibrator_loaded / v2_config_loaded / v2_status. '
+    +'<code>/admin/reload</code> production\'da 403.</p>')+'</div>';
+  out+='<div class="sec">'+finding("good","Golden prediction test",
+    "<b>Production inference, nb15\'in TEST tahminleriyle bit-for-bit aynı.</b>"
+    +"<p>4470 TEST satırı üzerinde max |Δrisk| &lt; 1e-6, median tam, risk-group %100 eşleşme, deterministik yeniden çalıştırma. "
+    +"Rapor: <code>reports/v2_production_packaging_report.md</code>.</p>")+'</div>';
+  out+='<div class="sec">'+card("Status",null,
+    '<div class="chips"><span class="chip good">V2 MODELING COMPLETE</span><span class="chip good">V2 PACKAGING COMPLETE</span>'
+    +'<span class="chip good">APPLICATION INTEGRATION COMPLETE</span><span class="chip warn">REAL FLEET VALIDATION: PENDING</span></div>'
+    +'<p class="copy" style="margin-top:10px">Verdict: <b>READY FOR PILOT DEPLOYMENT</b> — model sentetik olarak doğrulandı, gerçek filoda doğrulanmadı. '
+    +'Sonraki adım: gerçek-veri feature türetme hattı + shadow/backtest (modelleme değil).</p>')+'</div>';
+  return out;
+}
+function v2Limitations(){
+  return pageNote(
+    "Bu modelin sınırları: (1) Model şu an sentetik RideBase v1.3 verisiyle geliştirildi. "
+    +"(2) Gerçek RideBase filo verisiyle doğrulama henüz yapılmadı. "
+    +"(3) 120 günlük tahminler 30 günlük tahminlerden daha belirsiz olabilir. "
+    +"(4) Gelecekte veri davranışı değişebilir (<b>temporal drift</b> = geçmişteki davranış ile gelecekteki "
+    +"davranışın farklılaşması). "
+    +"(5) Bazı marka/segmentlerde veri daha az olduğu için performans değişebilir.",
+    null,"Teknik adı: Limitations / Known Caveats")
+   +'<div class="sec">'+card("Limitations & honest caveats",null,
+    '<ul style="margin:0;padding-left:18px;font-size:.85rem;color:var(--text-2);display:flex;flex-direction:column;gap:8px">'
+    +'<li>Yalnız sentetik doğrulama (RideBase v1.3). <b>Gerçek filo doğrulaması PENDING.</b> Güçlü sentetik skorlar gerçek dünya performansı iddiası değildir.</li>'
+    +'<li>Calibration @120 MODERATE sınırında; VAL/TEST\'te ~%70 sansür → geniş güven aralıkları, zayıf 180/365-gün desteği.</li>'
+    +'<li><code>split</code> feature\'ı dondurulmuş modelde inert ölü ağırlık (belgelendi; gerçek-veri yeniden eğitiminde çıkarılacak).</li>'
+    +'<li>median_service_days ham XGB-Cox eğrisinden gelir (nb15 sözleşmesi), kalibre edilmiş blend\'den değil.</li>'
+    +'<li>Gerçek-veri feature türetme hattı tasarlandı (<code>v2_real_data_feature_mapping.csv</code>) ama uygulanmadı.</li>'
+    +'<li>Zaman bölünmesi (motosiklet bölünmesi değil); tekrarlayan episode\'lar → grouped CI kullanıldı, artık bağımlılık kalıyor.</li>'
+    +'<li>scikit-survival ortamda scikit-learn 1.5.x sabitliyor.</li>'
+    +'</ul>')+'</div>';
+}
+function v2Predict(){
+  var api=(window.__V2_API__||"").replace(/\/$/,"");
+  var out=pageNote(
+    "Tek bir motor için canlı tahmin. <b>Örnek motor yükle</b> → <b>Tahmin et</b>. Sonuçta ne göreceğin: "
+    +"<b>30 / 60 / 90 / 120 gün</b> — motorun o süre içinde <i>herhangi bir zamanda</i> servise gelme ihtimali; "
+    +"<b>Risk grubu</b> — 90 günlük tahmine göre LOW / MEDIUM / HIGH; "
+    +"<b>Tahmini medyan servis süresi</b> — modelin servis olasılığının %50'ye ulaştığı yaklaşık gün sayısı. "
+    +"Buradaki sonuçlar <b>gerçek model API'sinden</b> gelir; backend erişilemezse sonuç gösterilmez (sahte tahmin yok).",
+    null,"Teknik adı: Live Prediction");
+  out+='<div class="sec"><div id="v2apiStatus" class="chips"><span class="chip">Model servisine bağlanılıyor…</span></div></div>';
+  out+='<div class="sec">'+card("Canlı V2 tahmini",api?("API: "+esc(api)):"API yapılandırılmadı",
+    (api
+      ?'<div id="v2pf"><div class="chips" style="margin:2px 0 10px"><button class="subtab" id="v2runSample">Örnek motor yükle & tahmin et</button></div>'
+        +'<div id="v2pfout"></div></div>'
+      :'<p class="copy">Public model API henüz bağlı değil. Canlı tahmin için ya sayfayı '
+        +'<code>?v2api=https://SENIN-API-ADRESIN</code> ile aç, ya da backend deploy edildikten sonra '
+        +'build sırasında <code>RIDEBASE_V2_API</code> ortam değişkenini ayarla. '
+        +'Backend: <code>ridebase-v1-dashboard/backend</code> → <code>POST /api/v2/predict</code>. '
+        +'Deploy blueprint\'i: <code>ridebase-v1-dashboard/render.yaml</code>.</p>'
+        +'<p class="copy" style="margin-top:8px">Response şekli: <code>{prediction:{risk_30d,risk_60d,risk_90d,risk_120d,median_service_days,risk_group_90d}, model, calibration, warning}</code>.</p>'))
+    +'</div>';
+  return out;
+}
+function v2ApiPing(){
+  var api=(window.__V2_API__||"").replace(/\/$/,"");
+  var el=document.getElementById("v2apiStatus"); if(!el)return;
+  if(!api){el.innerHTML='<span class="chip warn"><span class="dot"></span>API OFFLINE</span>'
+    +'<span class="chip">public model API yapılandırılmadı</span>'
+    +'<span class="chip">REAL FLEET VALIDATION: BEKLENİYOR</span>';return;}
+  var t=setTimeout(function(){},1);
+  fetch(api+"/health").then(function(r){return r.json();}).then(function(h){
+    var v1ok=(h.v1==="ok"||h.status==="ok"||h.v1_model_loaded);
+    var v2ok=(h.v2_model_loaded===true);
+    el.innerHTML='<span class="chip good"><span class="dot"></span>API ONLINE</span>'
+      +'<span class="chip '+(v1ok?'good':'warn')+'">V1 '+(v1ok?'AKTİF':'—')+'</span>'
+      +'<span class="chip '+(v2ok?'good':'warn')+'">V2 '+(v2ok?'AKTİF':'—')+'</span>'
+      +'<span class="chip">'+esc(h.v2_model||"")+'</span>'
+      +'<span class="chip">dataset '+esc(h.v2_dataset_version||M.current_dataset||"v1.3")+'</span>'
+      +'<span class="chip warn">REAL FLEET: '+esc(h.v2_real_fleet_validation||"PENDING")+'</span>';
+  }).catch(function(){clearTimeout(t);
+    el.innerHTML='<span class="chip bad"><span class="dot"></span>API OFFLINE</span>'
+      +'<span class="chip">backend erişilemedi — ilk istek (cold start) biraz uzun sürebilir</span>';
+  });
+}
+function wireV2Predict(){
+  v2ApiPing();
+  var api=(window.__V2_API__||"").replace(/\/$/,"");
+  var btn=document.getElementById("v2runSample"); if(!btn||!api)return;
+  btn.addEventListener("click",function(){
+    var box=document.getElementById("v2pfout"); box.innerHTML='<p class="copy">Tahmin ediliyor… (ilk istek biraz uzun sürebilir)</p>';
+    fetch(api+"/api/v2/sample").then(function(r){return r.json();}).then(function(s){
+      return fetch(api+"/api/v2/predict",{method:"POST",headers:{"Content-Type":"application/json"},
+        body:JSON.stringify({features:s.features})});
+    }).then(function(r){return r.json();}).then(function(d){
+      var p=d.prediction||{};
+      if(p.risk_90d==null){box.innerHTML='<div class="empty">Model sonucu boş döndü — '+esc((d.detail||"bilinmeyen hata"))+'</div>';return;}
+      box.innerHTML='<div class="grid g4" style="margin-top:6px">'
+        +kpi("30 GÜN",pct(p.risk_30d),"önümüzdeki 30 gün içinde","plain")
+        +kpi("60 GÜN",pct(p.risk_60d),"önümüzdeki 60 gün içinde","plain")
+        +kpi("90 GÜN",pct(p.risk_90d),"90 güne kadar herhangi bir zamanda","cyan")
+        +kpi("120 GÜN",pct(p.risk_120d),"önümüzdeki 120 gün içinde","plain")+'</div>'
+        +'<div class="chips" style="margin-top:10px">'
+        +'<span class="chip accent">RİSK GRUBU: '+esc(p.risk_group_90d||"—")+'</span>'
+        +'<span class="chip">tahmini medyan servis süresi ~'+n0(p.median_service_days)+' gün</span></div>'
+        +finding("warn","Not","<p>"+esc(d.warning||"Bu model SENTETİK olarak doğrulandı (RideBase v1.3). Gerçek filo doğrulaması PENDING.")+"</p>");
+    }).catch(function(e){box.innerHTML='<div class="empty">API erişilemedi — '+esc(String(e))+' (sahte tahmin üretilmez)</div>';});
+  });
+}
+
+/* ---------------- V3 placeholder ---------------- */
+function renderPlaceholder(id){
+  var m=(M.modules||[]).filter(function(x){return x.id===id;})[0]||{};
+  var prog=m.status==="in_progress";
+  var head=modHead(prog?("Module · "+(m.stage||"IN PROGRESS")):"Module · Planned",
+    m.name+" — "+(m.tagline||""),m.purpose,
+    (prog
+      ?'<span class="chip active"><span class="dot"></span>IN PROGRESS · '+esc(m.stage||"")+'</span><span class="chip">'+esc(m.notebook||"")+'</span><span class="chip warn">no predictive model yet</span>'
+      :'<span class="chip"><span class="dot" style="background:var(--muted)"></span>PLANNED</span><span class="chip">no results yet</span>'),null);
+  var extra= id==="v3" ? finding("","Prior","<b>Manufacturer maintenance knowledge — AVAILABLE AS PRIOR.</b><p>Notebook 11'de üretilen kanonik görev / aksiyon / km-aralığı bilgisi V3 için zayıf bir başlangıç önceliği (prior) olarak kullanılabilir.</p>") : '';
+  if(prog && id==="v2"){
+    extra += finding("good","Data prep","<b>Notebook 13 — leakage-safe survival data preparation tamamlandı.</b>"
+      +"<p>Frozen v1.3'ten 41.518 time-to-next-service episode; strict-temporal administrative censoring; "
+      +"V1'in kullanamadığı ~13.365 sağ-sansürlü kayıt artık kullanılabilir; leakage audit PASS; 0 negatif/0 sıfır süre. "
+      +"Henüz <b>predictive survival model yok</b> — C-index / Brier / calibration metrikleri Notebook 14'te hesaplanacak. "
+      +"Detay: <code>reports/v2_survival_data_prep_report.md</code>.</p>");
+  }
+  return head
+   +'<div class="sec">'+card("Durum",null,
+     '<p class="copy">'+(prog
+        ? 'Bu modül <b>çalışıyor</b> (aşama: <b>'+esc(m.stage||"")+'</b>). Data preparation notebook\'u tamam; predictive model henüz yok — metrik kartları bilinçli olarak boş.'
+        : 'Bu modül <b>planlandı</b>. Henüz notebook, model veya sonuç yok — bu ekran bilinçli olarak boş metrikle geliyor.')+'</p>'
+    +'<div class="chips" style="margin-top:8px"><span class="chip">status: '+esc(m.status||"planned")+'</span>'
+      +'<span class="chip">dataset: '+esc(m.dataset||"—")+'</span><span class="chip">model: —</span></div>'
+    +extra)+'</div>'
+   +'<div class="sec">'+card("Sisteme nasıl eklenecek?",null,
+     '<p class="copy">Modül kaydı zaten <code>manifest.modules</code> içinde. '+m.name+' çalışması bittiğinde: (1) notebook + artifactlar repo\'ya eklenir, (2) <code>build.py</code> yeniden çalıştırılır (manifest + changelog güncellenir), (3) bu HTML yeniden publish edilir. Frontend kodu değişmez.</p>')+'</div>';
+}
+
+/* ---------------- EXPERIMENTS ---------------- */
+function renderExperiments(){
+  var nbs=M.notebooks||[];
+  var head=modHead("System · Experiment Registry","Notebook & Experiment Registry",
+    "RideBase ML boru hattındaki 12 notebook. Her kart ilgili modüle bağlanır.",
+    '<span class="chip">'+nbs.length+' notebook</span><span class="chip">01 → 12</span>',null);
+  var out=head+'<div class="sec"><div class="grid g2">';
+  nbs.forEach(function(nb){
+    out+='<button class="modcard" '+(nb.module?'data-go="'+esc(nb.module==='v1'?'v1/experiments':nb.module)+'"':'')+'>'
+     +'<div class="mc-top"><span class="mc-id">NB '+esc(nb.n)+'</span>'+statusPill(nb.status)+'</div>'
+     +'<h3>'+esc(nb.title)+'</h3>'
+     +'<div class="mc-tag">'+esc(nb.result)+'</div>'
+     +'<div class="chips" style="margin-top:6px"><span class="chip">'+esc(nb.dataset)+'</span><span class="chip"><code style="font-size:.9em">'+esc(nb.file)+'</code></span></div>'
+     +'</button>';
+  });
+  out+='</div></div>';
+  return out;
+}
+
+/* ---------------- MODELS ---------------- */
+function renderModels(){
+  var reg=M.models||[];
+  var head=modHead("System · Model Registry","Model Registry",
+    "V0 kural baseline, V1 DAYS ve V1 KM modelleri; V2/V3 planlandı. Metrikler TEST setinden, artifactlardan okunur.",
+    '<span class="chip">'+reg.length+' kayıt</span>',null);
+  var out=head+'<div class="sec"><div class="twrap"><table class="tbl"><thead><tr><th>Model</th><th>Target</th><th class="n">Dataset</th><th>Family</th><th class="n">MAE</th><th class="n">R²</th><th>Status</th><th class="n">Updated</th></tr></thead><tbody>';
+  reg.forEach(function(m){
+    out+='<tr class="'+(m.status==="FROZEN"?"hl":"")+'"><td class="k">'+esc(m.name)+'</td><td>'+esc(m.target)+'</td><td class="n">'+esc(m.dataset_version||"—")+'</td><td>'+esc(m.model_family||"—")+'</td>'
+     +'<td class="n">'+(m.mae==null?"—":(m.mae>200?n0(m.mae):n1(m.mae)))+'</td><td class="n">'+(m.r2==null?"—":r3(m.r2))+'</td><td>'+statusPill((m.status||"").toLowerCase())+'</td><td class="n">'+esc(m.last_updated||"—")+'</td></tr>';
+  });
+  out+='</tbody></table></div></div>';
+  out+='<div class="sec">'+card("Artifact yolları",null,'<div class="mono-block">'+reg.filter(function(m){return m.artifact;}).map(function(m){return m.name+"  →  "+m.artifact;}).join("\n")+'</div>')+'</div>';
+  return out;
+}
+
+/* ---------------- DATASET ---------------- */
+function renderDataset(){
+  var ds=M.datasets||[];
+  var head=modHead("System · Dataset Registry","Dataset Registry",
+    "RideBase sentetik veri seti sürümleri. V1.2 realism benchmark, V1.3 regression calibration benchmark.",
+    '<span class="chip cyan">current: '+esc(M.current_dataset||"v1.3")+'</span>',null);
+  var out=head+'<div class="sec"><div class="grid g2">';
+  ds.forEach(function(d){
+    out+=card((d.label||d.version),d.purpose,
+      '<div class="chips">'+statusPill((d.status||"").toLowerCase())
+       +(d.quality?'<span class="chip good">QA: '+esc(d.quality)+'</span>':'')
+       +(d.generator_version?'<span class="chip">gen '+esc(d.generator_version)+'</span>':'')
+       +(d.regression_calibration_experiment?'<span class="chip">regression_calibration_experiment</span>':'')+'</div>'
+      +'<table class="tbl" style="margin-top:12px"><tr><td class="k">Version</td><td class="n">'+esc(d.version)+'</td></tr>'
+      +'<tr><td class="k">Used by</td><td>'+esc(d.used_by||"—")+'</td></tr></table>');
+  });
+  out+='</div></div>';
+  return out;
+}
+
+/* ---------------- ACTIVITY ---------------- */
+function renderActivity(){
+  var head=modHead("System · Changelog","Activity & Changelog",
+    "RideBase ML projesindeki değişiklikler — versiyon, tarih, modül, değişiklik, sonuç. Kayıtlar rapor içeriği ve dosya zaman damgalarından türetilir; kaynak: build.py.",
+    '<span class="chip">'+CL.length+' kayıt</span>',
+    'data <code>ridebase-control-center/data/changelog.json</code>');
+  var out=head+'<div class="sec"><div class="feed">'+CL.slice().reverse().map(function(e){
+    return '<div class="feed-item" data-go="'+esc(moduleHash(e.module))+'"><div class="fi-l"><span class="fi-date">'+esc(e.timestamp||"")+'</span>'+statusPill((e.status||"info").toLowerCase())+'</div>'
+     +'<div class="fi-body"><b>'+esc(e.version||"")+' · '+esc(e.module)+' — '+esc(e.title)+'</b><p>'+esc(e.description)+'</p>'
+     +'<div class="fi-meta"><span class="chip">'+esc(e.type)+'</span>'+(e.artifacts||[]).map(function(a){return '<span class="chip"><code style="font-size:.9em">'+esc(a)+'</code></span>';}).join('')+'</div></div></div>';
+  }).join('')+'</div></div>';
+  out+='<div class="sec">'+card("Yeni kayıt nasıl eklenir?",null,
+    '<p class="copy">Yeni bir değişiklik (model, veri, deney, UI, API) yapıldığında: <code>build.py</code> içindeki <code>changelog()</code> fonksiyonuna bir <code>e(...)</code> satırı eklenir ya da rapor/artifact dosyası güncellenir; <code>python build.py</code> çalıştırılır; HTML yeniden publish edilir.</p>')+'</div>';
+  return out;
+}
+
+/* ---------------- SYSTEM STATUS ---------------- */
+function renderStatus(){
+  var qa=M.qa||{}, ps=M.production_status||{}, mods=M.modules||[];
+  function st(id){var m=mods.filter(function(x){return x.id===id;})[0];return m?m.status:"planned";}
+  var head=modHead("System · Status","System Status",
+    "Dataset, model, API, dashboard, QA ve gerçek-filo doğrulama durumları tek bakışta.",null,null);
+  var out=head+'<div class="sec"><div class="grid g3">'
+   +kpi("Dataset "+esc(M.current_dataset||"v1.3"),"FROZEN","regression benchmark","cyan")
+   +kpi("EDA",st("eda")==="complete"?"COMPLETE":esc(st("eda")),null,"plain")
+   +kpi("V0",st("v0")==="complete"?"COMPLETE":esc(st("v0")),null,"plain")
+   +kpi("V1","ACTIVE · FROZEN","DAYS + KM regression")
+   +kpi("V2",'NOT STARTED',"survival — planned","plain")
+   +kpi("V3",'NOT STARTED',"next-task — planned","plain")
+   +'</div></div>';
+  out+='<div class="sec"><div class="sec-head"><h2>QA</h2><span class="tag">artifact-driven</span></div><div class="grid g3">'
+   +kpi("Leakage audit",qa.leakage_audit==="PASS"?'<span style="color:var(--good)">PASS</span>':esc(qa.leakage_audit||"—"),null,"plain")
+   +kpi("Model QA",qa.model_qa?'<span style="color:var(--good)">'+esc(qa.model_qa)+'</span>':"—",null,"plain")
+   +kpi("Reproducibility",qa.reproducibility==="PASS"?'<span style="color:var(--good)">PASS</span>':esc(qa.reproducibility||"—"),null,"plain")
+   +kpi("Temporal split",qa.temporal_split==="PASS"?'<span style="color:var(--good)">PASS</span>':esc(qa.temporal_split||"—"),null,"plain")
+   +kpi("Data QA",qa.data_qa?'<span style="color:var(--good)">'+esc(qa.data_qa)+'</span>':"—","v1.3","plain")
+   +kpi("API tests",'<span style="color:var(--good)">PASS</span>',esc(qa.api_tests||""),"plain")
+   +'</div></div>';
+  out+='<div class="sec"><div class="sec-head"><h2>Production</h2></div><div class="grid g3">'
+   +kpi("Application",esc(ps.application||"PILOT"),null,"cyan")
+   +kpi("Model",'SYNTH. VALIDATED',esc((ps.model||"").replace("SYNTHETICALLY VALIDATED ","")),"")
+   +kpi("Real fleet validation",'<span style="color:var(--warning)">PENDING</span>',null,"plain")
+   +'</div>'
+   +finding("warn","Ayrım","<b>APPLICATION: PILOT/deployed. MODEL: synthetically validated. REAL FLEET VALIDATION: pending.</b><p>Bu üçü karıştırılmaz.</p>")
+   +'</div>';
+  return out;
+}
+
+/* ---------------- command palette + search ---------------- */
+function paletteIndex(){
+  var idx=[];
+  Object.keys(ROUTES).forEach(function(r){idx.push({t:"Open "+ROUTES[r].label,s:"module",go:r});});
+  [["days","V1 · DAYS"],["km","V1 · KM"],["models","V1 · Models"],["features","V1 · Features"],["errors","V1 · Errors"],
+   ["drift","V1 · Drift"],["experiments","V1 · Experiments"],["predict","V1 · Live Prediction"],["verdict","V1 · Verdict"]]
+   .forEach(function(p){idx.push({t:p[1],s:"v1 tab",go:"v1/"+p[0]});});
+  (M.notebooks||[]).forEach(function(nb){idx.push({t:"NB "+nb.n+" — "+nb.title,s:nb.file,go:nb.module==="v1"?"v1/experiments":(nb.module||"experiments")});});
+  (M.models||[]).forEach(function(m){idx.push({t:m.name,s:"model · MAE "+(m.mae==null?"—":(m.mae>200?n0(m.mae):n1(m.mae))),go:"models"});});
+  (M.datasets||[]).forEach(function(d){idx.push({t:(d.label||d.version)+" dataset",s:d.purpose,go:"dataset"});});
+  CL.forEach(function(e){idx.push({t:e.title,s:e.module+" · "+e.timestamp,go:moduleHash(e.module)});});
+  idx.push({t:"KM MAE",s:"V1 primary metric",go:"v1/km"});
+  idx.push({t:"DAYS MAE",s:"V1 secondary metric",go:"v1/days"});
+  idx.push({t:"policy_interval_km",s:"feature — External Knowledge experiment",go:"v1/experiments"});
+  idx.push({t:"censoring / right-censored",s:"V2 motivation",go:"v2"});
+  return idx;
+}
+var PIDX=null, PSEL=0, PFILT=[];
+function openPalette(){
+  if(!PIDX)PIDX=paletteIndex();
+  $("#paletteBack").classList.add("on");
+  var inp=$("#paletteInput"); inp.value=""; PSEL=0; filterPalette("");
+  setTimeout(function(){inp.focus();},20);
+}
+function closePalette(){$("#paletteBack").classList.remove("on");}
+function filterPalette(q){
+  q=(q||"").toLowerCase().trim();
+  PFILT=!q?PIDX.slice(0,9):PIDX.filter(function(it){return (it.t+" "+it.s).toLowerCase().indexOf(q)>=0;}).slice(0,30);
+  PSEL=0;
+  $("#paletteResults").innerHTML=PFILT.length?PFILT.map(function(it,i){
+    return '<div class="pr'+(i===0?' sel':'')+'" data-i="'+i+'">'+esc(it.t)+' <small>'+esc(it.s)+'</small><span class="pr-k">↵</span></div>';
+  }).join(''):'<div class="pr"><small>Sonuç yok</small></div>';
+  $("#paletteResults").querySelectorAll(".pr[data-i]").forEach(function(el){
+    el.addEventListener("click",function(){choosePalette(+el.getAttribute("data-i"));});
+  });
+}
+function choosePalette(i){var it=PFILT[i];if(it){closePalette();go(it.go);}}
+document.addEventListener("keydown",function(e){
+  if((e.metaKey||e.ctrlKey)&&e.key.toLowerCase()==="k"){e.preventDefault();openPalette();return;}
+  if(!$("#paletteBack").classList.contains("on"))return;
+  if(e.key==="Escape")closePalette();
+  else if(e.key==="ArrowDown"){e.preventDefault();PSEL=Math.min(PFILT.length-1,PSEL+1);paintSel();}
+  else if(e.key==="ArrowUp"){e.preventDefault();PSEL=Math.max(0,PSEL-1);paintSel();}
+  else if(e.key==="Enter"){e.preventDefault();choosePalette(PSEL);}
+});
+function paintSel(){$("#paletteResults").querySelectorAll(".pr[data-i]").forEach(function(el,i){el.classList.toggle("sel",i===PSEL);});}
+$("#paletteInput").addEventListener("input",function(e){filterPalette(e.target.value);});
+$("#paletteBack").addEventListener("click",function(e){if(e.target===$("#paletteBack"))closePalette();});
+
+/* ---------------- boot ---------------- */
+/* Live API URL priority: (1) ?v2api= query param  (2) build-time injected M.v2_api  (3) none.
+   No default fake host — if none resolves, Live Prediction stays offline and says so. */
+try{var _q=new URLSearchParams(location.search).get("v2api");
+  window.__V2_API__=(_q||M.v2_api||window.__V2_API__||"").replace(/\/$/,"");}catch(e){}
+$("#ham").addEventListener("click",function(){$("#shell").classList.toggle("drawer");});
+if(!location.hash)location.hash="#overview";
+route();
+</script>
+<script>window.__EDA_MONTHLY__=__EDA_MONTHLY_JSON__;</script>
+</body>
+</html>

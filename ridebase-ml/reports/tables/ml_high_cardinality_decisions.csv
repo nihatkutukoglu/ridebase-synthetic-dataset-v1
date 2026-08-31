@@ -1,0 +1,9 @@
+﻿column,cardinality,use_or_drop,encoding_strategy,reason
+snapshot_id,41518,DROP_FROM_X_KEEP_MANIFEST,NONE,Satır kimliği
+source_service_id,41518,DROP_FROM_X,NONE,Servis kaydı kimliği
+motorcycle_id,8442,DROP_FROM_X_KEEP_MANIFEST,NONE,Yüksek cardinality kimliği; ezberleme riski
+customer_id,6080,DROP_FROM_X,NONE,Yüksek cardinality kişi kimliği
+workshop_id,10,KEEP,ONE_HOT_HANDLE_UNKNOWN,"10 kategori; prediction anında biliniyor, unseen workshop güvenli"
+model_id,39,KEEP,ONE_HOT_HANDLE_UNKNOWN,39 model; makul cardinality ve bakım davranışıyla ilişkili
+brand,12,KEEP,ONE_HOT_HANDLE_UNKNOWN,Düşük/orta cardinality
+model_name,39,DROP_REDUNDANT,NONE,model_id ile bire-bir aynı varlığı temsil ediyor

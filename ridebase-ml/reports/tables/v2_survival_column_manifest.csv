@@ -1,0 +1,169 @@
+﻿column,role,available_at_snapshot,uses_future_information,target_derived,model_feature_allowed,reason
+acquisition_channel,FEATURE,True,no,no,True,snapshot-time leakage-safe v1.3 feature
+annual_km_baseline,FEATURE,True,no,no,True,snapshot-time leakage-safe v1.3 feature
+appointment_rate,FEATURE,True,no,no,True,snapshot-time leakage-safe v1.3 feature
+appointment_service_count,FEATURE,True,no,no,True,snapshot-time leakage-safe v1.3 feature
+avg_km_per_active_day,FEATURE,True,no,no,True,snapshot-time leakage-safe v1.3 feature
+avg_km_per_day_since_previous_service,FEATURE,True,no,no,True,snapshot-time leakage-safe v1.3 feature
+avg_parts_lead_days,FEATURE,True,no,no,True,snapshot-time leakage-safe v1.3 feature
+avg_ride_days_per_week,FEATURE,True,no,no,True,snapshot-time leakage-safe v1.3 feature
+avg_service_interval_days,FEATURE,True,no,no,True,snapshot-time leakage-safe v1.3 feature
+avg_service_interval_km,FEATURE,True,no,no,True,snapshot-time leakage-safe v1.3 feature
+avg_service_spend,FEATURE,True,no,no,True,snapshot-time leakage-safe v1.3 feature
+brand,FEATURE,True,no,no,True,snapshot-time leakage-safe v1.3 feature
+breakdown_service_count,FEATURE,True,no,no,True,snapshot-time leakage-safe v1.3 feature
+category,FEATURE,True,no,no,True,snapshot-time leakage-safe v1.3 feature
+censoring_date,CENSORING,False,no,yes,False,administrative censor boundary
+chronic_risk_tier,METADATA,True,no,no,False,"provenance / synthetic-only, excluded from ML"
+city_ratio,FEATURE,True,no,no,True,snapshot-time leakage-safe v1.3 feature
+climate_zone,FEATURE,True,no,no,True,snapshot-time leakage-safe v1.3 feature
+cooling_type,FEATURE,True,no,no,True,snapshot-time leakage-safe v1.3 feature
+courier_customer_share,FEATURE,True,no,no,True,snapshot-time leakage-safe v1.3 feature
+cumulative_service_spend,FEATURE,True,no,no,True,snapshot-time leakage-safe v1.3 feature
+current_arrival_mode,FEATURE,True,no,no,True,snapshot-time leakage-safe v1.3 feature
+current_completed_task_count,FEATURE,True,no,no,True,snapshot-time leakage-safe v1.3 feature
+current_declined_task_count,FEATURE,True,no,no,True,snapshot-time leakage-safe v1.3 feature
+current_fault_task_count,FEATURE,True,no,no,True,snapshot-time leakage-safe v1.3 feature
+current_grand_total,FEATURE,True,no,no,True,snapshot-time leakage-safe v1.3 feature
+current_inspection_finding_task_count,FEATURE,True,no,no,True,snapshot-time leakage-safe v1.3 feature
+current_is_breakdown,FEATURE,True,no,no,True,snapshot-time leakage-safe v1.3 feature
+current_is_warranty,FEATURE,True,no,no,True,snapshot-time leakage-safe v1.3 feature
+current_labor_total,FEATURE,True,no,no,True,snapshot-time leakage-safe v1.3 feature
+current_mileage_estimated,FEATURE,True,no,no,True,snapshot-time leakage-safe v1.3 feature
+current_mileage_quality_flag,FEATURE,True,no,no,True,snapshot-time leakage-safe v1.3 feature
+current_mileage_source,FEATURE,True,no,no,True,snapshot-time leakage-safe v1.3 feature
+current_parts_line_count,FEATURE,True,no,no,True,snapshot-time leakage-safe v1.3 feature
+current_parts_total,FEATURE,True,no,no,True,snapshot-time leakage-safe v1.3 feature
+current_policy_due_task_count,FEATURE,True,no,no,True,snapshot-time leakage-safe v1.3 feature
+current_primary_trigger_task,FEATURE,True,no,no,True,snapshot-time leakage-safe v1.3 feature
+current_replace_task_count,FEATURE,True,no,no,True,snapshot-time leakage-safe v1.3 feature
+current_service_delay_days,FEATURE,True,no,no,True,snapshot-time leakage-safe v1.3 feature
+current_service_timestamp_repaired,FEATURE,True,no,no,True,snapshot-time leakage-safe v1.3 feature
+current_service_type_code,FEATURE,True,no,no,True,snapshot-time leakage-safe v1.3 feature
+current_supplier_parts_line_count,FEATURE,True,no,no,True,snapshot-time leakage-safe v1.3 feature
+current_task_count,FEATURE,True,no,no,True,snapshot-time leakage-safe v1.3 feature
+customer_id,IDENTIFIER,False,no,no,False,"row/entity id, not predictive"
+customer_type,FEATURE,True,no,no,True,snapshot-time leakage-safe v1.3 feature
+customer_volume_index,FEATURE,True,no,no,True,snapshot-time leakage-safe v1.3 feature
+cylinder_count,FEATURE,True,no,no,True,snapshot-time leakage-safe v1.3 feature
+daily_active_probability,FEATURE,True,no,no,True,snapshot-time leakage-safe v1.3 feature
+daily_service_capacity,FEATURE,True,no,no,True,snapshot-time leakage-safe v1.3 feature
+data_origin,AUDIT_ONLY,False,yes,no,False,future/outcome info — audit & target construction only
+days_observed,FEATURE,True,no,no,True,snapshot-time leakage-safe v1.3 feature
+days_since_brakes_task,FEATURE,True,no,no,True,snapshot-time leakage-safe v1.3 feature
+days_since_cooling_task,FEATURE,True,no,no,True,snapshot-time leakage-safe v1.3 feature
+days_since_electrical_task,FEATURE,True,no,no,True,snapshot-time leakage-safe v1.3 feature
+days_since_engine_task,FEATURE,True,no,no,True,snapshot-time leakage-safe v1.3 feature
+days_since_final_drive_task,FEATURE,True,no,no,True,snapshot-time leakage-safe v1.3 feature
+days_since_intake_task,FEATURE,True,no,no,True,snapshot-time leakage-safe v1.3 feature
+days_since_previous_service,FEATURE,True,no,no,True,snapshot-time leakage-safe v1.3 feature
+days_since_tires_wheels_task,FEATURE,True,no,no,True,snapshot-time leakage-safe v1.3 feature
+days_since_transmission_task,FEATURE,True,no,no,True,snapshot-time leakage-safe v1.3 feature
+duration_days,TARGET,False,no,yes,False,survival label
+engine_displacement_cc,FEATURE,True,no,no,True,snapshot-time leakage-safe v1.3 feature
+engine_oil_service_qty_l,FEATURE,True,no,no,True,snapshot-time leakage-safe v1.3 feature
+event_observed,TARGET,False,no,yes,False,survival label
+failure_hazard_score,METADATA,True,no,no,False,"provenance / synthetic-only, excluded from ML"
+feature_version,METADATA,True,no,no,False,"provenance / synthetic-only, excluded from ML"
+final_drive_type,FEATURE,True,no,no,True,snapshot-time leakage-safe v1.3 feature
+fuel_type,FEATURE,True,no,no,True,snapshot-time leakage-safe v1.3 feature
+generator_version,AUDIT_ONLY,False,yes,no,False,future/outcome info — audit & target construction only
+highway_ratio,FEATURE,True,no,no,True,snapshot-time leakage-safe v1.3 feature
+historical_interval_days_median,FEATURE,True,no,no,True,snapshot-time leakage-safe v1.3 feature
+historical_interval_days_std,FEATURE,True,no,no,True,snapshot-time leakage-safe v1.3 feature
+historical_interval_km_median,FEATURE,True,no,no,True,snapshot-time leakage-safe v1.3 feature
+historical_interval_km_std,FEATURE,True,no,no,True,snapshot-time leakage-safe v1.3 feature
+historical_on_time_rate,FEATURE,True,no,no,True,snapshot-time leakage-safe v1.3 feature
+historical_policy_delay_mean_days,FEATURE,True,no,no,True,snapshot-time leakage-safe v1.3 feature
+historical_policy_delay_median_days,FEATURE,True,no,no,True,snapshot-time leakage-safe v1.3 feature
+initial_mileage_km,FEATURE,True,no,no,True,snapshot-time leakage-safe v1.3 feature
+is_fleet_customer,FEATURE,True,no,no,True,snapshot-time leakage-safe v1.3 feature
+is_left_truncated,FEATURE,True,no,no,True,snapshot-time leakage-safe v1.3 feature
+km_since_brakes_task,FEATURE,True,no,no,True,snapshot-time leakage-safe v1.3 feature
+km_since_cooling_task,FEATURE,True,no,no,True,snapshot-time leakage-safe v1.3 feature
+km_since_electrical_task,FEATURE,True,no,no,True,snapshot-time leakage-safe v1.3 feature
+km_since_engine_task,FEATURE,True,no,no,True,snapshot-time leakage-safe v1.3 feature
+km_since_final_drive_task,FEATURE,True,no,no,True,snapshot-time leakage-safe v1.3 feature
+km_since_intake_task,FEATURE,True,no,no,True,snapshot-time leakage-safe v1.3 feature
+km_since_previous_service,FEATURE,True,no,no,True,snapshot-time leakage-safe v1.3 feature
+km_since_tires_wheels_task,FEATURE,True,no,no,True,snapshot-time leakage-safe v1.3 feature
+km_since_transmission_task,FEATURE,True,no,no,True,snapshot-time leakage-safe v1.3 feature
+labor_rate_index,FEATURE,True,no,no,True,snapshot-time leakage-safe v1.3 feature
+load_severity_factor,FEATURE,True,no,no,True,snapshot-time leakage-safe v1.3 feature
+long_term_km_per_day,FEATURE,True,no,no,True,snapshot-time leakage-safe v1.3 feature
+maintenance_overdue_days_pre_service,FEATURE,True,no,no,True,snapshot-time leakage-safe v1.3 feature
+maintenance_overdue_km_pre_service,FEATURE,True,no,no,True,snapshot-time leakage-safe v1.3 feature
+model_id,IDENTIFIER,False,no,no,False,"row/entity id, not predictive"
+model_name,IDENTIFIER,False,no,no,False,"row/entity id, not predictive"
+motorcycle_age_years,FEATURE,True,no,no,True,snapshot-time leakage-safe v1.3 feature
+motorcycle_id,IDENTIFIER,False,no,no,False,"row/entity id, not predictive"
+next_event_type_audit,AUDIT_ONLY,False,yes,no,False,future/outcome info — audit & target construction only
+next_service_at,AUDIT_ONLY,False,yes,no,False,future/outcome info — audit & target construction only
+offroad_ratio,FEATURE,True,no,no,True,snapshot-time leakage-safe v1.3 feature
+ownership_months,FEATURE,True,no,no,True,snapshot-time leakage-safe v1.3 feature
+periodic_service_count,FEATURE,True,no,no,True,snapshot-time leakage-safe v1.3 feature
+policy_group,FEATURE,True,no,no,True,snapshot-time leakage-safe v1.3 feature
+policy_interval_days,FEATURE,True,no,no,True,snapshot-time leakage-safe v1.3 feature
+policy_interval_km,FEATURE,True,no,no,True,snapshot-time leakage-safe v1.3 feature
+policy_ready,FEATURE,True,no,no,True,snapshot-time leakage-safe v1.3 feature
+powertrain_type,FEATURE,True,no,no,True,snapshot-time leakage-safe v1.3 feature
+previous_failure_count,FEATURE,True,no,no,True,snapshot-time leakage-safe v1.3 feature
+previous_interval_days,FEATURE,True,no,no,True,snapshot-time leakage-safe v1.3 feature
+previous_interval_km,FEATURE,True,no,no,True,snapshot-time leakage-safe v1.3 feature
+previous_policy_delay_days,FEATURE,True,no,no,True,snapshot-time leakage-safe v1.3 feature
+previous_service_count,FEATURE,True,no,no,True,snapshot-time leakage-safe v1.3 feature
+price_level,FEATURE,True,no,no,True,snapshot-time leakage-safe v1.3 feature
+production_year,FEATURE,True,no,no,True,snapshot-time leakage-safe v1.3 feature
+random_seed,AUDIT_ONLY,False,yes,no,False,future/outcome info — audit & target construction only
+recent_180d_km,FEATURE,True,no,no,True,snapshot-time leakage-safe v1.3 feature
+recent_30d_km,FEATURE,True,no,no,True,snapshot-time leakage-safe v1.3 feature
+recent_60d_km,FEATURE,True,no,no,True,snapshot-time leakage-safe v1.3 feature
+recent_90d_km,FEATURE,True,no,no,True,snapshot-time leakage-safe v1.3 feature
+recent_km_per_day,FEATURE,True,no,no,True,snapshot-time leakage-safe v1.3 feature
+recent_vs_long_term_usage_ratio,FEATURE,True,no,no,True,snapshot-time leakage-safe v1.3 feature
+repair_service_count,FEATURE,True,no,no,True,snapshot-time leakage-safe v1.3 feature
+riding_intensity,FEATURE,True,no,no,True,snapshot-time leakage-safe v1.3 feature
+rolling3_interval_days,FEATURE,True,no,no,True,snapshot-time leakage-safe v1.3 feature
+rolling3_interval_km,FEATURE,True,no,no,True,snapshot-time leakage-safe v1.3 feature
+same_day_parts_rate,FEATURE,True,no,no,True,snapshot-time leakage-safe v1.3 feature
+scenario_id,AUDIT_ONLY,False,yes,no,False,future/outcome info — audit & target construction only
+seasonality_strength,FEATURE,True,no,no,True,snapshot-time leakage-safe v1.3 feature
+service_bay_count,FEATURE,True,no,no,True,snapshot-time leakage-safe v1.3 feature
+service_odometer_regression_count_to_date,FEATURE,True,no,no,True,snapshot-time leakage-safe v1.3 feature
+service_sequence,FEATURE,True,no,no,True,snapshot-time leakage-safe v1.3 feature
+services_last_365d,FEATURE,True,no,no,True,snapshot-time leakage-safe v1.3 feature
+services_last_90d,FEATURE,True,no,no,True,snapshot-time leakage-safe v1.3 feature
+snapshot_at,AUDIT_ONLY,False,yes,no,False,future/outcome info — audit & target construction only
+snapshot_date,METADATA,True,no,no,False,"provenance / synthetic-only, excluded from ML"
+snapshot_day_of_year,FEATURE,True,no,no,True,snapshot-time leakage-safe v1.3 feature
+snapshot_id,IDENTIFIER,False,no,no,False,"row/entity id, not predictive"
+snapshot_month,FEATURE,True,no,no,True,snapshot-time leakage-safe v1.3 feature
+snapshot_month_cos,FEATURE,True,no,no,True,snapshot-time leakage-safe v1.3 feature
+snapshot_month_sin,FEATURE,True,no,no,True,snapshot-time leakage-safe v1.3 feature
+snapshot_odometer_km,AUDIT_ONLY,False,yes,no,False,future/outcome info — audit & target construction only
+snapshot_quarter,FEATURE,True,no,no,True,snapshot-time leakage-safe v1.3 feature
+snapshot_year,FEATURE,True,no,no,True,snapshot-time leakage-safe v1.3 feature
+source_service_id,IDENTIFIER,False,no,no,False,"row/entity id, not predictive"
+spark_plug_count,FEATURE,True,no,no,True,snapshot-time leakage-safe v1.3 feature
+spec_confidence,FEATURE,True,no,no,True,snapshot-time leakage-safe v1.3 feature
+storage_condition,FEATURE,True,no,no,True,snapshot-time leakage-safe v1.3 feature
+survival_admin_censor_at,CENSORING,False,no,yes,False,administrative censor boundary
+technician_count,FEATURE,True,no,no,True,snapshot-time leakage-safe v1.3 feature
+total_completed_task_count,FEATURE,True,no,no,True,snapshot-time leakage-safe v1.3 feature
+total_declined_task_count,FEATURE,True,no,no,True,snapshot-time leakage-safe v1.3 feature
+total_fault_task_count,FEATURE,True,no,no,True,snapshot-time leakage-safe v1.3 feature
+total_inspection_finding_task_count,FEATURE,True,no,no,True,snapshot-time leakage-safe v1.3 feature
+total_policy_due_task_count,FEATURE,True,no,no,True,snapshot-time leakage-safe v1.3 feature
+total_replace_task_count,FEATURE,True,no,no,True,snapshot-time leakage-safe v1.3 feature
+total_task_count,FEATURE,True,no,no,True,snapshot-time leakage-safe v1.3 feature
+track_ratio,FEATURE,True,no,no,True,snapshot-time leakage-safe v1.3 feature
+transmission_type,FEATURE,True,no,no,True,snapshot-time leakage-safe v1.3 feature
+usage_type,FEATURE,True,no,no,True,snapshot-time leakage-safe v1.3 feature
+walkin_service_count,FEATURE,True,no,no,True,snapshot-time leakage-safe v1.3 feature
+warranty_service_count,FEATURE,True,no,no,True,snapshot-time leakage-safe v1.3 feature
+weather_sensitivity,FEATURE,True,no,no,True,snapshot-time leakage-safe v1.3 feature
+winter_usage_factor,FEATURE,True,no,no,True,snapshot-time leakage-safe v1.3 feature
+workshop_city,FEATURE,True,no,no,True,snapshot-time leakage-safe v1.3 feature
+workshop_climate_zone,FEATURE,True,no,no,True,snapshot-time leakage-safe v1.3 feature
+workshop_id,IDENTIFIER,False,no,no,False,"row/entity id, not predictive"
+workshop_region,FEATURE,True,no,no,True,snapshot-time leakage-safe v1.3 feature

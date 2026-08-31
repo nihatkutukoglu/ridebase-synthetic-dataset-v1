@@ -1,0 +1,45 @@
+{
+  "dataset_version": "1.2.0",
+  "generator_version": "1.2.0",
+  "random_seed": 42,
+  "framework_versions": {
+    "python": "3.11.15",
+    "autogluon": "1.6.1",
+    "catboost": "1.2.10",
+    "lightgbm": "4.6.0",
+    "xgboost": "3.2.0",
+    "sklearn": "1.8.0"
+  },
+  "raw_feature_count": 127,
+  "encoded_feature_count": 277,
+  "automl_time_budget_seconds_per_target": 900,
+  "eligible_counts": {
+    "DAYS": {
+      "TRAIN": 20679,
+      "VALIDATION": 1932,
+      "TEST": 2622
+    },
+    "KM": {
+      "TRAIN": 20678,
+      "VALIDATION": 1931,
+      "TEST": 2622
+    }
+  },
+  "days_final_model": "Manual::WeightedBlend",
+  "km_final_model": "AutoGluon::WeightedEnsemble_L2",
+  "validation_selection": "MAE, Median AE, R2; TEST unopened until lock",
+  "reproducibility": {
+    "DAYS": true,
+    "KM": true
+  },
+  "bagging": "disabled",
+  "stacking": "disabled; AutoGluon weighted ensemble L2 only",
+  "regression_ceiling_assessment": "AUTOML FOUND MODERATE HEADROOM",
+  "production_validation_status": "BLOCKED",
+  "limitations": [
+    "Synthetic dataset",
+    "Observed-only V1 selection bias",
+    "16k+ censored snapshots excluded",
+    "Feature importance is not causality"
+  ]
+}

@@ -1,0 +1,31 @@
+{
+  "dataset_version": "1.2.0",
+  "python_version": "3.11.15",
+  "sklearn_version": "1.8.0",
+  "standardized_model": "HistGradientBoostingRegressor(random_state=42, defaults)",
+  "feature_matrix": "SET_A_BASE_05 (models/ml_preprocessor_v1_2.joblib, 277 encoded features, TRAIN-fit)",
+  "selected_target_type": "NEXT_ANY_SERVICE",
+  "leaderboard_formulation": "V0_RESIDUAL_ANY",
+  "days_target_definition": "Kural bazli V0 tahmininin ne kadar erken/gec oldugunu (residual) ogren.",
+  "km_target_definition": "Kural bazli V0 tahmininin ne kadar erken/gec oldugunu (residual) ogren.",
+  "target_event_definition": "next ANY service",
+  "periodic_only": false,
+  "censoring_rule": "observed-only; ANY: v1_regression_eligible; PERIODIC: first future PERIODIC service <= primary_label_cutoff_at",
+  "fallback_rule": "no reconstruction anchor / no history -> row excluded (no fabricated target)",
+  "coverage": {
+    "any_service": 1.0,
+    "next_periodic_maintenance": 0.9431731502669718
+  },
+  "validation_metrics": {
+    "days_r2": 0.2810260649309937,
+    "km_r2": 0.15435340315252177
+  },
+  "test_metrics": {
+    "days_r2": 0.4243661067976011,
+    "km_r2": 0.22547680936810244,
+    "days_mae": 22.75351709540745,
+    "km_mae": 1537.187231365047
+  },
+  "business_interpretation": "Leaderboard is measured on the next-ANY-service ground truth; periodic-only target is reported as a product-scoping option.",
+  "production_validation_status": "BLOCKED"
+}

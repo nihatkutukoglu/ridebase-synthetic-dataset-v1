@@ -1,0 +1,77 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --font-sans: "Inter", "Segoe UI", system-ui, -apple-system, Helvetica, Arial, sans-serif;
+  --font-mono: "JetBrains Mono", "SF Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+}
+
+html,
+body {
+  background: #08090b;
+  color: #f3f4f6;
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+}
+
+body {
+  background-image: radial-gradient(circle at 20% -10%, rgba(255, 106, 26, 0.06), transparent 45%),
+    radial-gradient(circle at 100% 0%, rgba(34, 211, 238, 0.05), transparent 40%);
+  min-height: 100vh;
+}
+
+* {
+  scrollbar-width: thin;
+  scrollbar-color: #2a2f3a transparent;
+}
+*::-webkit-scrollbar {
+  height: 8px;
+  width: 8px;
+}
+*::-webkit-scrollbar-thumb {
+  background: #2a2f3a;
+  border-radius: 8px;
+}
+
+.metric-num {
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -0.02em;
+}
+
+.label-tiny {
+  font-size: 10.5px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: #98a2b3;
+  font-weight: 600;
+}
+
+/* Recharts dark theme */
+.recharts-cartesian-axis-tick text {
+  fill: #98a2b3;
+  font-size: 11px;
+}
+.recharts-cartesian-grid line {
+  stroke: #1b1f27;
+}
+.recharts-tooltip-wrapper {
+  outline: none;
+}
+.recharts-default-tooltip {
+  background: #111318 !important;
+  border: 1px solid #242933 !important;
+  border-radius: 10px !important;
+  font-size: 12px;
+}
+.recharts-legend-item-text {
+  color: #98a2b3 !important;
+  font-size: 11px;
+}
+
+:focus-visible {
+  outline: 2px solid #22d3ee;
+  outline-offset: 2px;
+  border-radius: 4px;
+}

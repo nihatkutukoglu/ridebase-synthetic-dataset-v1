@@ -1,0 +1,84 @@
+{
+  "dataset_version": "1.3.0",
+  "notebook": "10_v1_3_final_regression.ipynb",
+  "python_version": "3.11.15",
+  "sklearn_version": "1.8.0",
+  "experiment_type": "MODEL_ENGINEERING (dataset FROZEN)",
+  "target_contract": "NEXT ANY SERVICE — RAW days / RAW km-delta, observed-only",
+  "split": {
+    "TRAIN": 32203,
+    "VALIDATION": 4845,
+    "TEST": 4470
+  },
+  "observed": {
+    "TRAIN": 25442,
+    "VALIDATION": 1429,
+    "TEST": 1282
+  },
+  "feature_count_total": 146,
+  "encoded_feature_count": 281,
+  "best_feature_set": {
+    "DAYS": "SET_C_RECENT_USAGE",
+    "KM": "SET_D_HISTORICAL_INTERVAL"
+  },
+  "days_final": {
+    "kind": "best_single",
+    "spec": [
+      "single",
+      "AutoGluon_best"
+    ]
+  },
+  "km_final": {
+    "kind": "best_single",
+    "spec": [
+      "single",
+      "AutoGluon_best"
+    ]
+  },
+  "baseline_reproduction": {
+    "DAYS": {
+      "test_r2": 0.6471192269830612,
+      "test_mae": 22.624212096647877,
+      "flag": "OK"
+    },
+    "KM": {
+      "test_r2": 0.4249777267322524,
+      "test_mae": 948.1862312514829,
+      "flag": "OK"
+    }
+  },
+  "final_test": {
+    "DAYS": {
+      "mae": 22.210360650430488,
+      "median_ae": 12.874500788935908,
+      "rmse": 35.20874188539904,
+      "r2": 0.6604824242158305,
+      "bias": 4.023404193139127,
+      "p90_ae": 54.27810175238717
+    },
+    "KM": {
+      "mae": 1003.2490325070767,
+      "median_ae": 762.7020263671875,
+      "rmse": 1348.8433759629877,
+      "r2": 0.39058447902413906,
+      "bias": 479.783480615958,
+      "p90_ae": 2150.126513671875
+    }
+  },
+  "regression_ceiling": "V1.3 REGRESSION CEILING REACHED",
+  "final_verdict": "NO IMPROVEMENT",
+  "v2_survival": "STILL RECOMMENDED",
+  "reproducibility": {
+    "DAYS": "PASS",
+    "KM": "PASS"
+  },
+  "observed_censored_shift": "MATERIAL",
+  "autogluon_used": true,
+  "limitations": [
+    "Synthetic v1.3 regression-calibration release",
+    "observed-only selection bias",
+    "DAYS target distribution drift HIGH across splits",
+    "no production validation"
+  ],
+  "production_validation_status": "BLOCKED"
+}

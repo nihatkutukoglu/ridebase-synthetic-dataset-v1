@@ -1,0 +1,21 @@
+[build-system]
+requires = ["setuptools>=61"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "ridebase-ml"
+version = "0.2.0"
+description = "RideBase ML — V2 survival production inference package (V2SurvivalPredictor)"
+requires-python = ">=3.9"
+dependencies = [
+    "numpy",
+    "pandas",
+    "scipy",
+    "joblib",
+    "scikit-learn==1.5.2",
+    "scikit-survival==0.23.1",
+    "xgboost==2.1.4",
+]
+
+[tool.setuptools]
+packages = ["ridebase_ml", "ridebase_ml.v2"]

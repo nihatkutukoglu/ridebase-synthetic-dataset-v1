@@ -1,0 +1,5 @@
+﻿feature_a,feature_b,a_to_b_max_unique,b_to_a_max_unique,relationship,decision,reason
+model_id,model_name,1,1,ONE_TO_ONE,KEEP model_id; DROP model_name,Aynı varlığın iki etiketi; başlangıç pipeline'ında tek temsil yeterli
+workshop_id,workshop_city,1,1,ONE_TO_ONE,KEEP workshop_id; DROP workshop_city,Aynı varlığın iki etiketi; başlangıç pipeline'ında tek temsil yeterli
+climate_zone,workshop_climate_zone,1,1,ONE_TO_ONE,KEEP climate_zone; DROP workshop_climate_zone,Aynı varlığın iki etiketi; başlangıç pipeline'ında tek temsil yeterli
+powertrain_type,fuel_type,1,1,ONE_TO_ONE,KEEP powertrain_type; DROP fuel_type,Aynı varlığın iki etiketi; başlangıç pipeline'ında tek temsil yeterli

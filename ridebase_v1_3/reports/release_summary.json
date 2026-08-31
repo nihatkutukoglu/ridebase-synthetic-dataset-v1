@@ -1,0 +1,468 @@
+{
+  "release_gate": "PASS",
+  "failed_high_checks": [],
+  "services": 41518,
+  "snapshots": 41518,
+  "split_counts": {
+    "TRAIN": 32203,
+    "VALIDATION": 4845,
+    "TEST": 4470
+  },
+  "observed_by_split": {
+    "TRAIN": 25442,
+    "VALIDATION": 1429,
+    "TEST": 1282
+  },
+  "censored_total": 8442,
+  "event_distribution": {
+    "PERIODIC": 38899,
+    "REPAIR": 1778,
+    "BREAKDOWN": 422,
+    "TIRE": 419
+  },
+  "metrics": [
+    {
+      "target": "DAYS",
+      "split": "TRAIN",
+      "model": "HistGradientBoostingRegressor",
+      "metric": "mae",
+      "value": 16.056739652300497,
+      "n": 25442
+    },
+    {
+      "target": "DAYS",
+      "split": "TRAIN",
+      "model": "HistGradientBoostingRegressor",
+      "metric": "median_ae",
+      "value": 9.835846431601066,
+      "n": 25442
+    },
+    {
+      "target": "DAYS",
+      "split": "TRAIN",
+      "model": "HistGradientBoostingRegressor",
+      "metric": "rmse",
+      "value": 24.36288776771553,
+      "n": 25442
+    },
+    {
+      "target": "DAYS",
+      "split": "TRAIN",
+      "model": "HistGradientBoostingRegressor",
+      "metric": "r2",
+      "value": 0.9405171126493095,
+      "n": 25442
+    },
+    {
+      "target": "DAYS",
+      "split": "TRAIN",
+      "model": "HistGradientBoostingRegressor",
+      "metric": "within_15",
+      "value": 0.6444068862510809,
+      "n": 25442
+    },
+    {
+      "target": "DAYS",
+      "split": "TRAIN",
+      "model": "HistGradientBoostingRegressor",
+      "metric": "within_30",
+      "value": 0.8454524015407594,
+      "n": 25442
+    },
+    {
+      "target": "DAYS",
+      "split": "TRAIN",
+      "model": "HistGradientBoostingRegressor",
+      "metric": "within_60",
+      "value": 0.9628173885700809,
+      "n": 25442
+    },
+    {
+      "target": "DAYS",
+      "split": "VALIDATION",
+      "model": "HistGradientBoostingRegressor",
+      "metric": "mae",
+      "value": 9.757637158071594,
+      "n": 1429
+    },
+    {
+      "target": "DAYS",
+      "split": "VALIDATION",
+      "model": "HistGradientBoostingRegressor",
+      "metric": "median_ae",
+      "value": 6.4534710758953935,
+      "n": 1429
+    },
+    {
+      "target": "DAYS",
+      "split": "VALIDATION",
+      "model": "HistGradientBoostingRegressor",
+      "metric": "rmse",
+      "value": 14.645892095540827,
+      "n": 1429
+    },
+    {
+      "target": "DAYS",
+      "split": "VALIDATION",
+      "model": "HistGradientBoostingRegressor",
+      "metric": "r2",
+      "value": 0.7978734344671143,
+      "n": 1429
+    },
+    {
+      "target": "DAYS",
+      "split": "VALIDATION",
+      "model": "HistGradientBoostingRegressor",
+      "metric": "within_15",
+      "value": 0.8103568929321203,
+      "n": 1429
+    },
+    {
+      "target": "DAYS",
+      "split": "VALIDATION",
+      "model": "HistGradientBoostingRegressor",
+      "metric": "within_30",
+      "value": 0.9517144856543037,
+      "n": 1429
+    },
+    {
+      "target": "DAYS",
+      "split": "VALIDATION",
+      "model": "HistGradientBoostingRegressor",
+      "metric": "within_60",
+      "value": 0.9895031490552834,
+      "n": 1429
+    },
+    {
+      "target": "DAYS",
+      "split": "TEST",
+      "model": "HistGradientBoostingRegressor",
+      "metric": "mae",
+      "value": 22.776135670625067,
+      "n": 1282
+    },
+    {
+      "target": "DAYS",
+      "split": "TEST",
+      "model": "HistGradientBoostingRegressor",
+      "metric": "median_ae",
+      "value": 12.574973632064541,
+      "n": 1282
+    },
+    {
+      "target": "DAYS",
+      "split": "TEST",
+      "model": "HistGradientBoostingRegressor",
+      "metric": "rmse",
+      "value": 36.26488998864324,
+      "n": 1282
+    },
+    {
+      "target": "DAYS",
+      "split": "TEST",
+      "model": "HistGradientBoostingRegressor",
+      "metric": "r2",
+      "value": 0.6398080714525669,
+      "n": 1282
+    },
+    {
+      "target": "DAYS",
+      "split": "TEST",
+      "model": "HistGradientBoostingRegressor",
+      "metric": "within_15",
+      "value": 0.5452418096723869,
+      "n": 1282
+    },
+    {
+      "target": "DAYS",
+      "split": "TEST",
+      "model": "HistGradientBoostingRegressor",
+      "metric": "within_30",
+      "value": 0.7613104524180967,
+      "n": 1282
+    },
+    {
+      "target": "DAYS",
+      "split": "TEST",
+      "model": "HistGradientBoostingRegressor",
+      "metric": "within_60",
+      "value": 0.9188767550702028,
+      "n": 1282
+    },
+    {
+      "target": "KM",
+      "split": "TRAIN",
+      "model": "HistGradientBoostingRegressor",
+      "metric": "mae",
+      "value": 594.8193816528889,
+      "n": 25442
+    },
+    {
+      "target": "KM",
+      "split": "TRAIN",
+      "model": "HistGradientBoostingRegressor",
+      "metric": "median_ae",
+      "value": 455.5225586208337,
+      "n": 25442
+    },
+    {
+      "target": "KM",
+      "split": "TRAIN",
+      "model": "HistGradientBoostingRegressor",
+      "metric": "rmse",
+      "value": 797.8252027650266,
+      "n": 25442
+    },
+    {
+      "target": "KM",
+      "split": "TRAIN",
+      "model": "HistGradientBoostingRegressor",
+      "metric": "r2",
+      "value": 0.7981900399814987,
+      "n": 25442
+    },
+    {
+      "target": "KM",
+      "split": "TRAIN",
+      "model": "HistGradientBoostingRegressor",
+      "metric": "within_500",
+      "value": 0.53800801823756,
+      "n": 25442
+    },
+    {
+      "target": "KM",
+      "split": "TRAIN",
+      "model": "HistGradientBoostingRegressor",
+      "metric": "within_1000",
+      "value": 0.8232450279066111,
+      "n": 25442
+    },
+    {
+      "target": "KM",
+      "split": "TRAIN",
+      "model": "HistGradientBoostingRegressor",
+      "metric": "within_2000",
+      "value": 0.9761418127505699,
+      "n": 25442
+    },
+    {
+      "target": "KM",
+      "split": "VALIDATION",
+      "model": "HistGradientBoostingRegressor",
+      "metric": "mae",
+      "value": 610.5883023562872,
+      "n": 1429
+    },
+    {
+      "target": "KM",
+      "split": "VALIDATION",
+      "model": "HistGradientBoostingRegressor",
+      "metric": "median_ae",
+      "value": 461.1542457846376,
+      "n": 1429
+    },
+    {
+      "target": "KM",
+      "split": "VALIDATION",
+      "model": "HistGradientBoostingRegressor",
+      "metric": "rmse",
+      "value": 823.6458407010741,
+      "n": 1429
+    },
+    {
+      "target": "KM",
+      "split": "VALIDATION",
+      "model": "HistGradientBoostingRegressor",
+      "metric": "r2",
+      "value": 0.6425842668044635,
+      "n": 1429
+    },
+    {
+      "target": "KM",
+      "split": "VALIDATION",
+      "model": "HistGradientBoostingRegressor",
+      "metric": "within_500",
+      "value": 0.5346396081175647,
+      "n": 1429
+    },
+    {
+      "target": "KM",
+      "split": "VALIDATION",
+      "model": "HistGradientBoostingRegressor",
+      "metric": "within_1000",
+      "value": 0.8159552134359692,
+      "n": 1429
+    },
+    {
+      "target": "KM",
+      "split": "VALIDATION",
+      "model": "HistGradientBoostingRegressor",
+      "metric": "within_2000",
+      "value": 0.9734079776067179,
+      "n": 1429
+    },
+    {
+      "target": "KM",
+      "split": "TEST",
+      "model": "HistGradientBoostingRegressor",
+      "metric": "mae",
+      "value": 969.4052326243323,
+      "n": 1282
+    },
+    {
+      "target": "KM",
+      "split": "TEST",
+      "model": "HistGradientBoostingRegressor",
+      "metric": "median_ae",
+      "value": 713.1989537676909,
+      "n": 1282
+    },
+    {
+      "target": "KM",
+      "split": "TEST",
+      "model": "HistGradientBoostingRegressor",
+      "metric": "rmse",
+      "value": 1323.36546937444,
+      "n": 1282
+    },
+    {
+      "target": "KM",
+      "split": "TEST",
+      "model": "HistGradientBoostingRegressor",
+      "metric": "r2",
+      "value": 0.41338919156038734,
+      "n": 1282
+    },
+    {
+      "target": "KM",
+      "split": "TEST",
+      "model": "HistGradientBoostingRegressor",
+      "metric": "within_500",
+      "value": 0.36895475819032764,
+      "n": 1282
+    },
+    {
+      "target": "KM",
+      "split": "TEST",
+      "model": "HistGradientBoostingRegressor",
+      "metric": "within_1000",
+      "value": 0.6287051482059283,
+      "n": 1282
+    },
+    {
+      "target": "KM",
+      "split": "TEST",
+      "model": "HistGradientBoostingRegressor",
+      "metric": "within_2000",
+      "value": 0.8845553822152886,
+      "n": 1282
+    }
+  ],
+  "target_stats": [
+    {
+      "target": "DAYS",
+      "split": "TEST",
+      "count": 1282,
+      "mean": 104.6733963497428,
+      "median": 88.87304398148149,
+      "std": 60.44895865937155,
+      "p25": 53.79428240740741,
+      "p75": 153.779609375,
+      "p95": 215.41370717592594,
+      "p99": 231.53985347222223
+    },
+    {
+      "target": "DAYS",
+      "split": "TRAIN",
+      "count": 25442,
+      "mean": 127.755930805398,
+      "median": 94.88369791666668,
+      "std": 99.89443135335652,
+      "p25": 52.538952546296294,
+      "p75": 169.72735821759258,
+      "p95": 349.87882638888885,
+      "p99": 431.9828743055556
+    },
+    {
+      "target": "DAYS",
+      "split": "VALIDATION",
+      "count": 1429,
+      "mean": 63.630458872754794,
+      "median": 55.3221875,
+      "std": 32.587882554601265,
+      "p25": 39.052256944444444,
+      "p75": 83.62190972222223,
+      "p95": 129.401875,
+      "p99": 155.51307222222223
+    },
+    {
+      "target": "KM",
+      "split": "TEST",
+      "count": 1282,
+      "mean": 3502.9165366614666,
+      "median": 3177.5,
+      "std": 1728.519231103499,
+      "p25": 2308.75,
+      "p75": 4491.75,
+      "p95": 6656.700000000001,
+      "p99": 8980.210000000003
+    },
+    {
+      "target": "KM",
+      "split": "TRAIN",
+      "count": 25442,
+      "mean": 3566.332638943479,
+      "median": 3213.0,
+      "std": 1776.0082883888665,
+      "p25": 2321.0,
+      "p75": 4523.0,
+      "p95": 6841.949999999997,
+      "p99": 9019.59
+    },
+    {
+      "target": "KM",
+      "split": "VALIDATION",
+      "count": 1429,
+      "mean": 3446.07977606718,
+      "median": 3176.0,
+      "std": 1378.1791881260228,
+      "p25": 2463.0,
+      "p75": 4238.0,
+      "p95": 6138.199999999999,
+      "p99": 7430.88
+    }
+  ],
+  "reliability": {
+    "riding": {
+      "LOW": 0.036100453435647016,
+      "MEDIUM": 0.04340451777041092,
+      "HIGH": 0.06268355762065489
+    },
+    "riding_pass": true,
+    "load": {
+      "LOW": 0.04000889086463658,
+      "MEDIUM": 0.04648167033438892,
+      "HIGH": 0.06562587641394783,
+      "VERY_HIGH": 0.08521303258145363
+    },
+    "load_pass": true,
+    "warranty": {
+      "0-2": 0.020002768549280178,
+      "3-4": 0.0013825220112057047,
+      "5-7": 0.0,
+      "8-11": 0.0
+    },
+    "warranty_pass": true,
+    "fault_task_coverage": "2200/2200",
+    "fault_task_pass": true,
+    "final_drive": 168,
+    "adjusted_brand_spread": 1.3415877210855436
+  },
+  "mileage_autocorrelation": {
+    "v1_2": 0.8249271637456381,
+    "v1_3": 0.8993575004964901
+  },
+  "reproducibility_verified": true,
+  "zip_path": "ridebase_synthetic_dataset_v1_3.zip",
+  "sha256": "726a69b7bbb66665f38eb59164caea9847db71687948e0391bc56fbfac7244f7"
+}

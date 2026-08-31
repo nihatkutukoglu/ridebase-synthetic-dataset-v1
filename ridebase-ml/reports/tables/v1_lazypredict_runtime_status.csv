@@ -1,0 +1,87 @@
+﻿target,model,status,runtime,skip_reason
+DAYS,AdaBoostRegressor,SUCCESS,6.099884033203125,
+DAYS,BaggingRegressor,SUCCESS,8.036294937133789,
+DAYS,BayesianRidge,SUCCESS,0.38404393196105957,
+DAYS,CatBoostRegressor,SKIPPED,,Runtime bütçesi ve aynı ailede daha güvenli temsilci mevcut
+DAYS,DecisionTreeRegressor,SUCCESS,1.4252779483795166,
+DAYS,DummyRegressor,SUCCESS,0.06159520149230957,
+DAYS,ElasticNet,SUCCESS,0.20125603675842285,
+DAYS,ElasticNetCV,SKIPPED,,Runtime bütçesi ve aynı ailede daha güvenli temsilci mevcut
+DAYS,ExtraTreeRegressor,SUCCESS,0.5732879638671875,
+DAYS,ExtraTreesRegressor,SUCCESS,76.4761598110199,
+DAYS,GammaRegressor,SUCCESS,0.4834921360015869,
+DAYS,GaussianProcessRegressor,SKIPPED,,"O(n²)/O(n³), kernel/neighbors/CV veya benchmarkı kilitleyecek maliyet"
+DAYS,GradientBoostingRegressor,SUCCESS,24.822442054748535,
+DAYS,HistGradientBoostingRegressor,SUCCESS,1.1605169773101807,
+DAYS,HuberRegressor,SKIPPED,,Runtime bütçesi ve aynı ailede daha güvenli temsilci mevcut
+DAYS,KNeighborsRegressor,SKIPPED,,"O(n²)/O(n³), kernel/neighbors/CV veya benchmarkı kilitleyecek maliyet"
+DAYS,KernelRidge,SKIPPED,,"O(n²)/O(n³), kernel/neighbors/CV veya benchmarkı kilitleyecek maliyet"
+DAYS,LGBMRegressor,SKIPPED,,Runtime bütçesi ve aynı ailede daha güvenli temsilci mevcut
+DAYS,Lars,SKIPPED,,Runtime bütçesi ve aynı ailede daha güvenli temsilci mevcut
+DAYS,LarsCV,SKIPPED,,Runtime bütçesi ve aynı ailede daha güvenli temsilci mevcut
+DAYS,Lasso,SUCCESS,0.7754452228546143,
+DAYS,LassoCV,SKIPPED,,Runtime bütçesi ve aynı ailede daha güvenli temsilci mevcut
+DAYS,LassoLars,SKIPPED,,Runtime bütçesi ve aynı ailede daha güvenli temsilci mevcut
+DAYS,LassoLarsCV,SKIPPED,,Runtime bütçesi ve aynı ailede daha güvenli temsilci mevcut
+DAYS,LassoLarsIC,SKIPPED,,Runtime bütçesi ve aynı ailede daha güvenli temsilci mevcut
+DAYS,LinearRegression,SUCCESS,0.15952801704406738,
+DAYS,LinearSVR,SUCCESS,2.9226861000061035,
+DAYS,MLPRegressor,SKIPPED,,"O(n²)/O(n³), kernel/neighbors/CV veya benchmarkı kilitleyecek maliyet"
+DAYS,NuSVR,SKIPPED,,"O(n²)/O(n³), kernel/neighbors/CV veya benchmarkı kilitleyecek maliyet"
+DAYS,OrthogonalMatchingPursuit,SKIPPED,,Runtime bütçesi ve aynı ailede daha güvenli temsilci mevcut
+DAYS,OrthogonalMatchingPursuitCV,SKIPPED,,Runtime bütçesi ve aynı ailede daha güvenli temsilci mevcut
+DAYS,PassiveAggressiveRegressor,SUCCESS,0.26107096672058105,
+DAYS,PoissonRegressor,SUCCESS,1.514021873474121,
+DAYS,QuantileRegressor,SKIPPED,,"O(n²)/O(n³), kernel/neighbors/CV veya benchmarkı kilitleyecek maliyet"
+DAYS,RANSACRegressor,SKIPPED,,"O(n²)/O(n³), kernel/neighbors/CV veya benchmarkı kilitleyecek maliyet"
+DAYS,RandomForestRegressor,SKIPPED,,Runtime bütçesi ve aynı ailede daha güvenli temsilci mevcut
+DAYS,Ridge,SUCCESS,0.540992021560669,
+DAYS,RidgeCV,SKIPPED,,Runtime bütçesi ve aynı ailede daha güvenli temsilci mevcut
+DAYS,SGDRegressor,SUCCESS,0.23520398139953613,
+DAYS,SVR,SKIPPED,,"O(n²)/O(n³), kernel/neighbors/CV veya benchmarkı kilitleyecek maliyet"
+DAYS,TransformedTargetRegressor,SKIPPED,,Runtime bütçesi ve aynı ailede daha güvenli temsilci mevcut
+DAYS,TweedieRegressor,SUCCESS,0.45445990562438965,
+DAYS,XGBRegressor,SUCCESS,0.8066139221191406,
+KM,AdaBoostRegressor,SUCCESS,5.352510929107666,
+KM,BaggingRegressor,SUCCESS,8.23524808883667,
+KM,BayesianRidge,SUCCESS,0.31109189987182617,
+KM,CatBoostRegressor,SKIPPED,,Runtime bütçesi ve aynı ailede daha güvenli temsilci mevcut
+KM,DecisionTreeRegressor,SUCCESS,1.4526960849761963,
+KM,DummyRegressor,SUCCESS,0.05495905876159668,
+KM,ElasticNet,SUCCESS,0.24030590057373047,
+KM,ElasticNetCV,SKIPPED,,Runtime bütçesi ve aynı ailede daha güvenli temsilci mevcut
+KM,ExtraTreeRegressor,SUCCESS,0.5125038623809814,
+KM,ExtraTreesRegressor,SUCCESS,43.96078395843506,
+KM,GammaRegressor,FAILED,,Estimator bu hedefte prediction üretemedi
+KM,GaussianProcessRegressor,SKIPPED,,"O(n²)/O(n³), kernel/neighbors/CV veya benchmarkı kilitleyecek maliyet"
+KM,GradientBoostingRegressor,SUCCESS,20.641322135925293,
+KM,HistGradientBoostingRegressor,SUCCESS,1.0275421142578125,
+KM,HuberRegressor,SKIPPED,,Runtime bütçesi ve aynı ailede daha güvenli temsilci mevcut
+KM,KNeighborsRegressor,SKIPPED,,"O(n²)/O(n³), kernel/neighbors/CV veya benchmarkı kilitleyecek maliyet"
+KM,KernelRidge,SKIPPED,,"O(n²)/O(n³), kernel/neighbors/CV veya benchmarkı kilitleyecek maliyet"
+KM,LGBMRegressor,SKIPPED,,Runtime bütçesi ve aynı ailede daha güvenli temsilci mevcut
+KM,Lars,SKIPPED,,Runtime bütçesi ve aynı ailede daha güvenli temsilci mevcut
+KM,LarsCV,SKIPPED,,Runtime bütçesi ve aynı ailede daha güvenli temsilci mevcut
+KM,Lasso,SUCCESS,1.6537079811096191,
+KM,LassoCV,SKIPPED,,Runtime bütçesi ve aynı ailede daha güvenli temsilci mevcut
+KM,LassoLars,SKIPPED,,Runtime bütçesi ve aynı ailede daha güvenli temsilci mevcut
+KM,LassoLarsCV,SKIPPED,,Runtime bütçesi ve aynı ailede daha güvenli temsilci mevcut
+KM,LassoLarsIC,SKIPPED,,Runtime bütçesi ve aynı ailede daha güvenli temsilci mevcut
+KM,LinearRegression,SUCCESS,0.12388086318969727,
+KM,LinearSVR,SUCCESS,0.28249621391296387,
+KM,MLPRegressor,SKIPPED,,"O(n²)/O(n³), kernel/neighbors/CV veya benchmarkı kilitleyecek maliyet"
+KM,NuSVR,SKIPPED,,"O(n²)/O(n³), kernel/neighbors/CV veya benchmarkı kilitleyecek maliyet"
+KM,OrthogonalMatchingPursuit,SKIPPED,,Runtime bütçesi ve aynı ailede daha güvenli temsilci mevcut
+KM,OrthogonalMatchingPursuitCV,SKIPPED,,Runtime bütçesi ve aynı ailede daha güvenli temsilci mevcut
+KM,PassiveAggressiveRegressor,SUCCESS,0.23225998878479004,
+KM,PoissonRegressor,SUCCESS,1.2806599140167236,
+KM,QuantileRegressor,SKIPPED,,"O(n²)/O(n³), kernel/neighbors/CV veya benchmarkı kilitleyecek maliyet"
+KM,RANSACRegressor,SKIPPED,,"O(n²)/O(n³), kernel/neighbors/CV veya benchmarkı kilitleyecek maliyet"
+KM,RandomForestRegressor,SKIPPED,,Runtime bütçesi ve aynı ailede daha güvenli temsilci mevcut
+KM,Ridge,SUCCESS,0.327869176864624,
+KM,RidgeCV,SKIPPED,,Runtime bütçesi ve aynı ailede daha güvenli temsilci mevcut
+KM,SGDRegressor,SUCCESS,0.5462160110473633,
+KM,SVR,SKIPPED,,"O(n²)/O(n³), kernel/neighbors/CV veya benchmarkı kilitleyecek maliyet"
+KM,TransformedTargetRegressor,SKIPPED,,Runtime bütçesi ve aynı ailede daha güvenli temsilci mevcut
+KM,TweedieRegressor,SUCCESS,0.4603421688079834,
+KM,XGBRegressor,SUCCESS,0.6510598659515381,

@@ -1,0 +1,10 @@
+﻿check,value,status
+prediction snapshot key duplicate = 0,0,PASS
+target join one-to-one,"{'left_duplicates': 0, 'right_duplicates': 0, 'left_only': 0, 'right_only': 0, 'matched': 41518}",PASS
+no future task-history leakage,0,PASS
+censored excluded from classical metrics,observed + primary eligible masks,PASS
+negative remaining explained as overdue,38848,PASS
+no impossible negative predicted odometer,0,PASS
+predicted task codes canonical,0,PASS
+prediction outputs readable,3 parquet,PASS
+all applicable TEST metrics finite,31,PASS

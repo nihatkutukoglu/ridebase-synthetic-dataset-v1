@@ -1,0 +1,92 @@
+{
+  "dataset_version": "1.2.0",
+  "feature_set_version": "V1_ADVANCED_FEATURES_1.0.0",
+  "preprocessing_version": "V1_ADVANCED_PREPROCESSOR_1.0.0",
+  "python_version": "3.11.15",
+  "sklearn_version": "1.8.0",
+  "days_model": {
+    "type": "ENSEMBLE",
+    "members": [
+      "GradientBoostingRegressor__RAW",
+      "LGBMRegressor__RAW",
+      "HistGradientBoostingRegressor__RAW"
+    ],
+    "weights": [
+      0.3472566939690268,
+      0.33202078360773946,
+      0.32072252242323374
+    ]
+  },
+  "km_model": {
+    "type": "SINGLE",
+    "family": "GradientBoostingRegressor",
+    "params": {
+      "n_estimators": 100,
+      "min_samples_leaf": 15,
+      "max_features": 0.8,
+      "max_depth": 3,
+      "learning_rate": 0.08
+    },
+    "target_transform": "RAW"
+  },
+  "days_hyperparameters": {
+    "type": "ENSEMBLE",
+    "members": [
+      "GradientBoostingRegressor__RAW",
+      "LGBMRegressor__RAW",
+      "HistGradientBoostingRegressor__RAW"
+    ],
+    "weights": [
+      0.3472566939690268,
+      0.33202078360773946,
+      0.32072252242323374
+    ]
+  },
+  "km_hyperparameters": {
+    "type": "SINGLE",
+    "family": "GradientBoostingRegressor",
+    "params": {
+      "n_estimators": 100,
+      "min_samples_leaf": 15,
+      "max_features": 0.8,
+      "max_depth": 3,
+      "learning_rate": 0.08
+    },
+    "target_transform": "RAW"
+  },
+  "target_transform": {
+    "days": "RAW",
+    "km": "RAW"
+  },
+  "validation_selection": "Feature set, family, transform and blend selected by full Validation actionable MAE; TEST used once after lock",
+  "train_rows": {
+    "days": 20679,
+    "km": 20678
+  },
+  "test_rows": {
+    "days": 2622,
+    "km": 2622
+  },
+  "feature_set": {
+    "days": "SET_B_SERVICE_HISTORY",
+    "km": "SET_D_MAINTENANCE_FAILURE"
+  },
+  "final_feature_count": {
+    "days": 306,
+    "km": 338
+  },
+  "random_seed": 42,
+  "reproducibility": {
+    "DAYS": true,
+    "KM": true
+  },
+  "regression_ceiling": "DIMINISHING RETURNS",
+  "limitations": [
+    "Synthetic v1.2 offline PoC",
+    "Observed-only selection bias",
+    "Censored targets excluded",
+    "No production validation",
+    "Importance is not causality"
+  ],
+  "production_validation_status": "BLOCKED"
+}

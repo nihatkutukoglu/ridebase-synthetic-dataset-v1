@@ -1,0 +1,94 @@
+﻿split,problem,metric,value,n,notes
+TRAIN,NEXT_SERVICE,total_snapshots,27428.0,27428,
+TRAIN,NEXT_SERVICE,observed_targets,20679.0,27428,
+TRAIN,NEXT_SERVICE,censored_targets,1702.0,27428,
+TRAIN,NEXT_SERVICE,censoring_rate,0.06205337611200233,27428,
+TRAIN,NEXT_SERVICE,timing_prediction_coverage,1.0,20679,observed eligible targets
+TRAIN,NEXT_SERVICE_DAYS,days_mae,155.90322863341868,20679,ACTIONABLE; observed only
+TRAIN,NEXT_SERVICE_DAYS,days_median_ae,109.72847222222222,20679,ACTIONABLE; observed only
+TRAIN,NEXT_SERVICE_DAYS,days_mean_error_bias,-155.80571407779735,20679,ACTIONABLE; observed only
+TRAIN,NEXT_SERVICE_DAYS,days_p90_absolute_error,343.11291666666665,20679,ACTIONABLE; observed only
+TRAIN,NEXT_SERVICE_DAYS,days_within_30,0.09057497944774892,20679,ACTIONABLE; observed only
+TRAIN,NEXT_SERVICE_DAYS,days_within_60,0.2783016586875574,20679,ACTIONABLE; observed only
+TRAIN,NEXT_SERVICE_DAYS,days_within_90,0.4200396537550172,20679,ACTIONABLE; observed only
+TRAIN,NEXT_SERVICE_KM,km_mae,6660.429204541521,20678,ACTIONABLE; observed valid-km only
+TRAIN,NEXT_SERVICE_KM,km_median_ae,5193.0,20678,ACTIONABLE; observed valid-km only
+TRAIN,NEXT_SERVICE_KM,km_mean_error_bias,-6658.386124635483,20678,ACTIONABLE; observed valid-km only
+TRAIN,NEXT_SERVICE_KM,km_p90_absolute_error,12912.0,20678,ACTIONABLE; observed valid-km only
+TRAIN,NEXT_SERVICE_KM,km_within_1000,0.020940129606344907,20678,ACTIONABLE; observed valid-km only
+TRAIN,NEXT_SERVICE_KM,km_within_2000,0.0434277976593481,20678,ACTIONABLE; observed valid-km only
+TRAIN,NEXT_SERVICE_KM,km_within_5000,0.44738369281361834,20678,ACTIONABLE; observed valid-km only
+VALIDATION,NEXT_SERVICE,total_snapshots,6399.0,6399,
+VALIDATION,NEXT_SERVICE,observed_targets,1932.0,6399,
+VALIDATION,NEXT_SERVICE,censored_targets,1671.0,6399,
+VALIDATION,NEXT_SERVICE,censoring_rate,0.2611345522737928,6399,
+VALIDATION,NEXT_SERVICE,timing_prediction_coverage,1.0,1932,observed eligible targets
+VALIDATION,NEXT_SERVICE_DAYS,days_mae,62.63691314925821,1932,ACTIONABLE; observed only
+VALIDATION,NEXT_SERVICE_DAYS,days_median_ae,54.81979166666667,1932,ACTIONABLE; observed only
+VALIDATION,NEXT_SERVICE_DAYS,days_mean_error_bias,-62.58777236707806,1932,ACTIONABLE; observed only
+VALIDATION,NEXT_SERVICE_DAYS,days_p90_absolute_error,114.89999999999999,1932,ACTIONABLE; observed only
+VALIDATION,NEXT_SERVICE_DAYS,days_within_30,0.1915113871635611,1932,ACTIONABLE; observed only
+VALIDATION,NEXT_SERVICE_DAYS,days_within_60,0.5600414078674948,1932,ACTIONABLE; observed only
+VALIDATION,NEXT_SERVICE_DAYS,days_within_90,0.7753623188405797,1932,ACTIONABLE; observed only
+VALIDATION,NEXT_SERVICE_KM,km_mae,4421.281460383221,1931,ACTIONABLE; observed valid-km only
+VALIDATION,NEXT_SERVICE_KM,km_median_ae,3843.0,1931,ACTIONABLE; observed valid-km only
+VALIDATION,NEXT_SERVICE_KM,km_mean_error_bias,-4420.431123770068,1931,ACTIONABLE; observed valid-km only
+VALIDATION,NEXT_SERVICE_KM,km_p90_absolute_error,7678.0,1931,ACTIONABLE; observed valid-km only
+VALIDATION,NEXT_SERVICE_KM,km_within_1000,0.03728638011393061,1931,ACTIONABLE; observed valid-km only
+VALIDATION,NEXT_SERVICE_KM,km_within_2000,0.06576903158984981,1931,ACTIONABLE; observed valid-km only
+VALIDATION,NEXT_SERVICE_KM,km_within_5000,0.6664940445365096,1931,ACTIONABLE; observed valid-km only
+TEST,NEXT_SERVICE,total_snapshots,7691.0,7691,
+TEST,NEXT_SERVICE,observed_targets,2622.0,7691,
+TEST,NEXT_SERVICE,censored_targets,5069.0,7691,
+TEST,NEXT_SERVICE,censoring_rate,0.659082043947471,7691,
+TEST,NEXT_SERVICE,timing_prediction_coverage,1.0,2622,observed eligible targets
+TEST,NEXT_SERVICE_DAYS,days_mae,67.41054109598393,2622,ACTIONABLE; observed only
+TEST,NEXT_SERVICE_DAYS,days_median_ae,57.84791666666666,2622,ACTIONABLE; observed only
+TEST,NEXT_SERVICE_DAYS,days_mean_error_bias,-67.37090438320574,2622,ACTIONABLE; observed only
+TEST,NEXT_SERVICE_DAYS,days_p90_absolute_error,125.05173611111111,2622,ACTIONABLE; observed only
+TEST,NEXT_SERVICE_DAYS,days_within_30,0.17315026697177727,2622,ACTIONABLE; observed only
+TEST,NEXT_SERVICE_DAYS,days_within_60,0.5198321891685737,2622,ACTIONABLE; observed only
+TEST,NEXT_SERVICE_DAYS,days_within_90,0.7456140350877193,2622,ACTIONABLE; observed only
+TEST,NEXT_SERVICE_KM,km_mae,4515.311594202899,2622,ACTIONABLE; observed valid-km only
+TEST,NEXT_SERVICE_KM,km_median_ae,3981.5,2622,ACTIONABLE; observed valid-km only
+TEST,NEXT_SERVICE_KM,km_mean_error_bias,-4514.33295194508,2622,ACTIONABLE; observed valid-km only
+TEST,NEXT_SERVICE_KM,km_p90_absolute_error,7638.8,2622,ACTIONABLE; observed valid-km only
+TEST,NEXT_SERVICE_KM,km_within_1000,0.033943554538520215,2622,ACTIONABLE; observed valid-km only
+TEST,NEXT_SERVICE_KM,km_within_2000,0.06521739130434782,2622,ACTIONABLE; observed valid-km only
+TEST,NEXT_SERVICE_KM,km_within_5000,0.6586575133485889,2622,ACTIONABLE; observed valid-km only
+TRAIN,NEXT_TASK,task_prediction_coverage,1.0,20679,observed eligible targets
+TRAIN,NEXT_TASK,task_micro_precision,0.16299877580263908,20679,observed eligible targets
+TRAIN,NEXT_TASK,task_micro_recall,0.5656808904290623,20679,observed eligible targets
+TRAIN,NEXT_TASK,task_micro_f1,0.25307497082144476,20679,observed eligible targets
+TRAIN,NEXT_TASK,task_macro_f1,0.14150966090917616,20679,macro over TEST-present classes; rare classes are volatile
+TRAIN,NEXT_TASK,precision_at_1,0.24401566806905556,20679,observed eligible targets
+TRAIN,NEXT_TASK,precision_at_3,0.14359172751744925,20679,observed eligible targets
+TRAIN,NEXT_TASK,recall_at_3,0.08034861300130412,20679,observed eligible targets
+TRAIN,NEXT_TASK,hit_rate_at_3,0.3288360172155327,20679,observed eligible targets
+TRAIN,NEXT_TASK,subset_exact_match,0.0001450747134774409,20679,observed eligible targets
+TRAIN,NEXT_TASK,average_predicted_task_count,17.143865757531795,20679,observed eligible targets
+TRAIN,NEXT_TASK,average_actual_task_count,4.9399390686203395,20679,observed eligible targets
+VALIDATION,NEXT_TASK,task_prediction_coverage,1.0,1932,observed eligible targets
+VALIDATION,NEXT_TASK,task_micro_precision,0.15574057405740574,1932,observed eligible targets
+VALIDATION,NEXT_TASK,task_micro_recall,0.6537573467674224,1932,observed eligible targets
+VALIDATION,NEXT_TASK,task_micro_f1,0.2515548017123011,1932,observed eligible targets
+VALIDATION,NEXT_TASK,task_macro_f1,0.14814360231700366,1932,macro over TEST-present classes; rare classes are volatile
+VALIDATION,NEXT_TASK,precision_at_1,0.20652173913043478,1932,observed eligible targets
+VALIDATION,NEXT_TASK,precision_at_3,0.12284334023464458,1932,observed eligible targets
+VALIDATION,NEXT_TASK,recall_at_3,0.06744101022051331,1932,observed eligible targets
+VALIDATION,NEXT_TASK,hit_rate_at_3,0.2950310559006211,1932,observed eligible targets
+VALIDATION,NEXT_TASK,subset_exact_match,0.0,1932,observed eligible targets
+VALIDATION,NEXT_TASK,average_predicted_task_count,20.70186335403727,1932,observed eligible targets
+VALIDATION,NEXT_TASK,average_actual_task_count,4.931677018633541,1932,observed eligible targets
+TEST,NEXT_TASK,task_prediction_coverage,1.0,2622,observed eligible targets
+TEST,NEXT_TASK,task_micro_precision,0.15192840797038085,2622,observed eligible targets
+TEST,NEXT_TASK,task_micro_recall,0.6170936295624575,2622,observed eligible targets
+TEST,NEXT_TASK,task_micro_f1,0.24382669971036997,2622,observed eligible targets
+TEST,NEXT_TASK,task_macro_f1,0.1450069835956196,2622,macro over TEST-present classes; rare classes are volatile
+TEST,NEXT_TASK,precision_at_1,0.20861937452326468,2622,observed eligible targets
+TEST,NEXT_TASK,precision_at_3,0.12814645308924486,2622,observed eligible targets
+TEST,NEXT_TASK,recall_at_3,0.07023870061627499,2622,observed eligible targets
+TEST,NEXT_TASK,hit_rate_at_3,0.30434782608695654,2622,observed eligible targets
+TEST,NEXT_TASK,subset_exact_match,0.0,2622,observed eligible targets
+TEST,NEXT_TASK,average_predicted_task_count,20.499237223493516,2622,observed eligible targets
+TEST,NEXT_TASK,average_actual_task_count,5.046910755148741,2622,observed eligible targets

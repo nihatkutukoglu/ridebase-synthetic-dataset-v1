@@ -1,0 +1,5 @@
+﻿table_name,row_count,column_count,primary_id,date_range_start,date_range_end,tenant_count,notes
+motorcycles,,0,,,,,PRODUCTION DATA NOT AVAILABLE
+services,,0,,,,,PRODUCTION DATA NOT AVAILABLE
+service_todos,,0,,,,,PRODUCTION DATA NOT AVAILABLE
+part_categories,,0,,,,,PRODUCTION DATA NOT AVAILABLE
