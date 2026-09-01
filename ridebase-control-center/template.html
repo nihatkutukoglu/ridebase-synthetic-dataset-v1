@@ -1502,131 +1502,149 @@ function v2fetch(url,opts){
   return fetch(url,opts).then(function(r){if(ctl)clearTimeout(to);return r;},
     function(e){if(ctl)clearTimeout(to);throw e;});
 }
-/* raw fields a pilot user can actually provide; the model needs all 117 — the rest
-   come from full service-history derivation (not connected yet). */
-var V2_FORM=[
-  ["MOTOSİKLET",[
-    ["brand","Marka","sel"],
-    ["production_year","Model yılı","num",2000,2027],
-    ["engine_displacement_cc","Motor hacmi (cc)","num",49,800],
-    ["initial_mileage_km","Mevcut kilometre","num",0,600000]]],
-  ["KULLANIM",[
-    ["riding_intensity","Kullanım yoğunluğu","sel"],
-    ["usage_type","Kullanım tipi","sel"],
-    ["customer_type","Müşteri tipi","sel"],
-    ["annual_km_baseline","Yıllık yaklaşık km","num",1000,60000]]],
-  ["SERVİS GEÇMİŞİ",[
-    ["days_since_previous_service","Son servisten bu yana (gün)","num",0,700],
-    ["km_since_previous_service","Son servisten bu yana (km)","num",0,25000],
-    ["previous_service_count","Önceki servis sayısı","num",0,60]]]
-];
-var V2_FORM_KEYS=V2_FORM.reduce(function(a,g){return a.concat(g[1].map(function(f){return f[0];}));},[]);
 function v2Predict(){
   var api=(window.__V2_API__||"").replace(/\/$/,"");
   var out=pageNote(
-    "Burada tek bir motosiklet için V1 ve V2 modellerini çalıştırabilirsin. "
-    +"<b>V1:</b> yaklaşık kaç gün / km sonra servis? <b>V2:</b> 30 / 60 / 90 / 120 gün içinde servise gelme ihtimali? "
-    +"İki mod var: <b>kendi bilgilerinle</b> ya da <b>hazır örnek motorla</b>. "
+    "Burada bir motosiklet için servise dönüş ihtimalini hesaplayabilirsin. "
+    +"<b>30 / 60 / 90 / 120 gün</b>, modelin bugünden itibaren ne kadar ileri baktığı zaman aralıklarıdır. "
+    +"<b>Risk grubu</b>, 90 günlük ihtimalin düşük / orta / yüksek özetidir. "
+    +"<b>Medyan servis süresi</b>, model eğrisinin %50 dönüş ihtimaline ulaştığı yaklaşık süredir. "
     +"Sonuçlar <b>gerçek model API'sinden</b> canlı hesaplanır ("+esc(api||"—")+"); erişilemezse sonuç gösterilmez — sahte tahmin yok.",
     null,"Teknik adı: Live Prediction");
   out+='<div class="sec"><div id="v2apiStatus" class="chips"><span class="chip"><span class="dot"></span>Model servisine bağlanılıyor…</span></div>'
     +'<p class="copy" style="margin-top:8px;font-size:.8rem" id="v2coldNote" hidden>Render ücretsiz sunucusu uykudaysa ilk istek 50+ saniye sürebilir — beklemede kal.</p></div>';
   out+='<div class="sec"><div class="chips" style="margin-bottom:14px">'
-    +'<button class="subtab active" id="v2mOwn" style="border:1px solid var(--border);border-radius:8px">KENDİ MOTOSİKLETİMLE TAHMİN</button>'
+    +'<button class="subtab active" id="v2mScenario" style="border:1px solid var(--border);border-radius:8px">SENARYO TAHMİNİ</button>'
     +'<button class="subtab" id="v2mDemo" style="border:1px solid var(--border);border-radius:8px">ÖRNEK MOTORLA DEMO</button>'
+    +'<button class="subtab" id="v2mReal" style="border:1px solid var(--border);border-radius:8px">GERÇEK RIDEBASE MOTORU · YAKINDA</button>'
     +'</div><div id="v2modeBox"></div></div>';
   return out;
 }
 function v2FieldOpts(key){var c=window.__V2_CAT__||{};return (c.options&&c.options[key])||[];}
-function v2FieldStat(key){var c=window.__V2_CAT__||{};return (c.stats&&c.stats[key])||{};}
-function v2ModeOwn(){
-  var box=document.getElementById("v2modeBox"); if(!box)return;
-  var groups=V2_FORM.map(function(g){
-    return '<div style="margin-top:14px"><div class="eyebrow" style="font:700 .62rem/1.2 var(--sans);letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-bottom:8px">'+esc(g[0])+'</div>'
-      +'<div class="grid g2">'+g[1].map(function(f){
-        var k=f[0],lbl=f[1],st=v2FieldStat(k);
-        var inp;
-        if(f[2]==="sel"){var os=v2FieldOpts(k);
-          inp='<select data-k="'+k+'" style="width:100%;background:var(--panel-bg);border:1px solid var(--border);color:var(--text);border-radius:8px;padding:9px 10px;font:inherit"><option value="">—</option>'
-            +os.map(function(o){return '<option>'+esc(o)+'</option>';}).join('')+'</select>';
-        }else{
-          inp='<input data-k="'+k+'" type="number" inputmode="decimal" placeholder="'+(st.p50!=null?("~"+Math.round(st.p50)):"")+'"'
-            +(f[3]!=null?' min="'+f[3]+'"':'')+(f[4]!=null?' max="'+f[4]+'"':'')
-            +' style="width:100%;background:var(--panel-bg);border:1px solid var(--border);color:var(--text);border-radius:8px;padding:9px 10px;font:inherit">';
-        }
-        return '<label style="display:flex;flex-direction:column;gap:5px;font-size:.8rem;color:var(--text-2)">'+esc(lbl)+inp+'</label>';
-      }).join('')+'</div></div>';
+function v2SelectStyle(){return 'width:100%;background:var(--panel-bg);border:1px solid var(--border);color:var(--text);border-radius:8px;padding:9px 10px;font:inherit';}
+function v2InputStyle(){return v2SelectStyle();}
+function v2Options(items,placeholder,label){
+  return '<option value="">'+esc(placeholder||"—")+'</option>'+items.map(function(item){
+    var value=(typeof item==="object")?item.model_id:item;
+    var text=(typeof item==="object")?(item.model_name+(item.variant_or_generation?' · '+item.variant_or_generation:'')):item;
+    return '<option value="'+esc(value)+'">'+esc(label?label(item):text)+'</option>';
   }).join('');
-  box.innerHTML=finding("warn","Tam kişisel tahmin henüz mümkün değil",
-    "<p>V2 modeli <b>117 özellik</b> kullanır. Bunların yalnızca ~10'unu sen girebilirsin; kalan ~106'sı "
-    +"(kilometre/rota oranları, sürüş profili, mevsimsellik, atölye bilgileri ve <b>tüm servis geçmişinden türetilen</b> "
-    +"değerler) gerçek RideBase servis geçmişinden hesaplanır. <b>Bu veri hattı henüz bağlı değil.</b> "
-    +"Eksik alanları sessizce ortalamayla doldurmak yanıltıcı olur, o yüzden bunu yapmıyoruz — "
-    +"aşağıdaki sonuç <b>yaklaşık</b>tır ve girmediğin alanlar örnek bir motorun değerleridir.</p>")
-    +card("Bildiğin bilgileri gir","dropdownlar model feature kataloğundan",
-      groups
-      +'<div id="v2ownErr" class="finding bad" style="margin-top:12px;display:none"></div>'
-      +'<div class="chips" style="margin-top:14px"><button class="subtab" id="v2ownRun" style="border:1px solid var(--border);border-radius:8px">Girdiğim bilgilerle yaklaşık sonuç göster</button></div>'
-      +'<div id="v2ownOut" style="margin-top:12px"></div>')
-    +finding("","Gerçek RideBase verisi geldiğinde",
-      "<p><code>motorcycle_id</code> seçersin → backend servis geçmişini çeker → 117 özellik <b>otomatik türetilir</b> → V1/V2 çalışır. "
-      +"117 alanı asla elle girmezsin; bu ekranın mimarisi o akışa hazır.</p>");
-  var rb=document.getElementById("v2ownRun");
-  if(rb)rb.addEventListener("click",v2RunOwn);
 }
-function v2CollectOwn(){
-  var vals={},box=document.getElementById("v2modeBox");
-  box.querySelectorAll("[data-k]").forEach(function(el){
-    var v=el.value.trim(); if(v==="")return;
-    vals[el.getAttribute("data-k")]=(el.tagName==="SELECT")?v:Number(v);
-  });
-  return vals;
+function v2ModelsForBrand(brand){
+  var c=window.__V2_MODELS__||{models:[]};
+  return (c.models||[]).filter(function(m){return m.brand===brand;}).sort(function(a,b){return a.model_name.localeCompare(b.model_name);});
 }
-function v2ValidateOwn(v){
-  var e=[];
-  ["initial_mileage_km","km_since_previous_service","days_since_previous_service","annual_km_baseline","previous_service_count"].forEach(function(k){
-    if(v[k]!=null && v[k]<0)e.push(esc(k)+" negatif olamaz.");
+function v2ModelById(id){return ((window.__V2_MODELS__||{}).models||[]).filter(function(m){return m.model_id===id;})[0]||null;}
+function v2SpecCard(model){
+  var el=document.getElementById("v2specCard");if(!el)return;
+  if(!model){el.innerHTML='<div class="empty">Model seçince katalogdaki teknik özellikler burada otomatik görünür.</div>';return;}
+  var specs=[
+    ["Marka",model.brand],["Model",model.model_name],["Kategori",model.category],
+    ["Motor",model.powertrain_type==="EV"?"Elektrik":(model.engine_displacement_cc!=null?model.engine_displacement_cc+" cc":"Katalogda yok")],
+    ["Güç aktarma",model.powertrain_type],["Silindir",model.powertrain_type==="EV"?"Uygulanmaz":model.cylinder_count],
+    ["Soğutma",model.cooling_type],["Şanzıman",model.transmission_type],
+    ["Son aktarma",model.final_drive_type],["Yakıt",model.fuel_type]
+  ];
+  el.innerHTML='<div class="twrap"><table class="tbl"><tbody>'+specs.map(function(x){return '<tr><td class="k">'+esc(x[0])+'</td><td>'+esc(x[1]==null?'—':x[1])+'</td></tr>';}).join('')+'</tbody></table></div>'
+    +'<p class="copy" style="margin-top:10px">Bu değerler kullanıcıdan istenmez; seçilen <code>'+esc(model.model_id)+'</code> katalog kaydından gelir. '
+    +(model.year_range_confidence==="LOW"?'<b>Model yılı aralığının katalog doğruluğu sınırlıdır.</b>':'')+'</p>';
+}
+function v2ModeScenario(){
+  var box=document.getElementById("v2modeBox"); if(!box)return;
+  if(!window.__V2_MODELS__||!window.__V2_CAT__){box.innerHTML='<p class="copy"><span class="dot"></span> Motosiklet kataloğu yükleniyor…</p>';return;}
+  var brands=window.__V2_MODELS__.brands||[];
+  var usage=v2FieldOpts("usage_type"),intensity=v2FieldOpts("riding_intensity");
+  function label(id,text,html){return '<label style="display:flex;flex-direction:column;gap:5px;font-size:.8rem;color:var(--text-2)" for="'+id+'">'+esc(text)+html+'</label>';}
+  var bike='<div class="grid g3">'
+    +label("v2brand","Marka",'<select id="v2brand" style="'+v2SelectStyle()+'">'+v2Options(brands,"Marka seç")+'</select>')
+    +label("v2model","Model",'<select id="v2model" disabled style="'+v2SelectStyle()+'"><option value="">Önce marka seç</option></select>')
+    +label("v2year","Model yılı",'<input id="v2year" type="number" inputmode="numeric" placeholder="Model seç" disabled style="'+v2InputStyle()+'">')
+    +'</div><p class="copy" id="v2yearNote" style="margin-top:8px"></p><div id="v2specCard" style="margin-top:12px"></div>';
+  var use='<div class="grid g2">'
+    +label("v2odo","Güncel kilometre",'<input id="v2odo" type="number" min="0" max="2000000" inputmode="decimal" placeholder="örn. 12000" style="'+v2InputStyle()+'">')
+    +label("v2annual","Yıllık yaklaşık km",'<input id="v2annual" type="number" min="0" max="200000" inputmode="decimal" placeholder="örn. 10000" style="'+v2InputStyle()+'">')
+    +label("v2usage","Kullanım tipi",'<select id="v2usage" style="'+v2SelectStyle()+'">'+v2Options(usage,"Seçmek istemiyorum")+'</select>')
+    +label("v2intensity","Kullanım yoğunluğu",'<select id="v2intensity" style="'+v2SelectStyle()+'">'+v2Options(intensity,"Seçmek istemiyorum")+'</select>')
+    +'</div><p class="copy" style="margin-top:8px"><b>Güncel kilometre</b>, V2’deki <code>initial_mileage_km</code> değildir. O alan motosikletin sentetik <code>observation_start_date</code> tarihindeki kilometresidir. Güncel değer V1’e gider ve son servis km’siyle birlikte V2 için “son servisten beri km” türetir; başlangıç kilometresi bilinmediği için eksik bırakılır.</p>';
+  var service='<div class="grid g2">'
+    +label("v2lastdate","Son servis tarihi",'<input id="v2lastdate" type="date" style="'+v2InputStyle()+'">')
+    +label("v2lastodo","Son servis kilometresi",'<input id="v2lastodo" type="number" min="0" max="2000000" inputmode="decimal" placeholder="örn. 9000" style="'+v2InputStyle()+'">')
+    +'</div><p class="copy" style="margin-top:8px">Bu iki doğal bilgi girilirse gün/km farkları backend’de deterministik hesaplanır. Tarihsel servis sayıları, arızalar, harcama ve parça geçmişi uydurulmaz.</p>';
+  box.innerHTML=finding("warn","KISMİ BİLGİYLE SENARYO TAHMİNİ",
+    "<p>Bu mod örnek bir motorun gizli değerlerini kullanmaz. Bildiğin bilgiler, model kataloğu ve açık türetmeler kullanılır; kalan alanlar frozen eğitim pipeline’ının kayıtlı eksik-değer işlemesine bırakılır. <b>Bu tam kişisel tahmin değildir.</b></p>")
+    +card("1 · Motosikletini seç",window.__V2_MODELS__.model_count+" gerçek katalog modeli",bike)
+    +'<div class="sec">'+card("2 · Kullanım","yalnız anlamlı ürün bilgileri",use)+'</div>'
+    +'<div class="sec">'+card("3 · Servis geçmişi","varsa son servis bilgisi",service)+'</div>'
+    +'<div class="sec">'+card("4 · Bilgi kapsamı","117 alan backend tarafından sayılır",'<div id="v2coveragePreview"><p class="copy">Seçimler tamamlanınca tahmin yanıtı; <code>USER_INPUT</code>, <code>MODEL_MASTER</code>, <code>DERIVED</code> ve <code>MISSING_PREPROCESSOR</code> kaynaklarını ayrı ayrı gösterecek. Bu oran güven skoru değildir.</p></div>')+'</div>'
+    +'<div class="sec">'+card("5 · Tahmin","frozen V1 + V2 modelleri",'<div id="v2scenarioErr" class="finding bad" style="display:none"></div><div class="chips" style="margin-top:4px"><button class="subtab" id="v2scenarioRun" style="border:1px solid var(--border);border-radius:8px">V1 + V2 SENARYO TAHMİNİNİ HESAPLA</button></div><div id="v2scenarioOut" style="margin-top:12px"></div>')+'</div>';
+  var brand=document.getElementById("v2brand"),model=document.getElementById("v2model"),year=document.getElementById("v2year");
+  brand.addEventListener("change",function(){
+    var models=v2ModelsForBrand(brand.value);
+    model.innerHTML=v2Options(models,"Model seç");model.disabled=!brand.value;year.value="";year.disabled=true;
+    document.getElementById("v2yearNote").textContent="";v2SpecCard(null);
   });
-  if(v.production_year!=null && (v.production_year<1990||v.production_year>new Date().getFullYear()+1))
-    e.push("Model yılı mantıksız görünüyor.");
-  if(v.initial_mileage_km!=null && v.km_since_previous_service!=null && v.km_since_previous_service>v.initial_mileage_km)
-    e.push("Son servisten bu yana km, mevcut kilometreden büyük olamaz.");
-  if(v.engine_displacement_cc!=null && (v.engine_displacement_cc<25||v.engine_displacement_cc>1500))
-    e.push("Motor hacmi (cc) beklenen aralığın dışında.");
+  model.addEventListener("change",function(){
+    var m=v2ModelById(model.value);v2SpecCard(m);year.value="";year.disabled=!m;
+    if(!m)return;
+    if(m.year_range_authoritative){year.min=m.year_min;year.max=m.year_max;document.getElementById("v2yearNote").textContent="Geçerli katalog aralığı: "+m.year_min+"–"+m.year_max;}
+    else{year.removeAttribute("min");year.max=new Date().getFullYear();document.getElementById("v2yearNote").textContent="Katalog referans aralığı "+m.year_min+"–"+m.year_max+"; doğruluk LOW olduğu için aralık dışında değer engellenmez, uyarılır.";}
+  });
+  document.getElementById("v2scenarioRun").addEventListener("click",v2RunScenario);
+  v2SpecCard(null);
+}
+function v2ScenarioPayload(){
+  function val(id){var el=document.getElementById(id);return el&&el.value!==""?el.value:null;}
+  var p={brand:val("v2brand"),model_id:val("v2model"),production_year:Number(val("v2year")),snapshot_date:new Date().toISOString().slice(0,10)};
+  [["current_odometer_km","v2odo",Number],["annual_km_baseline","v2annual",Number],["usage_type","v2usage",String],["riding_intensity","v2intensity",String],["last_service_date","v2lastdate",String],["last_service_odometer_km","v2lastodo",Number]].forEach(function(x){var v=val(x[1]);if(v!=null)p[x[0]]=x[2](v);});
+  return p;
+}
+function v2ValidateScenario(p){
+  var e=[],today=new Date().toISOString().slice(0,10),model=v2ModelById(p.model_id);
+  if(!p.brand)e.push("Marka seç.");if(!model)e.push("Model seç.");if(!p.production_year)e.push("Model yılı gir.");
+  if(model&&model.brand!==p.brand)e.push("Seçilen model bu markaya ait değil.");
+  if(p.production_year<1900||p.production_year>new Date().getFullYear())e.push("Model yılı mantıklı aralıkta olmalı.");
+  if(p.current_odometer_km!=null&&(p.current_odometer_km<0||p.current_odometer_km>2000000))e.push("Güncel kilometre geçersiz.");
+  if(p.last_service_odometer_km!=null&&p.current_odometer_km==null)e.push("Son servis kilometresi için güncel kilometre de gerekli.");
+  if(p.last_service_odometer_km!=null&&p.current_odometer_km!=null&&p.last_service_odometer_km>p.current_odometer_km)e.push("Son servis kilometresi güncel kilometreden büyük olamaz.");
+  if(p.last_service_date&&p.last_service_date>today)e.push("Son servis tarihi gelecekte olamaz.");
+  if(p.annual_km_baseline!=null&&(p.annual_km_baseline<0||p.annual_km_baseline>200000))e.push("Yıllık km 0–200.000 aralığında olmalı.");
   return e;
 }
-function v2RunOwn(){
+function v2CoverageCard(c,p){
+  if(!c)return "";
+  var verdict={LIMITED_INFORMATION:"SINIRLI BİLGİ",MEDIUM_COVERAGE:"ORTA KAPSAM",FULL_SNAPSHOT:"TAM SNAPSHOT"}[c.verdict]||c.verdict;
+  var groups=(c.groups||[]).map(function(g){return '<tr><td class="k">'+esc(g.label)+'</td><td>'+g.known+' / '+g.total+'</td><td>'+g.missing+' bilinmiyor</td></tr>';}).join('');
+  var prov=(p||[]).map(function(x){return '<tr><td class="k"><code>'+esc(x.feature)+'</code></td><td>'+esc(x.source)+'</td><td>'+esc(x.detail)+'</td></tr>';}).join('');
+  return card("TAHMİN İÇİN KULLANILAN BİLGİ DÜZEYİ",verdict,
+    '<div class="grid g2">'+kpi("BİLİNEN / TÜRETİLEN",c.known_or_derived+' <small>/ '+c.total+'</small>',"V2 frozen raw feature sözleşmesi","cyan")+kpi("EKSİK",c.missing+' <small>alan</small>',"kayıtlı preprocessor eksik-değer işlemesi","plain")+'</div>'
+    +'<div class="twrap" style="margin-top:12px"><table class="tbl"><thead><tr><th>Bilgi grubu</th><th>Mevcut</th><th>Eksik</th></tr></thead><tbody>'+groups+'</tbody></table></div>'
+    +'<p class="copy" style="margin-top:10px">Hizmet geçmişi bağlı olmadığı için <b>'+c.history_features_missing+'</b> geçmiş-temelli özellik bilinmiyor. <b>Bu oran modelin güven skoru değildir;</b> modele ne kadar bilgi sağlandığını gösterir.</p>'
+    +'<details style="margin-top:12px"><summary style="cursor:pointer;color:var(--text-2)">Teknik feature provenance tablosu ('+c.total+')</summary><div class="twrap" style="margin-top:8px;max-height:360px;overflow:auto"><table class="tbl"><thead><tr><th>Feature</th><th>Kaynak</th><th>Açıklama</th></tr></thead><tbody>'+prov+'</tbody></table></div></details>');
+}
+function v2RunScenario(){
   var api=(window.__V2_API__||"").replace(/\/$/,"");
-  var errBox=document.getElementById("v2ownErr"), out=document.getElementById("v2ownOut");
-  var v=v2CollectOwn(), errs=v2ValidateOwn(v);
-  if(!Object.keys(v).length)errs.unshift("En az birkaç alan gir.");
+  var errBox=document.getElementById("v2scenarioErr"),out=document.getElementById("v2scenarioOut"),p=v2ScenarioPayload(),errs=v2ValidateScenario(p);
   if(errs.length){errBox.style.display="block";errBox.innerHTML='<div>'+errs.map(esc).join("<br>")+'</div>';return;}
   errBox.style.display="none";
   out.innerHTML='<p class="copy"><span class="dot"></span> Hesaplanıyor… (servis uykudaysa ilk istek 50+ sn sürebilir)</p>';
   var attempt=0;
   (function run(){
-    v2fetch(api+"/api/v2/sample").then(function(r){return r.json();}).then(function(s){
-      var feat=Object.assign({},s.features,v);          // user fields overlay the example base
-      return v2fetch(api+"/api/predict/service",{method:"POST",headers:{"Content-Type":"application/json"},
-        body:JSON.stringify({features:feat})}).then(function(r){return r.json();});
-    }).then(function(d){
-      var v2=d.v2||d.prediction||{}, v1=d.v1||null;
-      if(v2.risk_90d==null){out.innerHTML='<div class="empty">Model sonucu boş döndü — '+esc(d.detail||JSON.stringify(d).slice(0,140))+'</div>';return;}
-      out.innerHTML=v2ResultCard(v1,v2,d.warning,
-        "KISMİ SNAPSHOT — kişisel tahmin DEĞİLDİR",
-        "Girdiğin "+Object.keys(v).length+" alan kullanıldı; kalan ~"+(117-Object.keys(v).length)
-        +" teknik özellik <b>örnek bir motorun</b> değerleridir. Tam kişisel tahmin RideBase servis-geçmişi entegrasyonu gerektirir.");
+    v2fetch(api+"/api/v2/predict/scenario",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(p)}).then(function(r){return r.json().then(function(d){if(!r.ok)throw new Error(d.detail||("HTTP "+r.status));return d;});}).then(function(d){
+      if(!d.v2||d.v2.risk_90d==null){out.innerHTML='<div class="empty">Model sonucu boş döndü.</div>';return;}
+      var warnings=(d.warnings||[]).length?finding("warn","Girdi / OOD uyarıları","<ul style=\"margin:0;padding-left:18px\">"+d.warnings.map(function(w){return '<li>'+esc(w)+'</li>';}).join('')+'</ul>'):'';
+      out.innerHTML=v2ResultCard(d.v1,d.v2,d.warning,"KISMİ BİLGİYLE SENARYO TAHMİNİ",
+        "Modelin bazı özellikleri bilinmediği için bu sonuç tam kişisel tahmin değildir. Başka bir örnek motosikletten hiçbir gizli alan alınmadı.")
+        +'<div class="sec">'+v2CoverageCard(d.coverage,d.provenance)+'</div>'+warnings;
     }).catch(function(e){
       if(attempt++<1){out.innerHTML='<p class="copy"><span class="dot"></span> Servis uyanıyor, tekrar deneniyor…</p>';setTimeout(run,4000);return;}
       out.innerHTML='<div class="empty">API\'ye ulaşılamadı — '+esc(String(e))+'. Sahte tahmin üretilmez.</div>';
     });
   })();
 }
-var V2_HUMAN={brand:"Marka",production_year:"Model yılı",engine_displacement_cc:"Motor hacmi (cc)",
-  initial_mileage_km:"Kilometre",days_since_previous_service:"Son servisten (gün)",
-  km_since_previous_service:"Son servisten (km)",annual_km_baseline:"Yıllık km",
-  riding_intensity:"Kullanım yoğunluğu",usage_type:"Kullanım tipi",customer_type:"Müşteri tipi",
-  previous_service_count:"Önceki servis sayısı"};
+var V2_HUMAN={brand:"Marka",model_name:"Model",production_year:"Model yılı",category:"Kategori",
+  powertrain_type:"Güç aktarma",engine_displacement_cc:"Motor hacmi (cc)",snapshot_odometer_km:"Güncel kilometre",
+  days_since_previous_service:"Önceki servisten beri (gün)",km_since_previous_service:"Önceki servisten beri (km)",
+  annual_km_baseline:"Yıllık km",riding_intensity:"Kullanım yoğunluğu",usage_type:"Kullanım tipi"};
 function v2ModeDemo(){
   var box=document.getElementById("v2modeBox"); if(!box)return;
   var api=(window.__V2_API__||"").replace(/\/$/,"");
@@ -1637,9 +1655,12 @@ function v2ModeDemo(){
   var attempt=0;
   (function load(){
     v2fetch(api+"/api/v2/sample").then(function(r){return r.json();}).then(function(s){
-      window.__V2_SAMPLE__=s.features;
-      var rows=Object.keys(V2_HUMAN).filter(function(k){return s.features[k]!=null;}).map(function(k){
-        var val=s.features[k]; if(typeof val==="number")val=(Math.abs(val)>=100?n0(val):n1(val));
+      window.__V2_SAMPLE__=s;
+      var shown={};
+      Object.keys(s.features||{}).forEach(function(k){shown[k]=s.features[k];});
+      Object.keys(s.display||{}).forEach(function(k){shown[k]=s.display[k];});
+      var rows=Object.keys(V2_HUMAN).filter(function(k){return shown[k]!=null;}).map(function(k){
+        var val=shown[k]; if(typeof val==="number")val=(Math.abs(val)>=100?n0(val):n1(val));
         return '<tr><td class="k">'+esc(V2_HUMAN[k])+'</td><td>'+esc(val)+'</td></tr>';
       }).join('');
       document.getElementById("v2demoPrev").innerHTML=
@@ -1652,7 +1673,7 @@ function v2ModeDemo(){
         var a2=0;
         (function run(){
           v2fetch(api+"/api/predict/service",{method:"POST",headers:{"Content-Type":"application/json"},
-            body:JSON.stringify({features:window.__V2_SAMPLE__})}).then(function(r){return r.json();}).then(function(d){
+            body:JSON.stringify({features:window.__V2_SAMPLE__.features,snapshot_date:window.__V2_SAMPLE__.snapshot_date})}).then(function(r){return r.json();}).then(function(d){
             var v2=d.v2||d.prediction||{},v1=d.v1||null;
             if(v2.risk_90d==null){o.innerHTML='<div class="empty">Model sonucu boş döndü.</div>';return;}
             o.innerHTML=v2ResultCard(v1,v2,d.warning,"ÖRNEK MOTOR DEMOSU",
@@ -1668,6 +1689,12 @@ function v2ModeDemo(){
       document.getElementById("v2demoPrev").innerHTML='<div class="empty">Örnek motor yüklenemedi — '+esc(String(e))+'</div>';
     });
   })();
+}
+function v2ModeReal(){
+  var box=document.getElementById("v2modeBox");if(!box)return;
+  box.innerHTML=finding("warn","GERÇEK MOTOR ENTEGRASYONU · REAL DATA PIPELINE PENDING",
+    "<p>Bu mod henüz bağlı değil. Gelecekte kullanıcı <code>motorcycle_id</code> seçer; backend motosiklet, kullanım profili ve tam servis geçmişini RideBase veritabanından alır, 117-feature snapshot’ı otomatik türetir ve V1 + V2’yi çalıştırır. <b>Kullanıcı 117 alanı doldurmaz.</b></p>")
+    +card("Planlanan gerçek akış","buton bilinçli olarak kapalı",'<div class="chips"><span class="chip">motorcycle_id</span><span class="chip">RideBase DB</span><span class="chip">tam geçmiş</span><span class="chip">117-feature snapshot</span><span class="chip">V1 + V2</span></div><button class="subtab" disabled style="margin-top:14px;opacity:.45">GERÇEK MOTORLA TAHMİN · YAKINDA</button>');
 }
 function v2StatusChips(h){
   var v1ok=(h.v1==="ok"||h.status==="ok"||h.days_model_loaded);
@@ -1741,23 +1768,22 @@ function wireV2Predict(){
   v2ApiPing(0);
   var api=(window.__V2_API__||"").replace(/\/$/,"");
   if(!api)return;
-  if(!window.__V2_CAT__){
-    v2fetch(api+"/api/v2/features").then(function(r){return r.json();}).then(function(c){
-      window.__V2_CAT__=c; if(v2Active==="own")v2ModeOwn();
-    }).catch(function(){});
-  }
-  var own=document.getElementById("v2mOwn"), demo=document.getElementById("v2mDemo");
+  if(!window.__V2_CAT__)v2fetch(api+"/api/v2/features").then(function(r){return r.json();}).then(function(c){window.__V2_CAT__=c;if(v2Active==="scenario")v2ModeScenario();}).catch(function(){});
+  if(!window.__V2_MODELS__)v2fetch(api+"/api/v2/motorcycle-models").then(function(r){return r.json();}).then(function(c){window.__V2_MODELS__=c;if(v2Active==="scenario")v2ModeScenario();}).catch(function(e){var box=document.getElementById("v2modeBox");if(box)box.innerHTML='<div class="empty">Motosiklet kataloğu yüklenemedi — '+esc(String(e))+'. Tahmin butonu açılmaz.</div>';});
+  var scenario=document.getElementById("v2mScenario"),demo=document.getElementById("v2mDemo"),real=document.getElementById("v2mReal");
   function sel(mode){
     v2Active=mode;
-    if(own)own.classList.toggle("active",mode==="own");
+    if(scenario)scenario.classList.toggle("active",mode==="scenario");
     if(demo)demo.classList.toggle("active",mode==="demo");
-    (mode==="own"?v2ModeOwn:v2ModeDemo)();
+    if(real)real.classList.toggle("active",mode==="real");
+    (mode==="scenario"?v2ModeScenario:mode==="demo"?v2ModeDemo:v2ModeReal)();
   }
-  if(own)own.addEventListener("click",function(){sel("own");});
+  if(scenario)scenario.addEventListener("click",function(){sel("scenario");});
   if(demo)demo.addEventListener("click",function(){sel("demo");});
-  sel("own");
+  if(real)real.addEventListener("click",function(){sel("real");});
+  sel("scenario");
 }
-var v2Active="own";
+var v2Active="scenario";
 
 /* ---------------- V3 placeholder ---------------- */
 function renderPlaceholder(id){

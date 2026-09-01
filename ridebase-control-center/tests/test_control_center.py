@@ -72,5 +72,72 @@ class V1LivePredictionTests(unittest.TestCase):
         self.assertInBoth('function wireV2Predict()')
 
 
+class V2ScenarioPredictionTests(unittest.TestCase):
+    @classmethod
+    def setUpClass(cls):
+        cls.template = (ROOT / "template.html").read_text()
+        cls.built = (ROOT / "public" / "index.html").read_text()
+
+    def assertInBoth(self, text):
+        self.assertIn(text, self.template)
+        self.assertIn(text, self.built)
+
+    @staticmethod
+    def function_body(source, name, next_name):
+        return source.split(f"function {name}(){{", 1)[1].split(f"function {next_name}", 1)[0]
+
+    def test_three_truthful_modes_render(self):
+        for label in (
+            "SENARYO TAHMİNİ",
+            "ÖRNEK MOTORLA DEMO",
+            "GERÇEK RIDEBASE MOTORU · YAKINDA",
+            "REAL DATA PIPELINE PENDING",
+        ):
+            self.assertInBoth(label)
+
+    def test_catalog_and_cascading_model_selection_contract(self):
+        for text in (
+            "/api/v2/motorcycle-models",
+            "v2ModelsForBrand",
+            "v2ModelById",
+            "v2SpecCard",
+            "Katalog referans aralığı",
+        ):
+            self.assertInBoth(text)
+
+    def test_scenario_network_path_never_uses_sample(self):
+        for source in (self.template, self.built):
+            body = self.function_body(source, "v2RunScenario", "v2ModeDemo")
+            self.assertIn('/api/v2/predict/scenario', body)
+            self.assertNotIn('/api/v2/sample', body)
+            self.assertNotIn('Object.assign', body)
+
+    def test_demo_network_path_does_use_sample(self):
+        for source in (self.template, self.built):
+            body = self.function_body(source, "v2ModeDemo", "v2ModeReal")
+            self.assertIn('/api/v2/sample', body)
+            self.assertIn('/api/predict/service', body)
+            self.assertIn('ÖRNEK MOTOR DEMOSU', body)
+
+    def test_scenario_result_and_feature_coverage_render(self):
+        for text in (
+            "KISMİ BİLGİYLE SENARYO TAHMİNİ",
+            "TAHMİN İÇİN KULLANILAN BİLGİ DÜZEYİ",
+            "MISSING_PREPROCESSOR",
+            "Bu oran modelin güven skoru değildir",
+            "Teknik feature provenance tablosu",
+        ):
+            self.assertInBoth(text)
+
+    def test_current_odometer_is_not_initial_mileage(self):
+        self.assertInBoth("Güncel kilometre</b>, V2’deki <code>initial_mileage_km</code> değildir")
+        self.assertNotIn('initial_mileage_km","Mevcut kilometre', self.template)
+
+    def test_no_fake_or_random_fallback(self):
+        self.assertNotIn("fallbackPrediction", self.template)
+        self.assertNotIn("Math.random()", self.template)
+        self.assertInBoth("Sahte tahmin üretilmez.")
+
+
 if __name__ == "__main__":
     unittest.main()

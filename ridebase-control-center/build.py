@@ -402,6 +402,11 @@ def changelog():
       "EDA + V0 + V1 modüllerini tek merkezi yönetim panelinde birleştiren sistem (bu artifact).",
       "INFO", "v1.3", "ridebase-control-center/README.md",
       dt.date.today().isoformat())
+    e("V2", "UI", "V2 LIVE PREDICTION REDESIGNED",
+      "Brand→model selection, deterministic model-spec mapping and honest partial-snapshot inference "
+      "replaced the previous example-snapshot overlay approach.",
+      "PASS", "v1.3", "ridebase-control-center/template.html",
+      dt.date.today().isoformat())
     _v2rep = REPORTS / "v2_survival_data_prep_report.md"
     if _v2rep.exists():
         e("V2", "DATA", "V2 survival data preparation (nb13)",
@@ -551,7 +556,8 @@ def v2_block():
             "package": bm.get("package"),
             "feature_contract": by,
             "api_endpoints": ["GET /api/v2/model/info", "GET /api/v2/features", "GET /api/v2/metrics",
-                              "GET /api/v2/sample", "POST /api/v2/predict", "POST /api/v2/predict/batch",
+                              "GET /api/v2/sample", "GET /api/v2/motorcycle-models",
+                              "POST /api/v2/predict/scenario", "POST /api/v2/predict", "POST /api/v2/predict/batch",
                               "POST /api/predict/service"],
             "report": "ridebase-ml/reports/v2_production_packaging_report.md",
         }

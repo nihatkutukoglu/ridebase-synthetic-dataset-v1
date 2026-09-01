@@ -46,6 +46,37 @@ at `#v1/predict`:
 - Model status remains **SYNTHETICALLY VALIDATED**; real-fleet validation is
   **PENDING**.
 
+## V2 live prediction modes
+
+`V2 Survival → Canlı Tahmin` has three explicitly different product modes:
+
+- **Senaryo tahmini** loads the read-only 39-model inventory from
+  `GET /api/v2/motorcycle-models`, provides cascading brand → model → year
+  selection, and calls `POST /api/v2/predict/scenario`. The backend resolves
+  model-master specs, derives only deterministic date/mileage fields, and sends
+  those partial raw inputs to the frozen V2 preprocessor. It never calls or
+  overlays `/api/v2/sample`; genuinely unknown service-history fields remain
+  missing. The result is labelled **KISMİ BİLGİYLE SENARYO TAHMİNİ**, not a
+  personal prediction.
+- **Örnek motorla demo** is the only mode allowed to call `GET /api/v2/sample`.
+  The response includes separate human-readable identity metadata, while
+  `model_name`/`model_id` are not added to the frozen 117-feature model vector.
+- **Gerçek RideBase motoru** is disabled until `motorcycle_id → motorcycle →
+  usage profile → full service history → 117-feature snapshot` is connected.
+
+Every scenario response reports all 117 fields as `USER_INPUT`, `MODEL_MASTER`,
+`DERIVED`, or `MISSING_PREPROCESSOR`, plus real per-group coverage. Coverage is
+an input-completeness indicator, not model confidence. Frozen train-time
+missing-value handling is legitimate; copying another motorcycle's values is
+not.
+
+Mileage terminology is explicit: `initial_mileage_km` is the synthetic
+motorcycle's mileage at `observation_start_date` (basis:
+`AGE_CUSTOMER_TYPE_CATEGORY_PRIOR`) and is not current odometer.
+The product-level current odometer is used as V1 `snapshot_odometer_km` and,
+with last-service odometer, derives V2 `km_since_previous_service`; it is never
+silently mapped to `initial_mileage_km`.
+
 ---
 
 ## Purpose

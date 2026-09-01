@@ -24,6 +24,7 @@ The container needs the notebook artifacts at:
 /artifacts/reports     ← ridebase-ml/reports        (V2 /metrics reads reports/tables/*)
 /artifacts/outputs     ← ridebase-ml/outputs
 /artifacts/dataset     ← ridebase_v1_3/derived_outputs   (only for the input-feature catalog)
+/app/app/data/ridebase_motorcycle_models_v1.csv ← authoritative scenario model catalog
 ```
 
 **V2 also needs the `ridebase_ml` inference package importable.** Either:
@@ -57,6 +58,7 @@ Pick one:
 | `APP_ENV` | `production` |
 | `ALLOWED_ORIGINS` | `https://<your-frontend-domain>` (comma-separated, no trailing slash) |
 | `MODEL_DIR` / `REPORTS_DIR` / `OUTPUTS_DIR` / `DATASET_DIR` | `/artifacts/models` … (image defaults already set) |
+| `MODEL_CATALOG_PATH` | `/app/app/data/ridebase_motorcycle_models_v1.csv` (`Dockerfile.prod` copies it from v1.3 source tables) |
 | `MAX_REQUEST_BYTES` | `1000000` (raise only if you use `/predict/batch` heavily) |
 
 ### Render — one-file blueprint (recommended)
@@ -80,6 +82,12 @@ Then point the Control Center at it: publish with `RIDEBASE_V2_API=https://<the-
 in the environment when running `ridebase-control-center/build.py`, **or** open the
 published artifact with `?v2api=https://<the-render-url>`. No URL configured → the
 Live Prediction screen stays offline and says so (no fake fallback).
+
+The V2 scenario redesign adds `/api/v2/motorcycle-models` and
+`/api/v2/predict/scenario`, so an existing Render service with `autoDeploy: false`
+must be redeployed after this commit: **Render → ridebase-inference-api → Manual
+Deploy → Deploy latest commit**. Do not claim the scenario is production-live
+until both endpoints are reachable.
 
 > **Deployment status: `BLOCKED_BY_PROVIDER_AUTH`.** Creating the Render/Railway/
 > Fly account and pushing the deploy needs provider credentials that are not

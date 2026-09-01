@@ -12,7 +12,9 @@ from typing import Any, Dict, List
 from fastapi import APIRouter, HTTPException
 
 from .config import settings
-from .v2_schemas import UnifiedServiceRequest, V2BatchPredictRequest, V2PredictRequest
+from .v2_schemas import (UnifiedServiceRequest, V2BatchPredictRequest, V2PredictRequest,
+                         V2ScenarioRequest)
+from .v2_scenario import (ScenarioInputError, catalog_response, predict_scenario)
 from .v2_service import V2Unavailable, get_predictor
 
 v2 = APIRouter(prefix="/api/v2", tags=["v2"])
@@ -56,9 +58,70 @@ def features() -> Dict[str, Any]:
 
 @v2.get("/sample")
 def sample() -> Dict[str, Any]:
+    """Prepared, anonymised real snapshot for DEMO mode only.
+
+    Identity is display metadata and is never inserted as a new frozen V2 feature.
+    """
+    import numpy as np
+    import pandas as pd
+
     p = _pred()
-    return {"features": p.sample_snapshot(),
-            "note": "A production-safe example built from training medians/modes. Do not send 'split'."}
+    snap_path = settings.DATASET_DIR / "ml_maintenance_snapshots.parquet"
+    if not snap_path.exists():
+        return {"features": p.sample_snapshot(), "display": {},
+                "note": "Prepared median/mode demo because the snapshot artifact is unavailable."}
+    frame = pd.read_parquet(snap_path)
+    if frame.empty:
+        raise HTTPException(status_code=404, detail="no snapshot available for demo")
+    with_history = frame.dropna(subset=["days_since_previous_service", "km_since_previous_service"])
+    row = (with_history if not with_history.empty else frame).iloc[0]
+    features: Dict[str, Any] = {}
+    for feature in p.feature_cols:
+        if feature == "split" or feature not in row.index or pd.isna(row[feature]):
+            continue
+        value = row[feature]
+        features[feature] = bool(value) if isinstance(value, (bool, np.bool_)) else (
+            float(value) if isinstance(value, (int, float, np.integer, np.floating)) else str(value)
+        )
+    snapshot_date = pd.to_datetime(row.get("snapshot_date", row.get("snapshot_at"))).date().isoformat()
+    display_keys = ("brand", "model_id", "model_name", "production_year", "category",
+                    "powertrain_type", "engine_displacement_cc", "snapshot_odometer_km",
+                    "usage_type", "riding_intensity", "days_since_previous_service",
+                    "km_since_previous_service")
+    display = {}
+    for key in display_keys:
+        if key in row.index and not pd.isna(row[key]):
+            value = row[key]
+            display[key] = bool(value) if isinstance(value, (bool, np.bool_)) else (
+                float(value) if isinstance(value, (int, float, np.integer, np.floating)) else str(value)
+            )
+    return {"snapshot_id": str(row.get("snapshot_id", "prepared-demo")),
+            "snapshot_date": snapshot_date, "features": features, "display": display,
+            "note": "Prepared anonymised test motorcycle for DEMO mode only; targets are excluded."}
+
+
+@v2.get("/motorcycle-models")
+def motorcycle_models() -> Dict[str, Any]:
+    try:
+        return catalog_response()
+    except RuntimeError as exc:
+        raise HTTPException(status_code=503, detail=str(exc))
+
+
+@v2.post("/predict/scenario")
+def scenario(req: V2ScenarioRequest) -> Dict[str, Any]:
+    try:
+        return predict_scenario(req, _pred())
+    except ScenarioInputError as exc:
+        raise HTTPException(status_code=422, detail=str(exc))
+    except HTTPException:
+        raise
+    except Exception as exc:
+        # Frozen predictor input errors are user-correctable here, never a fake fallback.
+        from ridebase_ml.v2.predictor import PredictionError as V2PredictionError
+        if isinstance(exc, V2PredictionError):
+            raise HTTPException(status_code=422, detail=str(exc))
+        raise
 
 
 @v2.get("/metrics")

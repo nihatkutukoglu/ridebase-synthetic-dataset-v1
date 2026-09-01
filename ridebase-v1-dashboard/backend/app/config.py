@@ -31,6 +31,10 @@ class Settings:
     OUTPUTS_DIR: Path = _path("OUTPUTS_DIR", _ML_ROOT / "outputs")
     # snapshot table is only used to build the input-feature catalog (types / ranges / options)
     DATASET_DIR: Path = _path("DATASET_DIR", _REPO_ROOT / "ridebase_v1_3" / "derived_outputs")
+    MODEL_CATALOG_PATH: Path = _path(
+        "MODEL_CATALOG_PATH",
+        _REPO_ROOT / "ridebase_v1_3" / "source_tables" / "ridebase_motorcycle_models_v1.csv",
+    )
 
     ALLOWED_ORIGINS: list[str] = [
         o.strip()

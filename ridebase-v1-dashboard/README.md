@@ -111,6 +111,7 @@ or `make dev` from `ridebase-v1-dashboard/`.
 |-----|---------|---------|
 | `APP_ENV` | `development` | |
 | `MODEL_DIR` / `REPORTS_DIR` / `OUTPUTS_DIR` / `DATASET_DIR` | repo-relative `ridebase-ml/*` | artifact locations |
+| `MODEL_CATALOG_PATH` | `ridebase_v1_3/source_tables/ridebase_motorcycle_models_v1.csv` | authoritative read-only motorcycle model inventory |
 | `ALLOWED_ORIGINS` | `http://localhost:3000,http://127.0.0.1:3000` | CORS allow-list |
 | `MAX_REQUEST_BYTES` | `1000000` | request-size cap |
 | `SCATTER_SAMPLE` | `1500` | max scatter points returned |
@@ -152,7 +153,9 @@ The frozen FULL/FINAL V2 ensemble (`ENSEMBLE[XGBoost survival:cox + CoxNet]`, we
 | GET | `/api/v2/model/info` | artifact-driven metadata (family, run_mode=FULL, weights, horizons, TEST metrics) |
 | GET | `/api/v2/features` | fixed 117-feature contract + training stats/options (caller cannot set order; `split` is internal) |
 | GET | `/api/v2/metrics` | nb15/nb16 tables: horizon Brier/AUC/calibration, risk groups, grouped-bootstrap CIs, golden-parity flag |
-| GET | `/api/v2/sample` | production-safe example request (training medians/modes) |
+| GET | `/api/v2/sample` | prepared anonymised demo snapshot plus separate human-readable `display` metadata; demo mode only |
+| GET | `/api/v2/motorcycle-models` | read-only 12-brand / 39-model catalog derived from the authoritative v1.3 inventory |
+| POST | `/api/v2/predict/scenario` | natural brand/model/year/usage/service inputs → deterministic derivation → V1 + V2 partial-snapshot prediction + 117-field coverage/provenance |
 | POST | `/api/v2/predict` | `{features, snapshot_date?, strict?}` → `risk_30d/60d/90d/120d`, `median_service_days`, `risk_group_90d`, per-horizon calibration quality, `warning` |
 | POST | `/api/v2/predict/batch` | up to 2000 items |
 | POST | `/api/predict/service` | **V1 + V2 combined** — point days/km *and* probability-over-time for one snapshot |
@@ -167,6 +170,13 @@ MODERATE @60/90/120 — the app must not imply equal confidence across horizons.
 monotonicity-checked (the predictor raises rather than return a bad result); bit-for-bit
 parity with notebook 15's TEST predictions (`scripts/smoke_v2_inference.py`). If the bundle
 or `ridebase_ml` package is absent, `/api/v2/*` → 503 and V1 is unaffected.
+
+The scenario endpoint has no free-form feature map (`extra="forbid"`). It resolves
+technical specs only from the selected catalog `model_id`, rejects invalid brand/model
+pairs and impossible date/odometer relationships, and never reads `/api/v2/sample`.
+Unspecified frozen features remain missing and are handled by the persisted train-time
+preprocessor. The response classifies every frozen raw feature as `USER_INPUT`,
+`MODEL_MASTER`, `DERIVED`, or `MISSING_PREPROCESSOR`; it does not fabricate history.
 
 ### Guards
 

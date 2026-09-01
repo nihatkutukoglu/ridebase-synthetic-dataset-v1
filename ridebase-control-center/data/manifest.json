@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-09-01T11:53:33",
+  "generated_at": "2026-09-01T13:11:30",
   "project": "RideBase ML",
   "current_dataset": "v1.3",
   "environment": "PILOT",
@@ -2341,6 +2341,8 @@
         "GET /api/v2/features",
         "GET /api/v2/metrics",
         "GET /api/v2/sample",
+        "GET /api/v2/motorcycle-models",
+        "POST /api/v2/predict/scenario",
         "POST /api/v2/predict",
         "POST /api/v2/predict/batch",
         "POST /api/predict/service"

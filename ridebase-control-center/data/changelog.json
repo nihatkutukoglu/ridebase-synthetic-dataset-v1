@@ -117,20 +117,7 @@
     ]
   },
   {
-    "id": "API-10",
-    "timestamp": "2026-08-31",
-    "module": "API",
-    "type": "API",
-    "title": "V1 production dashboard (FastAPI + Next.js)",
-    "description": "Leakage-safe prediction API + analytics dashboard; frozen modelleri transform-only kullanır.",
-    "status": "PASS",
-    "version": "v1.3",
-    "artifacts": [
-      "ridebase-v1-dashboard/README.md"
-    ]
-  },
-  {
-    "id": "V2-12",
+    "id": "V2-13",
     "timestamp": "2026-08-31",
     "module": "V2",
     "type": "DATA",
@@ -143,7 +130,7 @@
     ]
   },
   {
-    "id": "V2-13",
+    "id": "V2-14",
     "timestamp": "2026-08-31",
     "module": "V2",
     "type": "MODEL",
@@ -156,7 +143,7 @@
     ]
   },
   {
-    "id": "V2-14",
+    "id": "V2-15",
     "timestamp": "2026-08-31",
     "module": "V2",
     "type": "MODEL",
@@ -169,7 +156,7 @@
     ]
   },
   {
-    "id": "V2-15",
+    "id": "V2-16",
     "timestamp": "2026-08-31",
     "module": "V2",
     "type": "PRODUCTION",
@@ -179,6 +166,19 @@
     "version": "v1.3",
     "artifacts": [
       "ridebase-ml/reports/v2_production_packaging_report.md"
+    ]
+  },
+  {
+    "id": "API-10",
+    "timestamp": "2026-09-01",
+    "module": "API",
+    "type": "API",
+    "title": "V1 production dashboard (FastAPI + Next.js)",
+    "description": "Leakage-safe prediction API + analytics dashboard; frozen modelleri transform-only kullanır.",
+    "status": "PASS",
+    "version": "v1.3",
+    "artifacts": [
+      "ridebase-v1-dashboard/README.md"
     ]
   },
   {
@@ -195,7 +195,20 @@
     ]
   },
   {
-    "id": "UI-16",
+    "id": "V2-12",
+    "timestamp": "2026-09-01",
+    "module": "V2",
+    "type": "UI",
+    "title": "V2 LIVE PREDICTION REDESIGNED",
+    "description": "Brand→model selection, deterministic model-spec mapping and honest partial-snapshot inference replaced the previous example-snapshot overlay approach.",
+    "status": "PASS",
+    "version": "v1.3",
+    "artifacts": [
+      "ridebase-control-center/template.html"
+    ]
+  },
+  {
+    "id": "UI-17",
     "timestamp": "2026-09-01",
     "module": "UI",
     "type": "UI",
@@ -208,7 +221,7 @@
     ]
   },
   {
-    "id": "API-17",
+    "id": "API-18",
     "timestamp": "2026-09-01",
     "module": "API",
     "type": "DEPLOYMENT",
@@ -221,7 +234,7 @@
     ]
   },
   {
-    "id": "V1-18",
+    "id": "V1-19",
     "timestamp": "2026-09-01",
     "module": "V1",
     "type": "UI",
