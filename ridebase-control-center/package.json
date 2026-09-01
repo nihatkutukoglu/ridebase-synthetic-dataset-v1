@@ -1,0 +1,9 @@
+{
+  "name": "ridebase-ml-control-center",
+  "version": "1.0.0",
+  "private": true,
+  "description": "RideBase ML Control Center — static beginner-friendly web app (Vercel). Backend: Render FastAPI (V1 + V2).",
+  "scripts": {
+    "build": "python3 build.py"
+  }
+}

@@ -30,9 +30,11 @@ services:
       - key: DATASET_DIR
         value: /artifacts/dataset
       - key: ALLOWED_ORIGINS
-        value: https://claude.ai,https://preview.claude.ai
+        # production frontend (Vercel) + Claude Artifact preview
+        value: https://ridebase-ml-control-center.vercel.app,https://claude.ai,https://preview.claude.ai
       - key: ALLOWED_ORIGIN_REGEX
-        # published Claude artifacts fetch from a per-artifact *.claudeusercontent.com origin
-        value: https://.*\.claudeusercontent\.com
+        # this Vercel project's per-deploy URLs + published Claude artifacts. Scoped,
+        # not a blind *.vercel.app wildcard.
+        value: https://(ridebase-ml-control-center-[a-z0-9-]+\.vercel\.app|.*\.claudeusercontent\.com)
       - key: MAX_REQUEST_BYTES
         value: "1000000"

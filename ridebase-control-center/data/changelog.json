@@ -130,19 +130,6 @@
     ]
   },
   {
-    "id": "UI-11",
-    "timestamp": "2026-08-31",
-    "module": "UI",
-    "type": "UI",
-    "title": "RideBase ML Control Center",
-    "description": "EDA + V0 + V1 modüllerini tek merkezi yönetim panelinde birleştiren sistem (bu artifact).",
-    "status": "INFO",
-    "version": "v1.3",
-    "artifacts": [
-      "ridebase-control-center/README.md"
-    ]
-  },
-  {
     "id": "V2-12",
     "timestamp": "2026-08-31",
     "module": "V2",
@@ -195,8 +182,21 @@
     ]
   },
   {
+    "id": "UI-11",
+    "timestamp": "2026-09-01",
+    "module": "UI",
+    "type": "UI",
+    "title": "RideBase ML Control Center",
+    "description": "EDA + V0 + V1 modüllerini tek merkezi yönetim panelinde birleştiren sistem (bu artifact).",
+    "status": "INFO",
+    "version": "v1.3",
+    "artifacts": [
+      "ridebase-control-center/README.md"
+    ]
+  },
+  {
     "id": "UI-16",
-    "timestamp": "2026-08-31",
+    "timestamp": "2026-09-01",
     "module": "UI",
     "type": "UI",
     "title": "Beginner-friendly metric explanations and terminology added",
@@ -209,7 +209,7 @@
   },
   {
     "id": "API-17",
-    "timestamp": "2026-08-31",
+    "timestamp": "2026-09-01",
     "module": "API",
     "type": "DEPLOYMENT",
     "title": "Public V1/V2 inference API — deploy blueprint prepared",

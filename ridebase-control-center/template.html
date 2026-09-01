@@ -522,6 +522,7 @@ function buildSidebar(st){
    +'<div class="sidebar-foot">'
      +'<div class="row"><span>Dataset</span><b>'+esc(M.current_dataset||"v1.3")+'</b></div>'
      +'<div class="row"><span>Environment</span><b>'+esc(M.environment||"PILOT")+'</b></div>'
+     +'<div class="row"><span>Frontend</span><b>'+esc(M.frontend||"PRODUCTION WEB")+'</b></div>'
      +'<div class="row"><span>Real fleet</span><b style="color:var(--warning)">'+esc(M.real_fleet_validation||"PENDING")+'</b></div>'
      +'<div class="row" style="margin-top:6px"><span>Palette</span><span class="kbd">⌘K</span></div>'
    +'</div>';
@@ -1164,11 +1165,10 @@ function v2Calibration(){
    +'</div></div>';
   out+='<div class="sec"><div class="sec-head"><h2>Calibration curves</h2><span class="tag">nb15 figures</span></div>'
    +'<div class="grid g2">'
-   +["07","08","09","10"].map(function(fid,i){var h=["30","60","90","120"][i];
-     return '<figure class="fig"><img loading="lazy" alt="calibration '+h+'d" src="'
-       +"../ridebase-ml/reports/figures/v2_survival_advanced/"+fid+"_calibration_"+h+"d.png"
-       +'"><figcaption>@'+h+' gün · reliability</figcaption></figure>';}).join('')
-   +'</div><p class="copy" style="margin-top:8px">Görseller repo\'daki nb15 çıktı klasöründen; artifact publish edildiğinde göreli yol geçerli olur.</p></div>';
+   +["07_calibration_30d","08_calibration_60d","09_calibration_90d","010_calibration_120d"].map(function(fn,i){var h=["30","60","90","120"][i];
+     return '<figure class="fig"><img loading="lazy" alt="calibration '+h+'d" src="fig/'+fn+'.png">'
+       +'<figcaption>@'+h+' gün · reliability (nb15)</figcaption></figure>';}).join('')
+   +'</div><p class="copy" style="margin-top:8px">Görseller nb15 çıktısıdır; ideal kalibrasyonda noktalar diyagonale yakın olur.</p></div>';
   return out;
 }
 function v2Risk(){

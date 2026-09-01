@@ -1,11 +1,32 @@
 # RideBase ML Control Center
 
-One central, publishable admin view of the whole RideBase ML project — EDA, V0
-baseline and V1 regression as **modules of a single system**, with V2 / V3 as
-declared-but-empty placeholders.
+One central admin view of the whole RideBase ML project — EDA, V0 baseline, V1
+regression and the **V2 survival** model (packaged, 10 sub-tabs, live prediction)
+as modules of a single system; V3 declared-but-empty.
 
-Published as a Claude Artifact (single self-contained HTML page). It does **not**
-replace the V1 production dashboard — it links out to it for live inference.
+## Production deployment
+
+```
+Vercel (this static site)  ──HTTPS──▶  Render FastAPI  ──▶  frozen V1 + V2 models
+https://ridebase-ml-control-center.vercel.app     https://ridebase-inference-api.onrender.com
+```
+
+- **Production frontend:** <https://ridebase-ml-control-center.vercel.app> — a
+  normal browser web app (no Claude iframe / artifact runtime). `build.py` emits
+  `public/index.html` (+ `public/fig/`), Vercel serves `public/` as a static site
+  (`vercel.json`).
+- **Production API:** <https://ridebase-inference-api.onrender.com> (V1 + V2,
+  `/api/v2/*`, `/api/predict/service`).
+- **API base URL** resolves: `?v2api=` query param → build-time
+  `NEXT_PUBLIC_API_BASE_URL` / `RIDEBASE_V2_API` → hard-coded Render default.
+  No `?v2api=` needed.
+- **Claude Artifact** (<https://claude.ai/code/artifact/3366dcd0-0e51-4f81-ba96-9d24253402bc>)
+  stays as **preview / development only** — its sandbox CSP can block the API call.
+- **CORS:** the Vercel origin must be in the Render service's `ALLOWED_ORIGINS`
+  (see `ridebase-v1-dashboard/render.yaml` / `DEPLOYMENT.md`).
+
+Redeploy the frontend after a rebuild: `python3 build.py && vercel --prod` (or
+push — Vercel builds `public/` from `vercel.json`).
 
 ---
 

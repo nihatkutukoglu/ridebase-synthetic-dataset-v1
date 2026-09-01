@@ -101,9 +101,22 @@ gcloud run deploy ridebase-v1-api \
 
 ---
 
-## 2. Frontend — Vercel (recommended) or any Node host
+## 2a. Control Center frontend — Vercel (LIVE)
 
-**Vercel**
+The **beginner-friendly Control Center** (`ridebase-control-center/`) is the
+production frontend, deployed as a **static site** (no Next.js, no Claude iframe):
+
+- **URL:** <https://ridebase-ml-control-center.vercel.app>
+- Vercel project `ridebase-ml-control-center`, **Root Directory** =
+  `ridebase-control-center`, framework **Other**.
+- `vercel.json`: `buildCommand: python3 build.py` (stdlib only) → `outputDirectory: public`.
+  Falls back to the committed `public/` if the build step fails.
+- Env var: `NEXT_PUBLIC_API_BASE_URL = https://ridebase-inference-api.onrender.com`
+  (also accepts `RIDEBASE_V2_API`; hard-coded fallback is the same URL).
+- Redeploy: `cd ridebase-control-center && python3 build.py && vercel --prod`, or push.
+- Claude Artifact (`3366dcd0-…`) is now **preview/development only**.
+
+## 2b. V1-only dashboard frontend — Vercel (optional, legacy)
 
 - Import the repo, set **Root Directory** = `ridebase-v1-dashboard/frontend`.
 - Framework preset: **Next.js** (auto).
@@ -127,15 +140,27 @@ docker run -p 3000:3000 -e NEXT_PUBLIC_API_BASE_URL=https://<backend> \
 
 ## 3. Wire CORS
 
-After both are up, set the backend `ALLOWED_ORIGINS` to the **exact** frontend
-origin(s) and redeploy the backend. Verify:
+Set on the Render service (`ridebase-inference-api` → **Environment** — saving an
+env var auto-redeploys, even with `autoDeploy: false` for git):
+
+| var | value |
+|-----|-------|
+| `ALLOWED_ORIGINS` | `https://ridebase-ml-control-center.vercel.app,https://claude.ai,https://preview.claude.ai` |
+| `ALLOWED_ORIGIN_REGEX` | `https://(ridebase-ml-control-center-[a-z0-9-]+\.vercel\.app\|.*\.claudeusercontent\.com)` |
+
+(Both are already in `render.yaml`; a dashboard env edit is the quickest way to
+apply them without re-syncing the blueprint.) Verify:
 
 ```bash
-curl -s -o /dev/null -w '%{http_code}\n' \
-  -X OPTIONS https://<backend>/api/v1/predict \
-  -H 'Origin: https://<frontend>' \
-  -H 'Access-Control-Request-Method: POST'      # expect 200 + access-control-allow-origin
+curl -s -i -X OPTIONS https://ridebase-inference-api.onrender.com/api/predict/service \
+  -H 'Origin: https://ridebase-ml-control-center.vercel.app' \
+  -H 'Access-Control-Request-Method: POST' | grep -i 'access-control-allow-origin'
+# expect: access-control-allow-origin: https://ridebase-ml-control-center.vercel.app
 ```
+
+**Do not treat the frontend Live Prediction as working until this returns the
+allow-origin header.** Render free instances also cold-start (~50 s) — the UI
+shows "Model servisi uyanıyor…" and retries; that is expected, not an outage.
 
 ---
 

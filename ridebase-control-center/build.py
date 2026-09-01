@@ -604,10 +604,14 @@ def build_manifest():
         "project": "RideBase ML",
         "current_dataset": "v1.3",
         "environment": "PILOT",
+        "frontend": os.environ.get("RIDEBASE_FRONTEND_ENV", "PRODUCTION WEB (Vercel)"),
         "real_fleet_validation": "PENDING",
-        # public inference API base URL; RIDEBASE_V2_API overrides, else the live Render service
-        "v2_api": os.environ.get(
-            "RIDEBASE_V2_API", "https://ridebase-inference-api.onrender.com"
+        # public inference API base URL; env overrides, else the live Render service.
+        # NEXT_PUBLIC_API_BASE_URL is accepted so Vercel env config matches the usual name.
+        "v2_api": (
+            os.environ.get("RIDEBASE_V2_API")
+            or os.environ.get("NEXT_PUBLIC_API_BASE_URL")
+            or "https://ridebase-inference-api.onrender.com"
         ).rstrip("/"),
         "modules": MODULES,
         "notebooks": [
@@ -679,8 +683,20 @@ def assemble_html(manifest: dict, changelog_entries: list):
 
     (OUT / "RideBase_Control_Center.full.html").write_text(tpl)          # local browser preview
     out = OUT / "RideBase_Control_Center.html"
-    out.write_text(artifact_html)                                        # publish this one
-    return out, eda["n_sections"], len(artifact_html)
+    out.write_text(artifact_html)                                        # Claude Artifact (preview)
+
+    # Vercel static site — the same standalone page (no Claude iframe runtime),
+    # served as public/index.html + the calibration figures it references.
+    public = OUT / "public"
+    (public / "fig").mkdir(parents=True, exist_ok=True)
+    (public / "index.html").write_text(tpl)
+    figdir = ML / "reports" / "figures" / "v2_survival_advanced"
+    n_fig = 0
+    if figdir.is_dir():
+        for p in figdir.glob("*calibrat*.png"):
+            (public / "fig" / p.name).write_bytes(p.read_bytes())
+            n_fig += 1
+    return out, eda["n_sections"], len(artifact_html), n_fig
 
 
 if __name__ == "__main__":
@@ -688,11 +704,13 @@ if __name__ == "__main__":
     cl = changelog()
     (DATA / "manifest.json").write_text(json.dumps(manifest, indent=2, ensure_ascii=False))
     (DATA / "changelog.json").write_text(json.dumps(cl, indent=2, ensure_ascii=False))
-    html_path, n_sec, size = assemble_html(manifest, cl)
+    html_path, n_sec, size, n_fig = assemble_html(manifest, cl)
     print("manifest.json  ", (DATA / "manifest.json").stat().st_size, "bytes")
     print("changelog.json ", len(cl), "entries")
     print("EDA sections   ", n_sec, "re-homed")
     print("artifact HTML  ", html_path.name, f"{size/1024:.0f} KB")
+    print("vercel static  ", "public/index.html +", n_fig, "figures")
+    print("API base URL   ", manifest["v2_api"])
     print("v0 DAYS/KM MAE ", manifest["v0"]["metrics"]["DAYS"].get("mae"),
           manifest["v0"]["metrics"]["KM"].get("mae"))
     print("v1 DAYS/KM MAE ", manifest["v1"]["bands"]["DAYS"]["configs"].get("tuned", {}).get("mae"),

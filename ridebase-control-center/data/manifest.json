@@ -1,8 +1,9 @@
 {
-  "generated_at": "2026-08-31T21:01:57",
+  "generated_at": "2026-09-01T10:49:46",
   "project": "RideBase ML",
   "current_dataset": "v1.3",
   "environment": "PILOT",
+  "frontend": "PRODUCTION WEB (Vercel)",
   "real_fleet_validation": "PENDING",
   "v2_api": "https://ridebase-inference-api.onrender.com",
   "modules": [
