@@ -219,5 +219,18 @@
     "artifacts": [
       "ridebase-v1-dashboard/render.yaml"
     ]
+  },
+  {
+    "id": "V1-18",
+    "timestamp": "2026-09-01",
+    "module": "V1",
+    "type": "UI",
+    "title": "Dedicated beginner-friendly V1 live prediction added",
+    "description": "V1 Regression → Canlı Tahmin ekranı gerçek /api/v1/sample + /api/v1/predict akışını kullanır. Demo sonucu gerçek frozen modelden gelir ve açıkça örnek motor olarak etiketlenir. Kişisel gerçek-motor girdisi, servis geçmişinden deterministik feature türetme hattı bağlanana kadar tahmin üretmez.",
+    "status": "PASS",
+    "version": "v1.3",
+    "artifacts": [
+      "ridebase-control-center/template.html"
+    ]
   }
 ]

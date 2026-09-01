@@ -16,7 +16,7 @@ https://ridebase-ml-control-center.vercel.app     https://ridebase-inference-api
   `public/index.html` (+ `public/fig/`), Vercel serves `public/` as a static site
   (`vercel.json`).
 - **Production API:** <https://ridebase-inference-api.onrender.com> (V1 + V2,
-  `/api/v2/*`, `/api/predict/service`).
+  `/api/v1/*`, `/api/v2/*`, `/api/predict/service`).
 - **API base URL** resolves: `?v2api=` query param → build-time
   `NEXT_PUBLIC_API_BASE_URL` / `RIDEBASE_V2_API` → hard-coded Render default.
   No `?v2api=` needed.
@@ -27,6 +27,24 @@ https://ridebase-ml-control-center.vercel.app     https://ridebase-inference-api
 
 Redeploy the frontend after a rebuild: `python3 build.py && vercel --prod` (or
 push — Vercel builds `public/` from `vercel.json`).
+
+## V1 live prediction
+
+The authoritative Control Center now includes **V1 Regression → Canlı Tahmin**
+at `#v1/predict`:
+
+- **Örnek motorla demo** loads an anonymised, complete snapshot from
+  `GET /api/v1/sample`, shows the understandable motorcycle fields first, and
+  runs the frozen DAYS/KM models only after the user clicks the prediction
+  button (`POST /api/v1/predict`). No static or fallback prediction is used.
+- **Kendi motosikletimle tahmin** is intentionally non-predictive until the
+  real RideBase service-history feature-derivation pipeline is connected. The
+  frontend never overlays a few user fields onto sample/default values and
+  presents that as a personal result.
+- V1 is a point estimate; the existing V2 live screen retains the combined V1
+  + V2 probability-over-time flow.
+- Model status remains **SYNTHETICALLY VALIDATED**; real-fleet validation is
+  **PENDING**.
 
 ---
 

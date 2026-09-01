@@ -471,6 +471,7 @@ function route(){
   view.focus();
   window.scrollTo({top:0,behavior:"instant"});
   if(st.route==="eda")initMonthlyChart();
+  if(st.route==="v1" && st.sub==="predict" && typeof wireV1Predict==="function")wireV1Predict();
   if(st.route==="v2" && st.sub==="predict" && typeof wireV2Predict==="function")wireV2Predict();
   $("#shell").classList.remove("drawer");
 }
@@ -499,7 +500,7 @@ function buildSidebar(st){
    +'</div>';
   if(st.route==="v1"){
     var subs=[["overview","Overview"],["days","DAYS"],["km","KM"],["models","Models"],["features","Features"],
-      ["errors","Errors"],["drift","Drift"],["experiments","Experiments"],["predict","Live Prediction"],["verdict","Verdict"]];
+      ["errors","Errors"],["drift","Drift"],["experiments","Experiments"],["predict","Canlı Tahmin"],["verdict","Verdict"]];
     html+='<div class="nav-group">'+subs.map(function(s){
       return navItem("v1",s[1],{sub:true,hash:"v1/"+s[0],subOf:"v1",subKey:s[0]==="overview"?null:s[0]});
     }).join('')+'</div>';
@@ -759,7 +760,7 @@ function renderV1(sub){
     '<span class="chip active"><span class="dot"></span>ACTIVE · FROZEN</span><span class="chip">DATASET v1.3</span><span class="chip warn"><span class="dot"></span>REAL FLEET: PENDING</span>',
     'config <code>models/v1_final_tuning_config.json</code>');
   var tabs=[["overview","Overview"],["days","DAYS"],["km","KM"],["models","Models"],["features","Features"],
-    ["errors","Errors"],["drift","Drift"],["experiments","Experiments"],["predict","Live Prediction"],["verdict","Verdict"]];
+    ["errors","Errors"],["drift","Drift"],["experiments","Experiments"],["predict","Canlı Tahmin"],["verdict","Verdict"]];
   var bar='<div class="subtabs">'+tabs.map(function(t){
     return '<button class="subtab'+(sub===t[0]?' active':'')+'" data-go="v1/'+t[0]+'">'+esc(t[1])+'</button>';
   }).join('')+'</div>';
@@ -953,20 +954,180 @@ function v1Experiments(){
   return out;
 }
 function v1Predict(){
-  var v1=M.v1||{}, lp=v1.live_prediction||{}, api=lp.api||{}, dT=(cfgOf("DAYS").tuned)||{}, kT=(cfgOf("KM").tuned)||{};
-  var out='<div class="sec">'+finding("warn","Artifact limitation",
-    "<b>Canlı inference bu artifact içinde çalışmaz.</b><p>"+esc(lp.reason||"Model joblib dosyaları gerektirir.")+"</p>")+'</div>';
-  out+='<div class="sec"><div class="sec-head"><h2>Deployed prediction API</h2><span class="tag">'+esc(api.repo||"ridebase-v1-dashboard/backend")+'</span></div>'
-   +card("Endpoint sözleşmesi",null,
-     '<div class="chips"><span class="chip cyan">'+esc(api.endpoint||"POST /api/v1/predict")+'</span><span class="chip">'+esc(api.health||"GET /health")+'</span><span class="chip">'+esc(api.features||"GET /api/v1/features")+'</span></div>'
-    +'<div class="mono-block" style="margin-top:12px">'+esc(api.contract||"")+'</div>'
-    +'<p class="copy" style="margin-top:10px">Repository\'deki FastAPI backend frozen modelleri <b>transform-only</b> çalıştırır, tahmini servis tarihi ve km sayacını türetir, out-of-distribution uyarısı verir. Bkz. <code>ridebase-v1-dashboard/README.md</code>.</p>')
-   +'</div>';
-  out+='<div class="sec"><div class="sec-head"><h2>Beklenen çıktı büyüklüğü</h2><span class="tag">frozen model · TEST error</span></div><div class="grid g2">'
-   +kpi("Tipik DAYS hatası",n1(dT.mae)+' <small>gün</small>',"MAE — güven aralığı değildir","cyan")
-   +kpi("Tipik KM hatası",n0(kT.mae)+' <small>km</small>',"MAE — güven aralığı değildir")
-   +'</div></div>';
+  var api=(window.__V2_API__||"").replace(/\/$/,"");
+  var dT=(cfgOf("DAYS").tuned)||{}, kT=(cfgOf("KM").tuned)||{};
+  var out=pageNote(
+    "V1, bir motosikletin yaklaşık <b>kaç gün</b> ve <b>kaç kilometre</b> sonra servise geleceğini tahmin eder. "
+    +"Tek bir yaklaşık sonuç verir; 30 / 60 / 90 / 120 günlük olasılıklar V2'nin konusudur.",
+    "Bu ekran frozen V1 modellerini <code>POST /api/v1/predict</code> üzerinden çalıştırır. "
+    +"Demo snapshot'ı <code>GET /api/v1/sample</code> ile gelir; tarayıcıda model yüklenmez ve tahmin uydurulmaz.",
+    "Teknik adı: V1 point prediction (nokta tahmini)");
+  out+='<div class="sec"><div class="sec-head"><h2>V1 — SONRAKİ SERVİS TAHMİNİ</h2><span class="tag">DAYS + KM</span></div>'
+    +'<div id="v1apiStatus" class="chips"><span class="chip"><span class="dot"></span>Model servisine bağlanılıyor…</span></div>'
+    +'<p class="copy" style="margin-top:8px;font-size:.8rem" id="v1coldNote" hidden>Render ücretsiz sunucusu uykudaysa ilk istek 50+ saniye sürebilir. Ekran 78 saniyeye kadar bekler ve üç kez dener.</p></div>';
+  out+='<div class="sec"><div class="chips" style="margin-bottom:14px">'
+    +'<button class="subtab active" id="v1mDemo" style="border:1px solid var(--border);border-radius:8px">ÖRNEK MOTORLA DEMO</button>'
+    +'<button class="subtab" id="v1mOwn" style="border:1px solid var(--border);border-radius:8px">KENDİ MOTOSİKLETİMLE TAHMİN</button>'
+    +'</div><div id="v1modeBox"></div></div>';
+  out+='<div class="sec"><div class="sec-head"><h2>Modelin testteki tipik hatası</h2><span class="tag">artifact-driven · TEST</span></div><div class="grid g4">'
+    +kpi("DAYS · MAE",n1(dT.mae)+' <small>gün</small>',"Model DAYS tahminlerinde test verisinde ortalama yaklaşık bu kadar yanıldı.","cyan")
+    +kpi("KM · MAE",n0(kT.mae)+' <small>km</small>',"Model KM tahminlerinde test verisinde ortalama yaklaşık bu kadar yanıldı.")
+    +kpi("DAYS · R²",r3(dT.r2),"Hedefteki değişkenliği açıklama gücü; doğruluk yüzdesi değildir.","plain")
+    +kpi("KM · R²",r3(kT.r2),"Hedefteki değişkenliği açıklama gücü; doğruluk yüzdesi değildir.","plain")
+    +'</div></div>';
+  out+='<div class="sec"><div class="grid g2">'
+    +card("V1 — nokta tahmini","Ne zaman / kaç km sonra?",
+      '<p class="copy">V1 tek bir yaklaşık servis zamanı ve kalan mesafe verir.</p>')
+    +card("V2 — olasılık tahmini","30 / 60 / 90 / 120 gün içinde ihtimal ne?",
+      '<p class="copy">V2 farklı zaman aralıklarında servise gelme ihtimalini verir.</p>'
+      +'<div class="chips" style="margin-top:12px"><button class="subtab" data-go="v2/predict" style="border:1px solid var(--border);border-radius:8px">V2 Survival → Canlı Tahmin</button></div>')
+    +'</div></div>';
   return out;
+}
+
+var V1_HUMAN={
+  brand:["Marka",""], category:["Motor kategorisi",""], production_year:["Model yılı",""],
+  engine_displacement_cc:["Motor hacmi"," cc"], snapshot_odometer_km:["Mevcut kilometre"," km"],
+  riding_intensity:["Kullanım yoğunluğu",""], usage_type:["Kullanım tipi",""],
+  annual_km_baseline:["Yıllık yaklaşık kullanım"," km"], previous_service_count:["Önceki servis sayısı",""],
+  days_since_previous_service:["Son servisten bu yana"," gün"],
+  km_since_previous_service:["Son servisten bu yana mesafe"," km"],
+  historical_interval_days_median:["Tipik servis aralığı"," gün"],
+  historical_interval_km_median:["Tipik servis aralığı"," km"]
+};
+function v1Json(url,opts){
+  return v2fetch(url,opts).then(function(r){
+    return r.json().catch(function(){return {};}).then(function(d){
+      if(!r.ok)throw new Error((d&&d.detail)?JSON.stringify(d.detail):("HTTP "+r.status));
+      return d;
+    });
+  });
+}
+function v1StatusChips(h){
+  var v1ok=(h.v1==="ok"||h.status==="ok"||h.days_model_loaded===true) && h.km_model_loaded===true;
+  var v2ok=h.v2_model_loaded===true;
+  return '<span class="chip good"><span class="dot"></span>BACKEND API ONLINE</span>'
+    +'<span class="chip '+(v1ok?'good':'warn')+'">V1 '+(v1ok?'LOADED':'—')+'</span>'
+    +'<span class="chip '+(v2ok?'good':'warn')+'">V2 '+(v2ok?'LOADED':'—')+'</span>'
+    +'<span class="chip">DATASET '+esc(h.dataset_version||h.v2_dataset_version||"1.3.0")+'</span>'
+    +'<span class="chip">MODEL '+esc(h.v2_run_mode||"FULL")+' · FINAL</span>'
+    +'<span class="chip warn">REAL FLEET '+esc(h.v2_real_fleet_validation||"PENDING")+'</span>';
+}
+function v1ApiPing(attempt){
+  attempt=attempt||0;
+  var api=(window.__V2_API__||"").replace(/\/$/,"");
+  var el=document.getElementById("v1apiStatus"),cold=document.getElementById("v1coldNote");
+  if(!el)return;
+  if(!api){el.innerHTML='<span class="chip warn">PUBLIC API YAPILANDIRILMADI</span>';return;}
+  if(cold)cold.hidden=false;
+  el.innerHTML='<span class="chip"><span class="dot"></span>'
+    +(attempt?'Model servisi uyanıyor… (deneme '+(attempt+1)+'/3)':'Model servisine bağlanılıyor…')+'</span>';
+  v1Json(api+"/health").then(function(h){
+    if(cold)cold.hidden=true; el.innerHTML=v1StatusChips(h);
+  }).catch(function(){
+    if(attempt<2){setTimeout(function(){v1ApiPing(attempt+1);},4000);return;}
+    el.innerHTML='<span class="chip bad"><span class="dot"></span>API\'YE ULAŞILAMADI</span>'
+      +'<button class="subtab" id="v1retry" style="padding:4px 10px">Tekrar dene</button>';
+    var rb=document.getElementById("v1retry");if(rb)rb.addEventListener("click",function(){v1ApiPing(0);});
+  });
+}
+function v1ModeDemo(){
+  var box=document.getElementById("v1modeBox");if(!box)return;
+  var api=(window.__V2_API__||"").replace(/\/$/,"");
+  box.innerHTML=card("Örnek motorla demo","geçerli tam snapshot · gerçek V1 modeli",
+    '<p class="copy"><b>Bu senin motosikletin değil.</b> Önce API\'den gelen anonim örnek motosikletin bilgileri gösterilir; tahmin ancak sen butona bastığında çalışır.</p>'
+    +'<div id="v1demoPrev" style="margin-top:12px"><p class="copy"><span class="dot"></span> Örnek motor yükleniyor…</p></div>');
+  var attempt=0;
+  (function load(){
+    v1Json(api+"/api/v1/sample").then(function(s){
+      if(!s.features||!Object.keys(s.features).length)throw new Error("örnek snapshot boş");
+      window.__V1_SAMPLE__=s;
+      var rows=[];
+      if(s.snapshot_date)rows.push('<tr><td class="k">Snapshot tarihi</td><td>'+esc(s.snapshot_date)+'</td></tr>');
+      Object.keys(V1_HUMAN).forEach(function(k){
+        if(s.features[k]==null)return;
+        var meta=V1_HUMAN[k],val=s.features[k];
+        if(typeof val==="number")val=(Math.abs(val)>=100?n0(val):n1(val));
+        rows.push('<tr><td class="k">'+esc(meta[0])+'</td><td>'+esc(val)+esc(meta[1])+'</td></tr>');
+      });
+      document.getElementById("v1demoPrev").innerHTML=
+        '<div class="twrap"><table class="tbl"><thead><tr><th>Örnek motosiklet</th><th>API\'den gelen değer</th></tr></thead><tbody>'+rows.join('')+'</tbody></table></div>'
+        +'<p class="copy" style="margin-top:10px;font-size:.78rem">API snapshot\'ında <b>'+Object.keys(s.features).length+'</b> geçerli alan var. Burada yalnızca anlaşılır olanlar özetleniyor; hiçbir eksik alan tarayıcı tarafından doldurulmuyor.</p>'
+        +'<div class="chips" style="margin-top:12px"><button class="subtab" id="v1demoRun" style="border:1px solid var(--border);border-radius:8px">BU ÖRNEĞİ TAHMİN ET</button></div>'
+        +'<div id="v1demoOut" style="margin-top:12px"></div>';
+      document.getElementById("v1demoRun").addEventListener("click",v1RunDemo);
+    }).catch(function(e){
+      if(attempt++<2){document.getElementById("v1demoPrev").innerHTML='<p class="copy"><span class="dot"></span> Model servisi uyanıyor… (deneme '+(attempt+1)+'/3)</p>';setTimeout(load,4000);return;}
+      document.getElementById("v1demoPrev").innerHTML='<div class="empty">Örnek motor yüklenemedi — '+esc(String(e))+'. Sahte örnek veya tahmin gösterilmez.</div>';
+    });
+  })();
+}
+function v1RunDemo(){
+  var s=window.__V1_SAMPLE__,api=(window.__V2_API__||"").replace(/\/$/,"");
+  var out=document.getElementById("v1demoOut");if(!s||!out)return;
+  out.innerHTML='<p class="copy"><span class="dot"></span> Gerçek V1 modeli tahmin yapıyor…</p>';
+  var attempt=0,payload={features:s.features,snapshot_date:s.snapshot_date,strict:true};
+  (function run(){
+    v1Json(api+"/api/v1/predict",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(payload)})
+      .then(function(d){
+        if(!d.prediction||d.prediction.next_service_days==null||d.prediction.next_service_km==null)
+          throw new Error("V1 sonucu eksik döndü");
+        out.innerHTML=v1ResultCard(d,s);
+      }).catch(function(e){
+        if(attempt++<2){out.innerHTML='<p class="copy"><span class="dot"></span> Model servisi uyanıyor, tekrar deneniyor… (deneme '+(attempt+1)+'/3)</p>';setTimeout(run,4000);return;}
+        out.innerHTML='<div class="empty">API\'ye ulaşılamadı — '+esc(String(e))+'. Sahte tahmin üretilmez.</div>';
+      });
+  })();
+}
+function v1ResultCard(d,s){
+  var p=d.prediction||{},der=d.derived||{},te=d.typical_model_error||{};
+  var g=finding("warn","ÖRNEK MOTOR DEMOSU",
+    "<p>Bu sonuç <b>hazır anonim örnek motosiklete</b> aittir; senin motoruna ait değildir. Değerler public Render API'deki gerçek frozen V1 modellerinden canlı hesaplandı.</p>");
+  g+='<div class="grid g2" style="margin-top:12px">'
+    +kpi("TAHMİNİ SONRAKİ SERVİS","~"+n0(p.next_service_days)+' <small>GÜN SONRA</small>',"Kaç gün sonra?","cyan")
+    +kpi("TAHMİNİ KALAN MESAFE","~"+n0(p.next_service_km)+' <small>KM SONRA</small>',"Kaç kilometre sonra?")+'</div>';
+  if(der.estimated_service_date||der.estimated_service_odometer_km!=null){
+    g+='<div class="grid g2" style="margin-top:12px">'
+      +(der.estimated_service_date?kpi("TAHMİNİ SERVİS TARİHİ",esc(der.estimated_service_date),"snapshot tarihi + tahmini gün · türetilmiş","plain"):'')
+      +(der.estimated_service_odometer_km!=null?kpi("TAHMİNİ SERVİS KİLOMETRESİ",n0(der.estimated_service_odometer_km)+' <small>km</small>',"mevcut km + tahmini kalan km · türetilmiş","plain"):'')
+      +'</div>';
+  }
+  g+=finding("","Bu sonuç nasıl okunmalı?",
+    '<p>Bu değerler kesin tarih veya kilometre değildir; modelin yaklaşık nokta tahminidir. Örneğin <b>~'+n0(p.next_service_days)
+    +' gün</b>, motorun tam o günde kesin servise geleceği anlamına gelmez.</p>');
+  if(te.days_mae!=null||te.km_mae!=null){
+    g+='<div class="grid g2" style="margin-top:12px">'
+      +(te.days_mae!=null?kpi("DAYS · TEST MAE","~"+n1(te.days_mae)+' <small>gün</small>',"Testteki ortalama hata; güven yüzdesi değildir.","plain"):'')
+      +(te.km_mae!=null?kpi("KM · TEST MAE","~"+n0(te.km_mae)+' <small>km</small>',"Testteki ortalama hata; güven yüzdesi değildir.","plain"):'')
+      +'</div>';
+  }
+  g+=finding("warn","Doğrulama durumu","<p><b>SENTETİK VERİDE DOĞRULANDI.</b> GERÇEK RIDEBASE FİLO TESTİ BEKLENİYOR.</p>");
+  g+='<div class="chips" style="margin-top:12px"><button class="subtab" data-go="v2/predict" style="border:1px solid var(--border);border-radius:8px">Zamana göre olasılıkları gör: V2 Survival → Canlı Tahmin</button></div>';
+  return g;
+}
+function v1ModeOwn(){
+  var box=document.getElementById("v1modeBox");if(!box)return;
+  var contract=((((M||{}).v1||{}).live_prediction||{}).api)||{};
+  box.innerHTML=finding("warn","GERÇEK MOTOR GİRDİ HATTI BEKLENİYOR",
+    "<p>Gerçek motosiklet için kişisel tahmin, servis geçmişinden feature türetme hattı bağlandıktan sonra aktif olacak.</p>")
+    +card("Neden şimdi tahmin yapmıyor?","eksik alanlar sessizce doldurulmaz",
+      '<p class="copy">V1 DAYS modeli <b>'+esc(contract.feature_count_days||"100+")+'</b>, KM modeli <b>'+esc(contract.feature_count_km||"100+")+'</b> bilgi kullanır. API\'nin basit alan kataloğu tek başına güvenli kişisel tahmin için yeterli değildir. '
+      +'Backend eksik değerleri teknik olarak impute edebilse de, bunu kişisel tahmin gibi sunmak yanıltıcı olur. Bu mod bu nedenle hiçbir inference isteği göndermez.</p>')
+    +finding("","Gerçek RideBase verisi bağlandığında",
+      "<p>Kullanıcı yalnızca <code>motorcycle_id</code> seçer → backend motosiklet ve servis geçmişini çeker → modelin ihtiyaç duyduğu bilgiler deterministik olarak türetilir → V1 DAYS/KM sonucu döner. Kullanıcı 100+ ML alanını elle girmez.</p>")
+    +'<div class="chips" style="margin-top:12px"><span class="chip warn">DEMO READY</span><span class="chip">PERSONAL REAL-MOTOR INPUT: PENDING REAL FEATURE PIPELINE</span></div>';
+}
+function wireV1Predict(){
+  v1ApiPing(0);
+  var demo=document.getElementById("v1mDemo"),own=document.getElementById("v1mOwn");
+  function sel(mode){
+    if(demo)demo.classList.toggle("active",mode==="demo");
+    if(own)own.classList.toggle("active",mode==="own");
+    (mode==="demo"?v1ModeDemo:v1ModeOwn)();
+  }
+  if(demo)demo.addEventListener("click",function(){sel("demo");});
+  if(own)own.addEventListener("click",function(){sel("own");});
+  sel("demo");
 }
 function v1Verdict(){
   var v1=M.v1||{}, vd=v1.verdict||{}, qa=v1.qa||[];

@@ -197,6 +197,15 @@ def v1_block():
     report_md = (REPORTS / "v1_final_hyperparameter_tuning_report.md")
     md = report_md.read_text() if report_md.exists() else None
     ext_card = read_json(MODELS / "v1_ext_maintenance_model_card.json") or {}
+    feature_ablation = read_csv("v1_final_tuning_feature_ablation")
+
+    def frozen_feature_count(target: str):
+        selected_set = (frozen.get(target) or {}).get("feature_set")
+        row = next((r for r in feature_ablation
+                    if (r.get("target") or "").upper() == target
+                    and r.get("feature_set") == selected_set), None)
+        value = num((row or {}).get("n_cols"))
+        return int(value) if value is not None else None
 
     # evolution table — only authoritative sources
     evo = []
@@ -258,14 +267,20 @@ def v1_block():
                      "datasında bu bilgi yeniden değerli olabilir."),
         },
         "live_prediction": {
-            "in_artifact": False,
-            "reason": ("Canlı inference joblib modelleri gerektirir; Claude artifact ortamı bunu çalıştıramaz. "
-                       "Gerçek tahmin, repository'deki dağıtılabilir FastAPI backend'inde çalışır."),
+            "in_artifact": True,
+            "route": "#v1/predict",
+            "mode": "DEMO_READY_PERSONAL_PIPELINE_PENDING",
+            "reason": ("Vercel Control Center public FastAPI backend'indeki frozen V1 modellerini çağırır. "
+                       "Demo gerçek model çıktısıdır; kişisel gerçek-motor girdisi servis geçmişinden "
+                       "deterministik feature türetme hattı bağlanana kadar kapalıdır."),
             "api": {
                 "repo": "ridebase-v1-dashboard/backend",
                 "endpoint": "POST /api/v1/predict",
+                "sample": "GET /api/v1/sample",
                 "health": "GET /health",
                 "features": "GET /api/v1/features",
+                "feature_count_days": frozen_feature_count("DAYS"),
+                "feature_count_km": frozen_feature_count("KM"),
                 "contract": "{ features: {<canonical snapshot cols>}, snapshot_date } -> "
                             "{ prediction:{next_service_days, next_service_km}, derived:{estimated_service_date, "
                             "estimated_service_odometer_km}, typical_model_error, warning }",
@@ -449,6 +464,11 @@ def changelog():
       "(?v2api= / RIDEBASE_V2_API) hazır. Gerçek public deployment BLOCKED_BY_PROVIDER_AUTH — provider hesabı "
       "gerekiyor; sahte online API gösterilmiyor.",
       "REVIEW", "v1.3", "ridebase-v1-dashboard/render.yaml", dt.date.today().isoformat())
+    e("V1", "UI", "Dedicated beginner-friendly V1 live prediction added",
+      "V1 Regression → Canlı Tahmin ekranı gerçek /api/v1/sample + /api/v1/predict akışını kullanır. "
+      "Demo sonucu gerçek frozen modelden gelir ve açıkça örnek motor olarak etiketlenir. Kişisel gerçek-motor "
+      "girdisi, servis geçmişinden deterministik feature türetme hattı bağlanana kadar tahmin üretmez.",
+      "PASS", "v1.3", "ridebase-control-center/template.html", dt.date.today().isoformat())
 
     entries = [x for x in entries if x["timestamp"]]
     entries.sort(key=lambda x: x["timestamp"])

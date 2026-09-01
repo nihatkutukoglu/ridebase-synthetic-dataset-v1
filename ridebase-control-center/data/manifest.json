@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-09-01T11:02:09",
+  "generated_at": "2026-09-01T11:53:33",
   "project": "RideBase ML",
   "current_dataset": "v1.3",
   "environment": "PILOT",
@@ -1809,13 +1809,18 @@
       "note": "v1.3 içindeki policy_interval_km gibi sentetik bakım politikası feature'ları zaten benzer sinyali taşıdığı için gerçek üretici takvimi ek bilgi sağlamadı. Gerçek production datasında bu bilgi yeniden değerli olabilir."
     },
     "live_prediction": {
-      "in_artifact": false,
-      "reason": "Canlı inference joblib modelleri gerektirir; Claude artifact ortamı bunu çalıştıramaz. Gerçek tahmin, repository'deki dağıtılabilir FastAPI backend'inde çalışır.",
+      "in_artifact": true,
+      "route": "#v1/predict",
+      "mode": "DEMO_READY_PERSONAL_PIPELINE_PENDING",
+      "reason": "Vercel Control Center public FastAPI backend'indeki frozen V1 modellerini çağırır. Demo gerçek model çıktısıdır; kişisel gerçek-motor girdisi servis geçmişinden deterministik feature türetme hattı bağlanana kadar kapalıdır.",
       "api": {
         "repo": "ridebase-v1-dashboard/backend",
         "endpoint": "POST /api/v1/predict",
+        "sample": "GET /api/v1/sample",
         "health": "GET /health",
         "features": "GET /api/v1/features",
+        "feature_count_days": 114,
+        "feature_count_km": 113,
         "contract": "{ features: {<canonical snapshot cols>}, snapshot_date } -> { prediction:{next_service_days, next_service_km}, derived:{estimated_service_date, estimated_service_odometer_km}, typical_model_error, warning }"
       }
     }
