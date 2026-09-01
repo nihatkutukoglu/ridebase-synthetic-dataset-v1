@@ -133,6 +133,19 @@ class V2ScenarioPredictionTests(unittest.TestCase):
         self.assertInBoth("Güncel kilometre</b>, V2’deki <code>initial_mileage_km</code> değildir")
         self.assertNotIn('initial_mileage_km","Mevcut kilometre', self.template)
 
+    def test_usage_fields_have_beginner_friendly_explanations(self):
+        for text in (
+            "Motosikletin göstergesinde yazan toplam kilometre.",
+            "Ayda 1.000 km ≈ yılda 12.000 km.",
+            "Günlük ulaşım (COMMUTER)",
+            "Kurye / teslimat (COURIER)",
+            "Hafta sonu / hobi (WEEKEND)",
+            "Az / seyrek (LOW)",
+            "Düzenli / orta (MEDIUM)",
+            "Sık / yoğun (HIGH)",
+        ):
+            self.assertInBoth(text)
+
     def test_no_fake_or_random_fallback(self):
         self.assertNotIn("fallbackPrediction", self.template)
         self.assertNotIn("Math.random()", self.template)

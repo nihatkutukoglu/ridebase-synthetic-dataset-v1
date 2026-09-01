@@ -1521,8 +1521,15 @@ function v2Predict(){
   return out;
 }
 function v2FieldOpts(key){var c=window.__V2_CAT__||{};return (c.options&&c.options[key])||[];}
+var V2_USAGE_LABELS={
+  COMMUTER:"Günlük ulaşım (COMMUTER)",COURIER:"Kurye / teslimat (COURIER)",
+  WEEKEND:"Hafta sonu / hobi (WEEKEND)",SEASONAL:"Mevsimsel kullanım (SEASONAL)",
+  TOURING:"Uzun yol / gezi (TOURING)",OFFROAD:"Arazi kullanımı (OFFROAD)",TRACK:"Pist kullanımı (TRACK)"
+};
+var V2_INTENSITY_LABELS={LOW:"Az / seyrek (LOW)",MEDIUM:"Düzenli / orta (MEDIUM)",HIGH:"Sık / yoğun (HIGH)"};
 function v2SelectStyle(){return 'width:100%;background:var(--panel-bg);border:1px solid var(--border);color:var(--text);border-radius:8px;padding:9px 10px;font:inherit';}
 function v2InputStyle(){return v2SelectStyle();}
+function v2Help(text){return '<small style="color:var(--muted);font-size:.7rem;line-height:1.45">'+esc(text)+'</small>';}
 function v2Options(items,placeholder,label){
   return '<option value="">'+esc(placeholder||"—")+'</option>'+items.map(function(item){
     var value=(typeof item==="object")?item.model_id:item;
@@ -1561,10 +1568,10 @@ function v2ModeScenario(){
     +label("v2year","Model yılı",'<input id="v2year" type="number" inputmode="numeric" placeholder="Model seç" disabled style="'+v2InputStyle()+'">')
     +'</div><p class="copy" id="v2yearNote" style="margin-top:8px"></p><div id="v2specCard" style="margin-top:12px"></div>';
   var use='<div class="grid g2">'
-    +label("v2odo","Güncel kilometre",'<input id="v2odo" type="number" min="0" max="2000000" inputmode="decimal" placeholder="örn. 12000" style="'+v2InputStyle()+'">')
-    +label("v2annual","Yıllık yaklaşık km",'<input id="v2annual" type="number" min="0" max="200000" inputmode="decimal" placeholder="örn. 10000" style="'+v2InputStyle()+'">')
-    +label("v2usage","Kullanım tipi",'<select id="v2usage" style="'+v2SelectStyle()+'">'+v2Options(usage,"Seçmek istemiyorum")+'</select>')
-    +label("v2intensity","Kullanım yoğunluğu",'<select id="v2intensity" style="'+v2SelectStyle()+'">'+v2Options(intensity,"Seçmek istemiyorum")+'</select>')
+    +label("v2odo","Güncel kilometre",'<input id="v2odo" type="number" min="0" max="2000000" inputmode="decimal" placeholder="örn. 12000" style="'+v2InputStyle()+'">'+v2Help("Motosikletin göstergesinde yazan toplam kilometre."))
+    +label("v2annual","Yıllık yaklaşık km",'<input id="v2annual" type="number" min="0" max="200000" inputmode="decimal" placeholder="örn. 10000" style="'+v2InputStyle()+'">'+v2Help("Bir yılda yaklaşık yaptığın toplam yol. Ayda 1.000 km ≈ yılda 12.000 km."))
+    +label("v2usage","Kullanım tipi",'<select id="v2usage" style="'+v2SelectStyle()+'">'+v2Options(usage,"Seçmek istemiyorum",function(o){return V2_USAGE_LABELS[o]||o;})+'</select>'+v2Help("Motosikleti en çok hangi amaçla kullandığını seç."))
+    +label("v2intensity","Kullanım yoğunluğu",'<select id="v2intensity" style="'+v2SelectStyle()+'">'+v2Options(intensity,"Seçmek istemiyorum",function(o){return V2_INTENSITY_LABELS[o]||o;})+'</select>'+v2Help("Ne kadar sık kullandığını seç: az, düzenli veya yoğun."))
     +'</div><p class="copy" style="margin-top:8px"><b>Güncel kilometre</b>, V2’deki <code>initial_mileage_km</code> değildir. O alan motosikletin sentetik <code>observation_start_date</code> tarihindeki kilometresidir. Güncel değer V1’e gider ve son servis km’siyle birlikte V2 için “son servisten beri km” türetir; başlangıç kilometresi bilinmediği için eksik bırakılır.</p>';
   var service='<div class="grid g2">'
     +label("v2lastdate","Son servis tarihi",'<input id="v2lastdate" type="date" style="'+v2InputStyle()+'">')
