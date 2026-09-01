@@ -10,7 +10,7 @@ import csv
 import datetime as dt
 import math
 from functools import lru_cache
-from typing import Any, Dict, Iterable, List, Tuple
+from typing import Any, Dict, Iterable, List, Optional, Tuple
 
 from .artifacts import DERIVED_FROM_DATE, get_store
 from .config import settings
@@ -24,6 +24,11 @@ MODEL_FEATURES = (
     "spark_plug_count", "fuel_type", "policy_group", "policy_ready",
     "spec_confidence",
 )
+
+_PRIMARY_MAINTENANCE_TASKS = {
+    "ICE": ("ENGINE_OIL_CHANGE", "GENERAL_SAFETY_INSPECTION"),
+    "EV": ("GENERAL_SAFETY_INSPECTION", "EV_TRACTION_BATTERY_HEALTH_CHECK"),
+}
 
 _NUMERIC_MODEL_FIELDS = {
     "engine_displacement_cc", "cylinder_count", "spark_plug_count",
@@ -101,8 +106,96 @@ def motorcycle_catalog() -> Tuple[Dict[str, Any], ...]:
     return rows
 
 
+@lru_cache(maxsize=1)
+def maintenance_policies() -> Tuple[Dict[str, str], ...]:
+    path = settings.MAINTENANCE_POLICY_PATH
+    if not path.exists():
+        raise RuntimeError(f"maintenance policy catalog not found: {path}")
+    with path.open(encoding="utf-8-sig", newline="") as handle:
+        rows = tuple(csv.DictReader(handle))
+    if not rows:
+        raise RuntimeError("maintenance policy catalog is empty")
+    return rows
+
+
+def _maintenance_policy_for_model(model: Dict[str, Any]) -> Optional[Dict[str, Any]]:
+    """Resolve one defensible primary service cadence for product-facing status.
+
+    Tiny chain-clean/lubrication cadences are intentionally not used as the primary
+    workshop-service interval. ICE models prefer engine-oil service; EV models and
+    fallbacks use the general safety inspection.
+    """
+    candidates = []
+    for row in maintenance_policies():
+        active = str(row.get("is_generator_active", "")).strip().lower()
+        if active not in {"1", "true", "yes"} or row.get("policy_kind") != "SCHEDULED":
+            continue
+        exact_model = _clean(row.get("model_id")) == model.get("model_id")
+        group_match = (not _clean(row.get("model_id"))
+                       and _clean(row.get("policy_group")) == model.get("policy_group"))
+        if not (exact_model or group_match):
+            continue
+        recurring_km = _number(row.get("recurring_km"))
+        recurring_months = _number(row.get("recurring_months"))
+        if recurring_km is None and recurring_months is None:
+            continue
+        candidates.append((row, exact_model, recurring_km, recurring_months))
+
+    task_priority = _PRIMARY_MAINTENANCE_TASKS.get(
+        str(model.get("powertrain_type")), ("GENERAL_SAFETY_INSPECTION",)
+    )
+    selected = None
+    for task in task_priority:
+        matches = [item for item in candidates if item[0].get("task_code") == task]
+        if matches:
+            selected = sorted(matches, key=lambda item: item[1], reverse=True)[0]
+            break
+    if selected is None:
+        workshop_candidates = [
+            item for item in candidates
+            if not any(token in str(item[0].get("task_code"))
+                       for token in ("CHAIN_CLEAN", "CHAIN_LUBRICATE", "CHAIN_INSPECTION"))
+        ]
+        if workshop_candidates:
+            selected = min(
+                workshop_candidates,
+                key=lambda item: float(item[2]) if item[2] is not None else float("inf"),
+            )
+    if selected is None:
+        return None
+
+    row, exact_model, recurring_km, recurring_months = selected
+    return {
+        "task_code": row.get("task_code"),
+        "interval_km": recurring_km,
+        "interval_months": recurring_months,
+        "interval_days": (round(float(recurring_months) * 30.4375, 2)
+                          if recurring_months is not None else None),
+        "trigger_mode": row.get("trigger_mode"),
+        "confidence": row.get("confidence"),
+        "source_authority": row.get("source_authority"),
+        "evidence_level": row.get("evidence_level"),
+        "manufacturer_exact": str(row.get("is_manufacturer_exact_interval", "")).strip().lower()
+        in {"1", "true", "yes"},
+        "policy_version": row.get("policy_version"),
+        "scope": "MODEL" if exact_model else "POLICY_GROUP",
+        "note": (
+            "Frozen manufacturer/model policy record; verify against the current owner manual."
+            if str(row.get("is_manufacturer_exact_interval", "")).strip().lower()
+            in {"1", "true", "yes"}
+            else "RideBase simulation policy prior; not a manufacturer-verified interval."
+        ),
+    }
+
+
+def _model_with_policy(model: Dict[str, Any]) -> Dict[str, Any]:
+    out = dict(model)
+    out["maintenance_policy"] = _maintenance_policy_for_model(out)
+    return out
+
+
 def catalog_response() -> Dict[str, Any]:
-    rows = list(motorcycle_catalog())
+    rows = [_model_with_policy(row) for row in motorcycle_catalog()]
     brands = sorted({str(row["brand"]) for row in rows})
     return {
         "source": "ridebase_v1_3/source_tables/ridebase_motorcycle_models_v1.csv",
@@ -127,7 +220,75 @@ def _selected_model(brand: str, model_id: str) -> Dict[str, Any]:
         raise ScenarioInputError(
             f"Invalid brand/model pair: {model_id} belongs to {model['brand']}, not {brand}"
         )
-    return dict(model)
+    return _model_with_policy(model)
+
+
+def _maintenance_assessment(req: V2ScenarioRequest, model: Dict[str, Any]) -> Dict[str, Any]:
+    policy = model.get("maintenance_policy")
+    result: Dict[str, Any] = {
+        "status": "UNKNOWN",
+        "label": "BAKIM DURUMU HESAPLANAMADI",
+        "policy": policy,
+        "km_since_service": None,
+        "days_since_service": None,
+        "progress_ratio": None,
+        "progress_pct": None,
+        "overdue_km": None,
+        "overdue_days": None,
+        "remaining_km": None,
+        "remaining_days": None,
+        "driving_metric": None,
+        "recent_annualized_km": None,
+        "annual_baseline_ratio": None,
+        "note": "Deterministic maintenance status; separate from V2 return-to-service probability.",
+    }
+    if policy is None:
+        return result
+
+    progress = []
+    km_since = None
+    if req.current_odometer_km is not None and req.last_service_odometer_km is not None:
+        km_since = float(req.current_odometer_km - req.last_service_odometer_km)
+        result["km_since_service"] = round(km_since, 2)
+        interval_km = policy.get("interval_km")
+        if interval_km:
+            km_ratio = km_since / float(interval_km)
+            progress.append(("KM", km_ratio))
+            result["overdue_km"] = round(max(0.0, km_since - float(interval_km)), 2)
+            result["remaining_km"] = round(max(0.0, float(interval_km) - km_since), 2)
+
+    days_since = None
+    if req.last_service_date is not None:
+        days_since = (req.snapshot_date - req.last_service_date).days
+        result["days_since_service"] = days_since
+        interval_days = policy.get("interval_days")
+        if interval_days:
+            day_ratio = days_since / float(interval_days)
+            progress.append(("DAYS", day_ratio))
+            result["overdue_days"] = round(max(0.0, days_since - float(interval_days)), 2)
+            result["remaining_days"] = round(max(0.0, float(interval_days) - days_since), 2)
+
+    if progress:
+        metric, ratio = max(progress, key=lambda item: item[1])
+        result["driving_metric"] = metric
+        result["progress_ratio"] = round(ratio, 4)
+        result["progress_pct"] = round(ratio * 100.0, 1)
+        if ratio >= 1.0:
+            result["status"] = "OVERDUE"
+            result["label"] = "BAKIM GECİKMİŞ"
+        elif ratio >= 0.8:
+            result["status"] = "DUE_SOON"
+            result["label"] = "BAKIM YAKLAŞIYOR"
+        else:
+            result["status"] = "NOT_DUE"
+            result["label"] = "BAKIM PERİYODU İÇİNDE"
+
+    if days_since and days_since >= 30 and km_since is not None and km_since >= 500:
+        annualized = km_since * 365.0 / days_since
+        result["recent_annualized_km"] = round(annualized, 1)
+        if req.annual_km_baseline and req.annual_km_baseline > 0:
+            result["annual_baseline_ratio"] = round(annualized / req.annual_km_baseline, 3)
+    return result
 
 
 def _set(features: Dict[str, Any], origins: Dict[str, Dict[str, str]], key: str,
@@ -232,6 +393,9 @@ def derive_scenario(req: V2ScenarioRequest, predictor: Any) -> Dict[str, Any]:
     for feature in MODEL_FEATURES:
         _set(features, origins, feature, model.get(feature), "MODEL_MASTER",
              f"Resolved from selected model {model['model_id']}.")
+    policy = model.get("maintenance_policy") or {}
+    _set(features, origins, "policy_interval_km", policy.get("interval_km"), "MODEL_MASTER",
+         f"Primary {policy.get('task_code')} cadence resolved from the selected model's policy group.")
 
     _set(features, origins, "production_year", req.production_year, "USER_INPUT", "Selected model year.")
     _set(features, origins, "usage_type", req.usage_type, "USER_INPUT", "Usage type entered by user.")
@@ -260,10 +424,31 @@ def derive_scenario(req: V2ScenarioRequest, predictor: Any) -> Dict[str, Any]:
         km = req.current_odometer_km - req.last_service_odometer_km
         _set(features, origins, "km_since_previous_service", km, "DERIVED",
              "current_odometer_km minus last_service_odometer_km.")
+        if policy.get("interval_km"):
+            overdue_km = max(0.0, km - float(policy["interval_km"]))
+            _set(features, origins, "maintenance_overdue_km_pre_service", overdue_km, "DERIVED",
+                 "max(0, km_since_previous_service minus primary policy_interval_km).")
         if req.last_service_date is not None and (req.snapshot_date - req.last_service_date).days > 0:
             per_day = km / (req.snapshot_date - req.last_service_date).days
             _set(features, origins, "avg_km_per_day_since_previous_service", per_day, "DERIVED",
                  "km_since_previous_service divided by days_since_previous_service.")
+
+    if req.last_service_date is not None and policy.get("interval_days"):
+        overdue_days = max(
+            0.0,
+            (req.snapshot_date - req.last_service_date).days - float(policy["interval_days"]),
+        )
+        _set(features, origins, "maintenance_overdue_days_pre_service", overdue_days, "DERIVED",
+             "max(0, days_since_previous_service minus primary policy interval days).")
+
+    maintenance = _maintenance_assessment(req, model)
+    baseline_ratio = maintenance.get("annual_baseline_ratio")
+    if baseline_ratio is not None and (baseline_ratio >= 2.0 or baseline_ratio <= 0.5):
+        warnings.append(
+            "Son servis sonrası tempo yıllık km girdisiyle belirgin biçimde çelişiyor: "
+            f"son dönem yıllıklandırılmış ~{maintenance['recent_annualized_km']:.0f} km, "
+            f"girilen yıllık {req.annual_km_baseline:.0f} km. V2 bu iki sinyali birlikte kullanır."
+        )
 
     coverage, provenance = _coverage(predictor.feature_cols, origins)
     return {
@@ -272,6 +457,7 @@ def derive_scenario(req: V2ScenarioRequest, predictor: Any) -> Dict[str, Any]:
         "origins": origins,
         "coverage": coverage,
         "provenance": provenance,
+        "maintenance": maintenance,
         "warnings": warnings,
     }
 
@@ -306,6 +492,7 @@ def predict_scenario(req: V2ScenarioRequest, predictor: Any) -> Dict[str, Any]:
             "risk_30d", "risk_60d", "risk_90d", "risk_120d",
             "median_service_days", "risk_group_90d", "estimated_median_service_date",
         ) if key in pred},
+        "maintenance": built["maintenance"],
         "coverage": built["coverage"],
         "provenance": built["provenance"],
         "warnings": warnings,

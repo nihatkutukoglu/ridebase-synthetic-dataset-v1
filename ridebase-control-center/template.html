@@ -1552,8 +1552,14 @@ function v2SpecCard(model){
     ["Soğutma",model.cooling_type],["Şanzıman",model.transmission_type],
     ["Son aktarma",model.final_drive_type],["Yakıt",model.fuel_type]
   ];
+  var policy=model.maintenance_policy||null;
+  if(policy){
+    specs.push(["Ana bakım periyodu",policy.interval_km!=null?n0(policy.interval_km)+" km":"—"]);
+    specs.push(["Bakım referansı",policy.task_code||"—"]);
+  }
   el.innerHTML='<div class="twrap"><table class="tbl"><tbody>'+specs.map(function(x){return '<tr><td class="k">'+esc(x[0])+'</td><td>'+esc(x[1]==null?'—':x[1])+'</td></tr>';}).join('')+'</tbody></table></div>'
     +'<p class="copy" style="margin-top:10px">Bu değerler kullanıcıdan istenmez; seçilen <code>'+esc(model.model_id)+'</code> katalog kaydından gelir. '
+    +(policy?'Ana bakım periyodu RideBase bakım-politikası kaydından alınır ve bakım durumunu deterministik hesaplamak için kullanılır. ':'')
     +(model.year_range_confidence==="LOW"?'<b>Model yılı aralığının katalog doğruluğu sınırlıdır.</b>':'')+'</p>';
 }
 function v2ModeScenario(){
@@ -1576,7 +1582,7 @@ function v2ModeScenario(){
   var service='<div class="grid g2">'
     +label("v2lastdate","Son servis tarihi",'<input id="v2lastdate" type="date" style="'+v2InputStyle()+'">')
     +label("v2lastodo","Son servis kilometresi",'<input id="v2lastodo" type="number" min="0" max="2000000" inputmode="decimal" placeholder="örn. 9000" style="'+v2InputStyle()+'">')
-    +'</div><p class="copy" style="margin-top:8px">Bu iki doğal bilgi girilirse gün/km farkları backend’de deterministik hesaplanır. Tarihsel servis sayıları, arızalar, harcama ve parça geçmişi uydurulmaz.</p>';
+    +'</div><p class="copy" style="margin-top:8px">Bu iki doğal bilgi girilirse gün/km farkları backend’de deterministik hesaplanır. Son servisten beri kilometre, seçilen motorun ana bakım periyoduyla karşılaştırılır; bakım gecikmişse ML yüzdelerinden ayrı ve açık biçimde gösterilir. Tarihsel servis sayıları, arızalar, harcama ve parça geçmişi uydurulmaz.</p>';
   box.innerHTML=finding("warn","KISMİ BİLGİYLE SENARYO TAHMİNİ",
     "<p>Bu mod örnek bir motorun gizli değerlerini kullanmaz. Bildiğin bilgiler, model kataloğu ve açık türetmeler kullanılır; kalan alanlar frozen eğitim pipeline’ının kayıtlı eksik-değer işlemesine bırakılır. <b>Bu tam kişisel tahmin değildir.</b></p>")
     +card("1 · Motosikletini seç",window.__V2_MODELS__.model_count+" gerçek katalog modeli",bike)
@@ -1628,6 +1634,26 @@ function v2CoverageCard(c,p){
     +'<p class="copy" style="margin-top:10px">Hizmet geçmişi bağlı olmadığı için <b>'+c.history_features_missing+'</b> geçmiş-temelli özellik bilinmiyor. <b>Bu oran modelin güven skoru değildir;</b> modele ne kadar bilgi sağlandığını gösterir.</p>'
     +'<details style="margin-top:12px"><summary style="cursor:pointer;color:var(--text-2)">Teknik feature provenance tablosu ('+c.total+')</summary><div class="twrap" style="margin-top:8px;max-height:360px;overflow:auto"><table class="tbl"><thead><tr><th>Feature</th><th>Kaynak</th><th>Açıklama</th></tr></thead><tbody>'+prov+'</tbody></table></div></details>');
 }
+function v2MaintenanceCard(m){
+  if(!m||m.status==="UNKNOWN"){
+    return finding("warn","DETERMİNİSTİK BAKIM DURUMU · HESAPLANAMADI","<p>Ana bakım periyodu ile son servis kilometresi birlikte bulunmadığı için deterministik bakım kararı verilemedi.</p>");
+  }
+  var policy=m.policy||{},kind=m.status==="OVERDUE"?"bad":m.status==="DUE_SOON"?"warn":"good";
+  var delta=m.status==="OVERDUE"
+    ?(m.driving_metric==="KM"?n0(m.overdue_km)+" km gecikmiş":n0(m.overdue_days)+" gün gecikmiş")
+    :(m.driving_metric==="KM"?n0(m.remaining_km)+" km kaldı":n0(m.remaining_days)+" gün kaldı");
+  var since=(m.km_since_service!=null?n0(m.km_since_service)+" km":"—")
+    +(m.days_since_service!=null?" · "+n0(m.days_since_service)+" gün":"");
+  var recent=m.recent_annualized_km!=null
+    ?'<p class="copy" style="margin-top:10px">Son servis sonrası kullanım temposu yıllıklandırıldığında yaklaşık <b>'+n0(m.recent_annualized_km)+' km/yıl</b>.</p>':'';
+  return finding(kind,"DETERMİNİSTİK BAKIM DURUMU · "+m.label,
+      '<p><b>Bu deterministik bakım kararıdır.</b> Aşağıdaki V2 yüzdeleri müşterinin servise dönme olasılığıdır; bakım gereksiniminin yerine geçmez.</p>')
+    +'<div class="grid g4" style="margin-top:10px">'
+    +kpi("BAKIM İLERLEMESİ",n1(m.progress_pct)+"%","kilometre ve zaman periyotlarından yüksek olan","cyan")
+    +kpi(m.status==="OVERDUE"?"GECİKME":"KALAN",delta,"belirleyici ölçüt: "+m.driving_metric,"plain")
+    +kpi("ANA PERİYOT",policy.interval_km!=null?n0(policy.interval_km)+" km":"—",policy.task_code||"bakım politikası","plain")
+    +kpi("SON SERVİSTEN BERİ",since,"doğrudan kullanıcı girdilerinden","plain")+'</div>'+recent;
+}
 function v2RunScenario(){
   var api=(window.__V2_API__||"").replace(/\/$/,"");
   var errBox=document.getElementById("v2scenarioErr"),out=document.getElementById("v2scenarioOut"),p=v2ScenarioPayload(),errs=v2ValidateScenario(p);
@@ -1639,9 +1665,10 @@ function v2RunScenario(){
     v2fetch(api+"/api/v2/predict/scenario",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(p)}).then(function(r){return r.json().then(function(d){if(!r.ok)throw new Error(d.detail||("HTTP "+r.status));return d;});}).then(function(d){
       if(!d.v2||d.v2.risk_90d==null){out.innerHTML='<div class="empty">Model sonucu boş döndü.</div>';return;}
       var warnings=(d.warnings||[]).length?finding("warn","Girdi / OOD uyarıları","<ul style=\"margin:0;padding-left:18px\">"+d.warnings.map(function(w){return '<li>'+esc(w)+'</li>';}).join('')+'</ul>'):'';
-      out.innerHTML=v2ResultCard(d.v1,d.v2,d.warning,"KISMİ BİLGİYLE SENARYO TAHMİNİ",
+      out.innerHTML=v2MaintenanceCard(d.maintenance)
+        +'<div class="sec">'+v2ResultCard(d.v1,d.v2,d.warning,"KISMİ BİLGİYLE SENARYO TAHMİNİ",
         "Modelin bazı özellikleri bilinmediği için bu sonuç tam kişisel tahmin değildir. Başka bir örnek motosikletten hiçbir gizli alan alınmadı.")
-        +'<div class="sec">'+v2CoverageCard(d.coverage,d.provenance)+'</div>'+warnings;
+        +'</div><div class="sec">'+v2CoverageCard(d.coverage,d.provenance)+'</div>'+warnings;
     }).catch(function(e){
       if(attempt++<1){out.innerHTML='<p class="copy"><span class="dot"></span> Servis uyanıyor, tekrar deneniyor…</p>';setTimeout(run,4000);return;}
       out.innerHTML='<div class="empty">API\'ye ulaşılamadı — '+esc(String(e))+'. Sahte tahmin üretilmez.</div>';

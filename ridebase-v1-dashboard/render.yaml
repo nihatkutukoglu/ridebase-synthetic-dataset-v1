@@ -31,6 +31,8 @@ services:
         value: /artifacts/dataset
       - key: MODEL_CATALOG_PATH
         value: /app/app/data/ridebase_motorcycle_models_v1.csv
+      - key: MAINTENANCE_POLICY_PATH
+        value: /app/app/data/maintenance_policies.csv
       - key: ALLOWED_ORIGINS
         # production frontend (Vercel) + Claude Artifact preview
         value: https://ridebase-ml-control-center.vercel.app,https://claude.ai,https://preview.claude.ai

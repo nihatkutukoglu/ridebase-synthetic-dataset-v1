@@ -12,7 +12,8 @@ ENV PYTHONUNBUFFERED=1 \
     REPORTS_DIR=/artifacts/reports \
     OUTPUTS_DIR=/artifacts/outputs \
     DATASET_DIR=/artifacts/dataset \
-    MODEL_CATALOG_PATH=/app/app/data/ridebase_motorcycle_models_v1.csv
+    MODEL_CATALOG_PATH=/app/app/data/ridebase_motorcycle_models_v1.csv \
+    MAINTENANCE_POLICY_PATH=/app/app/data/maintenance_policies.csv
 
 WORKDIR /app
 
@@ -29,6 +30,7 @@ RUN echo "/opt/ridebase_ml" > "$(python -c 'import site;print(site.getsitepackag
 COPY ridebase-v1-dashboard/backend/app ./app
 RUN mkdir -p /app/app/data
 COPY ridebase_v1_3/source_tables/ridebase_motorcycle_models_v1.csv /app/app/data/ridebase_motorcycle_models_v1.csv
+COPY ridebase_v1_3/source_tables/maintenance_policies.csv /app/app/data/maintenance_policies.csv
 # curated ~50 MB artifact subset; comment out if mounting a volume at /artifacts
 COPY ridebase-v1-dashboard/backend/artifacts /artifacts
 

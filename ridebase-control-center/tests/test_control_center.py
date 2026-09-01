@@ -129,6 +129,17 @@ class V2ScenarioPredictionTests(unittest.TestCase):
         ):
             self.assertInBoth(text)
 
+    def test_deterministic_maintenance_status_is_separate_and_prominent(self):
+        for text in (
+            "function v2MaintenanceCard",
+            "DETERMİNİSTİK BAKIM DURUMU",
+            "BAKIM İLERLEMESİ",
+            "Ana bakım periyodu",
+            "bakım gereksiniminin yerine geçmez",
+            "d.maintenance",
+        ):
+            self.assertInBoth(text)
+
     def test_current_odometer_is_not_initial_mileage(self):
         self.assertInBoth("Güncel kilometre</b>, V2’deki <code>initial_mileage_km</code> değildir")
         self.assertNotIn('initial_mileage_km","Mevcut kilometre', self.template)

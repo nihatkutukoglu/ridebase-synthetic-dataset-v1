@@ -35,6 +35,10 @@ class Settings:
         "MODEL_CATALOG_PATH",
         _REPO_ROOT / "ridebase_v1_3" / "source_tables" / "ridebase_motorcycle_models_v1.csv",
     )
+    MAINTENANCE_POLICY_PATH: Path = _path(
+        "MAINTENANCE_POLICY_PATH",
+        _REPO_ROOT / "ridebase_v1_3" / "source_tables" / "maintenance_policies.csv",
+    )
 
     ALLOWED_ORIGINS: list[str] = [
         o.strip()

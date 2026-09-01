@@ -46,6 +46,8 @@ def test_model_master_specs_are_resolved_from_selected_model(client):
     assert nmax["category"] == "SCOOTER"
     assert nmax["powertrain_type"] == "ICE"
     assert nmax["final_drive_type"] == "V_BELT"
+    assert nmax["maintenance_policy"]["interval_km"] > 0
+    assert nmax["maintenance_policy"]["task_code"] == "ENGINE_OIL_CHANGE"
     em1 = next(model for model in models if model["model_id"] == "HONDA_EM1E")
     assert em1["powertrain_type"] == "EV"
     assert em1["fuel_type"] == "ELECTRIC"
@@ -73,9 +75,12 @@ def test_scenario_derivation_is_deterministic_and_has_full_provenance():
     assert first["features"]["days_since_previous_service"] == 90
     assert first["features"]["km_since_previous_service"] == 3_000
     assert first["features"]["avg_km_per_day_since_previous_service"] == 3_000 / 90
+    assert first["features"]["policy_interval_km"] > 0
+    assert first["features"]["maintenance_overdue_km_pre_service"] == 0
     assert first["features"]["brand"] == "Yamaha"
     assert first["origins"]["brand"]["source"] == "MODEL_MASTER"
     assert first["origins"]["production_year"]["source"] == "USER_INPUT"
+    assert first["maintenance"]["status"] == "NOT_DUE"
 
 
 def test_scenario_never_uses_sample_snapshot(client, monkeypatch):
@@ -131,6 +136,49 @@ def test_scenario_probability_contract_and_coverage(client):
     assert risks == sorted(risks)
     assert body["coverage"]["known_or_derived"] < body["coverage"]["total"] == 117
     assert body["coverage"]["verdict"] == "LIMITED_INFORMATION"
+
+
+def test_overdue_mileage_is_a_strong_separate_maintenance_signal(client):
+    response = client.post(
+        "/api/v2/predict/scenario",
+        json=_payload(
+            brand="Bajaj",
+            model_id="BAJAJ_NS200",
+            current_odometer_km=15_000,
+            last_service_odometer_km=9_000,
+        ),
+    )
+    assert response.status_code == 200
+    body = response.json()
+    maintenance = body["maintenance"]
+    assert maintenance["policy"]["interval_km"] == 5_000
+    assert maintenance["km_since_service"] == 6_000
+    assert maintenance["progress_ratio"] == 1.2
+    assert maintenance["overdue_km"] == 1_000
+    assert maintenance["status"] == "OVERDUE"
+    assert maintenance["label"] == "BAKIM GECİKMİŞ"
+    provenance = {row["feature"]: row for row in body["provenance"]}
+    assert provenance["policy_interval_km"]["source"] == "MODEL_MASTER"
+    assert provenance["maintenance_overdue_km_pre_service"]["source"] == "DERIVED"
+
+
+def test_recent_annualized_mileage_conflict_is_reported(client):
+    today = dt.date.today()
+    response = client.post(
+        "/api/v2/predict/scenario",
+        json=_payload(
+            snapshot_date=today.isoformat(),
+            last_service_date=(today - dt.timedelta(days=60)).isoformat(),
+            current_odometer_km=15_000,
+            last_service_odometer_km=9_000,
+            annual_km_baseline=10_000,
+        ),
+    )
+    assert response.status_code == 200
+    body = response.json()
+    assert body["maintenance"]["recent_annualized_km"] == 36_500
+    assert body["maintenance"]["annual_baseline_ratio"] == 3.65
+    assert any("yıllık km girdisiyle" in warning for warning in body["warnings"])
 
 
 def test_low_confidence_model_year_mapping_warns_but_does_not_rewrite(client):

@@ -25,6 +25,7 @@ The container needs the notebook artifacts at:
 /artifacts/outputs     ← ridebase-ml/outputs
 /artifacts/dataset     ← ridebase_v1_3/derived_outputs   (only for the input-feature catalog)
 /app/app/data/ridebase_motorcycle_models_v1.csv ← authoritative scenario model catalog
+/app/app/data/maintenance_policies.csv ← frozen policy catalog for deterministic maintenance status
 ```
 
 **V2 also needs the `ridebase_ml` inference package importable.** Either:
@@ -59,6 +60,7 @@ Pick one:
 | `ALLOWED_ORIGINS` | `https://<your-frontend-domain>` (comma-separated, no trailing slash) |
 | `MODEL_DIR` / `REPORTS_DIR` / `OUTPUTS_DIR` / `DATASET_DIR` | `/artifacts/models` … (image defaults already set) |
 | `MODEL_CATALOG_PATH` | `/app/app/data/ridebase_motorcycle_models_v1.csv` (`Dockerfile.prod` copies it from v1.3 source tables) |
+| `MAINTENANCE_POLICY_PATH` | `/app/app/data/maintenance_policies.csv` (`Dockerfile.prod` copies it from v1.3 source tables) |
 | `MAX_REQUEST_BYTES` | `1000000` (raise only if you use `/predict/batch` heavily) |
 
 ### Render — one-file blueprint (recommended)

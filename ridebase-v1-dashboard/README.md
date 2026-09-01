@@ -112,6 +112,7 @@ or `make dev` from `ridebase-v1-dashboard/`.
 | `APP_ENV` | `development` | |
 | `MODEL_DIR` / `REPORTS_DIR` / `OUTPUTS_DIR` / `DATASET_DIR` | repo-relative `ridebase-ml/*` | artifact locations |
 | `MODEL_CATALOG_PATH` | `ridebase_v1_3/source_tables/ridebase_motorcycle_models_v1.csv` | authoritative read-only motorcycle model inventory |
+| `MAINTENANCE_POLICY_PATH` | `ridebase_v1_3/source_tables/maintenance_policies.csv` | frozen policy catalog used for deterministic maintenance-due status |
 | `ALLOWED_ORIGINS` | `http://localhost:3000,http://127.0.0.1:3000` | CORS allow-list |
 | `MAX_REQUEST_BYTES` | `1000000` | request-size cap |
 | `SCATTER_SAMPLE` | `1500` | max scatter points returned |
@@ -154,8 +155,8 @@ The frozen FULL/FINAL V2 ensemble (`ENSEMBLE[XGBoost survival:cox + CoxNet]`, we
 | GET | `/api/v2/features` | fixed 117-feature contract + training stats/options (caller cannot set order; `split` is internal) |
 | GET | `/api/v2/metrics` | nb15/nb16 tables: horizon Brier/AUC/calibration, risk groups, grouped-bootstrap CIs, golden-parity flag |
 | GET | `/api/v2/sample` | prepared anonymised demo snapshot plus separate human-readable `display` metadata; demo mode only |
-| GET | `/api/v2/motorcycle-models` | read-only 12-brand / 39-model catalog derived from the authoritative v1.3 inventory |
-| POST | `/api/v2/predict/scenario` | natural brand/model/year/usage/service inputs → deterministic derivation → V1 + V2 partial-snapshot prediction + 117-field coverage/provenance |
+| GET | `/api/v2/motorcycle-models` | read-only 12-brand / 39-model catalog plus primary maintenance cadence from the authoritative v1.3 inventories |
+| POST | `/api/v2/predict/scenario` | natural inputs → deterministic maintenance-due status + V1/V2 partial-snapshot prediction + 117-field coverage/provenance |
 | POST | `/api/v2/predict` | `{features, snapshot_date?, strict?}` → `risk_30d/60d/90d/120d`, `median_service_days`, `risk_group_90d`, per-horizon calibration quality, `warning` |
 | POST | `/api/v2/predict/batch` | up to 2000 items |
 | POST | `/api/predict/service` | **V1 + V2 combined** — point days/km *and* probability-over-time for one snapshot |
@@ -177,6 +178,9 @@ pairs and impossible date/odometer relationships, and never reads `/api/v2/sampl
 Unspecified frozen features remain missing and are handled by the persisted train-time
 preprocessor. The response classifies every frozen raw feature as `USER_INPUT`,
 `MODEL_MASTER`, `DERIVED`, or `MISSING_PREPROCESSOR`; it does not fabricate history.
+The scenario also returns a separate deterministic `maintenance` decision. It compares
+distance/time since the last service with the selected model policy, and must not be
+interpreted as or blended into the calibrated V2 return-to-service probability.
 
 ### Guards
 
