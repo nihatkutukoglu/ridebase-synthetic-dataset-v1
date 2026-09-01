@@ -22,6 +22,15 @@ class V1LivePredictionTests(unittest.TestCase):
         self.assertInBoth("wireV1Predict()")
         self.assertInBoth("V1 — SONRAKİ SERVİS TAHMİNİ")
 
+    def test_live_prediction_is_first_and_default_for_v1_and_v2(self):
+        for source in (self.template, self.built):
+            self.assertIn('var sub=parts[1]||((route==="v1"||route==="v2")?"predict":null);', source)
+            self.assertIn('sub=sub||"predict";', source)
+            self.assertIn('var subs=[["predict","Canlı Tahmin"],["overview","Overview"]', source)
+            self.assertIn('var v2subs=[["predict","Canlı Tahmin"],["overview","Genel Bakış"]', source)
+            self.assertIn('var tabs=[["predict","Canlı Tahmin"],["overview","Overview"]', source)
+            self.assertIn('var tabs=[["predict","Canlı Tahmin"],["overview","Genel Bakış"]', source)
+
     def test_demo_uses_real_v1_contract(self):
         self.assertInBoth('/api/v1/sample')
         self.assertInBoth('/api/v1/predict')

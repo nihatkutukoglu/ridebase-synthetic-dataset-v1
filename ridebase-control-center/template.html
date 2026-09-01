@@ -460,7 +460,9 @@ var ROUTES = {
 function parseHash(){
   var h=(location.hash||"#overview").replace(/^#/,"");
   var parts=h.split("/");
-  return {route:ROUTES[parts[0]]?parts[0]:"overview",sub:parts[1]||null};
+  var route=ROUTES[parts[0]]?parts[0]:"overview";
+  var sub=parts[1]||((route==="v1"||route==="v2")?"predict":null);
+  return {route:route,sub:sub};
 }
 function go(hash){location.hash=hash;}
 function route(){
@@ -497,18 +499,18 @@ function buildSidebar(st){
      +navItem("v1","V1 Regression",{ic:sq()})
      +navItem("v2","V2 Survival",{ic:sq(),soon:!M.v2,disabled:false})
      +navItem("v3","V3 Next Task",{ic:sq(),soon:true,disabled:false})
-   +'</div>';
+  +'</div>';
   if(st.route==="v1"){
-    var subs=[["overview","Overview"],["days","DAYS"],["km","KM"],["models","Models"],["features","Features"],
-      ["errors","Errors"],["drift","Drift"],["experiments","Experiments"],["predict","Canlı Tahmin"],["verdict","Verdict"]];
+    var subs=[["predict","Canlı Tahmin"],["overview","Overview"],["days","DAYS"],["km","KM"],["models","Models"],
+      ["features","Features"],["errors","Errors"],["drift","Drift"],["experiments","Experiments"],["verdict","Verdict"]];
     html+='<div class="nav-group">'+subs.map(function(s){
       return navItem("v1",s[1],{sub:true,hash:"v1/"+s[0],subOf:"v1",subKey:s[0]==="overview"?null:s[0]});
     }).join('')+'</div>';
   }
   if(st.route==="v2" && M.v2){
-    var v2subs=[["overview","Genel Bakış"],["horizons","Zaman Aralıkları"],["calibration","Güvenilirlik"],["risk","Risk Grupları"],
+    var v2subs=[["predict","Canlı Tahmin"],["overview","Genel Bakış"],["horizons","Zaman Aralıkları"],["calibration","Güvenilirlik"],["risk","Risk Grupları"],
       ["models","Modeller"],["features","Modelin Baktığı Bilgiler"],["segments","Motor Grupları"],["packaging","Uygulamaya Bağlanma"],
-      ["predict","Canlı Tahmin"],["limitations","Sınırlamalar"]];
+      ["limitations","Sınırlamalar"]];
     html+='<div class="nav-group">'+v2subs.map(function(s){
       return navItem("v2",s[1],{sub:true,hash:"v2/"+s[0],subOf:"v2",subKey:s[0]==="overview"?null:s[0]});
     }).join('')+'</div>';
@@ -753,14 +755,14 @@ function renderV0(){
 
 /* ---------------- V1 ---------------- */
 function renderV1(sub){
-  sub=sub||"overview";
+  sub=sub||"predict";
   var v1=M.v1||{};
   var head=modHead("Module · Regression","V1 — Next-Service Regression",
     "Bir motosikletin bir sonraki servisine kalan gün ve kilometreyi tahmin eder. Notebook 06–12; final model Notebook 12'de dondurulmuştur.",
     '<span class="chip active"><span class="dot"></span>ACTIVE · FROZEN</span><span class="chip">DATASET v1.3</span><span class="chip warn"><span class="dot"></span>REAL FLEET: PENDING</span>',
     'config <code>models/v1_final_tuning_config.json</code>');
-  var tabs=[["overview","Overview"],["days","DAYS"],["km","KM"],["models","Models"],["features","Features"],
-    ["errors","Errors"],["drift","Drift"],["experiments","Experiments"],["predict","Canlı Tahmin"],["verdict","Verdict"]];
+  var tabs=[["predict","Canlı Tahmin"],["overview","Overview"],["days","DAYS"],["km","KM"],["models","Models"],
+    ["features","Features"],["errors","Errors"],["drift","Drift"],["experiments","Experiments"],["verdict","Verdict"]];
   var bar='<div class="subtabs">'+tabs.map(function(t){
     return '<button class="subtab'+(sub===t[0]?' active':'')+'" data-go="v1/'+t[0]+'">'+esc(t[1])+'</button>';
   }).join('')+'</div>';
@@ -1165,15 +1167,15 @@ function v2Head(){
     'config <code>models/v2_advanced_config.json</code> · report <code>reports/v2_survival_advanced_report.md</code>');
 }
 function v2Bar(sub){
-  var tabs=[["overview","Genel Bakış"],["horizons","Zaman Aralıkları"],["calibration","Güvenilirlik"],["risk","Risk Grupları"],
+  var tabs=[["predict","Canlı Tahmin"],["overview","Genel Bakış"],["horizons","Zaman Aralıkları"],["calibration","Güvenilirlik"],["risk","Risk Grupları"],
     ["models","Modeller"],["features","Modelin Baktığı Bilgiler"],["segments","Motor Grupları"],["packaging","Uygulamaya Bağlanma"],
-    ["predict","Canlı Tahmin"],["limitations","Sınırlamalar"]];
+    ["limitations","Sınırlamalar"]];
   return '<div class="subtabs">'+tabs.map(function(t){
     return '<button class="subtab'+(sub===t[0]?' active':'')+'" data-go="v2/'+t[0]+'" title="'+esc({overview:"Overview",horizons:"Prediction Horizons",calibration:"Calibration",risk:"Risk Groups",models:"Models",features:"Features",segments:"Segment Analysis",packaging:"Production Packaging",predict:"Live Prediction",limitations:"Limitations"}[t[0]]||"")+'">'+esc(t[1])+'</button>';
   }).join('')+'</div>';
 }
 function renderV2(sub){
-  sub=sub||"overview";
+  sub=sub||"predict";
   var body={overview:v2Overview,horizons:v2Horizons,calibration:v2Calibration,risk:v2Risk,models:v2Models,
     features:v2Features,segments:v2Segments,packaging:v2Packaging,predict:v2Predict,limitations:v2Limitations}[sub]||v2Overview;
   return v2Head()+v2Bar(sub)+body();
