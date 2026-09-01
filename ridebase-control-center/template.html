@@ -1341,23 +1341,172 @@ function v2fetch(url,opts){
   return fetch(url,opts).then(function(r){if(ctl)clearTimeout(to);return r;},
     function(e){if(ctl)clearTimeout(to);throw e;});
 }
+/* raw fields a pilot user can actually provide; the model needs all 117 — the rest
+   come from full service-history derivation (not connected yet). */
+var V2_FORM=[
+  ["MOTOSİKLET",[
+    ["brand","Marka","sel"],
+    ["production_year","Model yılı","num",2000,2027],
+    ["engine_displacement_cc","Motor hacmi (cc)","num",49,800],
+    ["initial_mileage_km","Mevcut kilometre","num",0,600000]]],
+  ["KULLANIM",[
+    ["riding_intensity","Kullanım yoğunluğu","sel"],
+    ["usage_type","Kullanım tipi","sel"],
+    ["customer_type","Müşteri tipi","sel"],
+    ["annual_km_baseline","Yıllık yaklaşık km","num",1000,60000]]],
+  ["SERVİS GEÇMİŞİ",[
+    ["days_since_previous_service","Son servisten bu yana (gün)","num",0,700],
+    ["km_since_previous_service","Son servisten bu yana (km)","num",0,25000],
+    ["previous_service_count","Önceki servis sayısı","num",0,60]]]
+];
+var V2_FORM_KEYS=V2_FORM.reduce(function(a,g){return a.concat(g[1].map(function(f){return f[0];}));},[]);
 function v2Predict(){
   var api=(window.__V2_API__||"").replace(/\/$/,"");
   var out=pageNote(
-    "Tek bir motor için canlı tahmin. <b>Örnek motor yükle & tahmin et</b>'e bas. Sonuçta ne göreceğin: "
-    +"<b>30 / 60 / 90 / 120 gün</b> — motorun o süre içinde <i>herhangi bir zamanda</i> servise gelme ihtimali; "
-    +"<b>90 günlük risk</b> — LOW / MEDIUM / HIGH; "
-    +"<b>medyan servis süresi</b> — modelin servis olasılığının %50'ye ulaştığı yaklaşık gün. "
-    +"Sonuçlar <b>gerçek model API'sinden</b> gelir ("+esc(api||"—")+"); erişilemezse sonuç gösterilmez — sahte tahmin yok.",
+    "Burada tek bir motosiklet için V1 ve V2 modellerini çalıştırabilirsin. "
+    +"<b>V1:</b> yaklaşık kaç gün / km sonra servis? <b>V2:</b> 30 / 60 / 90 / 120 gün içinde servise gelme ihtimali? "
+    +"İki mod var: <b>kendi bilgilerinle</b> ya da <b>hazır örnek motorla</b>. "
+    +"Sonuçlar <b>gerçek model API'sinden</b> canlı hesaplanır ("+esc(api||"—")+"); erişilemezse sonuç gösterilmez — sahte tahmin yok.",
     null,"Teknik adı: Live Prediction");
   out+='<div class="sec"><div id="v2apiStatus" class="chips"><span class="chip"><span class="dot"></span>Model servisine bağlanılıyor…</span></div>'
     +'<p class="copy" style="margin-top:8px;font-size:.8rem" id="v2coldNote" hidden>Render ücretsiz sunucusu uykudaysa ilk istek 50+ saniye sürebilir — beklemede kal.</p></div>';
-  out+='<div class="sec">'+card("Canlı tahmin — V1 + V2","POST /api/predict/service",
-    '<div id="v2pf"><div class="chips" style="margin:2px 0 12px">'
-      +'<button class="subtab" id="v2runSample">Örnek motor yükle & tahmin et</button></div>'
-      +'<div id="v2pfout"></div></div>')
-    +'</div>';
+  out+='<div class="sec"><div class="chips" style="margin-bottom:14px">'
+    +'<button class="subtab active" id="v2mOwn" style="border:1px solid var(--border);border-radius:8px">KENDİ MOTOSİKLETİMLE TAHMİN</button>'
+    +'<button class="subtab" id="v2mDemo" style="border:1px solid var(--border);border-radius:8px">ÖRNEK MOTORLA DEMO</button>'
+    +'</div><div id="v2modeBox"></div></div>';
   return out;
+}
+function v2FieldOpts(key){var c=window.__V2_CAT__||{};return (c.options&&c.options[key])||[];}
+function v2FieldStat(key){var c=window.__V2_CAT__||{};return (c.stats&&c.stats[key])||{};}
+function v2ModeOwn(){
+  var box=document.getElementById("v2modeBox"); if(!box)return;
+  var groups=V2_FORM.map(function(g){
+    return '<div style="margin-top:14px"><div class="eyebrow" style="font:700 .62rem/1.2 var(--sans);letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-bottom:8px">'+esc(g[0])+'</div>'
+      +'<div class="grid g2">'+g[1].map(function(f){
+        var k=f[0],lbl=f[1],st=v2FieldStat(k);
+        var inp;
+        if(f[2]==="sel"){var os=v2FieldOpts(k);
+          inp='<select data-k="'+k+'" style="width:100%;background:var(--panel-bg);border:1px solid var(--border);color:var(--text);border-radius:8px;padding:9px 10px;font:inherit"><option value="">—</option>'
+            +os.map(function(o){return '<option>'+esc(o)+'</option>';}).join('')+'</select>';
+        }else{
+          inp='<input data-k="'+k+'" type="number" inputmode="decimal" placeholder="'+(st.p50!=null?("~"+Math.round(st.p50)):"")+'"'
+            +(f[3]!=null?' min="'+f[3]+'"':'')+(f[4]!=null?' max="'+f[4]+'"':'')
+            +' style="width:100%;background:var(--panel-bg);border:1px solid var(--border);color:var(--text);border-radius:8px;padding:9px 10px;font:inherit">';
+        }
+        return '<label style="display:flex;flex-direction:column;gap:5px;font-size:.8rem;color:var(--text-2)">'+esc(lbl)+inp+'</label>';
+      }).join('')+'</div></div>';
+  }).join('');
+  box.innerHTML=finding("warn","Tam kişisel tahmin henüz mümkün değil",
+    "<p>V2 modeli <b>117 özellik</b> kullanır. Bunların yalnızca ~10'unu sen girebilirsin; kalan ~106'sı "
+    +"(kilometre/rota oranları, sürüş profili, mevsimsellik, atölye bilgileri ve <b>tüm servis geçmişinden türetilen</b> "
+    +"değerler) gerçek RideBase servis geçmişinden hesaplanır. <b>Bu veri hattı henüz bağlı değil.</b> "
+    +"Eksik alanları sessizce ortalamayla doldurmak yanıltıcı olur, o yüzden bunu yapmıyoruz — "
+    +"aşağıdaki sonuç <b>yaklaşık</b>tır ve girmediğin alanlar örnek bir motorun değerleridir.</p>")
+    +card("Bildiğin bilgileri gir","dropdownlar model feature kataloğundan",
+      groups
+      +'<div id="v2ownErr" class="finding bad" style="margin-top:12px;display:none"></div>'
+      +'<div class="chips" style="margin-top:14px"><button class="subtab" id="v2ownRun" style="border:1px solid var(--border);border-radius:8px">Girdiğim bilgilerle yaklaşık sonuç göster</button></div>'
+      +'<div id="v2ownOut" style="margin-top:12px"></div>')
+    +finding("","Gerçek RideBase verisi geldiğinde",
+      "<p><code>motorcycle_id</code> seçersin → backend servis geçmişini çeker → 117 özellik <b>otomatik türetilir</b> → V1/V2 çalışır. "
+      +"117 alanı asla elle girmezsin; bu ekranın mimarisi o akışa hazır.</p>");
+  var rb=document.getElementById("v2ownRun");
+  if(rb)rb.addEventListener("click",v2RunOwn);
+}
+function v2CollectOwn(){
+  var vals={},box=document.getElementById("v2modeBox");
+  box.querySelectorAll("[data-k]").forEach(function(el){
+    var v=el.value.trim(); if(v==="")return;
+    vals[el.getAttribute("data-k")]=(el.tagName==="SELECT")?v:Number(v);
+  });
+  return vals;
+}
+function v2ValidateOwn(v){
+  var e=[];
+  ["initial_mileage_km","km_since_previous_service","days_since_previous_service","annual_km_baseline","previous_service_count"].forEach(function(k){
+    if(v[k]!=null && v[k]<0)e.push(esc(k)+" negatif olamaz.");
+  });
+  if(v.production_year!=null && (v.production_year<1990||v.production_year>new Date().getFullYear()+1))
+    e.push("Model yılı mantıksız görünüyor.");
+  if(v.initial_mileage_km!=null && v.km_since_previous_service!=null && v.km_since_previous_service>v.initial_mileage_km)
+    e.push("Son servisten bu yana km, mevcut kilometreden büyük olamaz.");
+  if(v.engine_displacement_cc!=null && (v.engine_displacement_cc<25||v.engine_displacement_cc>1500))
+    e.push("Motor hacmi (cc) beklenen aralığın dışında.");
+  return e;
+}
+function v2RunOwn(){
+  var api=(window.__V2_API__||"").replace(/\/$/,"");
+  var errBox=document.getElementById("v2ownErr"), out=document.getElementById("v2ownOut");
+  var v=v2CollectOwn(), errs=v2ValidateOwn(v);
+  if(!Object.keys(v).length)errs.unshift("En az birkaç alan gir.");
+  if(errs.length){errBox.style.display="block";errBox.innerHTML='<div>'+errs.map(esc).join("<br>")+'</div>';return;}
+  errBox.style.display="none";
+  out.innerHTML='<p class="copy"><span class="dot"></span> Hesaplanıyor… (servis uykudaysa ilk istek 50+ sn sürebilir)</p>';
+  var attempt=0;
+  (function run(){
+    v2fetch(api+"/api/v2/sample").then(function(r){return r.json();}).then(function(s){
+      var feat=Object.assign({},s.features,v);          // user fields overlay the example base
+      return v2fetch(api+"/api/predict/service",{method:"POST",headers:{"Content-Type":"application/json"},
+        body:JSON.stringify({features:feat})}).then(function(r){return r.json();});
+    }).then(function(d){
+      var v2=d.v2||d.prediction||{}, v1=d.v1||null;
+      if(v2.risk_90d==null){out.innerHTML='<div class="empty">Model sonucu boş döndü — '+esc(d.detail||JSON.stringify(d).slice(0,140))+'</div>';return;}
+      out.innerHTML=v2ResultCard(v1,v2,d.warning,
+        "KISMİ SNAPSHOT — kişisel tahmin DEĞİLDİR",
+        "Girdiğin "+Object.keys(v).length+" alan kullanıldı; kalan ~"+(117-Object.keys(v).length)
+        +" teknik özellik <b>örnek bir motorun</b> değerleridir. Tam kişisel tahmin RideBase servis-geçmişi entegrasyonu gerektirir.");
+    }).catch(function(e){
+      if(attempt++<1){out.innerHTML='<p class="copy"><span class="dot"></span> Servis uyanıyor, tekrar deneniyor…</p>';setTimeout(run,4000);return;}
+      out.innerHTML='<div class="empty">API\'ye ulaşılamadı — '+esc(String(e))+'. Sahte tahmin üretilmez.</div>';
+    });
+  })();
+}
+var V2_HUMAN={brand:"Marka",production_year:"Model yılı",engine_displacement_cc:"Motor hacmi (cc)",
+  initial_mileage_km:"Kilometre",days_since_previous_service:"Son servisten (gün)",
+  km_since_previous_service:"Son servisten (km)",annual_km_baseline:"Yıllık km",
+  riding_intensity:"Kullanım yoğunluğu",usage_type:"Kullanım tipi",customer_type:"Müşteri tipi",
+  previous_service_count:"Önceki servis sayısı"};
+function v2ModeDemo(){
+  var box=document.getElementById("v2modeBox"); if(!box)return;
+  var api=(window.__V2_API__||"").replace(/\/$/,"");
+  box.innerHTML=card("Örnek motorla demo","hazır snapshot · gerçek model inference",
+    '<p class="copy">Bu mod, veriye dokunmadan modelin nasıl çalıştığını görmen içindir. '
+    +'Önce örnek motosikletin bilgileri gösterilir, sonra tahmin edilir.</p>'
+    +'<div id="v2demoPrev"><p class="copy"><span class="dot"></span> Örnek motor yükleniyor…</p></div>');
+  var attempt=0;
+  (function load(){
+    v2fetch(api+"/api/v2/sample").then(function(r){return r.json();}).then(function(s){
+      window.__V2_SAMPLE__=s.features;
+      var rows=Object.keys(V2_HUMAN).filter(function(k){return s.features[k]!=null;}).map(function(k){
+        var val=s.features[k]; if(typeof val==="number")val=(Math.abs(val)>=100?n0(val):n1(val));
+        return '<tr><td class="k">'+esc(V2_HUMAN[k])+'</td><td>'+esc(val)+'</td></tr>';
+      }).join('');
+      document.getElementById("v2demoPrev").innerHTML=
+        '<div class="twrap"><table class="tbl"><thead><tr><th>Örnek motosiklet</th><th>Değer</th></tr></thead><tbody>'+rows+'</tbody></table></div>'
+        +'<div class="chips" style="margin-top:12px"><button class="subtab" id="v2demoRun" style="border:1px solid var(--border);border-radius:8px">Bu örneği tahmin et</button></div>'
+        +'<div id="v2demoOut" style="margin-top:12px"></div>';
+      document.getElementById("v2demoRun").addEventListener("click",function(){
+        var o=document.getElementById("v2demoOut");
+        o.innerHTML='<p class="copy"><span class="dot"></span> Tahmin ediliyor…</p>';
+        var a2=0;
+        (function run(){
+          v2fetch(api+"/api/predict/service",{method:"POST",headers:{"Content-Type":"application/json"},
+            body:JSON.stringify({features:window.__V2_SAMPLE__})}).then(function(r){return r.json();}).then(function(d){
+            var v2=d.v2||d.prediction||{},v1=d.v1||null;
+            if(v2.risk_90d==null){o.innerHTML='<div class="empty">Model sonucu boş döndü.</div>';return;}
+            o.innerHTML=v2ResultCard(v1,v2,d.warning,"ÖRNEK MOTOR DEMOSU",
+              "Bu sonuç <b>hazır örnek bir motosiklete</b> aittir — senin motorun değil.");
+          }).catch(function(e){
+            if(a2++<1){o.innerHTML='<p class="copy"><span class="dot"></span> Servis uyanıyor, tekrar deneniyor…</p>';setTimeout(run,4000);return;}
+            o.innerHTML='<div class="empty">API\'ye ulaşılamadı — '+esc(String(e))+'. Sahte tahmin üretilmez.</div>';
+          });
+        })();
+      });
+    }).catch(function(e){
+      if(attempt++<1){setTimeout(load,4000);return;}
+      document.getElementById("v2demoPrev").innerHTML='<div class="empty">Örnek motor yüklenemedi — '+esc(String(e))+'</div>';
+    });
+  })();
 }
 function v2StatusChips(h){
   var v1ok=(h.v1==="ok"||h.status==="ok"||h.days_model_loaded);
@@ -1397,8 +1546,15 @@ function v2ApiPing(attempt){
       +esc(api)+'/docs';}
   });
 }
-function v2ResultCard(v1,v2,warn){
-  var g='<div class="grid g4" style="margin-top:6px">'
+function v2ResultCard(v1,v2,warn,srcLabel,srcNote){
+  var g='';
+  if(srcLabel){
+    var kind=(srcLabel.indexOf("DEMO")>=0||srcLabel.indexOf("KISMİ")>=0)?"warn":"good";
+    g+=finding(kind,srcLabel,"<p>"+(srcNote||"")+"</p>");
+  }else{
+    g+=finding("good","GERÇEK MODEL TAHMİNİ","<p>Bu değerler Render'daki V1/V2 modellerinden canlı hesaplandı.</p>");
+  }
+  g+='<div class="grid g4" style="margin-top:6px">'
     +kpi("30 GÜN",pct(v2.risk_30d),"önümüzdeki 30 gün içinde servise gelme ihtimali","plain")
     +kpi("60 GÜN",pct(v2.risk_60d),"önümüzdeki 60 gün içinde","plain")
     +kpi("90 GÜN",pct(v2.risk_90d),"bugünden 90. güne kadar herhangi bir zamanda servise gelme ihtimali","cyan")
@@ -1423,30 +1579,24 @@ function v2ResultCard(v1,v2,warn){
 function wireV2Predict(){
   v2ApiPing(0);
   var api=(window.__V2_API__||"").replace(/\/$/,"");
-  var btn=document.getElementById("v2runSample"); if(!btn||!api)return;
-  btn.addEventListener("click",function(){
-    var box=document.getElementById("v2pfout");
-    box.innerHTML='<p class="copy"><span class="dot"></span> Tahmin ediliyor… (servis uykudaysa ilk istek 50+ sn sürebilir)</p>';
-    var attempt=0;
-    (function run(){
-      v2fetch(api+"/api/v2/sample").then(function(r){return r.json();}).then(function(s){
-        return v2fetch(api+"/api/predict/service",{method:"POST",headers:{"Content-Type":"application/json"},
-          body:JSON.stringify({features:s.features})}).then(function(r){return r.json();});
-      }).then(function(d){
-        var v2=d.v2||d.prediction||{}, v1=d.v1||null;
-        if(v2.risk_90d==null){
-          box.innerHTML='<div class="empty">Model sonucu boş döndü — '+esc(d.detail||JSON.stringify(d).slice(0,140))+'</div>';return;}
-        box.innerHTML=v2ResultCard(v1,v2,d.warning);
-      }).catch(function(e){
-        if(attempt++<1){box.innerHTML='<p class="copy"><span class="dot"></span> Servis uyanıyor, tekrar deneniyor…</p>';setTimeout(run,4000);return;}
-        box.innerHTML='<div class="empty">API\'ye ulaşılamadı — '+esc(String(e))
-          +'. <b>Sahte tahmin üretilmez.</b> Servis uykuda olabilir (tekrar dene), ya da bu yayınlanmış '
-          +'artifact dış API çağrısına izin vermiyor olabilir — o durumda '
-          +'<code>RideBase_Control_Center.full.html</code> dosyasını tarayıcıda aç.</div>';
-      });
-    })();
-  });
+  if(!api)return;
+  if(!window.__V2_CAT__){
+    v2fetch(api+"/api/v2/features").then(function(r){return r.json();}).then(function(c){
+      window.__V2_CAT__=c; if(v2Active==="own")v2ModeOwn();
+    }).catch(function(){});
+  }
+  var own=document.getElementById("v2mOwn"), demo=document.getElementById("v2mDemo");
+  function sel(mode){
+    v2Active=mode;
+    if(own)own.classList.toggle("active",mode==="own");
+    if(demo)demo.classList.toggle("active",mode==="demo");
+    (mode==="own"?v2ModeOwn:v2ModeDemo)();
+  }
+  if(own)own.addEventListener("click",function(){sel("own");});
+  if(demo)demo.addEventListener("click",function(){sel("demo");});
+  sel("own");
 }
+var v2Active="own";
 
 /* ---------------- V3 placeholder ---------------- */
 function renderPlaceholder(id){
