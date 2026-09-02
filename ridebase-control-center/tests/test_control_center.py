@@ -24,7 +24,7 @@ class V1LivePredictionTests(unittest.TestCase):
 
     def test_live_prediction_is_first_and_default_for_v1_and_v2(self):
         for source in (self.template, self.built):
-            self.assertIn('var sub=parts[1]||((route==="v1"||route==="v2")?"predict":null);', source)
+            self.assertIn('var sub=parts[1]||((route==="v1"||route==="v2"||route==="v2_1")?"predict":null);', source)
             self.assertIn('sub=sub||"predict";', source)
             self.assertIn('var subs=[["predict","Canlı Tahmin"],["overview","Overview"]', source)
             self.assertIn('var v2subs=[["predict","Canlı Tahmin"],["overview","Genel Bakış"]', source)
@@ -185,17 +185,24 @@ class V2ScenarioPredictionTests(unittest.TestCase):
         self.assertNotIn("Math.random()", self.template)
         self.assertInBoth("Sahte tahmin üretilmez.")
 
-    def test_v2_0_failed_audit_and_v2_1_stop_gate_are_prominent(self):
+    def test_v2_0_failed_audit_stays_visible_and_v2_1_is_not_v2_0(self):
+        # V2.0's failed audit must remain prominent, and its research scenario is
+        # never relabelled as V2.1.
         for text in (
             "V2.0 · LIVE-SCENARIO AUDIT FAILED",
             "V2.0 CANLI SENARYO İÇİN GÜVENİLİR DEĞİL",
-            "V2.1 DYNAMIC LANDMARK · MODELLEME DURDURULDU",
-            "Synthetic-sanity kapısı <b>FAIL</b>",
             "V2.0 ARAŞTIRMA SENARYOSU · ÜRÜN KARARI İÇİN KULLANMA",
-            "V2.1 modeli, metriği veya tahmin API rotası yayımlanmadı",
             "SOURCE SCHEMA v1.3 · UNCHANGED",
         ):
             self.assertInBoth(text)
+        # the obsolete "modelling stopped / not published" claims are gone
+        for text in (
+            "V2.1 DYNAMIC LANDMARK · MODELLEME DURDURULDU",
+            "V2.1 modeli, metriği veya tahmin API rotası yayımlanmadı",
+            "DATA GATE FAILED",
+        ):
+            self.assertNotIn(text, self.template)
+            self.assertNotIn(text, self.built)
 
     def test_v2_0_scenario_is_never_presented_as_v2_1(self):
         for source in (self.template, self.built):
@@ -203,6 +210,44 @@ class V2ScenarioPredictionTests(unittest.TestCase):
             self.assertIn("V2.0 ARAŞTIRMA SENARYOSU", body)
             self.assertIn("arbitrary-day auditini geçmedi", body)
             self.assertNotIn("V2.1 tahmini", body)
+
+    def test_v2_1_experimental_live_state_is_truthful(self):
+        for text in (
+            "V2.1 Landmark",                       # dedicated route/module
+            "v2_1:{label:\"V2.1 Landmark\"",       # SPA route registered
+            "/api/v2_1/predict/scenario",          # V2.1 API path, not /api/v2/
+            "wireV2_1Predict",
+            "EXPERIMENTAL LIVE (SYNTHETIC)",
+            "SENTETİK VERİDE DOĞRULANDI",
+            "GERÇEK RIDEBASE FİLO TESTİ BEKLENİYOR",
+            "REAL FLEET",
+            "Bu yüzdeler <b>bakım ihtimali değildir.</b>",   # due vs return-risk separated
+            "gizli değerlerini kullanmaz",                    # no hidden sample overlay
+            "current_odometer_km_at_landmark olur — initial_mileage_km DEĞİL",
+            "Girdi / OOD uyarıları (sonuçların ÜSTÜNDE)",     # OOD above result cards
+            "Sahte tahmin üretilmez.",                        # API-down: no fake result
+            "coverage is not a confidence score",
+        ):
+            self.assertInBoth(text)
+
+    def test_v2_1_status_manifest_is_truthful(self):
+        import json
+        manifest = json.loads((ROOT / "data" / "manifest.json").read_text())
+        v21 = manifest["v2_1"]
+        self.assertEqual(v21["status"], "EXPERIMENTAL_LIVE")
+        self.assertTrue(v21["model_available"])
+        self.assertTrue(v21["prediction_route_available"])
+        self.assertEqual(v21["data_gate_status"], "PASS")
+        self.assertEqual(v21["model_gate_status"], "PASS")
+        self.assertEqual(v21["real_fleet_validation"], "PENDING")
+        self.assertEqual(v21["champion"], "xgb_cox")
+        self.assertEqual(v21["selection_split"], "VALIDATION")
+        self.assertEqual(v21["golden_parity"]["parity_pass"], True)
+        self.assertEqual(v21["p30_health"]["exact_zero_share"], 0.0)
+        # V2.0 failure still recorded, V3 still on hold
+        self.assertIn("V2.0 LIVE-SCENARIO AUDIT FAILED", manifest["production_status"]["model"])
+        v3 = [m for m in manifest["modules"] if m["id"] == "v3"][0]
+        self.assertEqual(v3["status"], "planned")
 
 
 if __name__ == "__main__":

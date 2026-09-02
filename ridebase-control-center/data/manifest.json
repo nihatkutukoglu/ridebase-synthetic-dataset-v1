@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-09-02T10:57:39",
+  "generated_at": "2026-09-02T21:18:34",
   "project": "RideBase ML",
   "current_dataset": "v1.3",
   "environment": "PILOT",
@@ -37,12 +37,22 @@
     {
       "id": "v2",
       "name": "V2 Survival",
-      "tagline": "V2.0 audit failed · V2.1 data gate blocked",
+      "tagline": "V2.0 audit failed · V2.1 dynamic landmark live (synthetic)",
       "status": "review",
-      "stage": "V2_1_SYNTHETIC_DATA_GATE_FAILED",
-      "notebook": "V2.1 derived pipeline",
-      "dataset": "v1.3 + V2.1 derived",
-      "purpose": "V2.0 servis-event snapshot benchmark'ı korunuyor fakat canlı-senaryo auditinde başarısız. V2.1 için 251,054 derived dynamic landmark üretildi; overdue davranış yönü synthetic-sanity kapısını geçmediği için modelleme durduruldu. REAL FLEET VALIDATION: PENDING."
+      "stage": "V2_1_EXPERIMENTAL_LIVE_SYNTHETIC",
+      "notebook": "15_v2_survival_advanced.ipynb",
+      "dataset": "v1.3 + V2.1 / v1.4 landmarks",
+      "purpose": "V2.0 servis-event snapshot benchmark'ı yalnızca araştırma baseline'ı olarak korunuyor ve canlı-senaryo auditinde başarısız. Canlı müşteri tahmini artık V2.1 dynamic-landmark modeliyle yapılır."
+    },
+    {
+      "id": "v2_1",
+      "name": "V2.1 Landmark",
+      "tagline": "Dynamic-landmark service-return survival",
+      "status": "active",
+      "stage": "V2_1_EXPERIMENTAL_LIVE_SYNTHETIC",
+      "notebook": "ridebase_ml.v2_1",
+      "dataset": "V2.1 / v1.4 landmarks",
+      "purpose": "V1.4 landmark verisi üzerinde 256,841 dynamic landmark; kaynak şema değişmedi. Champion xgb_cox + isotonic kalibrasyon, VALIDATION üzerinde seçildi. Frozen TEST IPCW C-index 0.753, IBS 0.102. Data + model + davranış kapıları PASS. SENTETİK VERİDE DOĞRULANDI — GERÇEK FİLO TESTİ BEKLENİYOR."
     },
     {
       "id": "v3",
@@ -283,6 +293,31 @@
     {
       "label": "ML Control Center",
       "detail": "Central admin system (this)",
+      "kind": "ui"
+    },
+    {
+      "label": "V2.0 live-scenario audit",
+      "detail": "FAILED — kept as synthetic research baseline only",
+      "kind": "model"
+    },
+    {
+      "label": "V1.4 event generator",
+      "detail": "Continuing stochastic service-event process — overdue dead region removed",
+      "kind": "data"
+    },
+    {
+      "label": "V2.1 dynamic-landmark dataset",
+      "detail": "256,841 landmarks on V1.4; source schema unchanged; data gate PASS",
+      "kind": "data"
+    },
+    {
+      "label": "V2.1 survival model (Phase 3)",
+      "detail": "xgb_cox + isotonic; VALIDATION-only selection; behaviour gate PASS",
+      "kind": "model"
+    },
+    {
+      "label": "V2.1 packaging + /api/v2_1/*",
+      "detail": "V21SurvivalPredictor + routes; golden parity PASS; V1/V2.0 untouched",
       "kind": "ui"
     }
   ],
@@ -2355,23 +2390,223 @@
   "v2_1": {
     "version": "V2.1",
     "name": "Dynamic Landmark Survival",
-    "status": "DATA_GATE_FAILED",
-    "model_training_allowed": false,
-    "model_available": false,
-    "prediction_route_available": false,
-    "dataset_version": "1.4.0-v2.1-experiment",
-    "parent_dataset": "1.3.0",
-    "source_schema_version": "1.3.0",
-    "landmarks": 251054,
-    "motorcycles": 8420,
-    "events": 140860,
-    "censored": 110194,
-    "landmark_quality": "PASS",
-    "synthetic_sanity": "FAIL",
-    "failed_sanity_checks": [
-      "overdue_direction_physically_coherent",
-      "severely_overdue_not_dead_region"
+    "status": "EXPERIMENTAL_LIVE",
+    "model_training_allowed": true,
+    "model_available": true,
+    "prediction_route_available": true,
+    "api_family": [
+      "GET /api/v2_1/model/info",
+      "GET /api/v2_1/features",
+      "GET /api/v2_1/metrics",
+      "GET /api/v2_1/sample",
+      "POST /api/v2_1/predict",
+      "POST /api/v2_1/predict/batch",
+      "POST /api/v2_1/predict/scenario"
     ],
+    "dataset_version": "1.4.0-v2.1-dynamic-landmark",
+    "parent_dataset": "1.4.0",
+    "source_schema_version": "1.3.0",
+    "landmarks": 256841,
+    "motorcycles": 8907,
+    "events": 208746,
+    "censored": 48095,
+    "feature_count": 54,
+    "landmark_quality": "PASS",
+    "data_gate_status": "PASS",
+    "data_gate_failed_checks": [],
+    "model_gate_status": "PASS",
+    "model_gate_failed_checks": [],
+    "champion": "xgb_cox",
+    "calibration_method": "isotonic",
+    "selection_split": "VALIDATION",
+    "test_metrics": {
+      "ipcw_c_index": 0.7526812034629026,
+      "harrell_c_index": 0.7527365929375829,
+      "ibs": 0.10199462240085244,
+      "brier": {
+        "30": 0.0834682403713001,
+        "60": 0.11091643207963932,
+        "90": 0.10788327827386922,
+        "120": 0.09090007332679748
+      },
+      "auc": {
+        "30": 0.7771883610241372,
+        "60": 0.7942458656560296,
+        "90": 0.8078179496837391,
+        "120": 0.8193944698154507
+      }
+    },
+    "unseen_motorcycle_metrics": {
+      "ipcw_c_index": 0.756368284912511,
+      "ibs": 0.1018572824650308
+    },
+    "p30_health": {
+      "exact_zero_share": 0.0,
+      "median": 0.04700854700854701,
+      "unique_probability_levels": 126
+    },
+    "behavioral_checks": {
+      "km_sensitivity_meaningful": true,
+      "elapsed_time_no_structural_reversal": true,
+      "due_state_no_structural_reversal": true,
+      "calendar_invariance": true,
+      "same_input_deterministic": true,
+      "horizon_monotonicity": true,
+      "odometer_consistency": true,
+      "annual_usage_changes_risk": true
+    },
+    "top_features": [
+      "riding_intensity",
+      "km_due_ratio",
+      "recent_90d_km",
+      "annual_km_baseline",
+      "max_due_ratio",
+      "oem_interval_km",
+      "last_service_task_count",
+      "cumulative_service_spend"
+    ],
+    "calibration_comparison": {
+      "uncalibrated": {
+        "horizons": {
+          "30": {
+            "brier": 0.10526227736433104,
+            "calibration_error": 0.0117136710786417,
+            "exact_zero_share": 0.0,
+            "unique_probability_levels": 17962
+          },
+          "60": {
+            "brier": 0.15904334515567076,
+            "calibration_error": 0.04180991523878714,
+            "exact_zero_share": 0.0,
+            "unique_probability_levels": 17904
+          },
+          "90": {
+            "brier": 0.18481058102600623,
+            "calibration_error": 0.06537954631227944,
+            "exact_zero_share": 0.0,
+            "unique_probability_levels": 17835
+          },
+          "120": {
+            "brier": 0.19153187319802997,
+            "calibration_error": 0.07624085704112803,
+            "exact_zero_share": 0.0,
+            "unique_probability_levels": 17759
+          }
+        },
+        "mean_brier": 0.1601620191860095,
+        "mean_calibration_error": 0.04878599741770907
+      },
+      "isotonic": {
+        "horizons": {
+          "30": {
+            "brier": 0.10622421931480117,
+            "calibration_error": 0.01604933023053438,
+            "exact_zero_share": 5.566069241901369e-05,
+            "unique_probability_levels": 85
+          },
+          "60": {
+            "brier": 0.15816107913986027,
+            "calibration_error": 0.024531108171469508,
+            "exact_zero_share": 0.0,
+            "unique_probability_levels": 120
+          },
+          "90": {
+            "brier": 0.18060955307249082,
+            "calibration_error": 0.028051244230599123,
+            "exact_zero_share": 0.0,
+            "unique_probability_levels": 102
+          },
+          "120": {
+            "brier": 0.18522913826448079,
+            "calibration_error": 0.026589924617304896,
+            "exact_zero_share": 0.0,
+            "unique_probability_levels": 103
+          }
+        },
+        "mean_brier": 0.15755599744790827,
+        "mean_calibration_error": 0.02380540181247698
+      },
+      "platt": {
+        "horizons": {
+          "30": {
+            "brier": 0.10611587554356149,
+            "calibration_error": 0.016477910271628683,
+            "exact_zero_share": 0.0,
+            "unique_probability_levels": 17962
+          },
+          "60": {
+            "brier": 0.15831912177138516,
+            "calibration_error": 0.02601251991608889,
+            "exact_zero_share": 0.0,
+            "unique_probability_levels": 17905
+          },
+          "90": {
+            "brier": 0.18181273873179257,
+            "calibration_error": 0.040705150290578224,
+            "exact_zero_share": 0.0,
+            "unique_probability_levels": 17842
+          },
+          "120": {
+            "brier": 0.18762897933241543,
+            "calibration_error": 0.05288977864701573,
+            "exact_zero_share": 0.0,
+            "unique_probability_levels": 17778
+          }
+        },
+        "mean_brier": 0.15846917884478864,
+        "mean_calibration_error": 0.03402133978132788
+      },
+      "beta": {
+        "horizons": {
+          "30": {
+            "brier": 0.10592798082822052,
+            "calibration_error": 0.014831378958489653,
+            "exact_zero_share": 0.0,
+            "unique_probability_levels": 17961
+          },
+          "60": {
+            "brier": 0.15765818489846506,
+            "calibration_error": 0.023849854490393438,
+            "exact_zero_share": 0.0,
+            "unique_probability_levels": 17906
+          },
+          "90": {
+            "brier": 0.18046851196663924,
+            "calibration_error": 0.034111401271391256,
+            "exact_zero_share": 0.0,
+            "unique_probability_levels": 17856
+          },
+          "120": {
+            "brier": 0.18581392982833972,
+            "calibration_error": 0.03471434742098888,
+            "exact_zero_share": 0.0,
+            "unique_probability_levels": 17794
+          }
+        },
+        "mean_brier": 0.15746715188041616,
+        "mean_calibration_error": 0.026876745535315806
+      }
+    },
+    "grouped_bootstrap": {
+      "p90_brier_95ci": [
+        0.17231756949249358,
+        0.1805115839495257
+      ],
+      "p90_auc_95ci": [
+        0.8004327775806586,
+        0.8140838084046677
+      ]
+    },
+    "golden_parity": {
+      "rows": 4000,
+      "max_probability_delta": 8.295865654928125e-06,
+      "mean_probability_delta": 2.741199727496408e-07,
+      "risk_score_max_delta": 4.999742508060567e-07,
+      "horizon_monotonic": true,
+      "deterministic": true,
+      "tolerance": 0.0005,
+      "parity_pass": true
+    },
     "v2_0_audit": "FAIL",
     "v2_0_failed_checks": [
       "service_event_landmark_mismatch",
@@ -2382,7 +2617,9 @@
       "observation_artifact_invariance",
       "overdue_product_contradiction"
     ],
-    "verdict": "BLOCKED"
+    "model_validation": "SYNTHETICALLY_VALIDATED",
+    "real_fleet_validation": "PENDING",
+    "verdict": "SYNTHETICALLY VALIDATED — REAL FLEET VALIDATION PENDING"
   },
   "models": [
     {
@@ -2464,7 +2701,7 @@
   },
   "production_status": {
     "application": "PILOT (deployable)",
-    "model": "V2.0 LIVE-SCENARIO AUDIT FAILED · V2.1 DATA GATE FAILED",
+    "model": "V2.0 LIVE-SCENARIO AUDIT FAILED · V2.1 DYNAMIC LANDMARK — SYNTHETICALLY VALIDATED (EXPERIMENTAL LIVE), REAL FLEET PENDING",
     "real_fleet_validation": "PENDING"
   }
 }

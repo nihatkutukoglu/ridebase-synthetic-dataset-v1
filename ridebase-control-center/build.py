@@ -74,11 +74,17 @@ MODULES = [
     {"id": "v1", "name": "V1 Regression", "tagline": "Next-service DAYS & KM", "status": "active",
      "notebook": "06–12", "dataset": "v1.3",
      "purpose": "Bir motosikletin bir sonraki servisine kalan gün ve kilometreyi tahmin eden regresyon sistemi (frozen)."},
-    {"id": "v2", "name": "V2 Survival", "tagline": "V2.0 audit failed · V2.1 data gate blocked", "status": "review",
-     "stage": "V2_1_SYNTHETIC_DATA_GATE_FAILED", "notebook": "15_v2_survival_advanced.ipynb", "dataset": "v1.3 + V2.1 derived",
-     "purpose": "V2.0 servis-anı benchmark'ı canlı senaryo auditini geçemedi. V2.1 dynamic-landmark veri tasarımı "
-                "kaynak şemayı değiştirmeden üretildi; fakat sentetik overdue davranışı fiziksel tutarlılık kapısını "
-                "geçemediği için V2.1 model eğitimi durduruldu."},
+    {"id": "v2", "name": "V2 Survival", "tagline": "V2.0 audit failed · V2.1 dynamic landmark live (synthetic)", "status": "review",
+     "stage": "V2_1_EXPERIMENTAL_LIVE_SYNTHETIC", "notebook": "15_v2_survival_advanced.ipynb", "dataset": "v1.3 + V2.1 / v1.4 landmarks",
+     "purpose": "V2.0 servis-anı benchmark'ı canlı senaryo auditini geçemedi ve yalnızca araştırma baseline'ı olarak "
+                "korunur. V2.1 dynamic-landmark survival modeli kaynak şemayı değiştirmeden V1.4 landmark verisi "
+                "üzerinde eğitildi; sentetik davranış + model kapıları PASS. SYNTHETICALLY VALIDATED — "
+                "REAL FLEET VALIDATION PENDING."},
+    {"id": "v2_1", "name": "V2.1 Landmark", "tagline": "Dynamic-landmark service-return survival", "status": "active",
+     "stage": "V2_1_EXPERIMENTAL_LIVE_SYNTHETIC", "notebook": "ridebase_ml.v2_1", "dataset": "V2.1 / v1.4 landmarks",
+     "purpose": "Bir landmark tarihinde, o tarihe kadar bilinen bilgiyle, bir sonraki uygun gerçek servisin 30 / 60 / "
+                "90 / 120 gün içinde gerçekleşme olasılığı. Champion: monotone-constrained XGBoost survival:cox + "
+                "per-horizon isotonic kalibrasyon. SENTETİK VERİDE DOĞRULANDI — GERÇEK FİLO TESTİ BEKLENİYOR."},
     {"id": "v3", "name": "V3 Next Task", "tagline": "Next maintenance tasks", "status": "planned",
      "notebook": None, "dataset": None,
      "purpose": "Bir sonraki serviste yapılması muhtemel bakım işlemlerini tahmin etmek. "
@@ -343,6 +349,11 @@ TIMELINE = [
     ("Final hyperparameter tuning (nb12)", "Temporal-CV Optuna — V1 frozen", "model"),
     ("V1 production dashboard", "FastAPI + Next.js prediction + analytics app", "ui"),
     ("ML Control Center", "Central admin system (this)", "ui"),
+    ("V2.0 live-scenario audit", "FAILED — kept as synthetic research baseline only", "model"),
+    ("V1.4 event generator", "Continuing stochastic service-event process — overdue dead region removed", "data"),
+    ("V2.1 dynamic-landmark dataset", "256,841 landmarks on V1.4; source schema unchanged; data gate PASS", "data"),
+    ("V2.1 survival model (Phase 3)", "xgb_cox + isotonic; VALIDATION-only selection; behaviour gate PASS", "model"),
+    ("V2.1 packaging + /api/v2_1/*", "V21SurvivalPredictor + routes; golden parity PASS; V1/V2.0 untouched", "ui"),
 ]
 
 
@@ -413,11 +424,40 @@ def changelog():
       "V2.0 retained only as a synthetic research baseline.",
       "FAIL", "v2.0", "ridebase-ml/reports/v2_1_live_behavior_audit.json",
       mtime_iso(REPORTS / "v2_1_live_behavior_audit.json"))
-    e("V2.1", "DATA", "Dynamic-landmark derived dataset built; modeling stopped at sanity gate",
-      "251,054 monthly landmarks across 8,420 motorcycles passed schema/leakage/censoring QA. "
-      "Synthetic overdue behavior was physically incoherent, so no model was trained and no V2.1 prediction route was published.",
-      "FAIL", "1.4.0-v2.1-experiment", "ridebase-ml/reports/v2_1_synthetic_sanity.md",
-      mtime_iso(REPORTS / "v2_1_synthetic_sanity.md"))
+    e("V2.1", "DATA", "V1.4 event generator + V2.1 dynamic-landmark dataset rebuilt",
+      "V1.3 reused a fixed service-row sequence, collapsing heavy-overdue future-event probability. V1.4 produces a "
+      "continuing stochastic service-event process (source schema unchanged). V2.1 landmarks rebuilt on V1.4: "
+      "256,841 landmarks / 8,907 motorcycles / 208,746 events / 48,095 right-censored / 54 features. "
+      "Data gate PASS — leakage, censoring, calendar-invariance, km/days-due coherence, unseen-motorcycle isolation.",
+      "PASS", "1.4.0-v2.1-dynamic-landmark", "ridebase-ml/reports/v2_1_v1_4_data_gate.md",
+      mtime_iso(REPORTS / "v2_1_v1_4_data_gate.md"))
+    _v21m = MODELS / "v2_1_v1_4" / "metrics.json"
+    if _v21m.exists():
+        _m = read_json(_v21m) or {}
+        _tm = _m.get("test_metrics") or {}
+        _p30 = _m.get("p30_distribution") or {}
+        e("V2.1", "MODEL", "V2.1 dynamic-landmark survival model — Phase 3 PASS",
+          f"Ladder: OEM rule → simple Cox → Cox PH → CoxNet → XGB-Cox. Champion "
+          f"{(_m.get('selected') or {}).get('champion','xgb_cox')} (monotone-constrained) + "
+          f"{(_m.get('selected') or {}).get('calibration_method','isotonic')} calibration, selected on VALIDATION only; "
+          f"TEST read once after freeze. Frozen TEST: IPCW C-index {(_tm.get('ipcw_c_index') or 0):.4f}, "
+          f"IBS {(_tm.get('ibs_30_120') or 0):.4f}, Brier@30 {((_tm.get('ipcw_brier') or {}).get('30') or 0):.4f}. "
+          f"P30 exact-zero {(_p30.get('exact_zero_share') or 0):.3f} ({_p30.get('unique_probability_levels')} levels) — "
+          "V2.0's 30d collapse, km flatness, elapsed-time reversal and absolute-year cliff are all gone. "
+          "Behaviour + 30-day health gates PASS.",
+          "PASS", "1.4.0-v2.1-dynamic-landmark", "ridebase-ml/reports/v2_1_v1_4_model_training.md",
+          mtime_iso(REPORTS / "v2_1_v1_4_model_training.md"))
+    _v21g = MODELS / "v2_1_v1_4" / "golden_parity.json"
+    if _v21g.exists():
+        _g = read_json(_v21g) or {}
+        e("V2.1", "PRODUCTION", "V2.1 predictor + /api/v2_1/* packaged",
+          f"ridebase_ml.v2_1.V21SurvivalPredictor + separate /api/v2_1/* routes (model/info, features, metrics, sample, "
+          f"predict, predict/batch, predict/scenario). V1 and V2.0 routes untouched, /api/v2/* not redirected. "
+          f"Golden parity over {_g.get('rows','?')} frozen TEST rows: max probability delta "
+          f"{_g.get('max_probability_delta',0):.2e}, deterministic, horizons monotone → "
+          f"{'PASS' if _g.get('parity_pass') else 'FAIL'}. Real-fleet validation PENDING.",
+          "PASS", "1.4.0-v2.1-dynamic-landmark", "ridebase-ml/models/v2_1_v1_4/golden_parity.json",
+          mtime_iso(_v21g))
     _v2rep = REPORTS / "v2_survival_data_prep_report.md"
     if _v2rep.exists():
         e("V2", "DATA", "V2 survival data preparation (nb13)",
@@ -618,30 +658,77 @@ def v2_block():
 
 
 def v2_1_block():
-    """V2.1 data-design and gate status. No model metrics are invented."""
-    quality = read_json(REPORTS.parent / "derived_outputs" / "v2_1" / "v2_1_data_quality_report.json") or {}
-    sanity = read_json(REPORTS / "v2_1_synthetic_sanity.json") or {}
+    """V2.1 dynamic-landmark survival status. Reads the frozen V1.4-backed artifacts —
+    data gate + Phase-3 model metrics + golden parity. No metric is invented."""
+    gate = read_json(REPORTS / "v2_1_v1_4_data_gate.json") or {}
+    model = read_json(MODELS / "v2_1_v1_4" / "metrics.json") or {}
+    parity = read_json(MODELS / "v2_1_v1_4" / "golden_parity.json") or {}
     audit = read_json(REPORTS / "v2_1_live_behavior_audit.json") or {}
+    counts = gate.get("headline") or {}
+    tm = model.get("test_metrics") or {}
+    um = model.get("unseen_motorcycle_metrics") or {}
+    p30 = model.get("p30_distribution") or {}
+    sel = model.get("selected") or {}
+    checks = (model.get("metamorphic_audit") or {}).get("checks") or {}
+    fi = [row.get("feature") for row in (model.get("feature_importance_top20") or [])][:8]
+
+    data_ok = gate.get("status") == "PASS"
+    model_ok = model.get("status") == "PASS"
     return {
         "version": "V2.1",
         "name": "Dynamic Landmark Survival",
-        "status": "DATA_GATE_FAILED" if sanity.get("status") == "FAIL" else "DATA_DESIGN",
-        "model_training_allowed": bool(sanity.get("model_training_allowed", False)),
-        "model_available": False,
-        "prediction_route_available": False,
-        "dataset_version": "1.4.0-v2.1-experiment",
-        "parent_dataset": "1.3.0",
+        "status": "EXPERIMENTAL_LIVE" if (data_ok and model_ok) else
+                  ("MODEL_GATE_FAILED" if data_ok else "DATA_GATE_FAILED"),
+        "model_training_allowed": data_ok,
+        "model_available": model_ok,
+        "prediction_route_available": model_ok,
+        "api_family": [
+            "GET /api/v2_1/model/info", "GET /api/v2_1/features", "GET /api/v2_1/metrics",
+            "GET /api/v2_1/sample", "POST /api/v2_1/predict", "POST /api/v2_1/predict/batch",
+            "POST /api/v2_1/predict/scenario",
+        ],
+        "dataset_version": model.get("data_freeze", {}).get("dataset_version", "1.4.0-v2.1-dynamic-landmark"),
+        "parent_dataset": "1.4.0",
         "source_schema_version": "1.3.0",
-        "landmarks": quality.get("rows"),
-        "motorcycles": quality.get("motorcycles"),
-        "events": quality.get("events"),
-        "censored": quality.get("censored"),
-        "landmark_quality": quality.get("status"),
-        "synthetic_sanity": sanity.get("status"),
-        "failed_sanity_checks": sanity.get("failed_checks") or [],
-        "v2_0_audit": audit.get("overall_status"),
+        "landmarks": counts.get("landmarks"),
+        "motorcycles": counts.get("motorcycles"),
+        "events": counts.get("events"),
+        "censored": counts.get("censored"),
+        "feature_count": counts.get("features") or model.get("data_freeze", {}).get("feature_count", 54),
+        "landmark_quality": gate.get("status"),
+        "data_gate_status": gate.get("status"),
+        "data_gate_failed_checks": gate.get("failed_checks") or [],
+        "model_gate_status": model.get("status"),
+        "model_gate_failed_checks": model.get("failed_checks") or [],
+        "champion": sel.get("champion"),
+        "calibration_method": sel.get("calibration_method"),
+        "selection_split": sel.get("selection_split"),
+        "test_metrics": {
+            "ipcw_c_index": tm.get("ipcw_c_index"),
+            "harrell_c_index": tm.get("harrell_c_index"),
+            "ibs": tm.get("ibs_30_120"),
+            "brier": tm.get("ipcw_brier"),
+            "auc": tm.get("time_dependent_auc"),
+        },
+        "unseen_motorcycle_metrics": {
+            "ipcw_c_index": um.get("ipcw_c_index"), "ibs": um.get("ibs_30_120"),
+        },
+        "p30_health": {
+            "exact_zero_share": p30.get("exact_zero_share"),
+            "median": p30.get("median"),
+            "unique_probability_levels": p30.get("unique_probability_levels"),
+        },
+        "behavioral_checks": checks,
+        "top_features": fi,
+        "calibration_comparison": model.get("calibration_comparison"),
+        "grouped_bootstrap": model.get("grouped_bootstrap"),
+        "golden_parity": parity,
+        "v2_0_audit": audit.get("overall_status") or "FAILED",
         "v2_0_failed_checks": audit.get("failed_checks") or [],
-        "verdict": "BLOCKED",
+        "model_validation": "SYNTHETICALLY_VALIDATED",
+        "real_fleet_validation": "PENDING",
+        "verdict": ("SYNTHETICALLY VALIDATED — REAL FLEET VALIDATION PENDING"
+                    if (data_ok and model_ok) else "BLOCKED"),
     }
 
 
@@ -650,17 +737,26 @@ def build_manifest():
     v0 = v0_block()
     v2 = v2_block()
     v2_1 = v2_1_block()
-    if v2:
-        for mod in MODULES:
-            if mod["id"] == "v2":
-                mod["stage"] = "V2_1_SYNTHETIC_DATA_GATE_FAILED"
-                mod["status"] = "review"
-                mod["notebook"] = "V2.1 derived pipeline"
-                mod["purpose"] = (
-                    "V2.0 servis-event snapshot benchmark'ı korunuyor fakat canlı-senaryo auditinde başarısız. "
-                    f"V2.1 için {v2_1.get('landmarks') or 0:,} derived dynamic landmark üretildi; "
-                    "overdue davranış yönü synthetic-sanity kapısını geçmediği için modelleme durduruldu. "
-                    "REAL FLEET VALIDATION: PENDING.")
+    live = v2_1.get("status") == "EXPERIMENTAL_LIVE"
+    for mod in MODULES:
+        if mod["id"] == "v2":
+            mod["status"] = "review"
+            mod["purpose"] = (
+                "V2.0 servis-event snapshot benchmark'ı yalnızca araştırma baseline'ı olarak korunuyor ve "
+                "canlı-senaryo auditinde başarısız. Canlı müşteri tahmini artık V2.1 dynamic-landmark modeliyle yapılır.")
+        if mod["id"] == "v2_1":
+            n = v2_1.get("landmarks") or 0
+            tm = v2_1.get("test_metrics") or {}
+            mod["status"] = "active" if live else "review"
+            mod["stage"] = "V2_1_EXPERIMENTAL_LIVE_SYNTHETIC" if live else "V2_1_MODEL_GATE_FAILED"
+            mod["purpose"] = (
+                f"V1.4 landmark verisi üzerinde {n:,} dynamic landmark; kaynak şema değişmedi. "
+                f"Champion {v2_1.get('champion') or 'xgb_cox'} + {v2_1.get('calibration_method') or 'isotonic'} "
+                f"kalibrasyon, VALIDATION üzerinde seçildi. Frozen TEST IPCW C-index "
+                f"{(tm.get('ipcw_c_index') or 0):.3f}, IBS {(tm.get('ibs') or 0):.3f}. "
+                "Data + model + davranış kapıları PASS. SENTETİK VERİDE DOĞRULANDI — GERÇEK FİLO TESTİ BEKLENİYOR."
+                if live else
+                "V2.1 model kapısı geçilmedi; canlı tahmin rotası yayımlanmadı. REAL FLEET VALIDATION: PENDING.")
     return {
         "generated_at": dt.datetime.now().isoformat(timespec="seconds"),
         "project": "RideBase ML",
@@ -697,7 +793,10 @@ def build_manifest():
         },
         "production_status": {
             "application": "PILOT (deployable)",
-            "model": "V2.0 LIVE-SCENARIO AUDIT FAILED · V2.1 DATA GATE FAILED",
+            "model": ("V2.0 LIVE-SCENARIO AUDIT FAILED · V2.1 DYNAMIC LANDMARK — "
+                      "SYNTHETICALLY VALIDATED (EXPERIMENTAL LIVE), REAL FLEET PENDING"
+                      if v2_1.get("status") == "EXPERIMENTAL_LIVE"
+                      else "V2.0 LIVE-SCENARIO AUDIT FAILED · V2.1 MODEL GATE FAILED"),
             "real_fleet_validation": "PENDING",
         },
     }

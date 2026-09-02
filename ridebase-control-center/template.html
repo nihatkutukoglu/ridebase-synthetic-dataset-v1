@@ -450,6 +450,7 @@ var ROUTES = {
   v0:{label:"V0 Baseline",render:renderV0},
   v1:{label:"V1 Regression",render:renderV1},
   v2:{label:"V2 Survival",render:function(sub){return (M.v2?renderV2(sub):renderPlaceholder("v2"));}},
+  v2_1:{label:"V2.1 Landmark",render:function(sub){return renderV2_1(sub);}},
   v3:{label:"V3 Next Task",render:function(){return renderPlaceholder("v3");}},
   experiments:{label:"Experiments",render:renderExperiments},
   models:{label:"Models",render:renderModels},
@@ -461,7 +462,7 @@ function parseHash(){
   var h=(location.hash||"#overview").replace(/^#/,"");
   var parts=h.split("/");
   var route=ROUTES[parts[0]]?parts[0]:"overview";
-  var sub=parts[1]||((route==="v1"||route==="v2")?"predict":null);
+  var sub=parts[1]||((route==="v1"||route==="v2"||route==="v2_1")?"predict":null);
   return {route:route,sub:sub};
 }
 function go(hash){location.hash=hash;}
@@ -475,6 +476,7 @@ function route(){
   if(st.route==="eda")initMonthlyChart();
   if(st.route==="v1" && st.sub==="predict" && typeof wireV1Predict==="function")wireV1Predict();
   if(st.route==="v2" && st.sub==="predict" && typeof wireV2Predict==="function")wireV2Predict();
+  if(st.route==="v2_1" && st.sub==="predict" && typeof wireV2_1Predict==="function")wireV2_1Predict();
   $("#shell").classList.remove("drawer");
 }
 window.addEventListener("hashchange",route);
@@ -498,6 +500,7 @@ function buildSidebar(st){
      +navItem("v0","V0 Baseline",{ic:sq()})
      +navItem("v1","V1 Regression",{ic:sq()})
      +navItem("v2","V2 Survival",{ic:sq(),soon:!M.v2,disabled:false})
+     +navItem("v2_1","V2.1 Landmark",{ic:sq(),disabled:false})
      +navItem("v3","V3 Next Task",{ic:sq(),soon:true,disabled:false})
   +'</div>';
   if(st.route==="v1"){
@@ -513,6 +516,12 @@ function buildSidebar(st){
       ["limitations","Sınırlamalar"]];
     html+='<div class="nav-group">'+v2subs.map(function(s){
       return navItem("v2",s[1],{sub:true,hash:"v2/"+s[0],subOf:"v2",subKey:s[0]==="overview"?null:s[0]});
+    }).join('')+'</div>';
+  }
+  if(st.route==="v2_1"){
+    var v21subs=[["predict","Canlı Tahmin"],["overview","Genel Bakış"]];
+    html+='<div class="nav-group">'+v21subs.map(function(s){
+      return navItem("v2_1",s[1],{sub:true,hash:"v2_1/"+s[0],subOf:"v2_1",subKey:s[0]==="overview"?null:s[0]});
     }).join('')+'</div>';
   }
   html+='<div class="nav-group"><div class="glabel">System</div>'
@@ -553,7 +562,7 @@ function renderOverview(){
   var qa=M.qa||{};
   var out='';
   out+=modHead("RideBase ML · Control Center","RideBase ML Control Center",
-    "RideBase servis tahmini veri bilimi ve makine öğrenmesi sisteminin merkezi yönetim paneli. V1 frozen; V2.0 canlı-senaryo auditinde başarısız; V2.1 dynamic-landmark veri kapısında durduruldu; V3 beklemede.",
+    "RideBase servis tahmini veri bilimi ve makine öğrenmesi sisteminin merkezi yönetim paneli. V1 frozen; V2.0 canlı-senaryo auditinde başarısız (yalnız araştırma baseline'ı); V2.1 dynamic-landmark survival modeli sentetik veride doğrulandı (deneysel canlı) — gerçek filo testi bekleniyor; V3 beklemede.",
     '<span class="chip cyan"><span class="dot"></span>DATASET '+esc(M.current_dataset||"v1.3")+'</span>'
    +'<span class="chip">ENV: '+esc(M.environment||"PILOT")+'</span>'
    +'<span class="chip warn"><span class="dot"></span>REAL FLEET VALIDATION: '+esc(M.real_fleet_validation||"PENDING")+'</span>',
@@ -584,7 +593,7 @@ function renderOverview(){
   out+='<div class="sec"><div class="sec-head"><h2>Yönetici Özeti</h2><span class="tag">10 soru</span></div>'
    +'<div class="grid g2">'
    + card("Proje durumu",null,
-       '<p class="copy">V1 <b>frozen</b>. V2.0 yalnız araştırma baseline’ı ve canlı-senaryo auditinde başarısız. V2.1 derived landmark QA geçti fakat synthetic-sanity kapısında durdu. V3 <b>ON HOLD</b>.</p>'
+       '<p class="copy">V1 <b>frozen</b>. V2.0 yalnız araştırma baseline’ı ve canlı-senaryo auditinde başarısız. V2.1 dynamic-landmark survival modeli data + model + davranış kapılarını geçti — <b>SENTETİK VERİDE DOĞRULANDI</b>, gerçek filo testi bekleniyor. V3 <b>ON HOLD</b>.</p>'
       +'<div class="chips" style="margin-top:6px">'+mods.map(function(m){return '<span class="chip">'+esc(m.name)+' '+statusPill(m.status)+'</span>';}).join('')+'</div>')
    + card("Aktif model performansı (TEST)",null,
        '<div class="grid g2" style="gap:10px">'
@@ -597,8 +606,8 @@ function renderOverview(){
        return '<b style="color:var(--text)">'+esc(e.title||"—")+'</b><p class="copy" style="margin-top:4px">'+esc(e.description||"")+'</p>'
         +'<div class="chips" style="margin-top:6px"><span class="chip">'+esc(e.module||"")+'</span><span class="chip">'+esc(e.timestamp||"")+'</span>'+statusPill(e.status||"info")+'</div>';})())
    + card("Sonraki aşama",null,
-       '<b style="color:var(--text)">V2.1 — Same-schema synthetic event redesign</b>'
-      +'<p class="copy" style="margin-top:4px">Ağır gecikmiş durumlarda oluşan yapay düşük-dönüş bölgesi düzeltilmeli. Yeni generator ayrı sürümlenecek; v1.3 kaynakları değişmeyecek. Kapı geçmeden model yok.</p>')
+       '<b style="color:var(--text)">V2.1 — canlı deploy + gerçek filo doğrulaması</b>'
+      +'<p class="copy" style="margin-top:4px">V1.4 generator ağır-gecikme dead-region\'ını kaldırdı; V2.1 modeli sentetik veride doğrulandı ve <code>/api/v2_1/*</code> ile paketlendi. Sıradaki: canlı deploy sonrası audit ve gerçek RideBase servis geçmişiyle backtesting. Kaynak şema değişmedi.</p>')
    +'</div></div>';
 
   /* module cards */
@@ -1155,26 +1164,32 @@ function v1Verdict(){
 /* ---------------- V2 SURVIVAL ---------------- */
 function v2Head(){
   var v=M.v2||{}, v21=M.v2_1||{};
+  var live=v21.status==="EXPERIMENTAL_LIVE";
   var chips='<span class="chip warn"><span class="dot"></span>V2.0 · LIVE-SCENARIO AUDIT FAILED</span>'
-    +'<span class="chip bad">V2.1 · '+esc(v21.status||"DATA GATE")+'</span>'
+    +'<span class="chip '+(live?'good':'bad')+'">V2.1 · '+esc(live?"EXPERIMENTAL LIVE (SYNTHETIC)":(v21.status||"—"))+'</span>'
     +'<span class="chip">SOURCE SCHEMA v1.3 · UNCHANGED</span>'
     +'<span class="chip warn">REAL FLEET: PENDING</span>';
   return modHead("Module · Survival Analysis","V2.0 Audit + V2.1 Dynamic Landmark",
-    "V2.0 dondurulmuş araştırma benchmark'ıdır ve arbitrary-day canlı senaryo auditini geçemedi. "
-    +"V2.1, kaynak şemayı değiştirmeden doğru dynamic-landmark problemini kurdu; sentetik veri davranış kapısı geçilene kadar model eğitimi ve tahmin rotası yoktur.",
+    "V2.0 dondurulmuş araştırma benchmark'ıdır, arbitrary-day canlı senaryo auditini geçemedi ve yalnız karşılaştırma için tutulur. "
+    +"Canlı müşteri-dönüş tahmini artık kaynak şemayı değiştirmeyen V2.1 dynamic-landmark modeliyle yapılır — sentetik veride doğrulandı, gerçek filo testi bekleniyor.",
     chips,
-    'design <code>docs/v2_1_dynamic_landmark_design.md</code> · gate <code>reports/v2_1_synthetic_sanity.md</code>');
+    'model <code>reports/v2_1_v1_4_model_training.md</code> · api <code>/api/v2_1/*</code>');
 }
 function v2AuditWarning(){
-  var v=M.v2_1||{};
+  var v=M.v2_1||{}, tm=v.test_metrics||{}, live=v.status==="EXPERIMENTAL_LIVE";
   return '<div class="sec">'+finding("bad","V2.0 CANLI SENARYO İÇİN GÜVENİLİR DEĞİL",
     '<p>Eski model servis tamamlandığı andaki snapshotlarla eğitildi; bu ekran ise rastgele bir bugünü soruyor. '
     +'30 günlük risk çökmesi, kilometre duyarsızlığı, gecikme yönü ve veri-penceresi artefaktı audit testlerinde başarısız oldu. '
-    +'<b>Aşağıdaki V2.0 tahminleri yalnız araştırma/karşılaştırma içindir; operasyonel müşteri kararı değildir.</b></p>')
-    +finding("warn","V2.1 DYNAMIC LANDMARK · MODELLEME DURDURULDU",
-    '<p>'+n0(v.landmarks||0)+' landmark ve '+n0(v.motorcycles||0)+' motosiklet için derived-only veri QA geçti. '
-    +'Ancak ağır gecikmiş sentetik örneklerde servis dönüşü yapay biçimde neredeyse sıfıra düştü. '
-    +'Synthetic-sanity kapısı <b>FAIL</b>; V2.1 modeli, metriği veya tahmin API rotası yayımlanmadı.</p>')+'</div>';
+    +'<b>Bu sekmedeki V2.0 tahminleri yalnız araştırma/karşılaştırma içindir; operasyonel müşteri kararı değildir.</b></p>')
+    +finding(live?"good":"warn",live?"V2.1 DYNAMIC LANDMARK · SENTETİK VERİDE DOĞRULANDI":"V2.1 DYNAMIC LANDMARK · MODEL KAPISI",
+    '<p>'+n0(v.landmarks||0)+' landmark · '+n0(v.motorcycles||0)+' motosiklet · '+n0(v.feature_count||54)+' feature (kaynak şema değişmedi). '
+    +(live
+      ?('Champion <b>'+esc(v.champion||"xgb_cox")+'</b> + '+esc(v.calibration_method||"isotonic")+' kalibrasyon yalnız VALIDATION üzerinde seçildi; TEST bir kez okundu. '
+        +'Frozen TEST IPCW C-index <b>'+r3(tm.ipcw_c_index)+'</b>, IBS <b>'+r3(tm.ibs)+'</b>. 30 günlük tam-sıfır oranı <b>'+r3((v.p30_health||{}).exact_zero_share)+'</b>. '
+        +'Data + model + davranış kapıları PASS. Ayrı canlı tahmin: <a href="#v2_1/predict" style="color:var(--accent)">V2.1 Landmark → Canlı Tahmin</a>. '
+        +'<b>SENTETİK VERİDE DOĞRULANDI. GERÇEK RIDEBASE FİLO TESTİ BEKLENİYOR.</b>')
+      :'V2.1 model kapısı geçilmedi; canlı tahmin rotası yayımlanmadı.')
+    +'</p>')+'</div>';
 }
 function v2Bar(sub){
   var tabs=[["predict","Canlı Tahmin"],["overview","Genel Bakış"],["horizons","Zaman Aralıkları"],["calibration","Güvenilirlik"],["risk","Risk Grupları"],
@@ -1202,11 +1217,12 @@ function v2Overview(){
     "Champion: "+esc(v.selected_model||"ENSEMBLE")+" · horizons "+esc((v.primary_horizons||[30,60,90,120]).join(" / "))
     +" gün · calibration "+esc(v.calibration_method||"IPCW isotonic")+". Median service days ham XGB-Cox eğrisinden gelir (nb15 sözleşmesi).",
     "Teknik adı: Survival Analysis / Time-to-Event");
+  var v21tm=v21.test_metrics||{};
   out+='<div class="sec"><div class="grid g4">'
-    +kpi("V2.1 LANDMARK",n0(v21.landmarks),"derived-only aylık gözlem","cyan")
-    +kpi("MOTOSİKLET",n0(v21.motorcycles),"kaynak şema değişmedi","plain")
-    +kpi("LANDMARK QA",esc(v21.landmark_quality||"—"),"leakage / censoring / odometer","plain")
-    +kpi("SYNTHETIC SANITY",esc(v21.synthetic_sanity||"—"),"FAIL ise model eğitilmez","plain")
+    +kpi("V2.1 LANDMARK",n0(v21.landmarks),n0(v21.motorcycles)+" motosiklet · kaynak şema değişmedi","cyan")
+    +kpi("V2.1 DATA + MODEL GATE",esc(v21.data_gate_status||"—")+" / "+esc(v21.model_gate_status||"—"),"leakage / censoring / davranış kapıları","plain")
+    +kpi("V2.1 TEST IPCW C-INDEX",r3(v21tm.ipcw_c_index),"champion "+esc(v21.champion||"xgb_cox")+" · VALIDATION-seçili","plain")
+    +kpi("V2.1 30G TAM-SIFIR",r3((v21.p30_health||{}).exact_zero_share),"V2.0 %92 → V2.1 %0 (çözüldü)","plain")
     +'</div></div>';
   out+='<div class="sec"><div class="grid g2">'
    +card("V1 — nokta tahmini","Yaklaşık kaç gün / kaç km sonra servis?",
@@ -1848,6 +1864,280 @@ function wireV2Predict(){
 }
 var v2Active="scenario";
 
+/* ================= V2.1 DYNAMIC LANDMARK ================= */
+function v2_1SyntheticBanner(){
+  return finding("warn","SENTETİK VERİDE DOĞRULANDI",
+    "<p><b>SENTETİK VERİDE DOĞRULANDI. GERÇEK RIDEBASE FİLO TESTİ BEKLENİYOR.</b> "
+    +"V2.1 dynamic-landmark modeli RideBase Sentetik Veri Seti v1.4 (V2.1 landmark) üzerinde eğitildi ve doğrulandı; "
+    +"gerçek-dünya / üretim doğrulaması yapılmadı.</p>");
+}
+function renderV2_1(sub){
+  sub=sub||"predict";
+  var v=M.v2_1||{};
+  if(!v.model_available){
+    return v2_1Head()+'<div class="sec">'+finding("bad","V2.1 MODEL KAPISI GEÇİLMEDİ",
+      "<p>V2.1 dynamic-landmark model kapısı geçilmediği için canlı tahmin rotası yayımlanmadı. "
+      +"Detay: <code>reports/v2_1_v1_4_model_training.md</code>.</p>")+'</div>';
+  }
+  return v2_1Head()+v2_1Bar(sub)+(sub==="overview"?v2_1Overview():v2_1Predict());
+}
+function v2_1Head(){
+  var v=M.v2_1||{}, live=v.status==="EXPERIMENTAL_LIVE";
+  var chips='<span class="chip '+(live?'good':'bad')+'"><span class="dot"></span>V2.1 · '
+      +esc(live?"EXPERIMENTAL LIVE (SYNTHETIC)":(v.status||"—"))+'</span>'
+    +'<span class="chip">SOURCE SCHEMA v1.3 · UNCHANGED</span>'
+    +'<span class="chip">CHAMPION '+esc((v.champion||"xgb_cox").toUpperCase())+'</span>'
+    +'<span class="chip">CALIBRATION '+esc((v.calibration_method||"isotonic").toUpperCase())+'</span>'
+    +'<span class="chip warn">REAL FLEET: '+esc(v.real_fleet_validation||"PENDING")+'</span>';
+  return modHead("Module · V2.1 Dynamic Landmark","Servise Dönme Olasılığı (Landmark Survival)",
+    "Bir <b>landmark tarihinde</b>, yalnız o tarihe kadar bilinen bilgiyle: bir sonraki uygun gerçek servisin "
+    +"<b>30 / 60 / 90 / 120 gün</b> içinde gerçekleşme olasılığı. Bu bir <b>servise dönme</b> olasılığıdır — "
+    +"“bakım gerekli mi” olasılığı değildir. Bakım kararı ayrı, deterministik bakım motorundan gelir.",
+    chips,'model <code>reports/v2_1_v1_4_model_training.md</code> · api <code>/api/v2_1/*</code>');
+}
+function v2_1Bar(sub){
+  var tabs=[["predict","Canlı Tahmin"],["overview","Genel Bakış"]];
+  return '<div class="subtabs">'+tabs.map(function(t){
+    return '<button class="subtab'+(sub===t[0]?' active':'')+'" data-go="v2_1/'+t[0]+'">'+esc(t[1])+'</button>';
+  }).join('')+'</div>';
+}
+function v2_1Overview(){
+  var v=M.v2_1||{}, tm=v.test_metrics||{}, um=v.unseen_motorcycle_metrics||{}, br=tm.brier||{}, au=tm.auc||{},
+      p30=v.p30_health||{}, gp=v.golden_parity||{}, chk=v.behavioral_checks||{};
+  var out=pageNote(
+    "<b>P30 / P60 / P90 / P120</b>: bugünden itibaren 30 / 60 / 90 / 120 gün içinde servise dönme olasılığı. "
+    +"Pencere büyüdükçe olasılık düşemez (P30 ≤ P60 ≤ P90 ≤ P120). "
+    +"<b>C-index</b>: sıralama gücü (yüksek daha iyi) — doğruluk yüzdesi değildir. "
+    +"<b>Brier / IBS</b>: olasılık hatası (düşük daha iyi). "
+    +"<b>AUC</b>: ayırma gücü — doğruluk değildir. "
+    +"<b>Kalibrasyon</b>: tahmin edilen olasılık ile gözlenen sıklığın uyumu. "
+    +"<b>Sağ-sansür (censored)</b>: kesim tarihine kadar servis gözlenmedi. "
+    +"<b>TRAIN / VALIDATION / TEST</b> zaman sırasına göre bölünür; champion + kalibrasyon yalnız VALIDATION'da seçildi, "
+    +"TEST donduktan sonra bir kez okundu. <b>Unseen-motorcycle testi</b>: eğitimde hiç görülmemiş motosikletler. "
+    +"<b>Feature importance ≠ nedensellik.</b>",
+    "Champion: "+esc(v.champion||"xgb_cox")+" (monotone-constrained XGBoost survival:cox) · calibration "
+    +esc(v.calibration_method||"isotonic")+" · seçim yalnız "+esc(v.selection_split||"VALIDATION")+".",
+    "Teknik adı: Dynamic-Landmark Survival Analysis");
+  out+='<div class="sec">'+v2_1SyntheticBanner()+'</div>';
+  out+='<div class="sec"><div class="grid g4">'
+    +kpi("LANDMARK",n0(v.landmarks),n0(v.motorcycles)+" motosiklet · "+n0(v.feature_count||54)+" feature","cyan")
+    +kpi("DATA / MODEL GATE",esc(v.data_gate_status||"—")+" / "+esc(v.model_gate_status||"—"),"kaynak şema değişmedi","plain")
+    +kpi("TEST IPCW C-INDEX",r3(tm.ipcw_c_index),"Harrell C "+r3(tm.harrell_c_index),"plain")
+    +kpi("TEST IBS (30–120)",r3(tm.ibs),"düşük daha iyi","plain")
+    +'</div></div>';
+  out+='<div class="sec"><div class="grid g4">'
+    +kpi("BRIER@30",r3(br["30"]),"AUC@30 "+r3(au["30"]),"plain")
+    +kpi("BRIER@60",r3(br["60"]),"AUC@60 "+r3(au["60"]),"plain")
+    +kpi("BRIER@90",r3(br["90"]),"AUC@90 "+r3(au["90"]),"plain")
+    +kpi("BRIER@120",r3(br["120"]),"AUC@120 "+r3(au["120"]),"plain")
+    +'</div></div>';
+  out+='<div class="sec"><div class="grid g3">'
+    +kpi("UNSEEN-MOTORCYCLE C-INDEX",r3(um.ipcw_c_index),"IBS "+r3(um.ibs)+" · genelleme tutarlı","cyan")
+    +kpi("P30 TAM-SIFIR ORANI",r3(p30.exact_zero_share),(p30.unique_probability_levels||"—")+" farklı seviye · medyan "+r3(p30.median),"plain")
+    +kpi("GOLDEN PARITY",gp.parity_pass?"PASS":"—","max Δ "+(gp.max_probability_delta!=null?gp.max_probability_delta.toExponential(1):"—")+" · "+n0(gp.rows)+" satır","plain")
+    +'</div></div>';
+  function ck(k,label){return '<li>'+(chk[k]?'✅':'❌')+' '+esc(label)+'</li>';}
+  out+='<div class="sec">'+card("Davranış kapısı (metamorphic audit)","V2.0 hatalarının hepsi giderildi",
+    '<ul class="tk">'
+    +ck("km_sensitivity_meaningful","Kilometre arttıkça risk anlamlı artıyor (V2.0 düzlüğü yok)")
+    +ck("elapsed_time_no_structural_reversal","Gecikme arttıkça yapısal ters dönüş yok")
+    +ck("due_state_no_structural_reversal","Due-state arttıkça ters dönüş yok")
+    +ck("calendar_invariance","Takvim değişmezliği — 2026/mutlak-yıl uçurumu yok")
+    +ck("horizon_monotonicity","P30 ≤ P60 ≤ P90 ≤ P120")
+    +ck("same_input_deterministic","Aynı girdi → aynı çıktı")
+    +ck("annual_usage_changes_risk","Yıllık kullanım riski etkiliyor")
+    +'</ul>')+'</div>';
+  out+='<div class="sec">'+card("En etkili feature'lar","önem ≠ nedensellik",
+    '<div class="chips">'+(v.top_features||[]).map(function(f){return '<span class="chip"><code>'+esc(f)+'</code></span>';}).join('')
+    +'</div><p class="copy" style="margin-top:8px">Mutlak yıl / split / days_observed / target / censor feature\'ı yok; yalnız '
+    +'<code>landmark_month_sin/cos</code> mevsimsellik için var.</p>')+'</div>';
+  out+='<div class="sec">'+finding("warn","V2.0 ile ilişki",
+    "<p>V2.0 servis-anı benchmark'ı <b>canlı-senaryo auditini geçemedi</b> (30g tam-sıfır çökmesi, km duyarsızlığı, "
+    +"gecikme ters dönüşü, mutlak-yıl kayması) ve yalnız araştırma baseline'ı olarak tutulur. V2.1 farklı bir soruyu "
+    +"(arbitrary-today → gelecekteki servis) doğru kurar ve bu hataların hepsini giderir.</p>")+'</div>';
+  return out;
+}
+function v2_1Predict(){
+  var out='<div class="sec"><div id="v2_1apiStatus" class="chips"><span class="chip"><span class="dot"></span>Model servisine bağlanılıyor…</span></div>'
+    +'<p class="copy" style="margin-top:8px;font-size:.8rem" id="v2_1coldNote" hidden>Render ücretsiz sunucusu uykudaysa ilk istek 50+ saniye sürebilir.</p></div>';
+  out+='<div class="sec">'+v2_1SyntheticBanner()+'</div>';
+  out+='<div class="sec">'+finding("warn","KISMİ BİLGİYLE SENARYO TAHMİNİ",
+    "<p>Bu mod örnek bir motorun gizli değerlerini kullanmaz ve uydurma servis geçmişi eklemez. Bildiğin alanlar + "
+    +"model kataloğu + açık türetmeler kullanılır; kalan 54 feature'ın geri kalanı frozen preprocessor'ın kayıtlı "
+    +"eksik-değer işlemesine bırakılır. <b>Bu tam kişisel tahmin değildir.</b> "
+    +"Bilgi kapsamı bir güven skoru <b>değildir</b>.</p>")+'</div>';
+  out+='<div class="sec" id="v2_1formBox"><p class="copy"><span class="dot"></span> Form hazırlanıyor…</p></div>';
+  out+='<div class="sec" id="v2_1out"></div>';
+  return out;
+}
+function v2_1ApiPing(attempt){
+  attempt=attempt||0;
+  var api=(window.__V2_API__||"").replace(/\/$/,""), el=document.getElementById("v2_1apiStatus");
+  if(!el)return;
+  var cold=document.getElementById("v2_1coldNote");
+  if(!api){el.innerHTML='<span class="chip warn"><span class="dot"></span>API OFFLINE</span><span class="chip">public model API yapılandırılmadı</span>';return;}
+  if(cold)cold.hidden=false;
+  el.innerHTML='<span class="chip"><span class="dot"></span>'+(attempt?'Model servisi uyanıyor… (deneme '+(attempt+1)+')':'Model servisine bağlanılıyor…')+'</span>';
+  v2fetch(api+"/health").then(function(r){return r.json();}).then(function(h){
+    if(cold)cold.hidden=true;
+    var v1ok=(h.v1==="ok"||h.status==="ok"), v21ok=(h.v2_1_model_loaded===true);
+    el.innerHTML='<span class="chip good"><span class="dot"></span>BACKEND API ONLINE</span>'
+      +'<span class="chip '+(v1ok?'good':'warn')+'">V1 '+(v1ok?'LOADED':'—')+'</span>'
+      +'<span class="chip warn">V2.0 RESEARCH '+((h.v2_model_loaded===true)?'LOADED':'—')+'</span>'
+      +'<span class="chip '+(v21ok?'good':'bad')+'">V2.1 '+(v21ok?'LOADED':'—')+'</span>'
+      +'<span class="chip">CHAMPION '+esc((h.v2_1_champion||"—").toUpperCase())+'</span>'
+      +'<span class="chip">DATASET '+esc(h.v2_1_dataset_version||"—")+'</span>'
+      +'<span class="chip warn">REAL FLEET '+esc(h.v2_1_real_fleet_validation||"PENDING")+'</span>';
+  }).catch(function(){
+    if(attempt<2){setTimeout(function(){v2_1ApiPing(attempt+1);},4000);return;}
+    el.innerHTML='<span class="chip bad"><span class="dot"></span>API\'YE ULAŞILAMADI</span><span class="chip">'+esc(api)+'</span>'
+      +'<button class="subtab" id="v2_1retry" style="padding:4px 10px">Tekrar dene</button>';
+    var rb=document.getElementById("v2_1retry");if(rb)rb.addEventListener("click",function(){v2_1ApiPing(0);});
+    if(cold)cold.hidden=false;
+  });
+}
+function v2_1Form(){
+  var box=document.getElementById("v2_1formBox"); if(!box)return;
+  var cat=window.__V2_MODELS__||null;
+  function lab(id,text,html){return '<label style="display:flex;flex-direction:column;gap:5px;font-size:.8rem;color:var(--text-2)" for="'+id+'">'+esc(text)+html+'</label>';}
+  var st=v2SelectStyle(), it=v2InputStyle();
+  var bikeFields;
+  if(cat&&cat.brands&&cat.brands.length){
+    bikeFields='<div class="grid g3">'
+      +lab("v21brand","Marka",'<select id="v21brand" style="'+st+'">'+v2Options(cat.brands,"Marka seç")+'</select>')
+      +lab("v21model","Model",'<select id="v21model" disabled style="'+st+'"><option value="">Önce marka seç</option></select>')
+      +lab("v21year","Model yılı",'<input id="v21year" type="number" inputmode="numeric" placeholder="ör. 2022" style="'+it+'">')
+      +'</div><div id="v21specCard" style="margin-top:12px"></div>';
+  }else{
+    bikeFields='<div class="grid g3">'
+      +lab("v21brand","Marka",'<input id="v21brand" type="text" placeholder="ör. Honda" style="'+it+'">')
+      +lab("v21model","Model ID",'<input id="v21model" type="text" placeholder="ör. HONDA_PCX125" style="'+it+'">'+v2Help("Katalog kimliği; bilinmiyorsa V2.1 senaryo için gereklidir."))
+      +lab("v21year","Model yılı",'<input id="v21year" type="number" inputmode="numeric" placeholder="ör. 2022" style="'+it+'">')
+      +'</div><p class="copy" style="margin-top:6px">Motosiklet kataloğu yüklenemedi — marka/model kimliğini elle gir.</p>';
+  }
+  var useFields='<div class="grid g2">'
+    +lab("v21odo","Güncel kilometre",'<input id="v21odo" type="number" min="0" max="2000000" inputmode="decimal" placeholder="ör. 18000" style="'+it+'">'+v2Help("Göstergedeki toplam kilometre. Bu değer V2.1'de current_odometer_km_at_landmark olur — initial_mileage_km DEĞİL."))
+    +lab("v21annual","Yıllık yaklaşık km",'<input id="v21annual" type="number" min="0" max="200000" inputmode="decimal" placeholder="ör. 9000" style="'+it+'">'+v2Help("Bir yılda yaklaşık toplam yol. Ayda 1.000 km ≈ yılda 12.000 km."))
+    +lab("v21usage","Kullanım tipi",'<select id="v21usage" style="'+st+'">'+v2Options(Object.keys(V2_USAGE_LABELS),"Seçmek istemiyorum",function(o){return V2_USAGE_LABELS[o]||o;})+'</select>')
+    +lab("v21intensity","Kullanım yoğunluğu",'<select id="v21intensity" style="'+st+'">'+v2Options(Object.keys(V2_INTENSITY_LABELS),"Seçmek istemiyorum",function(o){return V2_INTENSITY_LABELS[o]||o;})+'</select>')
+    +'</div>';
+  var svcFields='<div class="grid g3">'
+    +lab("v21ldate","Landmark tarihi (bugün)",'<input id="v21ldate" type="date" style="'+it+'">'+v2Help("Tahminin dayandığı 'bugün'. Boşsa sistem tarihi kullanılır."))
+    +lab("v21lastdate","Son servis tarihi",'<input id="v21lastdate" type="date" style="'+it+'">')
+    +lab("v21lastodo","Son servis kilometresi",'<input id="v21lastodo" type="number" min="0" max="2000000" inputmode="decimal" placeholder="ör. 9000" style="'+it+'">')
+    +'</div><p class="copy" style="margin-top:8px">Son servis tarihi + kilometresi + güncel kilometre birlikte girilirse "son servisten beri gün/km" ve due-ratio deterministik türetilir. Eksikse bu alanlar preprocessor tarafından impute edilir; tarihsel servis sayıları / arıza / harcama geçmişi <b>uydurulmaz</b>.</p>';
+  box.innerHTML=card("1 · Motosikletini seç",(cat&&cat.model_count?cat.model_count+" katalog modeli":"katalog referansı"),bikeFields)
+    +'<div class="sec">'+card("2 · Kullanım","yalnız anlamlı ürün bilgileri",useFields)+'</div>'
+    +'<div class="sec">'+card("3 · Landmark + servis geçmişi","varsa son servis bilgisi",svcFields)+'</div>'
+    +'<div class="sec">'+card("4 · Tahmin","frozen V2.1 dynamic-landmark modeli",
+      '<div id="v2_1err" class="finding bad" style="display:none"></div>'
+      +'<div class="chips" style="margin-top:4px"><button class="subtab" id="v2_1run" style="border:1px solid var(--border);border-radius:8px">V2.1 SERVİSE DÖNME OLASILIĞINI HESAPLA</button></div>')+'</div>';
+  var today=new Date().toISOString().slice(0,10);
+  var ld=document.getElementById("v21ldate"); if(ld)ld.value=today;
+  if(cat&&cat.brands){
+    var brand=document.getElementById("v21brand"),model=document.getElementById("v21model");
+    brand.addEventListener("change",function(){
+      var ms=v2ModelsForBrand(brand.value);
+      model.innerHTML=v2Options(ms,"Model seç");model.disabled=!brand.value;
+      if(document.getElementById("v21specCard"))document.getElementById("v21specCard").innerHTML="";
+    });
+    model.addEventListener("change",function(){
+      var m=v2ModelById(model.value),el=document.getElementById("v21specCard");
+      if(el)el.innerHTML=m?('<div class="twrap"><table class="tbl"><tbody>'
+        +[["Marka",m.brand],["Model",m.model_name],["Kategori",m.category],["Güç aktarma",m.powertrain_type],
+          ["Politika grubu",m.policy_group||"—"]].map(function(x){return '<tr><td class="k">'+esc(x[0])+'</td><td>'+esc(x[1]==null?"—":x[1])+'</td></tr>';}).join('')
+        +'</tbody></table></div><p class="copy" style="margin-top:8px">Bu değerler kullanıcıdan istenmez; <code>'+esc(m.model_id)+'</code> katalog kaydından gelir.</p>'):'';
+    });
+  }
+  document.getElementById("v2_1run").addEventListener("click",v2_1RunScenario);
+}
+function v2_1ScenarioPayload(){
+  function val(id){var el=document.getElementById(id);return el&&el.value!==""?el.value:null;}
+  var p={brand:val("v21brand"),model_id:val("v21model"),
+    landmark_date:val("v21ldate")||new Date().toISOString().slice(0,10)};
+  var y=val("v21year"); if(y!=null)p.production_year=Number(y);
+  [["current_odometer_km","v21odo",Number],["annual_km_baseline","v21annual",Number],
+   ["usage_type","v21usage",String],["riding_intensity","v21intensity",String],
+   ["last_service_date","v21lastdate",String],["last_service_odometer_km","v21lastodo",Number]]
+   .forEach(function(x){var v=val(x[1]);if(v!=null)p[x[0]]=x[2](v);});
+  return p;
+}
+function v2_1ValidateScenario(p){
+  var e=[],today=new Date().toISOString().slice(0,10);
+  if(!p.brand)e.push("Marka gir.");
+  if(!p.model_id)e.push("Model / model ID gir.");
+  if(!p.landmark_date)e.push("Landmark tarihi gir.");
+  if(p.current_odometer_km!=null&&(p.current_odometer_km<0||p.current_odometer_km>2000000))e.push("Güncel kilometre geçersiz.");
+  if(p.last_service_odometer_km!=null&&p.current_odometer_km!=null&&p.last_service_odometer_km>p.current_odometer_km)e.push("Son servis kilometresi güncel kilometreden büyük olamaz.");
+  if(p.last_service_date&&p.last_service_date>p.landmark_date)e.push("Son servis tarihi landmark tarihinden sonra olamaz.");
+  if(p.annual_km_baseline!=null&&(p.annual_km_baseline<0||p.annual_km_baseline>200000))e.push("Yıllık km 0–200.000 aralığında olmalı.");
+  return e;
+}
+function v2_1RunScenario(){
+  var api=(window.__V2_API__||"").replace(/\/$/,"");
+  var errBox=document.getElementById("v2_1err"),out=document.getElementById("v2_1out"),
+      p=v2_1ScenarioPayload(),errs=v2_1ValidateScenario(p);
+  if(errs.length){errBox.style.display="block";errBox.innerHTML='<div>'+errs.map(esc).join("<br>")+'</div>';return;}
+  errBox.style.display="none";
+  out.innerHTML='<p class="copy"><span class="dot"></span> Hesaplanıyor… (servis uykudaysa ilk istek 50+ sn sürebilir)</p>';
+  var attempt=0;
+  (function run(){
+    v2fetch(api+"/api/v2_1/predict/scenario",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(p)})
+    .then(function(r){return r.json().then(function(d){if(!r.ok)throw new Error(d.detail||("HTTP "+r.status));return d;});})
+    .then(function(d){ out.innerHTML=v2_1ResultCard(d,p); })
+    .catch(function(e){
+      if(attempt++<1){out.innerHTML='<p class="copy"><span class="dot"></span> Servis uyanıyor, tekrar deneniyor…</p>';setTimeout(run,4000);return;}
+      out.innerHTML='<div class="empty">API\'ye ulaşılamadı — '+esc(String(e))+'. Sahte tahmin üretilmez.</div>';
+    });
+  })();
+}
+function v2_1ResultCard(d,p){
+  var pr=d.prediction||{}, cov=d.feature_coverage||{}, prov=d.provenance||{};
+  var seq=[pr.risk_30d,pr.risk_60d,pr.risk_90d,pr.risk_120d];
+  var mono=seq.every(function(x,i){return i===0||x>=seq[i-1]-1e-9;});
+  var g='';
+  /* OOD / input warnings ABOVE the result cards */
+  if((d.warnings||[]).length){
+    g+=finding("warn","Girdi / OOD uyarıları (sonuçların ÜSTÜNDE)",
+      '<ul style="margin:0;padding-left:18px">'+d.warnings.map(function(w){return '<li>'+esc(w)+'</li>';}).join('')+'</ul>');
+  }
+  g+=finding("warn",esc(d.mode||"KISMİ BİLGİYLE SENARYO TAHMİNİ"),
+    "<p>Son servis başlangıç noktası eksikse kişisel bakım tarihi/gecikmesi hesaplanmaz; yalnız genel müşteri-dönüş "
+    +"senaryosu sunulur. "+esc(d.risk_meaning||"")+"</p>");
+  g+=finding("","MÜŞTERİNİN KENDİLİĞİNDEN SERVİSE GELME İHTİMALİ",
+    "<p>Bu yüzdeler <b>bakım ihtimali değildir.</b> Bakım kararı ayrı deterministik bakım motorundan / V1'den gelir; "
+    +"V2.1 yalnız müşterinin davranışını (servise dönme) tahmin eder.</p>")
+    +'<div class="grid g4" style="margin-top:6px">'
+    +kpi("30 GÜN",pct(pr.risk_30d),"servise dönme olasılığı","plain")
+    +kpi("60 GÜN",pct(pr.risk_60d),"servise dönme olasılığı","plain")
+    +kpi("90 GÜN",pct(pr.risk_90d),"servise dönme olasılığı","cyan")
+    +kpi("120 GÜN",pct(pr.risk_120d),"servise dönme olasılığı","plain")+'</div>'
+    +'<div class="chips" style="margin-top:12px">'
+    +'<span class="chip '+(mono?'':'bad')+'">HORIZON MONOTONİK: '+(mono?'P30 ≤ P60 ≤ P90 ≤ P120':'HATA')+'</span>'
+    +(pr.median_service_days!=null?'<span class="chip">MEDYAN DÖNÜŞ SÜRESİ ~'+n0(pr.median_service_days)+' gün</span>':'<span class="chip">MEDYAN DÖNÜŞ: 365g içinde yok</span>')
+    +'<span class="chip">risk_score '+r3(pr.risk_score)+'</span></div>';
+  /* feature coverage — explicitly not a confidence score */
+  g+='<div class="sec">'+card("TAHMİN İÇİN KULLANILAN BİLGİ DÜZEYİ",
+    (cov.resolved||0)+" / "+(cov.contract||54)+" feature çözüldü",
+    '<p class="copy">'+esc(cov.note||"coverage is not a confidence score")+" — modele ne kadar bilgi verildiğini gösterir, "
+    +"modelin ne kadar emin olduğunu değil. Kalan alanlar frozen preprocessor tarafından impute edilir.</p>"
+    +'<details style="margin-top:10px"><summary style="cursor:pointer;color:var(--text-2)">Teknik feature provenance tablosu</summary>'
+    +'<div class="twrap" style="margin-top:8px;max-height:320px;overflow:auto"><table class="tbl"><thead><tr><th>Feature</th><th>Kaynak</th></tr></thead><tbody>'
+    +Object.keys(prov).map(function(k){return '<tr><td class="k"><code>'+esc(k)+'</code></td><td>'+esc(prov[k])+'</td></tr>';}).join('')
+    +'</tbody></table></div></details>')+'</div>';
+  g+=finding("warn","Uyarı","<p><b>SENTETİK VERİDE DOĞRULANDI.</b> "+esc(d.warning||"")
+    +" GERÇEK RIDEBASE FİLO TESTİ BEKLENİYOR.</p>");
+  return g;
+}
+function wireV2_1Predict(){
+  v2_1ApiPing(0);
+  var api=(window.__V2_API__||"").replace(/\/$/,"");
+  if(!api){var b=document.getElementById("v2_1formBox");if(b)b.innerHTML='<div class="empty">Model API yapılandırılmadı — canlı tahmin yok.</div>';return;}
+  if(!window.__V2_MODELS__){
+    v2fetch(api+"/api/v2/motorcycle-models").then(function(r){return r.json();}).then(function(c){window.__V2_MODELS__=c;v2_1Form();}).catch(function(){v2_1Form();});
+  }else{ v2_1Form(); }
+}
+
 /* ---------------- V3 placeholder ---------------- */
 function renderPlaceholder(id){
   var m=(M.modules||[]).filter(function(x){return x.id===id;})[0]||{};
@@ -1959,9 +2249,9 @@ function renderStatus(){
    +kpi("EDA",st("eda")==="complete"?"COMPLETE":esc(st("eda")),null,"plain")
    +kpi("V0",st("v0")==="complete"?"COMPLETE":esc(st("v0")),null,"plain")
    +kpi("V1","ACTIVE · FROZEN","DAYS + KM regression")
-   +kpi("V2.0",'<span style="color:var(--critical)">AUDIT FAILED</span>',"synthetic research baseline","plain")
-   +kpi("V2.1",'<span style="color:var(--critical)">DATA GATE FAILED</span>',"dynamic landmark · no model","plain")
-   +kpi("V3",'ON HOLD',"V2.1 semantics pending","plain")
+   +kpi("V2.0",'<span style="color:var(--critical)">AUDIT FAILED</span>',"synthetic research baseline (kept)","plain")
+   +kpi("V2.1",'<span style="color:var(--good)">SYNTHETICALLY VALIDATED</span>',"dynamic landmark · experimental live · real fleet PENDING","cyan")
+   +kpi("V3",'ON HOLD',"V2.1 tamamlanana kadar beklemede","plain")
    +'</div></div>';
   out+='<div class="sec"><div class="sec-head"><h2>QA</h2><span class="tag">artifact-driven</span></div><div class="grid g3">'
    +kpi("Leakage audit",qa.leakage_audit==="PASS"?'<span style="color:var(--good)">PASS</span>':esc(qa.leakage_audit||"—"),null,"plain")
@@ -1976,7 +2266,7 @@ function renderStatus(){
    +kpi("Model",'<span style="color:var(--critical)">NOT PRODUCT-VALID</span>',esc(ps.model||""),"")
    +kpi("Real fleet validation",'<span style="color:var(--warning)">PENDING</span>',null,"plain")
    +'</div>'
-   +finding("bad","Ayrım","<b>APPLICATION yayında olabilir; V2.0 canlı-senaryo için başarısızdır ve V2.1 henüz model değildir.</b><p>API'nin yanıt vermesi model geçerliliği anlamına gelmez. Gerçek filo doğrulaması bekleniyor.</p>")
+   +finding("warn","Ayrım","<b>APPLICATION yayında olabilir; V2.0 canlı-senaryo için başarısızdır (araştırma baseline'ı olarak tutulur); V2.1 dynamic-landmark modeli yalnızca SENTETİK VERİDE DOĞRULANMIŞTIR.</b><p>API'nin yanıt vermesi veya sentetik kapıların geçmesi gerçek-dünya geçerliliği anlamına gelmez. Gerçek RideBase filo backtesting'i bekleniyor.</p>")
    +'</div>';
   return out;
 }

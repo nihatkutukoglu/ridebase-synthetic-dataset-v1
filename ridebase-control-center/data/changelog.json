@@ -117,7 +117,7 @@
     ]
   },
   {
-    "id": "V2-15",
+    "id": "V2-17",
     "timestamp": "2026-08-31",
     "module": "V2",
     "type": "DATA",
@@ -130,7 +130,7 @@
     ]
   },
   {
-    "id": "V2-16",
+    "id": "V2-18",
     "timestamp": "2026-08-31",
     "module": "V2",
     "type": "MODEL",
@@ -143,7 +143,7 @@
     ]
   },
   {
-    "id": "V2-17",
+    "id": "V2-19",
     "timestamp": "2026-08-31",
     "module": "V2",
     "type": "MODEL",
@@ -156,7 +156,7 @@
     ]
   },
   {
-    "id": "V2-18",
+    "id": "V2-20",
     "timestamp": "2026-08-31",
     "module": "V2",
     "type": "PRODUCTION",
@@ -225,16 +225,42 @@
     "timestamp": "2026-09-02",
     "module": "V2.1",
     "type": "DATA",
-    "title": "Dynamic-landmark derived dataset built; modeling stopped at sanity gate",
-    "description": "251,054 monthly landmarks across 8,420 motorcycles passed schema/leakage/censoring QA. Synthetic overdue behavior was physically incoherent, so no model was trained and no V2.1 prediction route was published.",
-    "status": "FAIL",
-    "version": "1.4.0-v2.1-experiment",
+    "title": "V1.4 event generator + V2.1 dynamic-landmark dataset rebuilt",
+    "description": "V1.3 reused a fixed service-row sequence, collapsing heavy-overdue future-event probability. V1.4 produces a continuing stochastic service-event process (source schema unchanged). V2.1 landmarks rebuilt on V1.4: 256,841 landmarks / 8,907 motorcycles / 208,746 events / 48,095 right-censored / 54 features. Data gate PASS — leakage, censoring, calendar-invariance, km/days-due coherence, unseen-motorcycle isolation.",
+    "status": "PASS",
+    "version": "1.4.0-v2.1-dynamic-landmark",
     "artifacts": [
-      "ridebase-ml/reports/v2_1_synthetic_sanity.md"
+      "ridebase-ml/reports/v2_1_v1_4_data_gate.md"
     ]
   },
   {
-    "id": "UI-19",
+    "id": "V2.1-15",
+    "timestamp": "2026-09-02",
+    "module": "V2.1",
+    "type": "MODEL",
+    "title": "V2.1 dynamic-landmark survival model — Phase 3 PASS",
+    "description": "Ladder: OEM rule → simple Cox → Cox PH → CoxNet → XGB-Cox. Champion xgb_cox (monotone-constrained) + isotonic calibration, selected on VALIDATION only; TEST read once after freeze. Frozen TEST: IPCW C-index 0.7527, IBS 0.1020, Brier@30 0.0835. P30 exact-zero 0.000 (126 levels) — V2.0's 30d collapse, km flatness, elapsed-time reversal and absolute-year cliff are all gone. Behaviour + 30-day health gates PASS.",
+    "status": "PASS",
+    "version": "1.4.0-v2.1-dynamic-landmark",
+    "artifacts": [
+      "ridebase-ml/reports/v2_1_v1_4_model_training.md"
+    ]
+  },
+  {
+    "id": "V2.1-16",
+    "timestamp": "2026-09-02",
+    "module": "V2.1",
+    "type": "PRODUCTION",
+    "title": "V2.1 predictor + /api/v2_1/* packaged",
+    "description": "ridebase_ml.v2_1.V21SurvivalPredictor + separate /api/v2_1/* routes (model/info, features, metrics, sample, predict, predict/batch, predict/scenario). V1 and V2.0 routes untouched, /api/v2/* not redirected. Golden parity over 4000 frozen TEST rows: max probability delta 8.30e-06, deterministic, horizons monotone → PASS. Real-fleet validation PENDING.",
+    "status": "PASS",
+    "version": "1.4.0-v2.1-dynamic-landmark",
+    "artifacts": [
+      "ridebase-ml/models/v2_1_v1_4/golden_parity.json"
+    ]
+  },
+  {
+    "id": "UI-21",
     "timestamp": "2026-09-02",
     "module": "UI",
     "type": "UI",
@@ -247,7 +273,7 @@
     ]
   },
   {
-    "id": "API-20",
+    "id": "API-22",
     "timestamp": "2026-09-02",
     "module": "API",
     "type": "DEPLOYMENT",
@@ -260,7 +286,7 @@
     ]
   },
   {
-    "id": "V1-21",
+    "id": "V1-23",
     "timestamp": "2026-09-02",
     "module": "V1",
     "type": "UI",
