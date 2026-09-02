@@ -1,0 +1,638 @@
+{
+  "report": "RideBase V2.1 synthetic-world sanity gate",
+  "status": "FAIL",
+  "model_training_allowed": false,
+  "failed_checks": [
+    "overdue_direction_physically_coherent",
+    "severely_overdue_not_dead_region"
+  ],
+  "gate_checks": {
+    "source_schema_unchanged": true,
+    "feature_hygiene_passed": true,
+    "maintenance_pressure_not_deterministic": true,
+    "overdue_direction_physically_coherent": false,
+    "severely_overdue_not_dead_region": false,
+    "breakdown_noise_present": true,
+    "landmark_coverage_adequate": true
+  },
+  "headline": {
+    "landmarks": 251054,
+    "motorcycles": 8420,
+    "events": 140860,
+    "censored": 110194,
+    "breakdown_service_share": 0.010164
+  },
+  "feature_distributions": {
+    "days_since_last_service": {
+      "count": 251054.0,
+      "mean": 196.1919,
+      "std": 212.15559,
+      "min": 0.0,
+      "1%": 1.0,
+      "10%": 18.0,
+      "25%": 49.0,
+      "50%": 124.0,
+      "75%": 264.0,
+      "90%": 479.0,
+      "95%": 655.0,
+      "99%": 976.0,
+      "max": 1948.0
+    },
+    "km_since_last_service": {
+      "count": 251054.0,
+      "mean": 4124.22735,
+      "std": 7122.56224,
+      "min": 0.0,
+      "1%": 20.0,
+      "10%": 243.0,
+      "25%": 726.0,
+      "50%": 1865.0,
+      "75%": 4164.0,
+      "90%": 10101.0,
+      "95%": 16673.0,
+      "99%": 35829.47,
+      "max": 150000.0
+    },
+    "days_due_ratio": {
+      "count": 251054.0,
+      "mean": 0.54997,
+      "std": 0.59674,
+      "min": 0.0,
+      "1%": 0.00274,
+      "10%": 0.05202,
+      "25%": 0.13689,
+      "50%": 0.34497,
+      "75%": 0.7447,
+      "90%": 1.36071,
+      "95%": 1.83162,
+      "99%": 2.71595,
+      "max": 6.57632
+    },
+    "km_due_ratio": {
+      "count": 251054.0,
+      "mean": 0.97647,
+      "std": 1.90949,
+      "min": 0.0,
+      "1%": 0.0042,
+      "10%": 0.05183,
+      "25%": 0.15752,
+      "50%": 0.4188,
+      "75%": 0.891,
+      "90%": 2.31347,
+      "95%": 4.01071,
+      "99%": 9.52982,
+      "max": 50.0
+    }
+  },
+  "event_behavior_by_due_ratio": {
+    "days_due_ratio": [
+      {
+        "due_bin": "<=0.25",
+        "landmarks": 101169,
+        "eventual_event_rate": 0.7659164369,
+        "event_30d_rate": 0.1634979848,
+        "event_60d_rate": 0.312119832,
+        "event_90d_rate": 0.4261367712,
+        "event_120d_rate": 0.5157924246
+      },
+      {
+        "due_bin": "0.25-0.50",
+        "landmarks": 54899,
+        "eventual_event_rate": 0.638262992,
+        "event_30d_rate": 0.1469343624,
+        "event_60d_rate": 0.2632101595,
+        "event_90d_rate": 0.3578782541,
+        "event_120d_rate": 0.436232727
+      },
+      {
+        "due_bin": "0.50-0.80",
+        "landmarks": 37860,
+        "eventual_event_rate": 0.4985472795,
+        "event_30d_rate": 0.1088962109,
+        "event_60d_rate": 0.2060970741,
+        "event_90d_rate": 0.2976812878,
+        "event_120d_rate": 0.3850174216
+      },
+      {
+        "due_bin": "0.80-1.00",
+        "landmarks": 15622,
+        "eventual_event_rate": 0.3637818461,
+        "event_30d_rate": 0.1106105433,
+        "event_60d_rate": 0.216720894,
+        "event_90d_rate": 0.3056710214,
+        "event_120d_rate": 0.372503303
+      },
+      {
+        "due_bin": "1.00-1.50",
+        "landmarks": 20855,
+        "eventual_event_rate": 0.1442819468,
+        "event_30d_rate": 0.0577279276,
+        "event_60d_rate": 0.1005299768,
+        "event_90d_rate": 0.1334641222,
+        "event_120d_rate": 0.1620215772
+      },
+      {
+        "due_bin": "1.50-2.00",
+        "landmarks": 11105,
+        "eventual_event_rate": 0.0541197659,
+        "event_30d_rate": 0.0175490779,
+        "event_60d_rate": 0.0368910783,
+        "event_90d_rate": 0.0542467077,
+        "event_120d_rate": 0.0686575123
+      },
+      {
+        "due_bin": "2.00-3.00",
+        "landmarks": 8173,
+        "eventual_event_rate": 0.0201884253,
+        "event_30d_rate": 0.0111374078,
+        "event_60d_rate": 0.0192307692,
+        "event_90d_rate": 0.0265986518,
+        "event_120d_rate": 0.0334938246
+      },
+      {
+        "due_bin": ">3.00",
+        "landmarks": 1371,
+        "eventual_event_rate": 0.0,
+        "event_30d_rate": 0.0,
+        "event_60d_rate": 0.0,
+        "event_90d_rate": 0.0,
+        "event_120d_rate": 0.0
+      }
+    ],
+    "km_due_ratio": [
+      {
+        "due_bin": "<=0.25",
+        "landmarks": 88675,
+        "eventual_event_rate": 0.6595996617,
+        "event_30d_rate": 0.0308886952,
+        "event_60d_rate": 0.104448675,
+        "event_90d_rate": 0.1900523123,
+        "event_120d_rate": 0.2792963035
+      },
+      {
+        "due_bin": "0.25-0.50",
+        "landmarks": 51433,
+        "eventual_event_rate": 0.7024867303,
+        "event_30d_rate": 0.1291988637,
+        "event_60d_rate": 0.3048115281,
+        "event_90d_rate": 0.4532231474,
+        "event_120d_rate": 0.5683152255
+      },
+      {
+        "due_bin": "0.50-0.80",
+        "landmarks": 40194,
+        "eventual_event_rate": 0.7083395532,
+        "event_30d_rate": 0.292336439,
+        "event_60d_rate": 0.4908502918,
+        "event_90d_rate": 0.6159763314,
+        "event_120d_rate": 0.6950708277
+      },
+      {
+        "due_bin": "0.80-1.00",
+        "landmarks": 15455,
+        "eventual_event_rate": 0.6317696538,
+        "event_30d_rate": 0.3623033144,
+        "event_60d_rate": 0.5283902977,
+        "event_90d_rate": 0.6179704017,
+        "event_120d_rate": 0.6696963139
+      },
+      {
+        "due_bin": "1.00-1.50",
+        "landmarks": 17789,
+        "eventual_event_rate": 0.3990106245,
+        "event_30d_rate": 0.2667925865,
+        "event_60d_rate": 0.3753081854,
+        "event_90d_rate": 0.4293625241,
+        "event_120d_rate": 0.4647792835
+      },
+      {
+        "due_bin": "1.50-2.00",
+        "landmarks": 8450,
+        "eventual_event_rate": 0.0895857988,
+        "event_30d_rate": 0.0698822636,
+        "event_60d_rate": 0.0950961799,
+        "event_90d_rate": 0.1081081081,
+        "event_120d_rate": 0.1165815142
+      },
+      {
+        "due_bin": "2.00-3.00",
+        "landmarks": 10428,
+        "eventual_event_rate": 0.0135212888,
+        "event_30d_rate": 0.0115612957,
+        "event_60d_rate": 0.0154889768,
+        "event_90d_rate": 0.0172350117,
+        "event_120d_rate": 0.0189439742
+      },
+      {
+        "due_bin": ">3.00",
+        "landmarks": 18630,
+        "eventual_event_rate": 0.0004294149,
+        "event_30d_rate": 0.0004765025,
+        "event_60d_rate": 0.0005302227,
+        "event_90d_rate": 0.0005905802,
+        "event_120d_rate": 0.0006578406
+      }
+    ],
+    "max_due_ratio": [
+      {
+        "due_bin": "<=0.25",
+        "landmarks": 56533,
+        "eventual_event_rate": 0.7137777935,
+        "event_30d_rate": 0.0246189079,
+        "event_60d_rate": 0.1096445965,
+        "event_90d_rate": 0.2067402118,
+        "event_120d_rate": 0.303565099
+      },
+      {
+        "due_bin": "0.25-0.50",
+        "landmarks": 52486,
+        "eventual_event_rate": 0.7310330374,
+        "event_30d_rate": 0.1033989681,
+        "event_60d_rate": 0.2531073002,
+        "event_90d_rate": 0.3795856149,
+        "event_120d_rate": 0.4806853774
+      },
+      {
+        "due_bin": "0.50-0.80",
+        "landmarks": 50847,
+        "eventual_event_rate": 0.7188821366,
+        "event_30d_rate": 0.2346437346,
+        "event_60d_rate": 0.4033835362,
+        "event_90d_rate": 0.5246278413,
+        "event_120d_rate": 0.6170720179
+      },
+      {
+        "due_bin": "0.80-1.00",
+        "landmarks": 21786,
+        "eventual_event_rate": 0.6457816947,
+        "event_30d_rate": 0.3046611978,
+        "event_60d_rate": 0.4747277433,
+        "event_90d_rate": 0.5843466947,
+        "event_120d_rate": 0.6541199365
+      },
+      {
+        "due_bin": "1.00-1.50",
+        "landmarks": 24651,
+        "eventual_event_rate": 0.3993752789,
+        "event_30d_rate": 0.2337137018,
+        "event_60d_rate": 0.341552268,
+        "event_90d_rate": 0.401808486,
+        "event_120d_rate": 0.4443799855
+      },
+      {
+        "due_bin": "1.50-2.00",
+        "landmarks": 12000,
+        "eventual_event_rate": 0.1131666667,
+        "event_30d_rate": 0.0649674717,
+        "event_60d_rate": 0.0992453912,
+        "event_90d_rate": 0.1223551058,
+        "event_120d_rate": 0.1390503345
+      },
+      {
+        "due_bin": "2.00-3.00",
+        "landmarks": 13377,
+        "eventual_event_rate": 0.0228750841,
+        "event_30d_rate": 0.0155943828,
+        "event_60d_rate": 0.0230008024,
+        "event_90d_rate": 0.0279078845,
+        "event_120d_rate": 0.0321959568
+      },
+      {
+        "due_bin": ">3.00",
+        "landmarks": 19374,
+        "eventual_event_rate": 0.0004129245,
+        "event_30d_rate": 0.000459295,
+        "event_60d_rate": 0.0005123279,
+        "event_90d_rate": 0.0005720415,
+        "event_120d_rate": 0.0006386716
+      }
+    ]
+  },
+  "due_state_comparison": [
+    {
+      "due_state": "NOT_DUE",
+      "landmarks": 159866,
+      "event_30d_rate": 0.1168363033,
+      "event_90d_rate": 0.3628642216,
+      "eventual_event_rate": 0.7210663931
+    },
+    {
+      "due_state": "NEAR_DUE",
+      "landmarks": 34993,
+      "event_30d_rate": 0.2987340271,
+      "event_90d_rate": 0.5523129658,
+      "eventual_event_rate": 0.5920612694
+    },
+    {
+      "due_state": "OVERDUE",
+      "landmarks": 23444,
+      "event_30d_rate": 0.1163275479,
+      "event_90d_rate": 0.2035633832,
+      "eventual_event_rate": 0.194250128
+    },
+    {
+      "due_state": "SEVERELY_OVERDUE",
+      "landmarks": 32751,
+      "event_30d_rate": 0.0067080159,
+      "event_90d_rate": 0.0121322164,
+      "eventual_event_rate": 0.0095874935
+    }
+  ],
+  "customer_adherence_overlap": [
+    {
+      "customer_delay_group": "ON_TIME",
+      "landmarks": 227002,
+      "event_30d_rate": 0.1384721786,
+      "event_90d_rate": 0.3611774682,
+      "due_ratio_mean": 1.1511913308
+    },
+    {
+      "customer_delay_group": "0-3",
+      "landmarks": 2515,
+      "event_30d_rate": 0.0379482902,
+      "event_90d_rate": 0.1248272685,
+      "due_ratio_mean": 0.7802031259
+    },
+    {
+      "customer_delay_group": "3-7",
+      "landmarks": 3221,
+      "event_30d_rate": 0.0363754466,
+      "event_90d_rate": 0.1199715201,
+      "due_ratio_mean": 0.7758991274
+    },
+    {
+      "customer_delay_group": "7-30",
+      "landmarks": 11604,
+      "event_30d_rate": 0.0333965159,
+      "event_90d_rate": 0.1104939496,
+      "due_ratio_mean": 0.751625194
+    },
+    {
+      "customer_delay_group": ">30",
+      "landmarks": 6712,
+      "event_30d_rate": 0.0333022098,
+      "event_90d_rate": 0.109016811,
+      "due_ratio_mean": 0.8076382317
+    }
+  ],
+  "usage_behavior": [
+    {
+      "usage_type": "COMMUTER",
+      "landmarks": 114351,
+      "event_30d_rate": 0.1335305131,
+      "event_90d_rate": 0.3482462074,
+      "due_ratio_mean": 1.1626061529
+    },
+    {
+      "usage_type": "COURIER",
+      "landmarks": 43436,
+      "event_30d_rate": 0.1472877443,
+      "event_90d_rate": 0.3796308052,
+      "due_ratio_mean": 1.1621504778
+    },
+    {
+      "usage_type": "OFFROAD",
+      "landmarks": 5087,
+      "event_30d_rate": 0.1102746694,
+      "event_90d_rate": 0.3082952319,
+      "due_ratio_mean": 0.986648983
+    },
+    {
+      "usage_type": "SEASONAL",
+      "landmarks": 26291,
+      "event_30d_rate": 0.1234762092,
+      "event_90d_rate": 0.3313892502,
+      "due_ratio_mean": 1.0357632697
+    },
+    {
+      "usage_type": "TOURING",
+      "landmarks": 17675,
+      "event_30d_rate": 0.1005272408,
+      "event_90d_rate": 0.2856336261,
+      "due_ratio_mean": 0.8894757178
+    },
+    {
+      "usage_type": "TRACK",
+      "landmarks": 4664,
+      "event_30d_rate": 0.0982735724,
+      "event_90d_rate": 0.2784452297,
+      "due_ratio_mean": 0.9586567658
+    },
+    {
+      "usage_type": "WEEKEND",
+      "landmarks": 39550,
+      "event_30d_rate": 0.11572646,
+      "event_90d_rate": 0.303052285,
+      "due_ratio_mean": 1.1140203458
+    }
+  ],
+  "policy_group_behavior": [
+    {
+      "policy_group": "EV_HUB_MOTOR",
+      "landmarks": 609,
+      "event_30d_rate": 0.0447504303,
+      "event_90d_rate": 0.1484962406
+    },
+    {
+      "policy_group": "ICE_125_AIR_BELT",
+      "landmarks": 21208,
+      "event_30d_rate": 0.0891654466,
+      "event_90d_rate": 0.2810020877
+    },
+    {
+      "policy_group": "ICE_125_AIR_CHAIN",
+      "landmarks": 22116,
+      "event_30d_rate": 0.1121302883,
+      "event_90d_rate": 0.3063693631
+    },
+    {
+      "policy_group": "ICE_125_LIQUID_BELT",
+      "landmarks": 54009,
+      "event_30d_rate": 0.1023058066,
+      "event_90d_rate": 0.3032617375
+    },
+    {
+      "policy_group": "ICE_125_LIQUID_CHAIN",
+      "landmarks": 1576,
+      "event_30d_rate": 0.0514172709,
+      "event_90d_rate": 0.1659574468
+    },
+    {
+      "policy_group": "ICE_125_OIL_CHAIN",
+      "landmarks": 4699,
+      "event_30d_rate": 0.0457256461,
+      "event_90d_rate": 0.1473033975
+    },
+    {
+      "policy_group": "ICE_125_SCOOTER_BELT",
+      "landmarks": 26103,
+      "event_30d_rate": 0.0921125644,
+      "event_90d_rate": 0.2897493532
+    },
+    {
+      "policy_group": "ICE_200_LIQUID_CHAIN",
+      "landmarks": 6126,
+      "event_30d_rate": 0.0631543398,
+      "event_90d_rate": 0.2037940379
+    },
+    {
+      "policy_group": "ICE_200_OIL_CHAIN",
+      "landmarks": 2183,
+      "event_30d_rate": 0.0458412098,
+      "event_90d_rate": 0.1481108312
+    },
+    {
+      "policy_group": "ICE_250_LIQUID_BELT",
+      "landmarks": 13688,
+      "event_30d_rate": 0.0681044268,
+      "event_90d_rate": 0.2171057965
+    },
+    {
+      "policy_group": "ICE_250_LIQUID_CHAIN",
+      "landmarks": 10979,
+      "event_30d_rate": 0.0514802942,
+      "event_90d_rate": 0.1667003639
+    },
+    {
+      "policy_group": "ICE_350_LIQUID_BELT",
+      "landmarks": 2534,
+      "event_30d_rate": 0.0489995917,
+      "event_90d_rate": 0.156974202
+    },
+    {
+      "policy_group": "ICE_350_OIL_CHAIN",
+      "landmarks": 763,
+      "event_30d_rate": 0.0383036936,
+      "event_90d_rate": 0.1251862891
+    },
+    {
+      "policy_group": "ICE_400_LIQUID_CHAIN",
+      "landmarks": 1335,
+      "event_30d_rate": 0.0556844548,
+      "event_90d_rate": 0.1810699588
+    },
+    {
+      "policy_group": "ICE_450_TWIN_LIQUID_BELT",
+      "landmarks": 258,
+      "event_30d_rate": 0.0325203252,
+      "event_90d_rate": 0.1057268722
+    },
+    {
+      "policy_group": "ICE_450_TWIN_LIQUID_CHAIN",
+      "landmarks": 1474,
+      "event_30d_rate": 0.0582865169,
+      "event_90d_rate": 0.1836581709
+    },
+    {
+      "policy_group": "ICE_50_AIR_BELT",
+      "landmarks": 33890,
+      "event_30d_rate": 0.2180400755,
+      "event_90d_rate": 0.4799740975
+    },
+    {
+      "policy_group": "ICE_50_AIR_CHAIN",
+      "landmarks": 33925,
+      "event_30d_rate": 0.211994761,
+      "event_90d_rate": 0.4818190665
+    },
+    {
+      "policy_group": "ICE_650_TWIN_LIQUID_CHAIN",
+      "landmarks": 665,
+      "event_30d_rate": 0.062305296,
+      "event_90d_rate": 0.2016666667
+    },
+    {
+      "policy_group": "ICE_SMALL_SCOOTER_BELT",
+      "landmarks": 12914,
+      "event_30d_rate": 0.2102740273,
+      "event_90d_rate": 0.536779661
+    }
+  ],
+  "services_per_motorcycle_year": {
+    "count": 20696.0,
+    "mean": 2.00609,
+    "std": 1.77681,
+    "min": 1.0,
+    "10%": 1.0,
+    "25%": 1.0,
+    "50%": 1.0,
+    "75%": 2.0,
+    "90%": 4.0,
+    "99%": 10.0,
+    "max": 18.0
+  },
+  "inter_service_interval_days": {
+    "count": 33076.0,
+    "mean": 136.74069,
+    "std": 104.73534,
+    "min": 10.68032,
+    "1%": 21.12155,
+    "10%": 35.75661,
+    "25%": 55.36764,
+    "50%": 102.44935,
+    "75%": 188.69354,
+    "90%": 303.52166,
+    "99%": 439.56893,
+    "max": 597.08193
+  },
+  "right_censoring_by_split": [
+    {
+      "modeling_role": "TEST",
+      "landmarks": 44531,
+      "event_rate": 0.0975275651
+    },
+    {
+      "modeling_role": "TRAIN",
+      "landmarks": 133018,
+      "event_rate": 0.7692417568
+    },
+    {
+      "modeling_role": "UNSEEN_MOTORCYCLE_EXCLUDED",
+      "landmarks": 30441,
+      "event_rate": 0.6875595414
+    },
+    {
+      "modeling_role": "UNSEEN_MOTORCYCLE_TEMPORAL_TEST",
+      "landmarks": 8037,
+      "event_rate": 0.0899589399
+    },
+    {
+      "modeling_role": "VALIDATION",
+      "landmarks": 35027,
+      "event_rate": 0.3580380849
+    }
+  ],
+  "landmarks_per_motorcycle": {
+    "count": 8420.0,
+    "mean": 29.81639,
+    "std": 17.32551,
+    "min": 1.0,
+    "25%": 15.0,
+    "50%": 29.0,
+    "75%": 45.0,
+    "max": 67.0
+  },
+  "top_absolute_spearman_with_event_observed": {
+    "km_overdue": 0.464135,
+    "due_task_count": 0.463438,
+    "days_since_last_service": 0.460465,
+    "days_due_ratio": 0.454932,
+    "days_overdue": 0.427133,
+    "max_due_ratio": 0.422248,
+    "ownership_age_days": 0.388236,
+    "recent_service_count_365d": 0.355887,
+    "recent_service_count_90d": 0.344511,
+    "km_since_last_service": 0.330916,
+    "km_due_ratio": 0.317604,
+    "production_age_days": 0.298567,
+    "days_until_next_scheduled_due": 0.277429,
+    "prior_service_count": 0.191488,
+    "prior_periodic_service_count": 0.186542,
+    "annual_km_baseline": 0.120709,
+    "is_fleet_customer": 0.114375,
+    "historical_service_delay_mean_days": 0.114197,
+    "historical_on_time_rate": 0.114029,
+    "maintenance_due_now": 0.111733
+  },
+  "conclusion": "STOP BEFORE MODELING: the frozen v1.3 synthetic event process creates a severe overdue dead region; increasing due pressure is associated with sharply lower near-term return. A versioned same-schema synthetic event generator must be designed before V2.1 training can be valid."
+}

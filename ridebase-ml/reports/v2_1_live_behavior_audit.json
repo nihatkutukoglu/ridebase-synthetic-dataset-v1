@@ -1,0 +1,786 @@
+{
+  "audit": "V2.0 live-scenario regression audit",
+  "model_status": "SYNTHETIC RESEARCH BASELINE — FAILED LIVE-SCENARIO AUDIT",
+  "overall_status": "FAIL",
+  "failed_checks": [
+    "service_event_landmark_mismatch",
+    "exact_zero_30d_collapse",
+    "km_since_service_sensitivity",
+    "elapsed_time_direction",
+    "absolute_calendar_invariance",
+    "observation_artifact_invariance",
+    "overdue_product_contradiction"
+  ],
+  "checks": {
+    "service_event_landmark_mismatch": {
+      "status": "FAIL",
+      "evidence": "v1.3 ml_snapshot_contract is post-service; scenario route serves arbitrary snapshot_date"
+    },
+    "exact_zero_30d_collapse": {
+      "status": "FAIL",
+      "exact_zero_count": 92,
+      "case_count": 100,
+      "exact_zero_rate": 0.92
+    },
+    "km_since_service_sensitivity": {
+      "status": "FAIL",
+      "risk_90d_spread": 0.01612518
+    },
+    "elapsed_time_direction": {
+      "status": "FAIL",
+      "risk_90d_first": 0.26865431,
+      "risk_90d_last": 0.0
+    },
+    "absolute_calendar_invariance": {
+      "status": "FAIL",
+      "risk_90d_spread": 0.03211798
+    },
+    "observation_artifact_invariance": {
+      "status": "FAIL",
+      "risk_90d_spread": 0.12831618
+    },
+    "overdue_product_contradiction": {
+      "status": "FAIL",
+      "maintenance_status": "OVERDUE",
+      "risk_90d": 0.02933242
+    }
+  },
+  "cases": {
+    "km_since_last_service": [
+      {
+        "km_since_last_service": 500,
+        "risk_30d": 0.0,
+        "risk_60d": 0.00351199,
+        "risk_90d": 0.02933242,
+        "risk_120d": 0.11303835
+      },
+      {
+        "km_since_last_service": 2000,
+        "risk_30d": 0.0,
+        "risk_60d": 0.00351199,
+        "risk_90d": 0.02933242,
+        "risk_120d": 0.11303835
+      },
+      {
+        "km_since_last_service": 6000,
+        "risk_30d": 0.0,
+        "risk_60d": 0.00351199,
+        "risk_90d": 0.02933242,
+        "risk_120d": 0.11303835
+      },
+      {
+        "km_since_last_service": 10000,
+        "risk_30d": 0.0,
+        "risk_60d": 0.00351199,
+        "risk_90d": 0.02933242,
+        "risk_120d": 0.11303835
+      },
+      {
+        "km_since_last_service": 20000,
+        "risk_30d": 0.0,
+        "risk_60d": 0.00242308,
+        "risk_90d": 0.01320724,
+        "risk_120d": 0.09866567
+      }
+    ],
+    "days_since_last_service": [
+      {
+        "days_since_last_service": 30,
+        "risk_30d": 0.0,
+        "risk_60d": 0.05491204,
+        "risk_90d": 0.26865431,
+        "risk_120d": 0.55446166
+      },
+      {
+        "days_since_last_service": 90,
+        "risk_30d": 0.0,
+        "risk_60d": 0.01628058,
+        "risk_90d": 0.10354615,
+        "risk_120d": 0.25012095
+      },
+      {
+        "days_since_last_service": 180,
+        "risk_30d": 0.0,
+        "risk_60d": 0.00351199,
+        "risk_90d": 0.02933242,
+        "risk_120d": 0.11303835
+      },
+      {
+        "days_since_last_service": 365,
+        "risk_30d": 0.0,
+        "risk_60d": 0.00234722,
+        "risk_90d": 0.01320724,
+        "risk_120d": 0.06955709
+      },
+      {
+        "days_since_last_service": 730,
+        "risk_30d": 0.0,
+        "risk_60d": 0.0,
+        "risk_90d": 0.0,
+        "risk_120d": 0.01819532
+      }
+    ],
+    "calendar_year": [
+      {
+        "snapshot_year": 2023,
+        "risk_30d": 0.0,
+        "risk_60d": 0.00573959,
+        "risk_90d": 0.04532522,
+        "risk_120d": 0.15356242
+      },
+      {
+        "snapshot_year": 2024,
+        "risk_30d": 0.0,
+        "risk_60d": 0.00573959,
+        "risk_90d": 0.02756177,
+        "risk_120d": 0.15356242
+      },
+      {
+        "snapshot_year": 2025,
+        "risk_30d": 0.0,
+        "risk_60d": 0.00234722,
+        "risk_90d": 0.01320724,
+        "risk_120d": 0.06955709
+      },
+      {
+        "snapshot_year": 2026,
+        "risk_30d": 0.0,
+        "risk_60d": 0.00351199,
+        "risk_90d": 0.02933242,
+        "risk_120d": 0.11303835
+      }
+    ],
+    "days_observed_artifact": [
+      {
+        "days_observed": 100,
+        "risk_30d": 0.0,
+        "risk_60d": 0.01628058,
+        "risk_90d": 0.12831618,
+        "risk_120d": 0.29595999
+      },
+      {
+        "days_observed": 500,
+        "risk_30d": 0.0,
+        "risk_60d": 0.00351199,
+        "risk_90d": 0.03329479,
+        "risk_120d": 0.21167371
+      },
+      {
+        "days_observed": 1000,
+        "risk_30d": 0.0,
+        "risk_60d": 0.00234722,
+        "risk_90d": 0.01320724,
+        "risk_120d": 0.06955709
+      },
+      {
+        "days_observed": 1500,
+        "risk_30d": 0.0,
+        "risk_60d": 0.0,
+        "risk_90d": 0.0,
+        "risk_120d": 0.01096413
+      }
+    ],
+    "zero_30d_grid": [
+      {
+        "km": 500,
+        "days": 30,
+        "usage_type": "COMMUTER",
+        "risk_30d": 0.0
+      },
+      {
+        "km": 500,
+        "days": 30,
+        "usage_type": "COURIER",
+        "risk_30d": 0.0
+      },
+      {
+        "km": 500,
+        "days": 30,
+        "usage_type": "TOURING",
+        "risk_30d": 0.0
+      },
+      {
+        "km": 500,
+        "days": 30,
+        "usage_type": "WEEKEND",
+        "risk_30d": 0.0
+      },
+      {
+        "km": 500,
+        "days": 90,
+        "usage_type": "COMMUTER",
+        "risk_30d": 0.0
+      },
+      {
+        "km": 500,
+        "days": 90,
+        "usage_type": "COURIER",
+        "risk_30d": 0.0
+      },
+      {
+        "km": 500,
+        "days": 90,
+        "usage_type": "TOURING",
+        "risk_30d": 0.0
+      },
+      {
+        "km": 500,
+        "days": 90,
+        "usage_type": "WEEKEND",
+        "risk_30d": 0.0
+      },
+      {
+        "km": 500,
+        "days": 180,
+        "usage_type": "COMMUTER",
+        "risk_30d": 0.0
+      },
+      {
+        "km": 500,
+        "days": 180,
+        "usage_type": "COURIER",
+        "risk_30d": 0.0
+      },
+      {
+        "km": 500,
+        "days": 180,
+        "usage_type": "TOURING",
+        "risk_30d": 0.0
+      },
+      {
+        "km": 500,
+        "days": 180,
+        "usage_type": "WEEKEND",
+        "risk_30d": 0.0
+      },
+      {
+        "km": 500,
+        "days": 365,
+        "usage_type": "COMMUTER",
+        "risk_30d": 0.0
+      },
+      {
+        "km": 500,
+        "days": 365,
+        "usage_type": "COURIER",
+        "risk_30d": 0.0
+      },
+      {
+        "km": 500,
+        "days": 365,
+        "usage_type": "TOURING",
+        "risk_30d": 0.0
+      },
+      {
+        "km": 500,
+        "days": 365,
+        "usage_type": "WEEKEND",
+        "risk_30d": 0.0
+      },
+      {
+        "km": 500,
+        "days": 730,
+        "usage_type": "COMMUTER",
+        "risk_30d": 0.0
+      },
+      {
+        "km": 500,
+        "days": 730,
+        "usage_type": "COURIER",
+        "risk_30d": 0.0
+      },
+      {
+        "km": 500,
+        "days": 730,
+        "usage_type": "TOURING",
+        "risk_30d": 0.0
+      },
+      {
+        "km": 500,
+        "days": 730,
+        "usage_type": "WEEKEND",
+        "risk_30d": 0.0
+      },
+      {
+        "km": 2000,
+        "days": 30,
+        "usage_type": "COMMUTER",
+        "risk_30d": 0.0
+      },
+      {
+        "km": 2000,
+        "days": 30,
+        "usage_type": "COURIER",
+        "risk_30d": 0.0
+      },
+      {
+        "km": 2000,
+        "days": 30,
+        "usage_type": "TOURING",
+        "risk_30d": 0.0
+      },
+      {
+        "km": 2000,
+        "days": 30,
+        "usage_type": "WEEKEND",
+        "risk_30d": 0.0
+      },
+      {
+        "km": 2000,
+        "days": 90,
+        "usage_type": "COMMUTER",
+        "risk_30d": 0.0
+      },
+      {
+        "km": 2000,
+        "days": 90,
+        "usage_type": "COURIER",
+        "risk_30d": 0.0
+      },
+      {
+        "km": 2000,
+        "days": 90,
+        "usage_type": "TOURING",
+        "risk_30d": 0.0
+      },
+      {
+        "km": 2000,
+        "days": 90,
+        "usage_type": "WEEKEND",
+        "risk_30d": 0.0
+      },
+      {
+        "km": 2000,
+        "days": 180,
+        "usage_type": "COMMUTER",
+        "risk_30d": 0.0
+      },
+      {
+        "km": 2000,
+        "days": 180,
+        "usage_type": "COURIER",
+        "risk_30d": 0.0
+      },
+      {
+        "km": 2000,
+        "days": 180,
+        "usage_type": "TOURING",
+        "risk_30d": 0.0
+      },
+      {
+        "km": 2000,
+        "days": 180,
+        "usage_type": "WEEKEND",
+        "risk_30d": 0.0
+      },
+      {
+        "km": 2000,
+        "days": 365,
+        "usage_type": "COMMUTER",
+        "risk_30d": 0.0
+      },
+      {
+        "km": 2000,
+        "days": 365,
+        "usage_type": "COURIER",
+        "risk_30d": 0.0
+      },
+      {
+        "km": 2000,
+        "days": 365,
+        "usage_type": "TOURING",
+        "risk_30d": 0.0
+      },
+      {
+        "km": 2000,
+        "days": 365,
+        "usage_type": "WEEKEND",
+        "risk_30d": 0.0
+      },
+      {
+        "km": 2000,
+        "days": 730,
+        "usage_type": "COMMUTER",
+        "risk_30d": 0.0
+      },
+      {
+        "km": 2000,
+        "days": 730,
+        "usage_type": "COURIER",
+        "risk_30d": 0.0
+      },
+      {
+        "km": 2000,
+        "days": 730,
+        "usage_type": "TOURING",
+        "risk_30d": 0.0
+      },
+      {
+        "km": 2000,
+        "days": 730,
+        "usage_type": "WEEKEND",
+        "risk_30d": 0.0
+      },
+      {
+        "km": 6000,
+        "days": 30,
+        "usage_type": "COMMUTER",
+        "risk_30d": 0.0
+      },
+      {
+        "km": 6000,
+        "days": 30,
+        "usage_type": "COURIER",
+        "risk_30d": 0.0
+      },
+      {
+        "km": 6000,
+        "days": 30,
+        "usage_type": "TOURING",
+        "risk_30d": 0.0
+      },
+      {
+        "km": 6000,
+        "days": 30,
+        "usage_type": "WEEKEND",
+        "risk_30d": 0.0
+      },
+      {
+        "km": 6000,
+        "days": 90,
+        "usage_type": "COMMUTER",
+        "risk_30d": 0.0
+      },
+      {
+        "km": 6000,
+        "days": 90,
+        "usage_type": "COURIER",
+        "risk_30d": 0.0
+      },
+      {
+        "km": 6000,
+        "days": 90,
+        "usage_type": "TOURING",
+        "risk_30d": 0.0
+      },
+      {
+        "km": 6000,
+        "days": 90,
+        "usage_type": "WEEKEND",
+        "risk_30d": 0.0
+      },
+      {
+        "km": 6000,
+        "days": 180,
+        "usage_type": "COMMUTER",
+        "risk_30d": 0.0
+      },
+      {
+        "km": 6000,
+        "days": 180,
+        "usage_type": "COURIER",
+        "risk_30d": 0.0
+      },
+      {
+        "km": 6000,
+        "days": 180,
+        "usage_type": "TOURING",
+        "risk_30d": 0.0
+      },
+      {
+        "km": 6000,
+        "days": 180,
+        "usage_type": "WEEKEND",
+        "risk_30d": 0.0
+      },
+      {
+        "km": 6000,
+        "days": 365,
+        "usage_type": "COMMUTER",
+        "risk_30d": 0.0
+      },
+      {
+        "km": 6000,
+        "days": 365,
+        "usage_type": "COURIER",
+        "risk_30d": 0.0
+      },
+      {
+        "km": 6000,
+        "days": 365,
+        "usage_type": "TOURING",
+        "risk_30d": 0.0
+      },
+      {
+        "km": 6000,
+        "days": 365,
+        "usage_type": "WEEKEND",
+        "risk_30d": 0.0
+      },
+      {
+        "km": 6000,
+        "days": 730,
+        "usage_type": "COMMUTER",
+        "risk_30d": 0.0
+      },
+      {
+        "km": 6000,
+        "days": 730,
+        "usage_type": "COURIER",
+        "risk_30d": 0.0
+      },
+      {
+        "km": 6000,
+        "days": 730,
+        "usage_type": "TOURING",
+        "risk_30d": 0.0
+      },
+      {
+        "km": 6000,
+        "days": 730,
+        "usage_type": "WEEKEND",
+        "risk_30d": 0.0
+      },
+      {
+        "km": 10000,
+        "days": 30,
+        "usage_type": "COMMUTER",
+        "risk_30d": 0.00238148
+      },
+      {
+        "km": 10000,
+        "days": 30,
+        "usage_type": "COURIER",
+        "risk_30d": 0.00238148
+      },
+      {
+        "km": 10000,
+        "days": 30,
+        "usage_type": "TOURING",
+        "risk_30d": 0.00238148
+      },
+      {
+        "km": 10000,
+        "days": 30,
+        "usage_type": "WEEKEND",
+        "risk_30d": 0.00238148
+      },
+      {
+        "km": 10000,
+        "days": 90,
+        "usage_type": "COMMUTER",
+        "risk_30d": 0.0
+      },
+      {
+        "km": 10000,
+        "days": 90,
+        "usage_type": "COURIER",
+        "risk_30d": 0.0
+      },
+      {
+        "km": 10000,
+        "days": 90,
+        "usage_type": "TOURING",
+        "risk_30d": 0.0
+      },
+      {
+        "km": 10000,
+        "days": 90,
+        "usage_type": "WEEKEND",
+        "risk_30d": 0.0
+      },
+      {
+        "km": 10000,
+        "days": 180,
+        "usage_type": "COMMUTER",
+        "risk_30d": 0.0
+      },
+      {
+        "km": 10000,
+        "days": 180,
+        "usage_type": "COURIER",
+        "risk_30d": 0.0
+      },
+      {
+        "km": 10000,
+        "days": 180,
+        "usage_type": "TOURING",
+        "risk_30d": 0.0
+      },
+      {
+        "km": 10000,
+        "days": 180,
+        "usage_type": "WEEKEND",
+        "risk_30d": 0.0
+      },
+      {
+        "km": 10000,
+        "days": 365,
+        "usage_type": "COMMUTER",
+        "risk_30d": 0.0
+      },
+      {
+        "km": 10000,
+        "days": 365,
+        "usage_type": "COURIER",
+        "risk_30d": 0.0
+      },
+      {
+        "km": 10000,
+        "days": 365,
+        "usage_type": "TOURING",
+        "risk_30d": 0.0
+      },
+      {
+        "km": 10000,
+        "days": 365,
+        "usage_type": "WEEKEND",
+        "risk_30d": 0.0
+      },
+      {
+        "km": 10000,
+        "days": 730,
+        "usage_type": "COMMUTER",
+        "risk_30d": 0.0
+      },
+      {
+        "km": 10000,
+        "days": 730,
+        "usage_type": "COURIER",
+        "risk_30d": 0.0
+      },
+      {
+        "km": 10000,
+        "days": 730,
+        "usage_type": "TOURING",
+        "risk_30d": 0.0
+      },
+      {
+        "km": 10000,
+        "days": 730,
+        "usage_type": "WEEKEND",
+        "risk_30d": 0.0
+      },
+      {
+        "km": 20000,
+        "days": 30,
+        "usage_type": "COMMUTER",
+        "risk_30d": 0.05309727
+      },
+      {
+        "km": 20000,
+        "days": 30,
+        "usage_type": "COURIER",
+        "risk_30d": 0.05309727
+      },
+      {
+        "km": 20000,
+        "days": 30,
+        "usage_type": "TOURING",
+        "risk_30d": 0.05309727
+      },
+      {
+        "km": 20000,
+        "days": 30,
+        "usage_type": "WEEKEND",
+        "risk_30d": 0.05309727
+      },
+      {
+        "km": 20000,
+        "days": 90,
+        "usage_type": "COMMUTER",
+        "risk_30d": 0.0
+      },
+      {
+        "km": 20000,
+        "days": 90,
+        "usage_type": "COURIER",
+        "risk_30d": 0.0
+      },
+      {
+        "km": 20000,
+        "days": 90,
+        "usage_type": "TOURING",
+        "risk_30d": 0.0
+      },
+      {
+        "km": 20000,
+        "days": 90,
+        "usage_type": "WEEKEND",
+        "risk_30d": 0.0
+      },
+      {
+        "km": 20000,
+        "days": 180,
+        "usage_type": "COMMUTER",
+        "risk_30d": 0.0
+      },
+      {
+        "km": 20000,
+        "days": 180,
+        "usage_type": "COURIER",
+        "risk_30d": 0.0
+      },
+      {
+        "km": 20000,
+        "days": 180,
+        "usage_type": "TOURING",
+        "risk_30d": 0.0
+      },
+      {
+        "km": 20000,
+        "days": 180,
+        "usage_type": "WEEKEND",
+        "risk_30d": 0.0
+      },
+      {
+        "km": 20000,
+        "days": 365,
+        "usage_type": "COMMUTER",
+        "risk_30d": 0.0
+      },
+      {
+        "km": 20000,
+        "days": 365,
+        "usage_type": "COURIER",
+        "risk_30d": 0.0
+      },
+      {
+        "km": 20000,
+        "days": 365,
+        "usage_type": "TOURING",
+        "risk_30d": 0.0
+      },
+      {
+        "km": 20000,
+        "days": 365,
+        "usage_type": "WEEKEND",
+        "risk_30d": 0.0
+      },
+      {
+        "km": 20000,
+        "days": 730,
+        "usage_type": "COMMUTER",
+        "risk_30d": 0.0
+      },
+      {
+        "km": 20000,
+        "days": 730,
+        "usage_type": "COURIER",
+        "risk_30d": 0.0
+      },
+      {
+        "km": 20000,
+        "days": 730,
+        "usage_type": "TOURING",
+        "risk_30d": 0.0
+      },
+      {
+        "km": 20000,
+        "days": 730,
+        "usage_type": "WEEKEND",
+        "risk_30d": 0.0
+      }
+    ]
+  }
+}
