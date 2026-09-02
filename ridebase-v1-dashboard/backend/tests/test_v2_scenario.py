@@ -144,6 +144,7 @@ def test_overdue_mileage_is_a_strong_separate_maintenance_signal(client):
         json=_payload(
             brand="Bajaj",
             model_id="BAJAJ_NS200",
+            production_year=2016,
             current_odometer_km=15_000,
             last_service_odometer_km=9_000,
         ),
@@ -151,15 +152,59 @@ def test_overdue_mileage_is_a_strong_separate_maintenance_signal(client):
     assert response.status_code == 200
     body = response.json()
     maintenance = body["maintenance"]
-    assert maintenance["policy"]["interval_km"] == 5_000
+    assert maintenance["policy"]["interval_km"] == 3_000
+    assert maintenance["policy"]["market"] == "TR"
+    assert maintenance["policy"]["year_specific"] is True
+    assert maintenance["policy"]["manufacturer_exact"] is False
     assert maintenance["km_since_service"] == 6_000
-    assert maintenance["progress_ratio"] == 1.2
-    assert maintenance["overdue_km"] == 1_000
+    assert maintenance["progress_ratio"] == 2.0
+    assert maintenance["overdue_km"] == 3_000
     assert maintenance["status"] == "OVERDUE"
     assert maintenance["label"] == "BAKIM GECİKMİŞ"
+    assert maintenance["action"] == "SERVICE_NOW_REQUIRED"
+    assert maintenance["action_label"] == "SERVİS ŞİMDİ GEREKLİ"
+    assert body["v1"] is None
+    assert body["decision"]["show_v1_point_estimate"] is False
+    assert body["decision"]["primary_action"] == "SERVICE_NOW_REQUIRED"
     provenance = {row["feature"]: row for row in body["provenance"]}
     assert provenance["policy_interval_km"]["source"] == "MODEL_MASTER"
     assert provenance["maintenance_overdue_km_pre_service"]["source"] == "DERIVED"
+
+
+def test_current_ns200_ug2_keeps_separate_verified_policy(client):
+    response = client.post(
+        "/api/v2/predict/scenario",
+        json=_payload(
+            brand="Bajaj",
+            model_id="BAJAJ_NS200",
+            production_year=2024,
+            current_odometer_km=13_000,
+            last_service_odometer_km=9_000,
+        ),
+    )
+    assert response.status_code == 200
+    policy = response.json()["maintenance"]["policy"]
+    assert policy["interval_km"] == 5_000
+    assert policy["year_specific"] is False
+    assert policy["manufacturer_exact"] is True
+
+
+def test_missing_service_history_suppresses_personal_v1_timing(client):
+    response = client.post(
+        "/api/v2/predict/scenario",
+        json=_payload(last_service_date=None, last_service_odometer_km=None),
+    )
+    assert response.status_code == 200
+    body = response.json()
+    assert body["maintenance"]["status"] == "UNKNOWN"
+    assert body["maintenance"]["service_history_complete"] is False
+    assert set(body["maintenance"]["missing_inputs"]) == {
+        "last_service_date", "last_service_odometer_km",
+    }
+    assert body["v1"] is None
+    assert body["decision"]["prediction_scope"] == "COHORT_SCENARIO"
+    assert body["decision"]["show_v1_point_estimate"] is False
+    assert "kişisel tarih/mesafe" in body["decision"]["v1_suppressed_reason"]
 
 
 def test_recent_annualized_mileage_conflict_is_reported(client):

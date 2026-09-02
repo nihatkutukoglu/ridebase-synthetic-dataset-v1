@@ -142,10 +142,24 @@ class V2ScenarioPredictionTests(unittest.TestCase):
         for text in (
             "function v2MaintenanceCard",
             "DETERMİNİSTİK BAKIM DURUMU",
+            "SERVİS ŞİMDİ GEREKLİ",
             "BAKIM İLERLEMESİ",
             "Ana bakım periyodu",
-            "bakım gereksiniminin yerine geçmez",
+            "MÜŞTERİNİN KENDİLİĞİNDEN SERVİSE GELME İHTİMALİ",
+            "V1 KİŞİSEL TARİH / MESAFE GÖSTERİLMEDİ",
+            "model yılı ve Türkiye pazarı",
             "d.maintenance",
+            "d.decision",
+        ):
+            self.assertInBoth(text)
+
+    def test_incomplete_history_is_presented_as_cohort_scenario(self):
+        for text in (
+            "GENEL / BENZER MOTORLARA DAYALI SENARYO",
+            "Güncel kilometre, son servis tarihi ve son servis kilometresi birlikte gerekli",
+            "kişisel bakım tarihi hesaplanmadı",
+            "müşterinin kendiliğinden gelme ihtimali",
+            "decision.show_v1_point_estimate===false",
         ):
             self.assertInBoth(text)
 

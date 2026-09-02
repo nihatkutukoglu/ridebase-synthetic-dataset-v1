@@ -1556,12 +1556,12 @@ function v2SpecCard(model){
   ];
   var policy=model.maintenance_policy||null;
   if(policy){
-    specs.push(["Ana bakım periyodu",policy.interval_km!=null?n0(policy.interval_km)+" km":"—"]);
+    specs.push(["Ana bakım periyodu","Model yılıyla birlikte tahminde belirlenir"]);
     specs.push(["Bakım referansı",policy.task_code||"—"]);
   }
   el.innerHTML='<div class="twrap"><table class="tbl"><tbody>'+specs.map(function(x){return '<tr><td class="k">'+esc(x[0])+'</td><td>'+esc(x[1]==null?'—':x[1])+'</td></tr>';}).join('')+'</tbody></table></div>'
     +'<p class="copy" style="margin-top:10px">Bu değerler kullanıcıdan istenmez; seçilen <code>'+esc(model.model_id)+'</code> katalog kaydından gelir. '
-    +(policy?'Ana bakım periyodu RideBase bakım-politikası kaydından alınır ve bakım durumunu deterministik hesaplamak için kullanılır. ':'')
+    +(policy?'Ana bakım periyodu model yılı ve Türkiye pazarı birlikte değerlendirilerek tahmin yanıtında belirlenir. ':'')
     +(model.year_range_confidence==="LOW"?'<b>Model yılı aralığının katalog doğruluğu sınırlıdır.</b>':'')+'</p>';
 }
 function v2ModeScenario(){
@@ -1584,7 +1584,7 @@ function v2ModeScenario(){
   var service='<div class="grid g2">'
     +label("v2lastdate","Son servis tarihi",'<input id="v2lastdate" type="date" style="'+v2InputStyle()+'">')
     +label("v2lastodo","Son servis kilometresi",'<input id="v2lastodo" type="number" min="0" max="2000000" inputmode="decimal" placeholder="örn. 9000" style="'+v2InputStyle()+'">')
-    +'</div><p class="copy" style="margin-top:8px">Bu iki doğal bilgi girilirse gün/km farkları backend’de deterministik hesaplanır. Son servisten beri kilometre, seçilen motorun ana bakım periyoduyla karşılaştırılır; bakım gecikmişse ML yüzdelerinden ayrı ve açık biçimde gösterilir. Tarihsel servis sayıları, arızalar, harcama ve parça geçmişi uydurulmaz.</p>';
+    +'</div><p class="copy" style="margin-top:8px"><b>Kişisel bakım kararı için son servis tarihi ve kilometresi birlikte gereklidir.</b> İkisi de girilirse gün/km farkları backend’de deterministik hesaplanır. Biri eksikse kişisel bakım tarihi, gecikme ve V1 tarih/mesafe sonucu gösterilmez; yalnız genel müşteri-dönüş senaryosu sunulur. Tarihsel servis sayıları, arızalar, harcama ve parça geçmişi uydurulmaz.</p>';
   box.innerHTML=finding("warn","KISMİ BİLGİYLE SENARYO TAHMİNİ",
     "<p>Bu mod örnek bir motorun gizli değerlerini kullanmaz. Bildiğin bilgiler, model kataloğu ve açık türetmeler kullanılır; kalan alanlar frozen eğitim pipeline’ının kayıtlı eksik-değer işlemesine bırakılır. <b>Bu tam kişisel tahmin değildir.</b></p>")
     +card("1 · Motosikletini seç",window.__V2_MODELS__.model_count+" gerçek katalog modeli",bike)
@@ -1638,7 +1638,7 @@ function v2CoverageCard(c,p){
 }
 function v2MaintenanceCard(m){
   if(!m||m.status==="UNKNOWN"){
-    return finding("warn","DETERMİNİSTİK BAKIM DURUMU · HESAPLANAMADI","<p>Ana bakım periyodu ile son servis kilometresi birlikte bulunmadığı için deterministik bakım kararı verilemedi.</p>");
+    return finding("warn","KİŞİSEL BAKIM DURUMU · HESAPLANAMADI","<p><b>Güncel kilometre, son servis tarihi ve son servis kilometresi birlikte gerekli.</b> Bu başlangıç noktası tamamlanmadığı için kişisel bakım tarihi, kalan mesafe veya gecikme hesaplanamaz.</p>");
   }
   var policy=m.policy||{},kind=m.status==="OVERDUE"?"bad":m.status==="DUE_SOON"?"warn":"good";
   var delta=m.status==="OVERDUE"
@@ -1648,13 +1648,15 @@ function v2MaintenanceCard(m){
     +(m.days_since_service!=null?" · "+n0(m.days_since_service)+" gün":"");
   var recent=m.recent_annualized_km!=null
     ?'<p class="copy" style="margin-top:10px">Son servis sonrası kullanım temposu yıllıklandırıldığında yaklaşık <b>'+n0(m.recent_annualized_km)+' km/yıl</b>.</p>':'';
-  return finding(kind,"DETERMİNİSTİK BAKIM DURUMU · "+m.label,
-      '<p><b>Bu deterministik bakım kararıdır.</b> Aşağıdaki V2 yüzdeleri müşterinin servise dönme olasılığıdır; bakım gereksiniminin yerine geçmez.</p>')
+  var policyNote=policy.source_authority
+    ?'<p class="copy" style="margin-top:8px">Politika kaynağı: <b>'+esc(policy.source_authority)+'</b>. '+esc(policy.note||"")+'</p>':'';
+  return finding(kind,(m.status==="OVERDUE"?"SERVİS ŞİMDİ GEREKLİ · ":"DETERMİNİSTİK BAKIM DURUMU · ")+m.label,
+      '<p><b>'+esc(m.action_label||"Bu deterministik bakım kararıdır.")+'</b> V2 yüzdeleri yalnız müşterinin kendiliğinden servise dönme davranışını tahmin eder; bu bakım kararını değiştirmez.</p>')
     +'<div class="grid g4" style="margin-top:10px">'
     +kpi("BAKIM İLERLEMESİ",n1(m.progress_pct)+"%","kilometre ve zaman periyotlarından yüksek olan","cyan")
     +kpi(m.status==="OVERDUE"?"GECİKME":"KALAN",delta,"belirleyici ölçüt: "+m.driving_metric,"plain")
-    +kpi("ANA PERİYOT",policy.interval_km!=null?n0(policy.interval_km)+" km":"—",policy.task_code||"bakım politikası","plain")
-    +kpi("SON SERVİSTEN BERİ",since,"doğrudan kullanıcı girdilerinden","plain")+'</div>'+recent;
+    +kpi("ANA PERİYOT",policy.interval_km!=null?n0(policy.interval_km)+" km":"—",(policy.task_code||"bakım politikası")+(policy.year_specific?" · yıl/pazar kuralı":""),"plain")
+    +kpi("SON SERVİSTEN BERİ",since,"doğrudan kullanıcı girdilerinden","plain")+'</div>'+recent+policyNote;
 }
 function v2RunScenario(){
   var api=(window.__V2_API__||"").replace(/\/$/,"");
@@ -1667,9 +1669,13 @@ function v2RunScenario(){
     v2fetch(api+"/api/v2/predict/scenario",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(p)}).then(function(r){return r.json().then(function(d){if(!r.ok)throw new Error(d.detail||("HTTP "+r.status));return d;});}).then(function(d){
       if(!d.v2||d.v2.risk_90d==null){out.innerHTML='<div class="empty">Model sonucu boş döndü.</div>';return;}
       var warnings=(d.warnings||[]).length?finding("warn","Girdi / OOD uyarıları","<ul style=\"margin:0;padding-left:18px\">"+d.warnings.map(function(w){return '<li>'+esc(w)+'</li>';}).join('')+'</ul>'):'';
+      var personal=d.decision&&d.decision.prediction_scope==="PERSONAL_CONTEXT";
+      var scenarioLabel=personal?"KISMİ BİLGİYLE KİŞİSEL BAĞLAM":"GENEL / BENZER MOTORLARA DAYALI SENARYO";
+      var scenarioNote=personal
+        ?"Son servis başlangıç noktası biliniyor; bakım kararı deterministiktir. ML sonuçları yalnız müşteri dönüş davranışıdır."
+        :"Son servis tarihi ve kilometresi birlikte bilinmediği için kişisel bakım tarihi hesaplanmadı. Yüzdeler yalnız benzer sentetik kayıtlara dayalı genel müşteri-dönüş senaryosudur.";
       out.innerHTML=v2MaintenanceCard(d.maintenance)
-        +'<div class="sec">'+v2ResultCard(d.v1,d.v2,d.warning,"KISMİ BİLGİYLE SENARYO TAHMİNİ",
-        "Modelin bazı özellikleri bilinmediği için bu sonuç tam kişisel tahmin değildir. Başka bir örnek motosikletten hiçbir gizli alan alınmadı.")
+        +'<div class="sec">'+v2ResultCard(d.v1,d.v2,d.warning,scenarioLabel,scenarioNote,d.decision)
         +'</div><div class="sec">'+v2CoverageCard(d.coverage,d.provenance)+'</div>'+warnings;
     }).catch(function(e){
       if(attempt++<1){out.innerHTML='<p class="copy"><span class="dot"></span> Servis uyanıyor, tekrar deneniyor…</p>';setTimeout(run,4000);return;}
@@ -1770,22 +1776,23 @@ function v2ApiPing(attempt){
       +esc(api)+'/docs';}
   });
 }
-function v2ResultCard(v1,v2,warn,srcLabel,srcNote){
+function v2ResultCard(v1,v2,warn,srcLabel,srcNote,decision){
   var g='';
   if(srcLabel){
-    var kind=(srcLabel.indexOf("DEMO")>=0||srcLabel.indexOf("KISMİ")>=0)?"warn":"good";
+    var kind=(srcLabel.indexOf("DEMO")>=0||srcLabel.indexOf("KISMİ")>=0||srcLabel.indexOf("GENEL")>=0)?"warn":"good";
     g+=finding(kind,srcLabel,"<p>"+(srcNote||"")+"</p>");
   }else{
     g+=finding("good","GERÇEK MODEL TAHMİNİ","<p>Bu değerler Render'daki V1/V2 modellerinden canlı hesaplandı.</p>");
   }
-  g+='<div class="grid g4" style="margin-top:6px">'
-    +kpi("30 GÜN",pct(v2.risk_30d),"önümüzdeki 30 gün içinde servise gelme ihtimali","plain")
-    +kpi("60 GÜN",pct(v2.risk_60d),"önümüzdeki 60 gün içinde","plain")
-    +kpi("90 GÜN",pct(v2.risk_90d),"bugünden 90. güne kadar herhangi bir zamanda servise gelme ihtimali","cyan")
-    +kpi("120 GÜN",pct(v2.risk_120d),"önümüzdeki 120 gün içinde","plain")+'</div>'
+  g+=finding("","MÜŞTERİNİN KENDİLİĞİNDEN SERVİSE GELME İHTİMALİ","<p>Bu yüzdeler <b>bakım ihtimali değildir.</b> Bakım kararı yukarıdaki deterministik periyottan gelir; V2 yalnız müşterinin davranışını tahmin eder.</p>")
+    +'<div class="grid g4" style="margin-top:6px">'
+    +kpi("30 GÜN",pct(v2.risk_30d),"müşterinin kendiliğinden gelme ihtimali","plain")
+    +kpi("60 GÜN",pct(v2.risk_60d),"müşterinin kendiliğinden gelme ihtimali","plain")
+    +kpi("90 GÜN",pct(v2.risk_90d),"müşterinin kendiliğinden gelme ihtimali","cyan")
+    +kpi("120 GÜN",pct(v2.risk_120d),"müşterinin kendiliğinden gelme ihtimali","plain")+'</div>'
     +'<div class="chips" style="margin-top:12px">'
-    +'<span class="chip accent">90 GÜNLÜK RİSK: '+esc(v2.risk_group_90d||"—")+'</span>'
-    +'<span class="chip">MEDYAN SERVİS SÜRESİ ~'+n0(v2.median_service_days)+' gün</span></div>';
+    +'<span class="chip accent">90 GÜNLÜK MÜŞTERİ DÖNÜŞ SEGMENTİ: '+esc(v2.risk_group_90d||"—")+'</span>'
+    +((!decision||decision.show_v1_point_estimate!==false)?'<span class="chip">MEDYAN MÜŞTERİ DÖNÜŞ SÜRESİ ~'+n0(v2.median_service_days)+' gün</span>':'')+'</div>';
   if(v1){
     g+='<div class="grid g2" style="margin-top:14px">'
       +card("V1 — nokta tahmini","yaklaşık tek değer",
@@ -1794,7 +1801,9 @@ function v2ResultCard(v1,v2,warn,srcLabel,srcNote){
       +card("V2 — olasılık tahmini","zaman aralıklarında ihtimal",
         '<p class="copy">30g %'+pct(v2.risk_30d,0).replace("%","")+' · 60g '+pct(v2.risk_60d)+' · 90g '+pct(v2.risk_90d)+' · 120g '+pct(v2.risk_120d)+'</p>')
       +'</div>'
-      +finding("","V1 + V2","<p>V1 tek bir yaklaşık servis zamanı verir. V2 farklı zaman aralıklarında servise gelme ihtimalini verir.</p>");
+      +finding("","V1 + V2","<p>V1 yalnız yeterli servis geçmişi varken ve bakım gecikmemişken yaklaşık zaman verir. V2 müşterinin kendiliğinden servise dönme davranışını tahmin eder.</p>");
+  }else if(decision&&decision.show_v1_point_estimate===false){
+    g+=finding("warn","V1 KİŞİSEL TARİH / MESAFE GÖSTERİLMEDİ","<p>"+esc(decision.v1_suppressed_reason||"Kişisel servis başlangıç noktası bilinmiyor.")+"</p>");
   }
   g+=finding("warn","Uyarı","<p><b>SENTETİK VERİDE DOĞRULANDI.</b> "+esc(warn||"")
     +" GERÇEK RIDEBASE FİLO TESTİ BEKLENİYOR.</p>");

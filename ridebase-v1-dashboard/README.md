@@ -178,9 +178,15 @@ pairs and impossible date/odometer relationships, and never reads `/api/v2/sampl
 Unspecified frozen features remain missing and are handled by the persisted train-time
 preprocessor. The response classifies every frozen raw feature as `USER_INPUT`,
 `MODEL_MASTER`, `DERIVED`, or `MISSING_PREPROCESSOR`; it does not fabricate history.
-The scenario also returns a separate deterministic `maintenance` decision. It compares
-distance/time since the last service with the selected model policy, and must not be
-interpreted as or blended into the calibrated V2 return-to-service probability.
+The scenario also returns a separate deterministic `maintenance` decision plus a
+presentation `decision` contract. Personal maintenance status requires current odometer,
+last-service odometer, and last-service date together. If history is incomplete, or if
+maintenance is already overdue, the API suppresses V1's future date/km point estimate.
+Overdue status returns `SERVICE_NOW_REQUIRED`; V2 remains available only as customer
+self-return behaviour and must not be interpreted as maintenance need. Product policy
+resolution may be market/year-specific: Türkiye NS200 model years 2016–2023 use the
+confirmed 3,000 km RideBase operating cadence, while current UG2 uses its separate
+verified catalog policy.
 
 ### Guards
 

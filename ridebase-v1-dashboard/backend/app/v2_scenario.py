@@ -30,6 +30,34 @@ _PRIMARY_MAINTENANCE_TASKS = {
     "EV": ("GENERAL_SAFETY_INSPECTION", "EV_TRACTION_BATTERY_HEALTH_CHECK"),
 }
 
+# Product-facing, market/year-specific maintenance rules live outside the frozen
+# synthetic dataset contract. They must never be presented as manufacturer-exact
+# unless an authoritative year-specific manual backs them. The legacy NS200 rule
+# below is the RideBase Türkiye operating policy confirmed for the 2016 scenario;
+# current UG2 motorcycles continue to use the verified catalog policy.
+_MAINTENANCE_POLICY_OVERRIDES = (
+    {
+        "model_id": "BAJAJ_NS200",
+        "market": "TR",
+        "year_min": 2016,
+        "year_max": 2023,
+        "task_code": "ENGINE_OIL_CHANGE",
+        "interval_km": 3000,
+        "interval_months": 6,
+        "trigger_mode": "WHICHEVER_FIRST",
+        "confidence": "OPERATIONAL",
+        "source_authority": "RideBase Türkiye operational policy",
+        "evidence_level": "OWNER_CONFIRMED_OPERATING_POLICY",
+        "manufacturer_exact": False,
+        "policy_version": "product-2026-09-02",
+        "scope": "MODEL_YEAR_MARKET",
+        "note": (
+            "2016–2023 Türkiye NS200 için RideBase operasyonel yağ değişim aralığı; "
+            "üreticiye ait yıl-spesifik resmî periyot olarak sunulmaz."
+        ),
+    },
+)
+
 _NUMERIC_MODEL_FIELDS = {
     "engine_displacement_cc", "cylinder_count", "spark_plug_count",
 }
@@ -118,13 +146,25 @@ def maintenance_policies() -> Tuple[Dict[str, str], ...]:
     return rows
 
 
-def _maintenance_policy_for_model(model: Dict[str, Any]) -> Optional[Dict[str, Any]]:
+def _maintenance_policy_for_model(
+    model: Dict[str, Any], production_year: Optional[int] = None,
+) -> Optional[Dict[str, Any]]:
     """Resolve one defensible primary service cadence for product-facing status.
 
     Tiny chain-clean/lubrication cadences are intentionally not used as the primary
     workshop-service interval. ICE models prefer engine-oil service; EV models and
     fallbacks use the general safety inspection.
     """
+    if production_year is not None:
+        for override in _MAINTENANCE_POLICY_OVERRIDES:
+            if (override["model_id"] == model.get("model_id")
+                    and override["year_min"] <= production_year <= override["year_max"]):
+                out = dict(override)
+                months = out.get("interval_months")
+                out["interval_days"] = round(float(months) * 30.4375, 2) if months else None
+                out["year_specific"] = True
+                return out
+
     candidates = []
     for row in maintenance_policies():
         active = str(row.get("is_generator_active", "")).strip().lower()
@@ -179,6 +219,9 @@ def _maintenance_policy_for_model(model: Dict[str, Any]) -> Optional[Dict[str, A
         in {"1", "true", "yes"},
         "policy_version": row.get("policy_version"),
         "scope": "MODEL" if exact_model else "POLICY_GROUP",
+        "market": "TR",
+        "year_specific": False,
+        "source_url": row.get("source_url"),
         "note": (
             "Frozen manufacturer/model policy record; verify against the current owner manual."
             if str(row.get("is_manufacturer_exact_interval", "")).strip().lower()
@@ -188,9 +231,11 @@ def _maintenance_policy_for_model(model: Dict[str, Any]) -> Optional[Dict[str, A
     }
 
 
-def _model_with_policy(model: Dict[str, Any]) -> Dict[str, Any]:
+def _model_with_policy(
+    model: Dict[str, Any], production_year: Optional[int] = None,
+) -> Dict[str, Any]:
     out = dict(model)
-    out["maintenance_policy"] = _maintenance_policy_for_model(out)
+    out["maintenance_policy"] = _maintenance_policy_for_model(out, production_year)
     return out
 
 
@@ -211,7 +256,9 @@ def catalog_response() -> Dict[str, Any]:
     }
 
 
-def _selected_model(brand: str, model_id: str) -> Dict[str, Any]:
+def _selected_model(
+    brand: str, model_id: str, production_year: Optional[int] = None,
+) -> Dict[str, Any]:
     by_id = {row["model_id"]: row for row in motorcycle_catalog()}
     model = by_id.get(model_id)
     if model is None:
@@ -220,7 +267,7 @@ def _selected_model(brand: str, model_id: str) -> Dict[str, Any]:
         raise ScenarioInputError(
             f"Invalid brand/model pair: {model_id} belongs to {model['brand']}, not {brand}"
         )
-    return _model_with_policy(model)
+    return _model_with_policy(model, production_year)
 
 
 def _maintenance_assessment(req: V2ScenarioRequest, model: Dict[str, Any]) -> Dict[str, Any]:
@@ -228,6 +275,10 @@ def _maintenance_assessment(req: V2ScenarioRequest, model: Dict[str, Any]) -> Di
     result: Dict[str, Any] = {
         "status": "UNKNOWN",
         "label": "BAKIM DURUMU HESAPLANAMADI",
+        "action": "PERSONAL_MAINTENANCE_UNAVAILABLE",
+        "action_label": "KİŞİSEL BAKIM TARİHİ HESAPLANAMAZ",
+        "service_history_complete": False,
+        "missing_inputs": [],
         "policy": policy,
         "km_since_service": None,
         "days_since_service": None,
@@ -240,10 +291,21 @@ def _maintenance_assessment(req: V2ScenarioRequest, model: Dict[str, Any]) -> Di
         "driving_metric": None,
         "recent_annualized_km": None,
         "annual_baseline_ratio": None,
-        "note": "Deterministic maintenance status; separate from V2 return-to-service probability.",
+        "note": "Kişisel bakım kararı için son servis tarihi ve kilometre başlangıç noktası gerekir.",
     }
     if policy is None:
+        result["missing_inputs"] = ["maintenance_policy"]
         return result
+
+    required = {
+        "current_odometer_km": req.current_odometer_km,
+        "last_service_odometer_km": req.last_service_odometer_km,
+        "last_service_date": req.last_service_date,
+    }
+    result["missing_inputs"] = [key for key, value in required.items() if value is None]
+    if result["missing_inputs"]:
+        return result
+    result["service_history_complete"] = True
 
     progress = []
     km_since = None
@@ -276,12 +338,18 @@ def _maintenance_assessment(req: V2ScenarioRequest, model: Dict[str, Any]) -> Di
         if ratio >= 1.0:
             result["status"] = "OVERDUE"
             result["label"] = "BAKIM GECİKMİŞ"
+            result["action"] = "SERVICE_NOW_REQUIRED"
+            result["action_label"] = "SERVİS ŞİMDİ GEREKLİ"
         elif ratio >= 0.8:
             result["status"] = "DUE_SOON"
             result["label"] = "BAKIM YAKLAŞIYOR"
+            result["action"] = "PLAN_SERVICE"
+            result["action_label"] = "SERVİSİ PLANLA"
         else:
             result["status"] = "NOT_DUE"
             result["label"] = "BAKIM PERİYODU İÇİNDE"
+            result["action"] = "NO_IMMEDIATE_SERVICE"
+            result["action_label"] = "HEMEN SERVİS GEREKMİYOR"
 
     if days_since and days_since >= 30 and km_since is not None and km_since >= 500:
         annualized = km_since * 365.0 / days_since
@@ -372,7 +440,7 @@ def derive_scenario(req: V2ScenarioRequest, predictor: Any) -> Dict[str, Any]:
             and req.last_service_odometer_km > req.current_odometer_km):
         raise ScenarioInputError("last_service_odometer_km cannot exceed current_odometer_km")
 
-    model = _selected_model(req.brand, req.model_id)
+    model = _selected_model(req.brand, req.model_id, req.production_year)
     for key, value in (("usage_type", req.usage_type), ("riding_intensity", req.riding_intensity)):
         allowed = predictor.options.get(key, [])
         if value is not None and allowed and value not in allowed:
@@ -477,22 +545,55 @@ def predict_scenario(req: V2ScenarioRequest, predictor: Any) -> Dict[str, Any]:
         v1_features["snapshot_odometer_km"] = req.current_odometer_km
     v1 = v1_predict(store, v1_features, req.snapshot_date, strict=False)
 
+    maintenance = built["maintenance"]
+    show_v1 = maintenance["status"] not in {"UNKNOWN", "OVERDUE"}
+    prediction_scope = (
+        "PERSONAL_CONTEXT"
+        if maintenance["service_history_complete"] and maintenance["status"] != "UNKNOWN"
+        else "COHORT_SCENARIO"
+    )
+    if maintenance["status"] == "OVERDUE":
+        v1_suppressed_reason = (
+            "Bakım geciktiği için ileri tarih/mesafe tahmini gösterilmez; servis şimdi gereklidir."
+        )
+    elif maintenance["status"] == "UNKNOWN":
+        v1_suppressed_reason = (
+            "Son servis tarihi ve kilometresi bilinmediği için kişisel tarih/mesafe hesaplanamaz."
+        )
+    else:
+        v1_suppressed_reason = None
+
+    v1_payload = None
+    if show_v1:
+        v1_payload = {
+            "next_service_days": v1["prediction"]["next_service_days"],
+            "next_service_km": v1["prediction"]["next_service_km"],
+            "estimated_service_date": v1["derived"].get("estimated_service_date"),
+            "estimated_service_odometer_km": v1["derived"].get("estimated_service_odometer_km"),
+        }
+
     warnings = list(built["warnings"])
     warnings.extend(pred.get("warnings", []))
     return {
         "mode": "SCENARIO_PARTIAL",
         "selected_motorcycle": built["model"],
-        "v1": {
-            "next_service_days": v1["prediction"]["next_service_days"],
-            "next_service_km": v1["prediction"]["next_service_km"],
-            "estimated_service_date": v1["derived"].get("estimated_service_date"),
-            "estimated_service_odometer_km": v1["derived"].get("estimated_service_odometer_km"),
-        },
+        "v1": v1_payload,
         "v2": {key: pred.get(key) for key in (
             "risk_30d", "risk_60d", "risk_90d", "risk_120d",
             "median_service_days", "risk_group_90d", "estimated_median_service_date",
         ) if key in pred},
-        "maintenance": built["maintenance"],
+        "maintenance": maintenance,
+        "decision": {
+            "primary_source": "DETERMINISTIC_MAINTENANCE_POLICY",
+            "primary_action": maintenance["action"],
+            "primary_action_label": maintenance["action_label"],
+            "prediction_scope": prediction_scope,
+            "service_history_complete": maintenance["service_history_complete"],
+            "show_v1_point_estimate": show_v1,
+            "v1_suppressed_reason": v1_suppressed_reason,
+            "v2_role": "CUSTOMER_SELF_RETURN_PROBABILITY",
+            "v2_label": "Müşterinin kendiliğinden servise gelme ihtimali",
+        },
         "coverage": built["coverage"],
         "provenance": built["provenance"],
         "warnings": warnings,
@@ -500,8 +601,9 @@ def predict_scenario(req: V2ScenarioRequest, predictor: Any) -> Dict[str, Any]:
         "model": result["model"],
         "warning": result["warning"],
         "interpretation": (
-            "V1 is a point estimate of days/km to next service. V2 is the calibrated "
-            "probability of service return within each time window."
+            "Deterministic maintenance policy is the source of truth for whether service is due. "
+            "V1 timing is hidden when history is incomplete or maintenance is overdue. V2 is only "
+            "the calibrated probability that the customer returns within each time window."
         ),
         "mileage_contract": {
             "initial_mileage_km": (

@@ -41,8 +41,10 @@ at `#v1/predict`:
   real RideBase service-history feature-derivation pipeline is connected. The
   frontend never overlays a few user fields onto sample/default values and
   presents that as a personal result.
-- V1 is a point estimate; the existing V2 live screen retains the combined V1
-  + V2 probability-over-time flow.
+- V1 point timing is shown in the combined V2 scenario only when both last-service
+  inputs are present and deterministic maintenance is not overdue. Missing history
+  or an overdue policy suppresses the future date/km so it cannot contradict the
+  primary maintenance action.
 - Model status remains **SYNTHETICALLY VALIDATED**; real-fleet validation is
   **PENDING**.
 
@@ -56,8 +58,8 @@ at `#v1/predict`:
   model-master specs, derives only deterministic date/mileage fields, and sends
   those partial raw inputs to the frozen V2 preprocessor. It never calls or
   overlays `/api/v2/sample`; genuinely unknown service-history fields remain
-  missing. The result is labelled **KISMİ BİLGİYLE SENARYO TAHMİNİ**, not a
-  personal prediction.
+  missing. With incomplete last-service history the result is labelled as a
+  cohort/general scenario, not a personal prediction.
 - **Örnek motorla demo** is the only mode allowed to call `GET /api/v2/sample`.
   The response includes separate human-readable identity metadata, while
   `model_name`/`model_id` are not added to the frozen 117-feature model vector.
@@ -76,6 +78,14 @@ motorcycle's mileage at `observation_start_date` (basis:
 The product-level current odometer is used as V1 `snapshot_odometer_km` and,
 with last-service odometer, derives V2 `km_since_previous_service`; it is never
 silently mapped to `initial_mileage_km`.
+
+The deterministic maintenance decision is the product source of truth. A due
+or overdue policy is shown before ML and overdue means **SERVİS ŞİMDİ GEREKLİ**.
+V2 is explicitly labelled as customer self-return behaviour, not maintenance
+need. Personal maintenance status requires current odometer, last-service
+odometer, and last-service date together. The Türkiye NS200 product policy is
+year-aware: 2016–2023 uses the confirmed 3,000 km RideBase operating cadence;
+current UG2 keeps its separate verified catalog cadence.
 
 ---
 
