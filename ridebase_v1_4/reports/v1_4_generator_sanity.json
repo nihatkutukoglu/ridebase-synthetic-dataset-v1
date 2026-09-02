@@ -1,0 +1,390 @@
+{
+  "report": "RideBase v1.4 Synthetic Generator Update",
+  "version": "1.4.0",
+  "status": "PASS",
+  "failed_checks": [],
+  "gate_checks": {
+    "source_schema_unchanged": true,
+    "v1_3_hashes_unchanged": true,
+    "source_qa_pass": true,
+    "severely_overdue_dead_region_resolved": true,
+    "overdue_return_behavior_meaningful": true,
+    "due_pressure_direction": true,
+    "km_usage_sensitivity": true,
+    "time_usage_sensitivity": true,
+    "behavior_group_overlap": true,
+    "service_outcome_not_deterministic": true,
+    "reproducible_source_hashes": true
+  },
+  "root_cause": {
+    "code": "v1.3 regenerate_services preserved each motorcycle's fixed source row count and only rescaled timestamps; no stochastic event could occur after the final retained row",
+    "evidence": "99.0016% of v1.3 severely-overdue landmarks were after the final generated service; their P90 was 0%, versus 93.6306% when a future retained service existed",
+    "v1_3_p90_by_due_state": {
+      "NOT_DUE": 0.36286422161015275,
+      "NEAR_DUE": 0.5523129658165351,
+      "OVERDUE": 0.2035633831660864,
+      "SEVERELY_OVERDUE": 0.01213221639912516
+    }
+  },
+  "counts": {
+    "services": 52700,
+    "motorcycles_with_service": 8969,
+    "new_services": 11182,
+    "new_no_show": 926,
+    "new_cancel": 581,
+    "services_per_motorcycle": {
+      "count": 8969.0,
+      "mean": 5.87579,
+      "std": 6.06732,
+      "min": 1.0,
+      "25%": 2.0,
+      "50%": 4.0,
+      "75%": 7.0,
+      "max": 67.0
+    }
+  },
+  "service_type_shares": {
+    "PERIODIC": 0.88315,
+    "REPAIR": 0.051309,
+    "TIRE": 0.033966,
+    "BREAKDOWN": 0.031575
+  },
+  "inter_service_days": {
+    "count": 43731.0,
+    "mean": 153.43351,
+    "std": 116.84629,
+    "min": 6.35249,
+    "1%": 19.46189,
+    "10%": 37.55515,
+    "25%": 62.48088,
+    "50%": 118.91667,
+    "75%": 216.522,
+    "90%": 329.49916,
+    "99%": 496.83142,
+    "max": 972.66124
+  },
+  "inter_service_km": {
+    "count": 43731.0,
+    "mean": 3971.92913,
+    "std": 2649.8855,
+    "min": 0.0,
+    "1%": 245.3,
+    "10%": 1430.0,
+    "25%": 2305.0,
+    "50%": 3422.0,
+    "75%": 5047.0,
+    "90%": 6970.0,
+    "99%": 13424.7,
+    "max": 61212.0
+  },
+  "behavior_group_overlap": [
+    {
+      "behavior_group": "IRREGULAR",
+      "attempts": 1806,
+      "service_rate": 0.8671096346,
+      "p10_due": 0.3534823656,
+      "median_due": 1.2095018817,
+      "p90_due": 2.4519395161
+    },
+    {
+      "behavior_group": "REGULAR",
+      "attempts": 1798,
+      "service_rate": 0.8781979978,
+      "p10_due": 0.3643554722,
+      "median_due": 1.2057026833,
+      "p90_due": 2.3984696237
+    },
+    {
+      "behavior_group": "SLIGHTLY_LATE",
+      "attempts": 9085,
+      "service_rate": 0.8846450193,
+      "p10_due": 0.4006388319,
+      "median_due": 1.2206,
+      "p90_due": 2.4699694624
+    }
+  ],
+  "usage_group_behavior": [
+    {
+      "usage_type": "COMMUTER",
+      "landmarks": 121118,
+      "p30": 0.1724103767,
+      "p90": 0.4289370696,
+      "median_due": 0.476806517,
+      "annual_km": 10836.0
+    },
+    {
+      "usage_type": "COURIER",
+      "landmarks": 45770,
+      "p30": 0.1853834389,
+      "p90": 0.4571771903,
+      "median_due": 0.4723333333,
+      "annual_km": 11837.0
+    },
+    {
+      "usage_type": "OFFROAD",
+      "landmarks": 5377,
+      "p30": 0.1485958713,
+      "p90": 0.3840431467,
+      "median_due": 0.462,
+      "annual_km": 10514.0
+    },
+    {
+      "usage_type": "SEASONAL",
+      "landmarks": 27737,
+      "p30": 0.159137614,
+      "p90": 0.4024948625,
+      "median_due": 0.4719351281,
+      "annual_km": 10162.0
+    },
+    {
+      "usage_type": "TOURING",
+      "landmarks": 18863,
+      "p30": 0.1337539098,
+      "p90": 0.3517998198,
+      "median_due": 0.4520934418,
+      "annual_km": 9022.0
+    },
+    {
+      "usage_type": "TRACK",
+      "landmarks": 5034,
+      "p30": 0.1305125149,
+      "p90": 0.3422725467,
+      "median_due": 0.4800944863,
+      "annual_km": 8093.0
+    },
+    {
+      "usage_type": "WEEKEND",
+      "landmarks": 41882,
+      "p30": 0.1526192636,
+      "p90": 0.3802588224,
+      "median_due": 0.4832297133,
+      "annual_km": 9400.0
+    }
+  ],
+  "policy_group_behavior": [
+    {
+      "policy_group": "EV_HUB_MOTOR",
+      "attempts": 18,
+      "service_rate": 0.9444444444
+    },
+    {
+      "policy_group": "ICE_125_AIR_BELT",
+      "attempts": 917,
+      "service_rate": 0.8724100327
+    },
+    {
+      "policy_group": "ICE_125_AIR_CHAIN",
+      "attempts": 972,
+      "service_rate": 0.9002057613
+    },
+    {
+      "policy_group": "ICE_125_LIQUID_BELT",
+      "attempts": 2357,
+      "service_rate": 0.8752651676
+    },
+    {
+      "policy_group": "ICE_125_LIQUID_CHAIN",
+      "attempts": 52,
+      "service_rate": 0.8269230769
+    },
+    {
+      "policy_group": "ICE_125_OIL_CHAIN",
+      "attempts": 177,
+      "service_rate": 0.9378531073
+    },
+    {
+      "policy_group": "ICE_125_SCOOTER_BELT",
+      "attempts": 1173,
+      "service_rate": 0.8755328218
+    },
+    {
+      "policy_group": "ICE_200_LIQUID_CHAIN",
+      "attempts": 195,
+      "service_rate": 0.8358974359
+    },
+    {
+      "policy_group": "ICE_200_OIL_CHAIN",
+      "attempts": 66,
+      "service_rate": 0.9090909091
+    },
+    {
+      "policy_group": "ICE_250_LIQUID_BELT",
+      "attempts": 450,
+      "service_rate": 0.8955555556
+    },
+    {
+      "policy_group": "ICE_250_LIQUID_CHAIN",
+      "attempts": 322,
+      "service_rate": 0.8571428571
+    },
+    {
+      "policy_group": "ICE_350_LIQUID_BELT",
+      "attempts": 110,
+      "service_rate": 0.8818181818
+    },
+    {
+      "policy_group": "ICE_350_OIL_CHAIN",
+      "attempts": 25,
+      "service_rate": 0.76
+    },
+    {
+      "policy_group": "ICE_400_LIQUID_CHAIN",
+      "attempts": 35,
+      "service_rate": 0.8571428571
+    },
+    {
+      "policy_group": "ICE_450_TWIN_LIQUID_BELT",
+      "attempts": 17,
+      "service_rate": 0.9411764706
+    },
+    {
+      "policy_group": "ICE_450_TWIN_LIQUID_CHAIN",
+      "attempts": 40,
+      "service_rate": 0.95
+    },
+    {
+      "policy_group": "ICE_50_AIR_BELT",
+      "attempts": 2434,
+      "service_rate": 0.8812654067
+    },
+    {
+      "policy_group": "ICE_50_AIR_CHAIN",
+      "attempts": 2441,
+      "service_rate": 0.8897992626
+    },
+    {
+      "policy_group": "ICE_650_TWIN_LIQUID_CHAIN",
+      "attempts": 21,
+      "service_rate": 0.9047619048
+    },
+    {
+      "policy_group": "ICE_SMALL_SCOOTER_BELT",
+      "attempts": 867,
+      "service_rate": 0.8685121107
+    }
+  ],
+  "annual_services_per_motorcycle": {
+    "count": 27017.0,
+    "mean": 1.95062,
+    "std": 1.64376,
+    "min": 1.0,
+    "10%": 1.0,
+    "25%": 1.0,
+    "50%": 1.0,
+    "75%": 2.0,
+    "90%": 4.0,
+    "99%": 9.0,
+    "max": 18.0
+  },
+  "due_pressure_vs_return": [
+    {
+      "due_state": "NOT_DUE",
+      "landmarks": 201168,
+      "motorcycles": 8940,
+      "event_30d_rate": 0.1119710888,
+      "event_60d_rate": 0.234982701,
+      "event_90d_rate": 0.3439761791,
+      "event_120d_rate": 0.4380617196,
+      "eventual_event_rate": 0.8290384157,
+      "median_due_ratio": 0.349
+    },
+    {
+      "due_state": "NEAR_DUE",
+      "landmarks": 41216,
+      "motorcycles": 7162,
+      "event_30d_rate": 0.3328561724,
+      "event_60d_rate": 0.5196040373,
+      "event_90d_rate": 0.6388053183,
+      "event_120d_rate": 0.7161296584,
+      "eventual_event_rate": 0.8644458463,
+      "median_due_ratio": 0.9485
+    },
+    {
+      "due_state": "OVERDUE",
+      "landmarks": 18209,
+      "motorcycles": 4242,
+      "event_30d_rate": 0.3354385194,
+      "event_60d_rate": 0.519358559,
+      "event_90d_rate": 0.6352902411,
+      "event_120d_rate": 0.7092646493,
+      "eventual_event_rate": 0.8384864627,
+      "median_due_ratio": 1.4328
+    },
+    {
+      "due_state": "SEVERELY_OVERDUE",
+      "landmarks": 5188,
+      "motorcycles": 1304,
+      "event_30d_rate": 0.3469545104,
+      "event_60d_rate": 0.5304548959,
+      "event_90d_rate": 0.6355050116,
+      "event_120d_rate": 0.700077101,
+      "eventual_event_rate": 0.8043562066,
+      "median_due_ratio": 2.5075
+    }
+  ],
+  "breakdown_repair_contribution": 0.0828842504743833,
+  "appointments": {
+    "CONVERTED_TO_SERVICE": 30901,
+    "CANCELLED": 2552,
+    "NO_SHOW": 2052,
+    "RESCHEDULED": 844
+  },
+  "controlled_km_time_sensitivity": {
+    "km_control": {
+      "500_like": 0.003947666103137388,
+      "20000_like": 0.08445128879585402
+    },
+    "time_control": {
+      "30d_like": 0.0015909771448317262,
+      "730d_like": 0.07945251374644918
+    }
+  },
+  "heterogeneity": {
+    "behavior_groups": 3,
+    "within_bin_mixed_outcomes": true
+  },
+  "source_qa": {
+    "status": "PASS",
+    "failed": [],
+    "checks": {
+      "schema:appointments.csv": true,
+      "pk:appointments.csv": true,
+      "schema:customers.csv": true,
+      "pk:customers.csv": true,
+      "schema:maintenance_policies.csv": true,
+      "pk:maintenance_policies.csv": true,
+      "schema:maintenance_tasks.csv": true,
+      "pk:maintenance_tasks.csv": true,
+      "schema:mileage_timeline_monthly.csv": true,
+      "pk:mileage_timeline_monthly.csv": true,
+      "schema:motorcycles.csv": true,
+      "pk:motorcycles.csv": true,
+      "schema:ridebase_motorcycle_models_v1.csv": true,
+      "pk:ridebase_motorcycle_models_v1.csv": true,
+      "schema:service_parts.csv": true,
+      "pk:service_parts.csv": true,
+      "schema:service_tasks.csv": true,
+      "pk:service_tasks.csv": true,
+      "schema:services.csv": true,
+      "pk:services.csv": true,
+      "schema:services_enriched.csv": true,
+      "pk:services_enriched.csv": true,
+      "schema:usage_profiles.csv": true,
+      "pk:usage_profiles.csv": true,
+      "schema:workshops.csv": true,
+      "pk:workshops.csv": true,
+      "fk:service_motorcycle": "True",
+      "fk:service_customer": "True",
+      "fk:service_workshop": "True",
+      "fk:task_service": "True",
+      "fk:part_service": "True",
+      "fk:appointment_service": "True",
+      "relation:service_appointment": "True",
+      "relation:service_has_task": "True",
+      "timestamps:service_order": true,
+      "odometer:monotonic": true,
+      "window:no_future_history": true,
+      "policy:mapping": true
+    }
+  }
+}
