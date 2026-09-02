@@ -1,0 +1,7 @@
+{
+  "champion": "xgb_cox",
+  "selection_split": "VALIDATION",
+  "selection_metric": "minimum validation IBS among candidates passing physical behavior audit",
+  "calibration_method": "isotonic",
+  "calibration_selection": "first-half validation fit; second-half validation evaluation"
+}

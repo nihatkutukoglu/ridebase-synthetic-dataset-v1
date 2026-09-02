@@ -1,0 +1,12 @@
+{
+  "baseline_hazard.joblib": "70d87de08a6b44146a115134ddbd1e68b3972c5f5d5e94b9e7d4cebd732d2dc0",
+  "calibrator.joblib": "02f9d5955d922621eca65920aa0abd7fbd8a250f174c122e460aa6a61b350945",
+  "champion_model.joblib": "52f7b64a040745342860915e42ddc2774357ef444b306ad9c1881a4c809d8def",
+  "data_freeze_manifest.json": "28eb9a183e796e55833bc5043d79e37dbbeeb5a8fcda359b5b83cf96f2a43c78",
+  "feature_list.json": "aa8164987383bd2e1acb95456d735eae0586ae5ca9e8d73154a09892047a876a",
+  "frozen_test_predictions.parquet": "696a90bfceea87c7a52bb26b7c006ea33c42cb37dd65ca403a8d9dddf368047a",
+  "metrics.json": "0ff23e697eb12dc4f670914da2ae6caa49a5039d49ebf501bebf5509b4ba462c",
+  "preprocessor.joblib": "6b24e0ebc027f52bebb52841ec551cadb14b63bf2f540687a69ee0445ec9f990",
+  "selection_before_test.json": "d123e3ab045a6b95046af1b1b26d4c160a239551f20b1c0ad0d0bd63997e7942",
+  "test_first_touch.json": "c8a9203b80239f42d51fb927a889bdb5336acd54672fbfd7f60583b3c9e6272f"
+}

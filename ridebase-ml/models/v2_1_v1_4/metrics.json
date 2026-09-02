@@ -1,0 +1,879 @@
+{
+  "report": "RideBase V2.1 Model Training",
+  "status": "PASS",
+  "packaging_allowed": true,
+  "failed_checks": [],
+  "gate_checks": {
+    "p30_usable": true,
+    "km_sensitivity_meaningful": true,
+    "elapsed_time_no_structural_reversal": true,
+    "calendar_invariance": true,
+    "horizon_monotonicity": true,
+    "calibration_acceptable": true,
+    "unseen_motorcycle_reported": true,
+    "no_artifact_dominance": true,
+    "validation_only_selection": true,
+    "synthetic_only_status_explicit": true
+  },
+  "data_freeze": {
+    "modeling_table_sha256": "427e9e1fd321977f95c65c581df719c779747d0b8026aacefe0a4abb5fecdcc4",
+    "split_manifest_sha256": "4d0051e4c52649bf53002b00291db3ce5e0cc27267c71b620454845ed9faf937",
+    "feature_list": [
+      "brand",
+      "category",
+      "powertrain_type",
+      "policy_group",
+      "customer_type",
+      "usage_type",
+      "riding_intensity",
+      "climate_zone",
+      "storage_condition",
+      "workshop_region",
+      "workshop_price_level",
+      "last_service_type_code",
+      "last_arrival_mode",
+      "production_age_days",
+      "ownership_age_days",
+      "is_fleet_customer",
+      "current_odometer_km_at_landmark",
+      "annual_km_baseline",
+      "recent_90d_km",
+      "recent_vs_baseline_usage_ratio",
+      "days_since_last_service",
+      "km_since_last_service",
+      "avg_km_per_day_since_last_service",
+      "oem_interval_days",
+      "oem_interval_km",
+      "days_due_ratio",
+      "km_due_ratio",
+      "max_due_ratio",
+      "days_overdue",
+      "km_overdue",
+      "maintenance_due_now",
+      "due_task_count",
+      "critical_due_task_count",
+      "days_until_next_scheduled_due",
+      "km_until_next_scheduled_due",
+      "recent_service_count_90d",
+      "recent_service_count_365d",
+      "prior_service_count",
+      "prior_periodic_service_count",
+      "prior_breakdown_count",
+      "prior_repair_count",
+      "historical_service_delay_mean_days",
+      "historical_on_time_rate",
+      "cumulative_service_spend",
+      "last_service_was_breakdown",
+      "last_service_was_warranty",
+      "last_service_task_count",
+      "last_service_spend",
+      "service_bay_count",
+      "appointment_rate",
+      "avg_parts_lead_days",
+      "customer_volume_index",
+      "landmark_month_sin",
+      "landmark_month_cos"
+    ],
+    "feature_count": 54,
+    "target_contract": "time from landmark_at to next delivered service; right-censored at administrative cutoff",
+    "data_commit": "9ef72394b8e9f82819337e1d3bfdfda03084a16f",
+    "dataset_version": "1.4.0-v2.1-dynamic-landmark"
+  },
+  "candidate_validation_metrics": {
+    "oem_policy_due_rule": {
+      "ipcw_c_index": 0.6791876325198494,
+      "harrell_c_index": 0.679524528222907,
+      "ibs_30_120": 0.21827544548044725,
+      "ipcw_brier": {
+        "30": 0.12044880128198014,
+        "60": 0.1989045717340008,
+        "90": 0.25135907362203025,
+        "120": 0.28867658088864145
+      },
+      "time_dependent_auc": {
+        "30": 0.7511459203785109,
+        "60": 0.7378349555073834,
+        "90": 0.7369951283203617,
+        "120": 0.7388862283048163
+      },
+      "mean_time_dependent_auc": 0.7418519059205929,
+      "horizons": {
+        "30": {
+          "rows": 35951,
+          "event_rate": 0.1468665683847459,
+          "brier": 0.12060058937555976,
+          "auc": 0.7511903147578949,
+          "calibration_error": 0.07004262166327445,
+          "exact_zero_share": 0.0,
+          "unique_probability_levels": 35715
+        },
+        "60": {
+          "rows": 35865,
+          "event_rate": 0.27790324829220686,
+          "brier": 0.19938424825429812,
+          "auc": 0.7379028491140232,
+          "calibration_error": 0.13804398702336262,
+          "exact_zero_share": 0.0,
+          "unique_probability_levels": 35709
+        },
+        "90": {
+          "rows": 35786,
+          "event_rate": 0.3915218241770525,
+          "brier": 0.25222162359861705,
+          "auc": 0.7371205959955525,
+          "calibration_error": 0.20038378759380576,
+          "exact_zero_share": 0.0,
+          "unique_probability_levels": 35665
+        },
+        "120": {
+          "rows": 35722,
+          "event_rate": 0.48983819494989084,
+          "brier": 0.2898454843819696,
+          "auc": 0.7390632803789139,
+          "calibration_error": 0.2558071008747027,
+          "exact_zero_share": 0.0,
+          "unique_probability_levels": 35609
+        }
+      }
+    },
+    "simple_cox": {
+      "ipcw_c_index": 0.7031674299622809,
+      "harrell_c_index": 0.7035072399919545,
+      "ibs_30_120": 0.18018799834480578,
+      "ipcw_brier": {
+        "30": 0.11693914922278172,
+        "60": 0.17577709654439017,
+        "90": 0.20193458000659792,
+        "120": 0.20876548774407674
+      },
+      "time_dependent_auc": {
+        "30": 0.7625127331257906,
+        "60": 0.7680514773632672,
+        "90": 0.7709294446372839,
+        "120": 0.7729338443238898
+      },
+      "mean_time_dependent_auc": 0.7680312655458508,
+      "horizons": {
+        "30": {
+          "rows": 35951,
+          "event_rate": 0.1468665683847459,
+          "brier": 0.11707195815897044,
+          "auc": 0.7625159809434042,
+          "calibration_error": 0.04506415881231658,
+          "exact_zero_share": 0.0,
+          "unique_probability_levels": 35927
+        },
+        "60": {
+          "rows": 35865,
+          "event_rate": 0.27790324829220686,
+          "brier": 0.17607286767406108,
+          "auc": 0.7680871511093567,
+          "calibration_error": 0.07616449175130374,
+          "exact_zero_share": 0.0,
+          "unique_probability_levels": 35849
+        },
+        "90": {
+          "rows": 35786,
+          "event_rate": 0.3915218241770525,
+          "brier": 0.2023214456751117,
+          "auc": 0.7710434043908916,
+          "calibration_error": 0.09656543630845711,
+          "exact_zero_share": 0.0,
+          "unique_probability_levels": 35752
+        },
+        "120": {
+          "rows": 35722,
+          "event_rate": 0.48983819494989084,
+          "brier": 0.2090871867380666,
+          "auc": 0.7730756398498722,
+          "calibration_error": 0.10484917814442565,
+          "exact_zero_share": 0.0,
+          "unique_probability_levels": 35635
+        }
+      }
+    },
+    "cox_ph": {
+      "ipcw_c_index": 0.7247147450139857,
+      "harrell_c_index": 0.7250969555137902,
+      "ibs_30_120": 0.1599071891885254,
+      "ipcw_brier": {
+        "30": 0.10496902657625239,
+        "60": 0.1552937393609411,
+        "90": 0.1791004115277697,
+        "120": 0.18568580677747834
+      },
+      "time_dependent_auc": {
+        "30": 0.7834698519411976,
+        "60": 0.796602726051781,
+        "90": 0.800281884324431,
+        "120": 0.8014978166124873
+      },
+      "mean_time_dependent_auc": 0.7944880567170542,
+      "horizons": {
+        "30": {
+          "rows": 35951,
+          "event_rate": 0.1468665683847459,
+          "brier": 0.10509216178406752,
+          "auc": 0.7834745991920113,
+          "calibration_error": 0.009217803797469176,
+          "exact_zero_share": 0.0,
+          "unique_probability_levels": 35936
+        },
+        "60": {
+          "rows": 35865,
+          "event_rate": 0.27790324829220686,
+          "brier": 0.15558423411436745,
+          "auc": 0.7966200384971076,
+          "calibration_error": 0.031673197324645505,
+          "exact_zero_share": 0.0,
+          "unique_probability_levels": 35846
+        },
+        "90": {
+          "rows": 35786,
+          "event_rate": 0.3915218241770525,
+          "brier": 0.17947463369065839,
+          "auc": 0.800382163235529,
+          "calibration_error": 0.053894618976572696,
+          "exact_zero_share": 0.0,
+          "unique_probability_levels": 35734
+        },
+        "120": {
+          "rows": 35722,
+          "event_rate": 0.48983819494989084,
+          "brier": 0.18601545766203145,
+          "auc": 0.8016353411667968,
+          "calibration_error": 0.06364312653257471,
+          "exact_zero_share": 0.0,
+          "unique_probability_levels": 35577
+        }
+      }
+    },
+    "coxnet": {
+      "ipcw_c_index": 0.7247044232007787,
+      "harrell_c_index": 0.7250872814181261,
+      "ibs_30_120": 0.15999954084283347,
+      "ipcw_brier": {
+        "30": 0.10500841847259437,
+        "60": 0.15537519774938124,
+        "90": 0.17922652561834862,
+        "120": 0.18578537984894655
+      },
+      "time_dependent_auc": {
+        "30": 0.7836450480444824,
+        "60": 0.7965338953289277,
+        "90": 0.800296234981857,
+        "120": 0.8016247201361635
+      },
+      "mean_time_dependent_auc": 0.7945510463977047,
+      "horizons": {
+        "30": {
+          "rows": 35951,
+          "event_rate": 0.1468665683847459,
+          "brier": 0.10513146709845328,
+          "auc": 0.7836492780664392,
+          "calibration_error": 0.008603550834885133,
+          "exact_zero_share": 0.0,
+          "unique_probability_levels": 35934
+        },
+        "60": {
+          "rows": 35865,
+          "event_rate": 0.27790324829220686,
+          "brier": 0.15566507870684898,
+          "auc": 0.7965518042112916,
+          "calibration_error": 0.03226537950330498,
+          "exact_zero_share": 0.0,
+          "unique_probability_levels": 35854
+        },
+        "90": {
+          "rows": 35786,
+          "event_rate": 0.3915218241770525,
+          "brier": 0.17959954976936207,
+          "auc": 0.800396421345505,
+          "calibration_error": 0.055359661848434716,
+          "exact_zero_share": 0.0,
+          "unique_probability_levels": 35736
+        },
+        "120": {
+          "rows": 35722,
+          "event_rate": 0.48983819494989084,
+          "brier": 0.1861146534795228,
+          "auc": 0.8017607129514162,
+          "calibration_error": 0.06462344262848212,
+          "exact_zero_share": 0.0,
+          "unique_probability_levels": 35585
+        }
+      }
+    },
+    "xgb_cox": {
+      "ipcw_c_index": 0.7431559304452448,
+      "harrell_c_index": 0.7435597255672128,
+      "ibs_30_120": 0.2952310951356372,
+      "ipcw_brier": {
+        "30": 0.13054518154717407,
+        "60": 0.24805215206581827,
+        "90": 0.35163550153679446,
+        "120": 0.44146608206142396
+      },
+      "time_dependent_auc": {
+        "30": 0.804756693565258,
+        "60": 0.82000567991133,
+        "90": 0.8238822422631719,
+        "120": 0.8242980153313139
+      },
+      "mean_time_dependent_auc": 0.8171799400952469,
+      "horizons": {
+        "30": {
+          "rows": 35951,
+          "event_rate": 0.1468665683847459,
+          "brier": 0.13071786833528218,
+          "auc": 0.804763352362265,
+          "calibration_error": 0.13010502584923098,
+          "exact_zero_share": 0.0,
+          "unique_probability_levels": 6060
+        },
+        "60": {
+          "rows": 35865,
+          "event_rate": 0.27790324829220686,
+          "brier": 0.2487102930023732,
+          "auc": 0.8200145389818061,
+          "calibration_error": 0.24977033223057268,
+          "exact_zero_share": 0.0,
+          "unique_probability_levels": 13606
+        },
+        "90": {
+          "rows": 35786,
+          "event_rate": 0.3915218241770525,
+          "brier": 0.35299363777146286,
+          "auc": 0.8239750201190945,
+          "calibration_error": 0.3551885998379403,
+          "exact_zero_share": 0.0,
+          "unique_probability_levels": 19604
+        },
+        "120": {
+          "rows": 35722,
+          "event_rate": 0.48983819494989084,
+          "brier": 0.44354032699457846,
+          "auc": 0.8244424519581368,
+          "calibration_error": 0.4466209188607273,
+          "exact_zero_share": 0.0,
+          "unique_probability_levels": 23606
+        }
+      }
+    }
+  },
+  "selected": {
+    "champion": "xgb_cox",
+    "selection_split": "VALIDATION",
+    "selection_metric": "minimum validation IBS among candidates passing physical behavior audit",
+    "calibration_method": "isotonic",
+    "calibration_selection": "first-half validation fit; second-half validation evaluation"
+  },
+  "calibration_comparison": {
+    "uncalibrated": {
+      "horizons": {
+        "30": {
+          "brier": 0.10526227736433104,
+          "calibration_error": 0.0117136710786417,
+          "exact_zero_share": 0.0,
+          "unique_probability_levels": 17962
+        },
+        "60": {
+          "brier": 0.15904334515567076,
+          "calibration_error": 0.04180991523878714,
+          "exact_zero_share": 0.0,
+          "unique_probability_levels": 17904
+        },
+        "90": {
+          "brier": 0.18481058102600623,
+          "calibration_error": 0.06537954631227944,
+          "exact_zero_share": 0.0,
+          "unique_probability_levels": 17835
+        },
+        "120": {
+          "brier": 0.19153187319802997,
+          "calibration_error": 0.07624085704112803,
+          "exact_zero_share": 0.0,
+          "unique_probability_levels": 17759
+        }
+      },
+      "mean_brier": 0.1601620191860095,
+      "mean_calibration_error": 0.04878599741770907
+    },
+    "isotonic": {
+      "horizons": {
+        "30": {
+          "brier": 0.10622421931480117,
+          "calibration_error": 0.01604933023053438,
+          "exact_zero_share": 5.566069241901369e-05,
+          "unique_probability_levels": 85
+        },
+        "60": {
+          "brier": 0.15816107913986027,
+          "calibration_error": 0.024531108171469508,
+          "exact_zero_share": 0.0,
+          "unique_probability_levels": 120
+        },
+        "90": {
+          "brier": 0.18060955307249082,
+          "calibration_error": 0.028051244230599123,
+          "exact_zero_share": 0.0,
+          "unique_probability_levels": 102
+        },
+        "120": {
+          "brier": 0.18522913826448079,
+          "calibration_error": 0.026589924617304896,
+          "exact_zero_share": 0.0,
+          "unique_probability_levels": 103
+        }
+      },
+      "mean_brier": 0.15755599744790827,
+      "mean_calibration_error": 0.02380540181247698
+    },
+    "platt": {
+      "horizons": {
+        "30": {
+          "brier": 0.10611587554356149,
+          "calibration_error": 0.016477910271628683,
+          "exact_zero_share": 0.0,
+          "unique_probability_levels": 17962
+        },
+        "60": {
+          "brier": 0.15831912177138516,
+          "calibration_error": 0.02601251991608889,
+          "exact_zero_share": 0.0,
+          "unique_probability_levels": 17905
+        },
+        "90": {
+          "brier": 0.18181273873179257,
+          "calibration_error": 0.040705150290578224,
+          "exact_zero_share": 0.0,
+          "unique_probability_levels": 17842
+        },
+        "120": {
+          "brier": 0.18762897933241543,
+          "calibration_error": 0.05288977864701573,
+          "exact_zero_share": 0.0,
+          "unique_probability_levels": 17778
+        }
+      },
+      "mean_brier": 0.15846917884478864,
+      "mean_calibration_error": 0.03402133978132788
+    },
+    "beta": {
+      "horizons": {
+        "30": {
+          "brier": 0.10592798082822052,
+          "calibration_error": 0.014831378958489653,
+          "exact_zero_share": 0.0,
+          "unique_probability_levels": 17961
+        },
+        "60": {
+          "brier": 0.15765818489846506,
+          "calibration_error": 0.023849854490393438,
+          "exact_zero_share": 0.0,
+          "unique_probability_levels": 17906
+        },
+        "90": {
+          "brier": 0.18046851196663924,
+          "calibration_error": 0.034111401271391256,
+          "exact_zero_share": 0.0,
+          "unique_probability_levels": 17856
+        },
+        "120": {
+          "brier": 0.18581392982833972,
+          "calibration_error": 0.03471434742098888,
+          "exact_zero_share": 0.0,
+          "unique_probability_levels": 17794
+        }
+      },
+      "mean_brier": 0.15746715188041616,
+      "mean_calibration_error": 0.026876745535315806
+    }
+  },
+  "test_first_touch": {
+    "timestamp_utc": "2026-09-02T17:46:34.907359+00:00",
+    "commit": "9ef72394b8e9f82819337e1d3bfdfda03084a16f",
+    "selection_sha256": "d123e3ab045a6b95046af1b1b26d4c160a239551f20b1c0ad0d0bd63997e7942"
+  },
+  "test_metrics": {
+    "ipcw_c_index": 0.7526812034629026,
+    "harrell_c_index": 0.7527365929375829,
+    "ibs_30_120": 0.10199462240085244,
+    "ipcw_brier": {
+      "30": 0.0834682403713001,
+      "60": 0.11091643207963932,
+      "90": 0.10788327827386922,
+      "120": 0.09090007332679748
+    },
+    "time_dependent_auc": {
+      "30": 0.7771883610241372,
+      "60": 0.7942458656560296,
+      "90": 0.8078179496837391,
+      "120": 0.8193944698154507
+    },
+    "mean_time_dependent_auc": 0.7980098979511393,
+    "horizons": {
+      "30": {
+        "rows": 39418,
+        "event_rate": 0.12715003297985691,
+        "brier": 0.09836258962766563,
+        "auc": 0.768097123782536,
+        "calibration_error": 0.015717459879534903,
+        "exact_zero_share": 0.0,
+        "unique_probability_levels": 111
+      },
+      "60": {
+        "rows": 33359,
+        "event_rate": 0.2684732755778051,
+        "brier": 0.1542216935936636,
+        "auc": 0.7936907811417399,
+        "calibration_error": 0.033926624778641,
+        "exact_zero_share": 0.0,
+        "unique_probability_levels": 135
+      },
+      "90": {
+        "rows": 28265,
+        "event_rate": 0.41507164337519903,
+        "brier": 0.17677411959735917,
+        "auc": 0.8070600061796664,
+        "calibration_error": 0.046368871839030275,
+        "exact_zero_share": 0.0,
+        "unique_probability_levels": 115
+      },
+      "120": {
+        "rows": 24032,
+        "event_rate": 0.5660369507323568,
+        "brier": 0.17493497545682357,
+        "auc": 0.8187211753325524,
+        "calibration_error": 0.073434671583186,
+        "exact_zero_share": 0.0,
+        "unique_probability_levels": 108
+      }
+    }
+  },
+  "unseen_motorcycle_metrics": {
+    "ipcw_c_index": 0.756368284912511,
+    "harrell_c_index": 0.7564611655428071,
+    "ibs_30_120": 0.1018572824650308,
+    "ipcw_brier": {
+      "30": 0.08266349766770544,
+      "60": 0.11099241112271993,
+      "90": 0.10787099955114751,
+      "120": 0.0907533757747445
+    },
+    "time_dependent_auc": {
+      "30": 0.7758882035022243,
+      "60": 0.7963050920812745,
+      "90": 0.8086525952852123,
+      "120": 0.8212518594184198
+    },
+    "mean_time_dependent_auc": 0.7987530298827399,
+    "horizons": {
+      "30": {
+        "rows": 7144,
+        "event_rate": 0.12108062709966405,
+        "brier": 0.09718073502118613,
+        "auc": 0.7625736582258321,
+        "calibration_error": 0.017360848369913334,
+        "exact_zero_share": 0.0,
+        "unique_probability_levels": 49
+      },
+      "60": {
+        "rows": 6068,
+        "event_rate": 0.2575807514831905,
+        "brier": 0.15338369602194524,
+        "auc": 0.795412788662345,
+        "calibration_error": 0.038994635263124376,
+        "exact_zero_share": 0.0,
+        "unique_probability_levels": 60
+      },
+      "90": {
+        "rows": 5149,
+        "event_rate": 0.3985239852398524,
+        "brier": 0.17540746978191638,
+        "auc": 0.8084019559896045,
+        "calibration_error": 0.0494995801477563,
+        "exact_zero_share": 0.0,
+        "unique_probability_levels": 59
+      },
+      "120": {
+        "rows": 4369,
+        "event_rate": 0.5440604257267109,
+        "brier": 0.17364816924499824,
+        "auc": 0.8209589514980409,
+        "calibration_error": 0.06522142197035312,
+        "exact_zero_share": 0.0,
+        "unique_probability_levels": 74
+      }
+    }
+  },
+  "grouped_bootstrap": {
+    "p90_brier_95ci": [
+      0.17231756949249358,
+      0.1805115839495257
+    ],
+    "p90_auc_95ci": [
+      0.8004327775806586,
+      0.8140838084046677
+    ]
+  },
+  "p30_distribution": {
+    "min": 0.029105755300935073,
+    "p10": 0.029105755300935073,
+    "median": 0.04700854700854701,
+    "p90": 0.3021978021978022,
+    "max": 0.8746177370030581,
+    "exact_zero_share": 0.0,
+    "unique_probability_levels": 126
+  },
+  "metamorphic_audit": {
+    "scenarios": {
+      "km_since": [
+        {
+          "input": 500,
+          "p30": 0.029105755300935073,
+          "p90": 0.09362549800796813,
+          "p120": 0.145369284876905
+        },
+        {
+          "input": 2000,
+          "p30": 0.029105755300935073,
+          "p90": 0.14049586776859505,
+          "p120": 0.20710059171597633
+        },
+        {
+          "input": 6000,
+          "p30": 0.029105755300935073,
+          "p90": 0.2686804451510334,
+          "p120": 0.39579349904397704
+        },
+        {
+          "input": 10000,
+          "p30": 0.08739495798319327,
+          "p90": 0.33210332103321033,
+          "p120": 0.5164835164835164
+        },
+        {
+          "input": 20000,
+          "p30": 0.08739495798319327,
+          "p90": 0.3672316384180791,
+          "p120": 0.5973597359735974
+        }
+      ],
+      "days_since": [
+        {
+          "input": 30,
+          "p30": 0.029105755300935073,
+          "p90": 0.029105755300935073,
+          "p120": 0.029105755300935073
+        },
+        {
+          "input": 90,
+          "p30": 0.029105755300935073,
+          "p90": 0.053495440729483285,
+          "p120": 0.08045977011494253
+        },
+        {
+          "input": 180,
+          "p30": 0.029105755300935073,
+          "p90": 0.053495440729483285,
+          "p120": 0.08445945945945946
+        },
+        {
+          "input": 365,
+          "p30": 0.029105755300935073,
+          "p90": 0.11627906976744184,
+          "p120": 0.19195849546044094
+        },
+        {
+          "input": 730,
+          "p30": 0.029105755300935073,
+          "p90": 0.2686804451510334,
+          "p120": 0.39579349904397704
+        }
+      ],
+      "annual_km": [
+        {
+          "input": 3000,
+          "p30": 0.029105755300935073,
+          "p90": 0.09362549800796813,
+          "p120": 0.145369284876905
+        },
+        {
+          "input": 6000,
+          "p30": 0.029105755300935073,
+          "p90": 0.09362549800796813,
+          "p120": 0.145369284876905
+        },
+        {
+          "input": 12000,
+          "p30": 0.029105755300935073,
+          "p90": 0.12142857142857143,
+          "p120": 0.20710059171597633
+        },
+        {
+          "input": 30000,
+          "p30": 0.08296296296296296,
+          "p90": 0.3191214470284238,
+          "p120": 0.47530864197530864
+        }
+      ],
+      "due_state": [
+        {
+          "input": 0.35,
+          "p30": 0.029105755300935073,
+          "p90": 0.06280193236714976,
+          "p120": 0.08932038834951456
+        },
+        {
+          "input": 0.95,
+          "p30": 0.029105755300935073,
+          "p90": 0.15384615384615383,
+          "p120": 0.26254180602006694
+        },
+        {
+          "input": 1.5,
+          "p30": 0.08739495798319327,
+          "p90": 0.3672316384180791,
+          "p120": 0.5973597359735974
+        },
+        {
+          "input": 2.5,
+          "p30": 0.20721769499417927,
+          "p90": 0.6237623762376238,
+          "p120": 0.7469325153374234
+        }
+      ]
+    },
+    "checks": {
+      "km_sensitivity_meaningful": true,
+      "elapsed_time_no_structural_reversal": true,
+      "due_state_no_structural_reversal": true,
+      "calendar_invariance": true,
+      "same_input_deterministic": true,
+      "horizon_monotonicity": true,
+      "odometer_consistency": true,
+      "annual_usage_changes_risk": true
+    }
+  },
+  "feature_importance_top20": [
+    {
+      "feature": "riding_intensity",
+      "importance": 0.20791368186473846
+    },
+    {
+      "feature": "km_due_ratio",
+      "importance": 0.1376013308763504
+    },
+    {
+      "feature": "recent_90d_km",
+      "importance": 0.09135599434375763
+    },
+    {
+      "feature": "annual_km_baseline",
+      "importance": 0.07489083707332611
+    },
+    {
+      "feature": "max_due_ratio",
+      "importance": 0.050293631851673126
+    },
+    {
+      "feature": "oem_interval_km",
+      "importance": 0.039840418845415115
+    },
+    {
+      "feature": "last_service_task_count",
+      "importance": 0.0347784161567688
+    },
+    {
+      "feature": "cumulative_service_spend",
+      "importance": 0.0263239536434412
+    },
+    {
+      "feature": "policy_group",
+      "importance": 0.02596258744597435
+    },
+    {
+      "feature": "last_service_spend",
+      "importance": 0.02083340473473072
+    },
+    {
+      "feature": "recent_service_count_90d",
+      "importance": 0.020139727741479874
+    },
+    {
+      "feature": "km_since_last_service",
+      "importance": 0.019112631678581238
+    },
+    {
+      "feature": "days_since_last_service",
+      "importance": 0.01725209876894951
+    },
+    {
+      "feature": "due_task_count",
+      "importance": 0.015987800434231758
+    },
+    {
+      "feature": "is_fleet_customer",
+      "importance": 0.015741536393761635
+    },
+    {
+      "feature": "customer_type",
+      "importance": 0.015447643585503101
+    },
+    {
+      "feature": "landmark_month_cos",
+      "importance": 0.012359549291431904
+    },
+    {
+      "feature": "historical_service_delay_mean_days",
+      "importance": 0.011636298149824142
+    },
+    {
+      "feature": "ownership_age_days",
+      "importance": 0.010176275856792927
+    },
+    {
+      "feature": "days_until_next_scheduled_due",
+      "importance": 0.00964401476085186
+    }
+  ],
+  "feature_artifact_audit": {
+    "artifact_dominance": false,
+    "forbidden_tokens": [
+      "split",
+      "year",
+      "days_observed",
+      "censor",
+      "target",
+      "future",
+      "event_observed"
+    ]
+  },
+  "v2_0_comparison": {
+    "v2_0_live_audit": "FAILED",
+    "v2_0_p30_exact_zero_share": 0.92,
+    "v2_1_p30_exact_zero_share": 0.0,
+    "v2_1_km_sensitivity_pass": true,
+    "v2_1_elapsed_time_pass": true,
+    "v2_1_calendar_invariance_pass": true
+  },
+  "risk_groups": {
+    "status": "EXPERIMENTAL",
+    "basis": "validation P90 probability quantiles; not business validated"
+  },
+  "artifact_paths": [
+    "/Users/nihatkutukoglu/Downloads/ridebase_synthetic_dataset_v1/ridebase-ml/models/v2_1_v1_4/artifact_manifest.json",
+    "/Users/nihatkutukoglu/Downloads/ridebase_synthetic_dataset_v1/ridebase-ml/models/v2_1_v1_4/baseline_hazard.joblib",
+    "/Users/nihatkutukoglu/Downloads/ridebase_synthetic_dataset_v1/ridebase-ml/models/v2_1_v1_4/calibrator.joblib",
+    "/Users/nihatkutukoglu/Downloads/ridebase_synthetic_dataset_v1/ridebase-ml/models/v2_1_v1_4/champion_model.joblib",
+    "/Users/nihatkutukoglu/Downloads/ridebase_synthetic_dataset_v1/ridebase-ml/models/v2_1_v1_4/data_freeze_manifest.json",
+    "/Users/nihatkutukoglu/Downloads/ridebase_synthetic_dataset_v1/ridebase-ml/models/v2_1_v1_4/feature_list.json",
+    "/Users/nihatkutukoglu/Downloads/ridebase_synthetic_dataset_v1/ridebase-ml/models/v2_1_v1_4/frozen_test_predictions.parquet",
+    "/Users/nihatkutukoglu/Downloads/ridebase_synthetic_dataset_v1/ridebase-ml/models/v2_1_v1_4/metrics.json",
+    "/Users/nihatkutukoglu/Downloads/ridebase_synthetic_dataset_v1/ridebase-ml/models/v2_1_v1_4/preprocessor.joblib",
+    "/Users/nihatkutukoglu/Downloads/ridebase_synthetic_dataset_v1/ridebase-ml/models/v2_1_v1_4/selection_before_test.json",
+    "/Users/nihatkutukoglu/Downloads/ridebase_synthetic_dataset_v1/ridebase-ml/models/v2_1_v1_4/test_first_touch.json"
+  ],
+  "status_label": "SYNTHETICALLY VALIDATED — REAL FLEET VALIDATION PENDING"
+}
