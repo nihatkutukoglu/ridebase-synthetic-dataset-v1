@@ -163,8 +163,11 @@ def predict_scenario(req: V21ScenarioRequest) -> Dict[str, Any]:
     payload["landmark_date"] = req.landmark_date.isoformat()
     if req.last_service_date:
         payload["last_service_date"] = req.last_service_date.isoformat()
+    # source catalog dir: same frozen tables the backend already ships
+    # (Dockerfile.prod copies them to /app/app/data/; v1.3 == v1.4 for these files)
+    src_dir = settings.MODEL_CATALOG_PATH.parent
     try:
-        derived = derive(payload)
+        derived = derive(payload, source_dir=src_dir if (src_dir / "maintenance_policies.csv").exists() else None)
         result = p.predict([derived["features"]], strict=False)
     except ScenarioInputError as exc:
         raise HTTPException(status_code=422, detail=str(exc))

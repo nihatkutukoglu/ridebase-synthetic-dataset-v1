@@ -10,13 +10,14 @@ dst="$here/backend/artifacts"
 rm -rf "$dst"
 mkdir -p "$dst/models" "$dst/reports/tables" "$dst/reports/figures" "$dst/outputs" "$dst/dataset"
 
-# models: frozen V1 + V2 bundle files only (skip */v1_automl */v1_3_automl)
+# models: frozen V1 + V2.0 + V2.1 bundle files only (skip */v1_automl */v1_3_automl)
 rsync -a --prune-empty-dirs \
   --include='*/' \
   --include='v0_*' --include='v1_final_*' --include='v1_ext_*' --include='v1_3_final_*' \
   --include='v2_advanced_*' --include='v2_feature_catalog.json' \
   --include='v2_production_bundle_manifest.json' --include='v2_coxnet_model.joblib' \
   --include='v2_xgb_cox_model.json' \
+  --include='v2_1_v1_4/**' \
   --exclude='*' \
   "$ml/models/" "$dst/models/"
 

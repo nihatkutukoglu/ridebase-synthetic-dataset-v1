@@ -85,16 +85,33 @@ in the environment when running `ridebase-control-center/build.py`, **or** open 
 published artifact with `?v2api=https://<the-render-url>`. No URL configured → the
 Live Prediction screen stays offline and says so (no fake fallback).
 
-The V2 scenario redesign adds `/api/v2/motorcycle-models` and
-`/api/v2/predict/scenario`, so an existing Render service with `autoDeploy: false`
-must be redeployed after this commit: **Render → ridebase-inference-api → Manual
-Deploy → Deploy latest commit**. Do not claim the scenario is production-live
-until both endpoints are reachable.
+The V2.1 dynamic-landmark model adds a **separate** route family
+(`/api/v2_1/{model/info,features,metrics,sample,predict,predict/batch,predict/scenario}`)
+— `/api/v2/*` and `/api/v1/*` are untouched. An existing Render service with
+`autoDeploy: false` must be redeployed for these to appear:
 
-> **Deployment status: `BLOCKED_BY_PROVIDER_AUTH`.** Creating the Render/Railway/
-> Fly account and pushing the deploy needs provider credentials that are not
-> available in this environment. Everything above is prepared and verified
-> locally; the last step is a human clicking "Deploy".
+1. `bash ridebase-v1-dashboard/scripts/collect_prod_artifacts.sh`
+   — now also bundles `models/v2_1_v1_4/` (champion + preprocessor + calibrator +
+   baseline hazard + `metrics.json` + `golden_parity.json`). No new pip deps:
+   `requirements-prod.txt` already has `scikit-learn`, `xgboost`, `joblib`.
+2. commit `backend/artifacts/` **or** upload `models/v2_1_v1_4/` to the Render
+   Disk mounted at `/artifacts/models/`.
+3. **Render → ridebase-inference-api → Manual Deploy → Deploy latest commit**
+   (commit `4941069` or later).
+4. verify: `GET /health` → `v2_1_model_loaded: true`;
+   `GET /api/v2_1/model/info` → `champion: "xgb_cox"`.
+
+Do not claim V2.1 is production-live until `/health.v2_1_model_loaded` is `true`
+and `/api/v2_1/predict/scenario` returns monotone risks.
+
+> **Backend deployment status: `BACKEND_DEPLOY_AUTH_BLOCKED`.** Triggering the
+> Render deploy (or uploading to the Render Disk) needs the account owner — no
+> Render CLI, API key or deploy hook is available in this environment, and
+> `render.yaml` has `autoDeploy: false` so the GitHub push does not trigger it.
+> Everything else is done: code pushed to `origin/main`, the Control Center
+> frontend is deployed and verified on Vercel, artifacts stage cleanly, and the
+> V2.1 route + scenario logic pass the full in-process behavioural audit.
+> The single remaining manual action is step 3 above.
 
 ### Cloud Run (example)
 
