@@ -1,0 +1,40 @@
+{
+  "status": "PASS",
+  "checks": {
+    "unique_landmark_id": true,
+    "snapshot_target_key_match": true,
+    "positive_duration": true,
+    "event_binary": true,
+    "observed_has_next_service": true,
+    "censored_has_no_next_service": true,
+    "forbidden_model_features_absent": true,
+    "no_absolute_year_feature": true,
+    "manifest_key_match": true,
+    "current_odometer_nonnegative": true,
+    "km_since_service_nonnegative": true,
+    "next_service_strictly_after_landmark": true
+  },
+  "forbidden_features": [],
+  "rows": 251054,
+  "motorcycles": 8420,
+  "events": 140860,
+  "censored": 110194,
+  "event_rate": 0.561075,
+  "landmarks_per_motorcycle": {
+    "count": 8420.0,
+    "mean": 29.816,
+    "std": 17.326,
+    "min": 1.0,
+    "25%": 15.0,
+    "50%": 29.0,
+    "75%": 45.0,
+    "max": 67.0
+  },
+  "split_counts": {
+    "TRAIN": 133018,
+    "TEST": 44531,
+    "VALIDATION": 35027,
+    "UNSEEN_MOTORCYCLE_EXCLUDED": 30441,
+    "UNSEEN_MOTORCYCLE_TEMPORAL_TEST": 8037
+  }
+}

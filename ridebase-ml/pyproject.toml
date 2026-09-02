@@ -18,4 +18,4 @@ dependencies = [
 ]
 
 [tool.setuptools]
-packages = ["ridebase_ml", "ridebase_ml.v2"]
+packages = ["ridebase_ml", "ridebase_ml.v2", "ridebase_ml.v2_1"]

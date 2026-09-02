@@ -1,11 +1,31 @@
-# RideBase ML — Synthetic Dataset v1.2
+# RideBase ML — Frozen v1.3 + V2.1 Dynamic-Landmark Experiment
 
-Bu çalışma alanının authoritative veri kaynağı repository kökündeki
-`ridebase_v1_2/` klasörüdür. Notebooklar `source_tables/` ve
-`derived_outputs/` dosyalarını doğrudan bu immutable release klasöründen okur.
+Bu çalışma alanının güncel authoritative veri kaynağı repository kökündeki
+`ridebase_v1_3/` klasörüdür. V1.3 kaynak ve eski derived/model artifactları
+immutable kabul edilir.
 
-`ridebase-ml/data/` altında eski çalışma kopyaları bulunabilir; bunlar v1.2
+`ridebase-ml/data/` altında eski çalışma kopyaları bulunabilir; bunlar v1.3
 analizlerinde kullanılmaz ve authoritative kaynak kabul edilmez.
+
+## V2.1 durumu
+
+V2.0 servis-event snapshotlarıyla eğitildiği için arbitrary-day canlı senaryo
+auditini geçemedi ve yalnız `SYNTHETIC RESEARCH BASELINE` olarak korunuyor.
+V2.1 yeni bir derived-only aylık dynamic-landmark veri hattıdır:
+
+```bash
+PYTHONPATH=ridebase-ml /usr/bin/python3 -m ridebase_ml.v2_1.schema_contract
+PYTHONPATH=ridebase-ml /usr/bin/python3 -m ridebase_ml.v2_1.landmarks
+PYTHONPATH=ridebase-ml /usr/bin/python3 -m ridebase_ml.v2_1.sanity
+PYTHONPATH=ridebase-ml /usr/bin/python3 -m ridebase_ml.v2_1.audit_v2_0
+PYTHONPATH=ridebase-ml /usr/bin/python3 -m pytest -q ridebase-ml/tests/test_v2_1_contract.py
+```
+
+Landmark/schema QA geçiyor; synthetic-sanity kapısı ağır gecikmiş örneklerdeki
+ters servis-dönüş yönü nedeniyle `FAIL`. Stop kuralı gereği V2.1 modeli
+eğitilmedi, V2.1 tahmin rotası oluşturulmadı ve V3 başlatılmadı. Sonraki iş,
+v1.3'ü değiştirmeden aynı kaynak şemalı yeni bir sentetik event-generator
+sürümüdür.
 
 ## Ana ML Problemleri
 
