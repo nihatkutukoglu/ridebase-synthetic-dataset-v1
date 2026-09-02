@@ -11,6 +11,8 @@ from .artifacts import get_store, read_predictions
 from .config import settings
 from .predictor import PredictionError, predict
 from .schemas import BatchPredictRequest, PredictRequest
+from .v2_1_routes import v2_1 as v2_1_router
+from .v2_1_service import health_fields as v2_1_health_fields
 from .v2_routes import unified as v2_unified_router
 from .v2_routes import v2 as v2_router
 from .v2_service import health_fields as v2_health_fields
@@ -26,6 +28,10 @@ def health():
         h.update(v2_health_fields())
     except Exception as exc:  # pragma: no cover
         h["v2_status"] = f"error: {exc}"
+    try:
+        h.update(v2_1_health_fields())
+    except Exception as exc:  # pragma: no cover
+        h["v2_1_status"] = f"error: {exc}"
     return h
 
 
@@ -187,3 +193,4 @@ def a_verdict():
 router.include_router(api)
 router.include_router(v2_router)
 router.include_router(v2_unified_router)
+router.include_router(v2_1_router)

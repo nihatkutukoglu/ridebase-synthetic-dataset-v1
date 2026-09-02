@@ -1,0 +1,10 @@
+{
+  "rows": 4000,
+  "max_probability_delta": 8.295865654928125e-06,
+  "mean_probability_delta": 2.741199727496408e-07,
+  "risk_score_max_delta": 4.999742508060567e-07,
+  "horizon_monotonic": true,
+  "deterministic": true,
+  "tolerance": 0.0005,
+  "parity_pass": true
+}
