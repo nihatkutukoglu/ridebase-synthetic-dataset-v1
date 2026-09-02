@@ -153,6 +153,41 @@ def assert_source_schema_contract(source_dir: Path, contract_path: Path) -> Dict
     }
 
 
+def assert_source_schema_compatible(source_dir: Path, contract_path: Path) -> Dict[str, Any]:
+    """Validate a versioned source release against the frozen v1.3 schema.
+
+    Row counts and hashes may change in a synthetic release; table names,
+    ordered columns, inferred dtypes and key semantics may not.
+    """
+    expected = json.loads(Path(contract_path).read_text())
+    source_dir = Path(source_dir)
+    actual_files = {path.name for path in source_dir.glob("*.csv")}
+    if actual_files != set(expected["tables"]):
+        raise AssertionError("source table set changed")
+    current_tables = {
+        name: _table_contract(source_dir / name, KEYS[name])
+        for name in sorted(KEYS)
+    }
+    errors = []
+    for name, current in current_tables.items():
+        baseline = expected["tables"][name]
+        for field in ("ordered_columns", "pandas_dtypes", "primary_key", "foreign_key_columns"):
+            if current[field] != baseline[field]:
+                errors.append(f"{name}: {field} changed")
+    if errors:
+        raise AssertionError("; ".join(errors))
+    return {
+        "status": "PASS",
+        "source_schema_version": expected["source_schema_version"],
+        "table_count": len(current_tables),
+        "source_columns_changed": False,
+        "versioned_source_content_changed": any(
+            current_tables[name]["sha256"] != expected["tables"][name]["sha256"]
+            for name in current_tables
+        ),
+    }
+
+
 if __name__ == "__main__":
     repo_root = Path(__file__).resolve().parents[3]
     source = repo_root / "ridebase_v1_3" / "source_tables"

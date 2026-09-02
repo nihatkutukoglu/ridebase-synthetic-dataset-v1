@@ -1,0 +1,831 @@
+{
+  "report": "RideBase V2.1 Dataset Rebuild",
+  "status": "PASS",
+  "model_training_allowed": true,
+  "failed_checks": [],
+  "gate_checks": {
+    "frozen_v1_3_source_unchanged": true,
+    "v1_4_source_schema_compatible": true,
+    "landmark_target_quality_pass": true,
+    "severe_overdue_not_near_zero": true,
+    "overdue_direction_coherent": true,
+    "km_due_relevant": true,
+    "days_due_not_structurally_reversed": true,
+    "no_absolute_calendar_year_feature": true,
+    "event_no_event_overlap": true,
+    "customer_behavior_overlap": true,
+    "usage_behavior_overlap": true,
+    "feature_lineage_no_leakage": true,
+    "split_not_model_feature": true,
+    "unseen_motorcycle_isolation": true,
+    "target_horizon_monotonicity": true,
+    "critical_due_feature_present": true
+  },
+  "input_version": "1.4.0",
+  "source_schema_version": "1.3.0",
+  "headline": {
+    "landmarks": 256841,
+    "motorcycles": 8907,
+    "events": 208746,
+    "censored": 48095,
+    "features": 54
+  },
+  "removed_artifacts": [
+    "split",
+    "absolute_year",
+    "days_observed",
+    "target/censor/future",
+    "current_service_*"
+  ],
+  "leakage_scan": {
+    "forbidden": [],
+    "explicit": []
+  },
+  "due_state_behavior": [
+    {
+      "due_state": "NOT_DUE",
+      "landmarks": 195688,
+      "motorcycles": 8907,
+      "event_30d_rate": 0.11141783,
+      "event_90d_rate": 0.3665833333,
+      "eventual_event_rate": 0.8045613425,
+      "due_ratio_mean": 0.3627714808
+    },
+    {
+      "due_state": "NEAR_DUE",
+      "landmarks": 39268,
+      "motorcycles": 7136,
+      "event_30d_rate": 0.3377437512,
+      "event_90d_rate": 0.6983906613,
+      "eventual_event_rate": 0.849852297,
+      "due_ratio_mean": 0.9638076074
+    },
+    {
+      "due_state": "OVERDUE",
+      "landmarks": 17093,
+      "motorcycles": 4222,
+      "event_30d_rate": 0.3446232535,
+      "event_90d_rate": 0.7112596057,
+      "eventual_event_rate": 0.8257766337,
+      "due_ratio_mean": 1.4808408012
+    },
+    {
+      "due_state": "SEVERELY_OVERDUE",
+      "landmarks": 4792,
+      "motorcycles": 1290,
+      "event_30d_rate": 0.3621744054,
+      "event_90d_rate": 0.7389489194,
+      "eventual_event_rate": 0.796327212,
+      "due_ratio_mean": 2.9395979299
+    }
+  ],
+  "km_due_behavior": [
+    {
+      "ratio_bin": "<=0.25",
+      "landmarks": 107947,
+      "motorcycles": 8865,
+      "event_30d_rate": 0.0406354531,
+      "event_90d_rate": 0.2135259661,
+      "eventual_event_rate": 0.7645881775,
+      "due_ratio_mean": 0.2793216644
+    },
+    {
+      "ratio_bin": ".25-.50",
+      "landmarks": 57522,
+      "motorcycles": 7413,
+      "event_30d_rate": 0.1340364676,
+      "event_90d_rate": 0.4806251419,
+      "eventual_event_rate": 0.8380967282,
+      "due_ratio_mean": 0.4672773553
+    },
+    {
+      "ratio_bin": ".50-.80",
+      "landmarks": 45296,
+      "motorcycles": 6336,
+      "event_30d_rate": 0.2877740651,
+      "event_90d_rate": 0.6585135724,
+      "eventual_event_rate": 0.8596123278,
+      "due_ratio_mean": 0.6683701406
+    },
+    {
+      "ratio_bin": ".80-1.0",
+      "landmarks": 17531,
+      "motorcycles": 5155,
+      "event_30d_rate": 0.3814605067,
+      "event_90d_rate": 0.7379722922,
+      "eventual_event_rate": 0.8651531573,
+      "due_ratio_mean": 0.9036564498
+    },
+    {
+      "ratio_bin": "1.0-1.5",
+      "landmarks": 18512,
+      "motorcycles": 4481,
+      "event_30d_rate": 0.3881639194,
+      "event_90d_rate": 0.7468839302,
+      "eventual_event_rate": 0.8496650821,
+      "due_ratio_mean": 1.2008603054
+    },
+    {
+      "ratio_bin": "1.5-2.0",
+      "landmarks": 5560,
+      "motorcycles": 2291,
+      "event_30d_rate": 0.3789980732,
+      "event_90d_rate": 0.7621017791,
+      "eventual_event_rate": 0.8285971223,
+      "due_ratio_mean": 1.7066267111
+    },
+    {
+      "ratio_bin": "2.0-3.0",
+      "landmarks": 3062,
+      "motorcycles": 1197,
+      "event_30d_rate": 0.3761077632,
+      "event_90d_rate": 0.7503834356,
+      "eventual_event_rate": 0.8037230568,
+      "due_ratio_mean": 2.3741156913
+    },
+    {
+      "ratio_bin": ">3.0",
+      "landmarks": 1411,
+      "motorcycles": 417,
+      "event_30d_rate": 0.3323029366,
+      "event_90d_rate": 0.708999159,
+      "eventual_event_rate": 0.7802976612,
+      "due_ratio_mean": 4.3228321521
+    }
+  ],
+  "days_due_behavior": [
+    {
+      "ratio_bin": "<=0.25",
+      "landmarks": 127604,
+      "motorcycles": 8907,
+      "event_30d_rate": 0.1514690248,
+      "event_90d_rate": 0.4222248489,
+      "eventual_event_rate": 0.8242766684,
+      "due_ratio_mean": 0.318173314
+    },
+    {
+      "ratio_bin": ".25-.50",
+      "landmarks": 67103,
+      "motorcycles": 8063,
+      "event_30d_rate": 0.165758983,
+      "event_90d_rate": 0.4285105476,
+      "eventual_event_rate": 0.804077314,
+      "due_ratio_mean": 0.6661919836
+    },
+    {
+      "ratio_bin": ".50-.80",
+      "landmarks": 39476,
+      "motorcycles": 6353,
+      "event_30d_rate": 0.1667727731,
+      "event_90d_rate": 0.4596546311,
+      "eventual_event_rate": 0.7966105988,
+      "due_ratio_mean": 0.8840111906
+    },
+    {
+      "ratio_bin": ".80-1.0",
+      "landmarks": 12324,
+      "motorcycles": 3720,
+      "event_30d_rate": 0.222127296,
+      "event_90d_rate": 0.6021594684,
+      "eventual_event_rate": 0.8102888673,
+      "due_ratio_mean": 1.0722189026
+    },
+    {
+      "ratio_bin": "1.0-1.5",
+      "landmarks": 8435,
+      "motorcycles": 2192,
+      "event_30d_rate": 0.2618090452,
+      "event_90d_rate": 0.6039805037,
+      "eventual_event_rate": 0.7957320688,
+      "due_ratio_mean": 1.3318028787
+    },
+    {
+      "ratio_bin": "1.5-2.0",
+      "landmarks": 1553,
+      "motorcycles": 396,
+      "event_30d_rate": 0.2339986235,
+      "event_90d_rate": 0.6195488722,
+      "eventual_event_rate": 0.7720540889,
+      "due_ratio_mean": 1.7829487259
+    },
+    {
+      "ratio_bin": "2.0-3.0",
+      "landmarks": 341,
+      "motorcycles": 102,
+      "event_30d_rate": 0.3501577287,
+      "event_90d_rate": 0.7517482517,
+      "eventual_event_rate": 0.7624633431,
+      "due_ratio_mean": 2.3512300407
+    },
+    {
+      "ratio_bin": ">3.0",
+      "landmarks": 5,
+      "motorcycles": 2,
+      "event_30d_rate": 0.4,
+      "event_90d_rate": 1.0,
+      "eventual_event_rate": 1.0,
+      "due_ratio_mean": 3.2043805613
+    }
+  ],
+  "customer_behavior": [
+    {
+      "customer_behavior": "ON_TIME",
+      "landmarks": 224146,
+      "motorcycles": 8782,
+      "event_30d_rate": 0.179409789,
+      "event_90d_rate": 0.4766094317,
+      "eventual_event_rate": 0.8395242387,
+      "due_ratio_mean": 0.5854500327
+    },
+    {
+      "customer_behavior": "SLIGHT_DELAY",
+      "landmarks": 7620,
+      "motorcycles": 538,
+      "event_30d_rate": 0.067862606,
+      "event_90d_rate": 0.2199349946,
+      "eventual_event_rate": 0.6385826772,
+      "due_ratio_mean": 0.5200699588
+    },
+    {
+      "customer_behavior": "LATE",
+      "landmarks": 14850,
+      "motorcycles": 1047,
+      "event_30d_rate": 0.0638875009,
+      "event_90d_rate": 0.2048737895,
+      "eventual_event_rate": 0.6266666667,
+      "due_ratio_mean": 0.5252844487
+    },
+    {
+      "customer_behavior": "VERY_LATE",
+      "landmarks": 10225,
+      "motorcycles": 784,
+      "event_30d_rate": 0.0624673561,
+      "event_90d_rate": 0.2048814832,
+      "eventual_event_rate": 0.6257212714,
+      "due_ratio_mean": 0.5130266586
+    }
+  ],
+  "usage_behavior": [
+    {
+      "usage_type": "COMMUTER",
+      "landmarks": 117034,
+      "motorcycles": 4067,
+      "event_30d_rate": 0.1717333428,
+      "event_90d_rate": 0.4599267907,
+      "eventual_event_rate": 0.8168908181,
+      "due_ratio_mean": 0.5820947561
+    },
+    {
+      "usage_type": "COURIER",
+      "landmarks": 44236,
+      "motorcycles": 1530,
+      "event_30d_rate": 0.1868360709,
+      "event_90d_rate": 0.4943592281,
+      "eventual_event_rate": 0.8250745999,
+      "due_ratio_mean": 0.5768661529
+    },
+    {
+      "usage_type": "OFFROAD",
+      "landmarks": 5192,
+      "motorcycles": 185,
+      "event_30d_rate": 0.1442825783,
+      "event_90d_rate": 0.4067401441,
+      "eventual_event_rate": 0.7962249615,
+      "due_ratio_mean": 0.5564657014
+    },
+    {
+      "usage_type": "SEASONAL",
+      "landmarks": 26819,
+      "motorcycles": 912,
+      "event_30d_rate": 0.1577242044,
+      "event_90d_rate": 0.4304438365,
+      "eventual_event_rate": 0.8065550543,
+      "due_ratio_mean": 0.5696388989
+    },
+    {
+      "usage_type": "TOURING",
+      "landmarks": 18214,
+      "motorcycles": 647,
+      "event_30d_rate": 0.1305906453,
+      "event_90d_rate": 0.3741385564,
+      "eventual_event_rate": 0.7985066432,
+      "due_ratio_mean": 0.5324488222
+    },
+    {
+      "usage_type": "TRACK",
+      "landmarks": 4867,
+      "motorcycles": 166,
+      "event_30d_rate": 0.124335813,
+      "event_90d_rate": 0.3563063063,
+      "eventual_event_rate": 0.7965892747,
+      "due_ratio_mean": 0.5695724771
+    },
+    {
+      "usage_type": "WEEKEND",
+      "landmarks": 40479,
+      "motorcycles": 1400,
+      "event_30d_rate": 0.1504078554,
+      "event_90d_rate": 0.4049806249,
+      "eventual_event_rate": 0.8018478717,
+      "due_ratio_mean": 0.5918083769
+    }
+  ],
+  "policy_behavior": [
+    {
+      "policy_group": "EV_HUB_MOTOR",
+      "landmarks": 649,
+      "motorcycles": 31,
+      "event_30d_rate": 0.0647249191,
+      "event_90d_rate": 0.2137809187,
+      "eventual_event_rate": 0.7103235747,
+      "due_ratio_mean": 0.4501045092
+    },
+    {
+      "policy_group": "ICE_125_AIR_BELT",
+      "landmarks": 21595,
+      "motorcycles": 766,
+      "event_30d_rate": 0.120598676,
+      "event_90d_rate": 0.3761654863,
+      "eventual_event_rate": 0.8048159296,
+      "due_ratio_mean": 0.518899887
+    },
+    {
+      "policy_group": "ICE_125_AIR_CHAIN",
+      "landmarks": 23027,
+      "motorcycles": 835,
+      "event_30d_rate": 0.1415710106,
+      "event_90d_rate": 0.3950965399,
+      "eventual_event_rate": 0.7933295696,
+      "due_ratio_mean": 0.5323676628
+    },
+    {
+      "policy_group": "ICE_125_LIQUID_BELT",
+      "landmarks": 55776,
+      "motorcycles": 1940,
+      "event_30d_rate": 0.1320537571,
+      "event_90d_rate": 0.3911740939,
+      "eventual_event_rate": 0.7989816408,
+      "due_ratio_mean": 0.5322840143
+    },
+    {
+      "policy_group": "ICE_125_LIQUID_CHAIN",
+      "landmarks": 1637,
+      "motorcycles": 66,
+      "event_30d_rate": 0.0718829517,
+      "event_90d_rate": 0.2284541724,
+      "eventual_event_rate": 0.7232742822,
+      "due_ratio_mean": 0.4772530064
+    },
+    {
+      "policy_group": "ICE_125_OIL_CHAIN",
+      "landmarks": 4962,
+      "motorcycles": 194,
+      "event_30d_rate": 0.0710691824,
+      "event_90d_rate": 0.225101397,
+      "eventual_event_rate": 0.7273276904,
+      "due_ratio_mean": 0.4788253918
+    },
+    {
+      "policy_group": "ICE_125_SCOOTER_BELT",
+      "landmarks": 26666,
+      "motorcycles": 928,
+      "event_30d_rate": 0.1247863912,
+      "event_90d_rate": 0.3864987614,
+      "eventual_event_rate": 0.8029700743,
+      "due_ratio_mean": 0.5339351174
+    },
+    {
+      "policy_group": "ICE_200_LIQUID_CHAIN",
+      "landmarks": 6268,
+      "motorcycles": 220,
+      "event_30d_rate": 0.0847793753,
+      "event_90d_rate": 0.2686146805,
+      "eventual_event_rate": 0.7886088066,
+      "due_ratio_mean": 0.8547179373
+    },
+    {
+      "policy_group": "ICE_200_OIL_CHAIN",
+      "landmarks": 2238,
+      "motorcycles": 72,
+      "event_30d_rate": 0.0683287165,
+      "event_90d_rate": 0.2171344165,
+      "eventual_event_rate": 0.7421805183,
+      "due_ratio_mean": 0.514259749
+    },
+    {
+      "policy_group": "ICE_250_LIQUID_BELT",
+      "landmarks": 14119,
+      "motorcycles": 521,
+      "event_30d_rate": 0.0899941228,
+      "event_90d_rate": 0.2831754482,
+      "eventual_event_rate": 0.7704511651,
+      "due_ratio_mean": 0.4755276855
+    },
+    {
+      "policy_group": "ICE_250_LIQUID_CHAIN",
+      "landmarks": 11293,
+      "motorcycles": 404,
+      "event_30d_rate": 0.0711270191,
+      "event_90d_rate": 0.2263261297,
+      "eventual_event_rate": 0.7383334809,
+      "due_ratio_mean": 0.4783878979
+    },
+    {
+      "policy_group": "ICE_350_LIQUID_BELT",
+      "landmarks": 2792,
+      "motorcycles": 101,
+      "event_30d_rate": 0.0705794948,
+      "event_90d_rate": 0.2237678855,
+      "eventual_event_rate": 0.7457020057,
+      "due_ratio_mean": 0.4843635777
+    },
+    {
+      "policy_group": "ICE_350_OIL_CHAIN",
+      "landmarks": 763,
+      "motorcycles": 32,
+      "event_30d_rate": 0.0642954856,
+      "event_90d_rate": 0.2041420118,
+      "eventual_event_rate": 0.6343381389,
+      "due_ratio_mean": 0.4852265939
+    },
+    {
+      "policy_group": "ICE_400_LIQUID_CHAIN",
+      "landmarks": 1358,
+      "motorcycles": 45,
+      "event_30d_rate": 0.0746382331,
+      "event_90d_rate": 0.2374798061,
+      "eventual_event_rate": 0.7776141384,
+      "due_ratio_mean": 0.4837977514
+    },
+    {
+      "policy_group": "ICE_450_TWIN_LIQUID_BELT",
+      "landmarks": 284,
+      "motorcycles": 14,
+      "event_30d_rate": 0.0814814815,
+      "event_90d_rate": 0.256,
+      "eventual_event_rate": 0.7147887324,
+      "due_ratio_mean": 0.4344282784
+    },
+    {
+      "policy_group": "ICE_450_TWIN_LIQUID_CHAIN",
+      "landmarks": 1547,
+      "motorcycles": 55,
+      "event_30d_rate": 0.0764075067,
+      "event_90d_rate": 0.2401715511,
+      "eventual_event_rate": 0.7478991597,
+      "due_ratio_mean": 0.4785023124
+    },
+    {
+      "policy_group": "ICE_50_AIR_BELT",
+      "landmarks": 34045,
+      "motorcycles": 1096,
+      "event_30d_rate": 0.275508657,
+      "event_90d_rate": 0.6374384236,
+      "eventual_event_rate": 0.8653253047,
+      "due_ratio_mean": 0.6839886925
+    },
+    {
+      "policy_group": "ICE_50_AIR_CHAIN",
+      "landmarks": 34125,
+      "motorcycles": 1148,
+      "event_30d_rate": 0.2699182066,
+      "event_90d_rate": 0.642339709,
+      "eventual_event_rate": 0.8671648352,
+      "due_ratio_mean": 0.6821215059
+    },
+    {
+      "policy_group": "ICE_650_TWIN_LIQUID_CHAIN",
+      "landmarks": 671,
+      "motorcycles": 24,
+      "event_30d_rate": 0.0819165379,
+      "event_90d_rate": 0.2607260726,
+      "eventual_event_rate": 0.737704918,
+      "due_ratio_mean": 0.471990962
+    },
+    {
+      "policy_group": "ICE_SMALL_SCOOTER_BELT",
+      "landmarks": 13026,
+      "motorcycles": 415,
+      "event_30d_rate": 0.2627783501,
+      "event_90d_rate": 0.6844547564,
+      "eventual_event_rate": 0.8843083065,
+      "due_ratio_mean": 0.6637980363
+    }
+  ],
+  "category_behavior": [
+    {
+      "category": "ADVENTURE",
+      "landmarks": 1625,
+      "motorcycles": 53,
+      "event_30d_rate": 0.0769230769,
+      "event_90d_rate": 0.2372881356,
+      "eventual_event_rate": 0.7612307692,
+      "due_ratio_mean": 0.5085627224
+    },
+    {
+      "category": "BIG_SCOOTER",
+      "landmarks": 16911,
+      "motorcycles": 622,
+      "event_30d_rate": 0.0867885182,
+      "event_90d_rate": 0.2733991759,
+      "eventual_event_rate": 0.7663650878,
+      "due_ratio_mean": 0.4769864881
+    },
+    {
+      "category": "CRUISER",
+      "landmarks": 284,
+      "motorcycles": 14,
+      "event_30d_rate": 0.0814814815,
+      "event_90d_rate": 0.256,
+      "eventual_event_rate": 0.7147887324,
+      "due_ratio_mean": 0.4344282784
+    },
+    {
+      "category": "CUB",
+      "landmarks": 44199,
+      "motorcycles": 1502,
+      "event_30d_rate": 0.2547083733,
+      "event_90d_rate": 0.6190043247,
+      "eventual_event_rate": 0.8594312089,
+      "due_ratio_mean": 0.6601304061
+    },
+    {
+      "category": "EV_SCOOTER",
+      "landmarks": 649,
+      "motorcycles": 31,
+      "event_30d_rate": 0.0647249191,
+      "event_90d_rate": 0.2137809187,
+      "eventual_event_rate": 0.7103235747,
+      "due_ratio_mean": 0.4501045092
+    },
+    {
+      "category": "MINI_BIKE",
+      "landmarks": 505,
+      "motorcycles": 20,
+      "event_30d_rate": 0.0742268041,
+      "event_90d_rate": 0.2197802198,
+      "eventual_event_rate": 0.7524752475,
+      "due_ratio_mean": 0.488879531
+    },
+    {
+      "category": "NAKED",
+      "landmarks": 35112,
+      "motorcycles": 1270,
+      "event_30d_rate": 0.082223338,
+      "event_90d_rate": 0.2554942456,
+      "eventual_event_rate": 0.7578035999,
+      "due_ratio_mean": 0.5514500554
+    },
+    {
+      "category": "ROADSTER",
+      "landmarks": 1672,
+      "motorcycles": 66,
+      "event_30d_rate": 0.0672478207,
+      "event_90d_rate": 0.2085848424,
+      "eventual_event_rate": 0.67284689,
+      "due_ratio_mean": 0.4806717682
+    },
+    {
+      "category": "SCOOTER",
+      "landmarks": 151108,
+      "motorcycles": 5145,
+      "event_30d_rate": 0.1728215029,
+      "event_90d_rate": 0.4699493907,
+      "eventual_event_rate": 0.8228220875,
+      "due_ratio_mean": 0.5761790133
+    },
+    {
+      "category": "SCRAMBLER",
+      "landmarks": 1496,
+      "motorcycles": 59,
+      "event_30d_rate": 0.0798611111,
+      "event_90d_rate": 0.2587621178,
+      "eventual_event_rate": 0.7372994652,
+      "due_ratio_mean": 0.4322112827
+    },
+    {
+      "category": "SUPERSPORT",
+      "landmarks": 1828,
+      "motorcycles": 66,
+      "event_30d_rate": 0.0658342792,
+      "event_90d_rate": 0.2113276492,
+      "eventual_event_rate": 0.727571116,
+      "due_ratio_mean": 0.4973537992
+    },
+    {
+      "category": "TOURING",
+      "landmarks": 1452,
+      "motorcycles": 59,
+      "event_30d_rate": 0.0630824373,
+      "event_90d_rate": 0.2047913447,
+      "eventual_event_rate": 0.7011019284,
+      "due_ratio_mean": 0.4930886277
+    }
+  ],
+  "age_behavior": [
+    {
+      "age_band": {
+        "closed": "right",
+        "closed_left": false,
+        "closed_right": true,
+        "is_empty": false,
+        "left": null,
+        "length": null,
+        "mid": null,
+        "open_left": true,
+        "open_right": false,
+        "right": 2.0
+      },
+      "landmarks": 36743,
+      "motorcycles": 3575,
+      "event_30d_rate": 0.1878182422,
+      "event_90d_rate": 0.4706617083,
+      "eventual_event_rate": 0.9078191764,
+      "due_ratio_mean": 0.4660678096
+    },
+    {
+      "age_band": {
+        "closed": "right",
+        "closed_left": false,
+        "closed_right": true,
+        "is_empty": false,
+        "left": 2.0,
+        "length": 3.0,
+        "mid": 3.5,
+        "open_left": true,
+        "open_right": false,
+        "right": 5.0
+      },
+      "landmarks": 131754,
+      "motorcycles": 6724,
+      "event_30d_rate": 0.1632791328,
+      "event_90d_rate": 0.4394160109,
+      "eventual_event_rate": 0.8418416139,
+      "due_ratio_mean": 0.5734196097
+    },
+    {
+      "age_band": {
+        "closed": "right",
+        "closed_left": false,
+        "closed_right": true,
+        "is_empty": false,
+        "left": 5.0,
+        "length": 5.0,
+        "mid": 7.5,
+        "open_left": true,
+        "open_right": false,
+        "right": 10.0
+      },
+      "landmarks": 87017,
+      "motorcycles": 4824,
+      "event_30d_rate": 0.1581986704,
+      "event_90d_rate": 0.4419095678,
+      "eventual_event_rate": 0.7331555903,
+      "due_ratio_mean": 0.6273564331
+    },
+    {
+      "age_band": {
+        "closed": "right",
+        "closed_left": false,
+        "closed_right": true,
+        "is_empty": false,
+        "left": 10.0,
+        "length": null,
+        "mid": null,
+        "open_left": true,
+        "open_right": false,
+        "right": null
+      },
+      "landmarks": 1327,
+      "motorcycles": 185,
+      "event_30d_rate": 0.1583552056,
+      "event_90d_rate": 0.4717391304,
+      "eventual_event_rate": 0.5101733233,
+      "due_ratio_mean": 0.7307130603
+    }
+  ],
+  "season_behavior": [
+    {
+      "season": 1,
+      "landmarks": 62765,
+      "motorcycles": 7989,
+      "event_30d_rate": 0.1643995274,
+      "event_90d_rate": 0.4327342048,
+      "eventual_event_rate": 0.8496614355,
+      "due_ratio_mean": 0.5215522963
+    },
+    {
+      "season": 2,
+      "landmarks": 68637,
+      "motorcycles": 8449,
+      "event_30d_rate": 0.1541246897,
+      "event_90d_rate": 0.435792547,
+      "eventual_event_rate": 0.7626935909,
+      "due_ratio_mean": 0.5653897709
+    },
+    {
+      "season": 3,
+      "landmarks": 67702,
+      "motorcycles": 8786,
+      "event_30d_rate": 0.1678287524,
+      "event_90d_rate": 0.4610328638,
+      "eventual_event_rate": 0.7415142832,
+      "due_ratio_mean": 0.6279601316
+    },
+    {
+      "season": 4,
+      "landmarks": 57737,
+      "motorcycles": 7660,
+      "event_30d_rate": 0.1762786581,
+      "event_90d_rate": 0.4539339549,
+      "eventual_event_rate": 0.9156346883,
+      "due_ratio_mean": 0.5919833615
+    }
+  ],
+  "breakdown_contribution": {
+    "observed_next_event_type_share": {
+      "PERIODIC": 0.882201,
+      "TIRE": 0.050449,
+      "REPAIR": 0.037754,
+      "BREAKDOWN": 0.029596
+    },
+    "breakdown_or_repair_share": 0.0673497935289778
+  },
+  "censoring": [
+    {
+      "modeling_role": "TEST",
+      "landmarks": 46508,
+      "censor_rate": 0.6737765546
+    },
+    {
+      "modeling_role": "TRAIN",
+      "landmarks": 134937,
+      "censor_rate": 0.018334482
+    },
+    {
+      "modeling_role": "UNSEEN_MOTORCYCLE_EXCLUDED",
+      "landmarks": 30951,
+      "censor_rate": 0.0528577429
+    },
+    {
+      "modeling_role": "UNSEEN_MOTORCYCLE_TEMPORAL_TEST",
+      "landmarks": 8409,
+      "censor_rate": 0.6790343679
+    },
+    {
+      "modeling_role": "VALIDATION",
+      "landmarks": 36036,
+      "censor_rate": 0.1925574426
+    }
+  ],
+  "landmark_density": {
+    "count": 8907.0,
+    "mean": 28.83586,
+    "std": 17.52719,
+    "min": 1.0,
+    "10%": 5.0,
+    "25%": 14.0,
+    "50%": 28.0,
+    "75%": 43.0,
+    "90%": 53.0,
+    "99%": 62.0,
+    "max": 67.0
+  },
+  "split_counts": [
+    {
+      "modeling_role": "TEST",
+      "landmarks": 46508,
+      "motorcycles": 7157
+    },
+    {
+      "modeling_role": "TRAIN",
+      "landmarks": 134937,
+      "motorcycles": 5880
+    },
+    {
+      "modeling_role": "UNSEEN_MOTORCYCLE_EXCLUDED",
+      "landmarks": 30951,
+      "motorcycles": 1201
+    },
+    {
+      "modeling_role": "UNSEEN_MOTORCYCLE_TEMPORAL_TEST",
+      "landmarks": 8409,
+      "motorcycles": 1275
+    },
+    {
+      "modeling_role": "VALIDATION",
+      "landmarks": 36036,
+      "motorcycles": 6358
+    }
+  ],
+  "temporal_cutoffs": {
+    "train_end": "2025-06-30",
+    "validation_end": "2025-12-31",
+    "test_start": "2026-01-01"
+  },
+  "motorcycle_overlap": {
+    "train_vs_temporal_test": 5490,
+    "train_vs_unseen": 0
+  },
+  "feature_dictionary_model_inputs": 54
+}

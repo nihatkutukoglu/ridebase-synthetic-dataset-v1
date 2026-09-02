@@ -19,7 +19,7 @@ from typing import Any, Dict, Iterable, List, Mapping, Optional, Sequence, Tuple
 import numpy as np
 import pandas as pd
 
-from .schema_contract import assert_source_schema_contract
+from .schema_contract import assert_source_schema_compatible, assert_source_schema_contract
 
 
 IDENTIFIER_COLUMNS = [
@@ -41,7 +41,7 @@ NUMERIC_FEATURES = [
     "km_since_last_service", "avg_km_per_day_since_last_service",
     "oem_interval_days", "oem_interval_km", "days_due_ratio", "km_due_ratio",
     "max_due_ratio", "days_overdue", "km_overdue", "maintenance_due_now",
-    "due_task_count", "days_until_next_scheduled_due", "km_until_next_scheduled_due",
+    "due_task_count", "critical_due_task_count", "days_until_next_scheduled_due", "km_until_next_scheduled_due",
     "recent_service_count_90d", "recent_service_count_365d",
     "prior_service_count", "prior_periodic_service_count", "prior_breakdown_count",
     "prior_repair_count", "historical_service_delay_mean_days",
@@ -82,6 +82,17 @@ class LandmarkPaths:
             source_dir=root / "ridebase_v1_3" / "source_tables",
             output_dir=root / "ridebase-ml" / "derived_outputs" / "v2_1",
             config_path=root / "ridebase-ml" / "config" / "v2_1_landmark_config.json",
+            schema_contract_path=root / "ridebase-ml" / "config" / "source_schema_contract_v1_3.json",
+        )
+
+    @classmethod
+    def for_v1_4(cls, repo_root: Path) -> "LandmarkPaths":
+        root = Path(repo_root).resolve()
+        return cls(
+            repo_root=root,
+            source_dir=root / "ridebase_v1_4" / "source_tables",
+            output_dir=root / "ridebase-ml" / "derived_outputs" / "v2_1_v1_4",
+            config_path=root / "ridebase-ml" / "config" / "v2_1_v1_4_config.json",
             schema_contract_path=root / "ridebase-ml" / "config" / "source_schema_contract_v1_3.json",
         )
 
@@ -238,6 +249,7 @@ def _due_task_features(
     policies: pd.DataFrame,
 ) -> pd.DataFrame:
     due_count = np.zeros(len(frame), dtype=np.int16)
+    critical_due_count = np.zeros(len(frame), dtype=np.int16)
     min_days = np.full(len(frame), np.nan)
     min_km = np.full(len(frame), np.nan)
     svc_groups = {key: group for key, group in services.groupby("motorcycle_id")}
@@ -291,6 +303,11 @@ def _due_task_features(
             else:
                 due = np.maximum(day_ratio, km_ratio) >= 1.0
             due_count[positions] += due.astype(np.int16)
+            critical = int(policy.get("precedence", 99)) <= 2 or str(policy["task_code"]) in {
+                "ENGINE_OIL_CHANGE", "BRAKE_SYSTEM_INSPECTION", "GENERAL_SAFETY_INSPECTION",
+            }
+            if critical:
+                critical_due_count[positions] += due.astype(np.int16)
             if pd.notna(recurring_days) and recurring_days > 0:
                 remaining = np.maximum(0.0, recurring_days - elapsed_days)
                 existing = min_days[positions]
@@ -300,6 +317,7 @@ def _due_task_features(
                 existing = min_km[positions]
                 min_km[positions] = np.where(np.isnan(existing), remaining, np.minimum(existing, remaining))
     frame["due_task_count"] = due_count
+    frame["critical_due_task_count"] = critical_due_count
     frame["days_until_next_scheduled_due"] = min_days
     frame["km_until_next_scheduled_due"] = min_km
     frame["maintenance_due_now"] = (due_count > 0).astype(np.int8)
@@ -399,7 +417,13 @@ def _quality_report(
 
 def build_landmark_dataset(paths: LandmarkPaths) -> Dict[str, Any]:
     config = _load_config(paths.config_path)
-    schema_check = assert_source_schema_contract(paths.source_dir, paths.schema_contract_path)
+    frozen_parent = paths.repo_root / "ridebase_v1_3" / "source_tables"
+    assert_source_schema_contract(frozen_parent, paths.schema_contract_path)
+    schema_check = (
+        assert_source_schema_contract(paths.source_dir, paths.schema_contract_path)
+        if paths.source_dir.resolve() == frozen_parent.resolve()
+        else assert_source_schema_compatible(paths.source_dir, paths.schema_contract_path)
+    )
     source = _read_sources(paths.source_dir)
 
     motorcycles = source["motorcycles"].copy()
@@ -418,7 +442,7 @@ def build_landmark_dataset(paths: LandmarkPaths) -> Dict[str, Any]:
     services = source["services"].loc[
         source["services"]["status"].isin(config["eligible_service_statuses"])
     ].copy()
-    services["service_at"] = pd.to_datetime(services["received_at"]).dt.normalize()
+    services["service_at"] = pd.to_datetime(services["received_at"], format="mixed").dt.normalize()
     services = services.merge(task_agg, on="service_id", how="left")
     services["last_service_task_count"] = services["last_service_task_count"].fillna(0).astype(int)
     services["last_service_spend"] = services["grand_total"].fillna(0.0)
@@ -600,5 +624,5 @@ def build_landmark_dataset(paths: LandmarkPaths) -> Dict[str, Any]:
 
 if __name__ == "__main__":
     root = Path(__file__).resolve().parents[3]
-    result = build_landmark_dataset(LandmarkPaths.from_repo(root))
+    result = build_landmark_dataset(LandmarkPaths.for_v1_4(root))
     print(json.dumps({"quality": result["quality"], "files": result["files"]}, indent=2, ensure_ascii=False))
