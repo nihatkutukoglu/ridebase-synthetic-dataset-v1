@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-09-02T10:05:47",
+  "generated_at": "2026-09-02T10:57:39",
   "project": "RideBase ML",
   "current_dataset": "v1.3",
   "environment": "PILOT",
@@ -37,12 +37,12 @@
     {
       "id": "v2",
       "name": "V2 Survival",
-      "tagline": "Time-to-event modelling",
-      "status": "complete",
-      "stage": "PRODUCTION_PACKAGED",
-      "notebook": "16_v2_production_packaging.ipynb",
-      "dataset": "v1.3",
-      "purpose": "Servise tam olarak kaç gün kaldığından çok, belirli zaman aralıklarında (30/60/90/120 gün) servise gelme olasılığını modellemek; sağ-sansürlü kayıtları da kullanır. nb13 leakage-safe survival veri hazırlığı, nb14 baseline, nb15 advanced (CoxNet / XGBoost survival:cox & aft, tuned + IPCW-isotonic calibrated), nb16 production packaging (deterministic inference + /api/v2/* + golden parity). Champion: ENSEMBLE[XGB_COX+COXNET]. REAL FLEET VALIDATION: PENDING."
+      "tagline": "V2.0 audit failed · V2.1 data gate blocked",
+      "status": "review",
+      "stage": "V2_1_SYNTHETIC_DATA_GATE_FAILED",
+      "notebook": "V2.1 derived pipeline",
+      "dataset": "v1.3 + V2.1 derived",
+      "purpose": "V2.0 servis-event snapshot benchmark'ı korunuyor fakat canlı-senaryo auditinde başarısız. V2.1 için 251,054 derived dynamic landmark üretildi; overdue davranış yönü synthetic-sanity kapısını geçmediği için modelleme durduruldu. REAL FLEET VALIDATION: PENDING."
     },
     {
       "id": "v3",
@@ -2352,6 +2352,38 @@
     "report": "ridebase-ml/reports/v2_survival_advanced_report.md",
     "prediction_output": "ridebase-ml/outputs/v2_advanced_test_predictions.parquet"
   },
+  "v2_1": {
+    "version": "V2.1",
+    "name": "Dynamic Landmark Survival",
+    "status": "DATA_GATE_FAILED",
+    "model_training_allowed": false,
+    "model_available": false,
+    "prediction_route_available": false,
+    "dataset_version": "1.4.0-v2.1-experiment",
+    "parent_dataset": "1.3.0",
+    "source_schema_version": "1.3.0",
+    "landmarks": 251054,
+    "motorcycles": 8420,
+    "events": 140860,
+    "censored": 110194,
+    "landmark_quality": "PASS",
+    "synthetic_sanity": "FAIL",
+    "failed_sanity_checks": [
+      "overdue_direction_physically_coherent",
+      "severely_overdue_not_dead_region"
+    ],
+    "v2_0_audit": "FAIL",
+    "v2_0_failed_checks": [
+      "service_event_landmark_mismatch",
+      "exact_zero_30d_collapse",
+      "km_since_service_sensitivity",
+      "elapsed_time_direction",
+      "absolute_calendar_invariance",
+      "observation_artifact_invariance",
+      "overdue_product_contradiction"
+    ],
+    "verdict": "BLOCKED"
+  },
   "models": [
     {
       "name": "V0 rule · DAYS",
@@ -2432,7 +2464,7 @@
   },
   "production_status": {
     "application": "PILOT (deployable)",
-    "model": "SYNTHETICALLY VALIDATED (RideBase Synthetic Dataset v1.3)",
+    "model": "V2.0 LIVE-SCENARIO AUDIT FAILED · V2.1 DATA GATE FAILED",
     "real_fleet_validation": "PENDING"
   }
 }

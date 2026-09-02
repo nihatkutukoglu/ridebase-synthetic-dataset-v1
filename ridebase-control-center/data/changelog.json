@@ -117,7 +117,7 @@
     ]
   },
   {
-    "id": "V2-13",
+    "id": "V2-15",
     "timestamp": "2026-08-31",
     "module": "V2",
     "type": "DATA",
@@ -130,7 +130,7 @@
     ]
   },
   {
-    "id": "V2-14",
+    "id": "V2-16",
     "timestamp": "2026-08-31",
     "module": "V2",
     "type": "MODEL",
@@ -143,7 +143,7 @@
     ]
   },
   {
-    "id": "V2-15",
+    "id": "V2-17",
     "timestamp": "2026-08-31",
     "module": "V2",
     "type": "MODEL",
@@ -156,7 +156,7 @@
     ]
   },
   {
-    "id": "V2-16",
+    "id": "V2-18",
     "timestamp": "2026-08-31",
     "module": "V2",
     "type": "PRODUCTION",
@@ -208,7 +208,33 @@
     ]
   },
   {
-    "id": "UI-17",
+    "id": "V2.0-13",
+    "timestamp": "2026-09-02",
+    "module": "V2.0",
+    "type": "AUDIT",
+    "title": "V2.0 live-scenario audit failed",
+    "description": "Service-event landmark mismatch, 30d exact-zero collapse, km insensitivity, elapsed-time reversal, absolute-year drift, observation-window artifact sensitivity and overdue contradiction reproduced. V2.0 retained only as a synthetic research baseline.",
+    "status": "FAIL",
+    "version": "v2.0",
+    "artifacts": [
+      "ridebase-ml/reports/v2_1_live_behavior_audit.json"
+    ]
+  },
+  {
+    "id": "V2.1-14",
+    "timestamp": "2026-09-02",
+    "module": "V2.1",
+    "type": "DATA",
+    "title": "Dynamic-landmark derived dataset built; modeling stopped at sanity gate",
+    "description": "251,054 monthly landmarks across 8,420 motorcycles passed schema/leakage/censoring QA. Synthetic overdue behavior was physically incoherent, so no model was trained and no V2.1 prediction route was published.",
+    "status": "FAIL",
+    "version": "1.4.0-v2.1-experiment",
+    "artifacts": [
+      "ridebase-ml/reports/v2_1_synthetic_sanity.md"
+    ]
+  },
+  {
+    "id": "UI-19",
     "timestamp": "2026-09-02",
     "module": "UI",
     "type": "UI",
@@ -221,7 +247,7 @@
     ]
   },
   {
-    "id": "API-18",
+    "id": "API-20",
     "timestamp": "2026-09-02",
     "module": "API",
     "type": "DEPLOYMENT",
@@ -234,7 +260,7 @@
     ]
   },
   {
-    "id": "V1-19",
+    "id": "V1-21",
     "timestamp": "2026-09-02",
     "module": "V1",
     "type": "UI",

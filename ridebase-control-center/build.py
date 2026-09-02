@@ -74,11 +74,11 @@ MODULES = [
     {"id": "v1", "name": "V1 Regression", "tagline": "Next-service DAYS & KM", "status": "active",
      "notebook": "06–12", "dataset": "v1.3",
      "purpose": "Bir motosikletin bir sonraki servisine kalan gün ve kilometreyi tahmin eden regresyon sistemi (frozen)."},
-    {"id": "v2", "name": "V2 Survival", "tagline": "Time-to-event modelling", "status": "in_progress",
-     "stage": "PRODUCTION_PACKAGED", "notebook": "15_v2_survival_advanced.ipynb", "dataset": "v1.3",
-     "purpose": "Servise tam olarak kaç gün kaldığından çok, belirli zaman aralıklarında servise gelme olasılığını "
-                "modellemek. Sağ-sansürlü kayıtları da kullanır. Notebook 13: leakage-safe survival episode "
-                "hazırlığı ve censoring audit tamamlandı — henüz predictive model yok."},
+    {"id": "v2", "name": "V2 Survival", "tagline": "V2.0 audit failed · V2.1 data gate blocked", "status": "review",
+     "stage": "V2_1_SYNTHETIC_DATA_GATE_FAILED", "notebook": "15_v2_survival_advanced.ipynb", "dataset": "v1.3 + V2.1 derived",
+     "purpose": "V2.0 servis-anı benchmark'ı canlı senaryo auditini geçemedi. V2.1 dynamic-landmark veri tasarımı "
+                "kaynak şemayı değiştirmeden üretildi; fakat sentetik overdue davranışı fiziksel tutarlılık kapısını "
+                "geçemediği için V2.1 model eğitimi durduruldu."},
     {"id": "v3", "name": "V3 Next Task", "tagline": "Next maintenance tasks", "status": "planned",
      "notebook": None, "dataset": None,
      "purpose": "Bir sonraki serviste yapılması muhtemel bakım işlemlerini tahmin etmek. "
@@ -407,6 +407,17 @@ def changelog():
       "replaced the previous example-snapshot overlay approach.",
       "PASS", "v1.3", "ridebase-control-center/template.html",
       dt.date.today().isoformat())
+    e("V2.0", "AUDIT", "V2.0 live-scenario audit failed",
+      "Service-event landmark mismatch, 30d exact-zero collapse, km insensitivity, elapsed-time reversal, "
+      "absolute-year drift, observation-window artifact sensitivity and overdue contradiction reproduced. "
+      "V2.0 retained only as a synthetic research baseline.",
+      "FAIL", "v2.0", "ridebase-ml/reports/v2_1_live_behavior_audit.json",
+      mtime_iso(REPORTS / "v2_1_live_behavior_audit.json"))
+    e("V2.1", "DATA", "Dynamic-landmark derived dataset built; modeling stopped at sanity gate",
+      "251,054 monthly landmarks across 8,420 motorcycles passed schema/leakage/censoring QA. "
+      "Synthetic overdue behavior was physically incoherent, so no model was trained and no V2.1 prediction route was published.",
+      "FAIL", "1.4.0-v2.1-experiment", "ridebase-ml/reports/v2_1_synthetic_sanity.md",
+      mtime_iso(REPORTS / "v2_1_synthetic_sanity.md"))
     _v2rep = REPORTS / "v2_survival_data_prep_report.md"
     if _v2rep.exists():
         e("V2", "DATA", "V2 survival data preparation (nb13)",
@@ -606,24 +617,49 @@ def v2_block():
     }
 
 
+def v2_1_block():
+    """V2.1 data-design and gate status. No model metrics are invented."""
+    quality = read_json(REPORTS.parent / "derived_outputs" / "v2_1" / "v2_1_data_quality_report.json") or {}
+    sanity = read_json(REPORTS / "v2_1_synthetic_sanity.json") or {}
+    audit = read_json(REPORTS / "v2_1_live_behavior_audit.json") or {}
+    return {
+        "version": "V2.1",
+        "name": "Dynamic Landmark Survival",
+        "status": "DATA_GATE_FAILED" if sanity.get("status") == "FAIL" else "DATA_DESIGN",
+        "model_training_allowed": bool(sanity.get("model_training_allowed", False)),
+        "model_available": False,
+        "prediction_route_available": False,
+        "dataset_version": "1.4.0-v2.1-experiment",
+        "parent_dataset": "1.3.0",
+        "source_schema_version": "1.3.0",
+        "landmarks": quality.get("rows"),
+        "motorcycles": quality.get("motorcycles"),
+        "events": quality.get("events"),
+        "censored": quality.get("censored"),
+        "landmark_quality": quality.get("status"),
+        "synthetic_sanity": sanity.get("status"),
+        "failed_sanity_checks": sanity.get("failed_checks") or [],
+        "v2_0_audit": audit.get("overall_status"),
+        "v2_0_failed_checks": audit.get("failed_checks") or [],
+        "verdict": "BLOCKED",
+    }
+
+
 def build_manifest():
     v1 = v1_block()
     v0 = v0_block()
     v2 = v2_block()
-    _v2_packaged = (MODELS / "v2_production_bundle_manifest.json").exists()
+    v2_1 = v2_1_block()
     if v2:
         for mod in MODULES:
             if mod["id"] == "v2":
-                mod["stage"] = "PRODUCTION_PACKAGED" if _v2_packaged else "ADVANCED_MODELING_COMPLETE"
-                mod["status"] = "complete" if _v2_packaged else "in_progress"
-                mod["notebook"] = ("16_v2_production_packaging.ipynb" if _v2_packaged
-                                   else "15_v2_survival_advanced.ipynb")
+                mod["stage"] = "V2_1_SYNTHETIC_DATA_GATE_FAILED"
+                mod["status"] = "review"
+                mod["notebook"] = "V2.1 derived pipeline"
                 mod["purpose"] = (
-                    "Servise tam olarak kaç gün kaldığından çok, belirli zaman aralıklarında (30/60/90/120 gün) "
-                    "servise gelme olasılığını modellemek; sağ-sansürlü kayıtları da kullanır. nb13 leakage-safe "
-                    "survival veri hazırlığı, nb14 baseline, nb15 advanced (CoxNet / XGBoost survival:cox & aft, "
-                    "tuned + IPCW-isotonic calibrated), nb16 production packaging (deterministic inference + "
-                    f"/api/v2/* + golden parity). Champion: {v2['selected_model']}. "
+                    "V2.0 servis-event snapshot benchmark'ı korunuyor fakat canlı-senaryo auditinde başarısız. "
+                    f"V2.1 için {v2_1.get('landmarks') or 0:,} derived dynamic landmark üretildi; "
+                    "overdue davranış yönü synthetic-sanity kapısını geçmediği için modelleme durduruldu. "
                     "REAL FLEET VALIDATION: PENDING.")
     return {
         "generated_at": dt.datetime.now().isoformat(timespec="seconds"),
@@ -649,6 +685,7 @@ def build_manifest():
         "v0": v0,
         "v1": v1,
         "v2": v2,
+        "v2_1": v2_1,
         "models": models_block(v1),
         "qa": {
             "leakage_audit": _qa_flag(v1["qa"], "leak") or "PASS",
@@ -660,7 +697,7 @@ def build_manifest():
         },
         "production_status": {
             "application": "PILOT (deployable)",
-            "model": "SYNTHETICALLY VALIDATED (RideBase Synthetic Dataset v1.3)",
+            "model": "V2.0 LIVE-SCENARIO AUDIT FAILED · V2.1 DATA GATE FAILED",
             "real_fleet_validation": "PENDING",
         },
     }

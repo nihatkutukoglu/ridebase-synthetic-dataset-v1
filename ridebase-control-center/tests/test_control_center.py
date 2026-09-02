@@ -185,6 +185,25 @@ class V2ScenarioPredictionTests(unittest.TestCase):
         self.assertNotIn("Math.random()", self.template)
         self.assertInBoth("Sahte tahmin üretilmez.")
 
+    def test_v2_0_failed_audit_and_v2_1_stop_gate_are_prominent(self):
+        for text in (
+            "V2.0 · LIVE-SCENARIO AUDIT FAILED",
+            "V2.0 CANLI SENARYO İÇİN GÜVENİLİR DEĞİL",
+            "V2.1 DYNAMIC LANDMARK · MODELLEME DURDURULDU",
+            "Synthetic-sanity kapısı <b>FAIL</b>",
+            "V2.0 ARAŞTIRMA SENARYOSU · ÜRÜN KARARI İÇİN KULLANMA",
+            "V2.1 modeli, metriği veya tahmin API rotası yayımlanmadı",
+            "SOURCE SCHEMA v1.3 · UNCHANGED",
+        ):
+            self.assertInBoth(text)
+
+    def test_v2_0_scenario_is_never_presented_as_v2_1(self):
+        for source in (self.template, self.built):
+            body = self.function_body(source, "v2RunScenario", "v2ModeDemo")
+            self.assertIn("V2.0 ARAŞTIRMA SENARYOSU", body)
+            self.assertIn("arbitrary-day auditini geçmedi", body)
+            self.assertNotIn("V2.1 tahmini", body)
+
 
 if __name__ == "__main__":
     unittest.main()

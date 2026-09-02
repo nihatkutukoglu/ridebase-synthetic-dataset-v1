@@ -553,7 +553,7 @@ function renderOverview(){
   var qa=M.qa||{};
   var out='';
   out+=modHead("RideBase ML · Control Center","RideBase ML Control Center",
-    "RideBase servis tahmini veri bilimi ve makine öğrenmesi sisteminin merkezi yönetim paneli. EDA, V0 baseline ve V1 regression modülleri tek yerden; V2/V3 planlandı.",
+    "RideBase servis tahmini veri bilimi ve makine öğrenmesi sisteminin merkezi yönetim paneli. V1 frozen; V2.0 canlı-senaryo auditinde başarısız; V2.1 dynamic-landmark veri kapısında durduruldu; V3 beklemede.",
     '<span class="chip cyan"><span class="dot"></span>DATASET '+esc(M.current_dataset||"v1.3")+'</span>'
    +'<span class="chip">ENV: '+esc(M.environment||"PILOT")+'</span>'
    +'<span class="chip warn"><span class="dot"></span>REAL FLEET VALIDATION: '+esc(M.real_fleet_validation||"PENDING")+'</span>',
@@ -584,7 +584,7 @@ function renderOverview(){
   out+='<div class="sec"><div class="sec-head"><h2>Yönetici Özeti</h2><span class="tag">10 soru</span></div>'
    +'<div class="grid g2">'
    + card("Proje durumu",null,
-       '<p class="copy">Proje <b style="color:var(--text)">V1 regression</b> aşamasında ve V1 <b>frozen</b>. EDA ve V0 tamamlandı; sıradaki aşama <b>V2 survival</b>.</p>'
+       '<p class="copy">V1 <b>frozen</b>. V2.0 yalnız araştırma baseline’ı ve canlı-senaryo auditinde başarısız. V2.1 derived landmark QA geçti fakat synthetic-sanity kapısında durdu. V3 <b>ON HOLD</b>.</p>'
       +'<div class="chips" style="margin-top:6px">'+mods.map(function(m){return '<span class="chip">'+esc(m.name)+' '+statusPill(m.status)+'</span>';}).join('')+'</div>')
    + card("Aktif model performansı (TEST)",null,
        '<div class="grid g2" style="gap:10px">'
@@ -597,8 +597,8 @@ function renderOverview(){
        return '<b style="color:var(--text)">'+esc(e.title||"—")+'</b><p class="copy" style="margin-top:4px">'+esc(e.description||"")+'</p>'
         +'<div class="chips" style="margin-top:6px"><span class="chip">'+esc(e.module||"")+'</span><span class="chip">'+esc(e.timestamp||"")+'</span>'+statusPill(e.status||"info")+'</div>';})())
    + card("Sonraki aşama",null,
-       '<b style="color:var(--text)">V2 — Survival Analysis</b>'
-      +'<p class="copy" style="margin-top:4px">Servise tam gün yerine, zaman aralıklarında servise gelme olasılığını modeller; sağ-sansürlü kayıtları da kullanır. <b>PLANNED</b> — sonuç yok.</p>')
+       '<b style="color:var(--text)">V2.1 — Same-schema synthetic event redesign</b>'
+      +'<p class="copy" style="margin-top:4px">Ağır gecikmiş durumlarda oluşan yapay düşük-dönüş bölgesi düzeltilmeli. Yeni generator ayrı sürümlenecek; v1.3 kaynakları değişmeyecek. Kapı geçmeden model yok.</p>')
    +'</div></div>';
 
   /* module cards */
@@ -1010,9 +1010,9 @@ function v1StatusChips(h){
   var v2ok=h.v2_model_loaded===true;
   return '<span class="chip good"><span class="dot"></span>BACKEND API ONLINE</span>'
     +'<span class="chip '+(v1ok?'good':'warn')+'">V1 '+(v1ok?'LOADED':'—')+'</span>'
-    +'<span class="chip '+(v2ok?'good':'warn')+'">V2 '+(v2ok?'LOADED':'—')+'</span>'
+    +'<span class="chip warn">V2.0 RESEARCH '+(v2ok?'LOADED':'—')+'</span>'
     +'<span class="chip">DATASET '+esc(h.dataset_version||h.v2_dataset_version||"1.3.0")+'</span>'
-    +'<span class="chip">MODEL '+esc(h.v2_run_mode||"FULL")+' · FINAL</span>'
+    +'<span class="chip bad">V2.0 LIVE AUDIT FAILED</span>'
     +'<span class="chip warn">REAL FLEET '+esc(h.v2_real_fleet_validation||"PENDING")+'</span>';
 }
 function v1ApiPing(attempt){
@@ -1154,17 +1154,27 @@ function v1Verdict(){
 
 /* ---------------- V2 SURVIVAL ---------------- */
 function v2Head(){
-  var v=M.v2||{}, pk=v.packaging||{};
-  var chips='<span class="chip active"><span class="dot"></span>'+esc(v.run_mode||"FULL")+' · '+esc(v.run_status||"FINAL")+'</span>'
-    +'<span class="chip">DATASET v1.3</span>'
-    +'<span class="chip good">SYNTHETICALLY VALIDATED</span>'
-    +'<span class="chip warn"><span class="dot"></span>REAL FLEET: PENDING</span>'
-    +(pk.packaged?'<span class="chip accent">PRODUCTION PACKAGED</span>':'');
-  return modHead("Module · Survival Analysis","V2 — Time-to-Next-Service Survival",
-    "Bir motosikletin 30 / 60 / 90 / 120 gün içinde tekrar servise gelme olasılığını hesaplar. "
-    +"Sağ-sansürlü kayıtları da kullanır. nb13 veri hazırlığı → nb14 baseline → nb15 advanced (tuned + kalibre) → nb16 production packaging.",
+  var v=M.v2||{}, v21=M.v2_1||{};
+  var chips='<span class="chip warn"><span class="dot"></span>V2.0 · LIVE-SCENARIO AUDIT FAILED</span>'
+    +'<span class="chip bad">V2.1 · '+esc(v21.status||"DATA GATE")+'</span>'
+    +'<span class="chip">SOURCE SCHEMA v1.3 · UNCHANGED</span>'
+    +'<span class="chip warn">REAL FLEET: PENDING</span>';
+  return modHead("Module · Survival Analysis","V2.0 Audit + V2.1 Dynamic Landmark",
+    "V2.0 dondurulmuş araştırma benchmark'ıdır ve arbitrary-day canlı senaryo auditini geçemedi. "
+    +"V2.1, kaynak şemayı değiştirmeden doğru dynamic-landmark problemini kurdu; sentetik veri davranış kapısı geçilene kadar model eğitimi ve tahmin rotası yoktur.",
     chips,
-    'config <code>models/v2_advanced_config.json</code> · report <code>reports/v2_survival_advanced_report.md</code>');
+    'design <code>docs/v2_1_dynamic_landmark_design.md</code> · gate <code>reports/v2_1_synthetic_sanity.md</code>');
+}
+function v2AuditWarning(){
+  var v=M.v2_1||{};
+  return '<div class="sec">'+finding("bad","V2.0 CANLI SENARYO İÇİN GÜVENİLİR DEĞİL",
+    '<p>Eski model servis tamamlandığı andaki snapshotlarla eğitildi; bu ekran ise rastgele bir bugünü soruyor. '
+    +'30 günlük risk çökmesi, kilometre duyarsızlığı, gecikme yönü ve veri-penceresi artefaktı audit testlerinde başarısız oldu. '
+    +'<b>Aşağıdaki V2.0 tahminleri yalnız araştırma/karşılaştırma içindir; operasyonel müşteri kararı değildir.</b></p>')
+    +finding("warn","V2.1 DYNAMIC LANDMARK · MODELLEME DURDURULDU",
+    '<p>'+n0(v.landmarks||0)+' landmark ve '+n0(v.motorcycles||0)+' motosiklet için derived-only veri QA geçti. '
+    +'Ancak ağır gecikmiş sentetik örneklerde servis dönüşü yapay biçimde neredeyse sıfıra düştü. '
+    +'Synthetic-sanity kapısı <b>FAIL</b>; V2.1 modeli, metriği veya tahmin API rotası yayımlanmadı.</p>')+'</div>';
 }
 function v2Bar(sub){
   var tabs=[["predict","Canlı Tahmin"],["overview","Genel Bakış"],["horizons","Zaman Aralıkları"],["calibration","Güvenilirlik"],["risk","Risk Grupları"],
@@ -1178,12 +1188,12 @@ function renderV2(sub){
   sub=sub||"predict";
   var body={overview:v2Overview,horizons:v2Horizons,calibration:v2Calibration,risk:v2Risk,models:v2Models,
     features:v2Features,segments:v2Segments,packaging:v2Packaging,predict:v2Predict,limitations:v2Limitations}[sub]||v2Overview;
-  return v2Head()+v2Bar(sub)+body();
+  return v2Head()+v2Bar(sub)+v2AuditWarning()+body();
 }
 function v2Overview(){
-  var v=M.v2||{}, tm=v.test_metrics||{}, vm=v.validation_metrics||{}, ot=v.optuna_trials||{};
+  var v=M.v2||{}, v21=M.v2_1||{}, tm=v.test_metrics||{}, vm=v.validation_metrics||{}, ot=v.optuna_trials||{};
   var out=pageNote(
-    "V2, bir motosikletin tam olarak kaç gün sonra servise geleceğini söylemek yerine, "
+    "<b>V2.0</b>, bir motosikletin tam olarak kaç gün sonra servise geleceğini söylemek yerine, "
     +"<b>30 / 60 / 90 / 120 gün içinde</b> servise gelme ihtimalini yüzde olarak hesaplar "
     +"(örn. 30 gün → %8, 60 gün → %29, 90 gün → %63, 120 gün → %78). "
     +"90 gün için %63 yazması, motorun <i>tam 90. günde</i> gelme ihtimali %63 demek değildir — "
@@ -1192,6 +1202,12 @@ function v2Overview(){
     "Champion: "+esc(v.selected_model||"ENSEMBLE")+" · horizons "+esc((v.primary_horizons||[30,60,90,120]).join(" / "))
     +" gün · calibration "+esc(v.calibration_method||"IPCW isotonic")+". Median service days ham XGB-Cox eğrisinden gelir (nb15 sözleşmesi).",
     "Teknik adı: Survival Analysis / Time-to-Event");
+  out+='<div class="sec"><div class="grid g4">'
+    +kpi("V2.1 LANDMARK",n0(v21.landmarks),"derived-only aylık gözlem","cyan")
+    +kpi("MOTOSİKLET",n0(v21.motorcycles),"kaynak şema değişmedi","plain")
+    +kpi("LANDMARK QA",esc(v21.landmark_quality||"—"),"leakage / censoring / odometer","plain")
+    +kpi("SYNTHETIC SANITY",esc(v21.synthetic_sanity||"—"),"FAIL ise model eğitilmez","plain")
+    +'</div></div>';
   out+='<div class="sec"><div class="grid g2">'
    +card("V1 — nokta tahmini","Yaklaşık kaç gün / kaç km sonra servis?",
      '<p class="copy">Tek bir yaklaşık süre verir. Örn. <b>~74 gün</b>, <b>~1.150 km</b>.</p>')
@@ -1507,17 +1523,18 @@ function v2fetch(url,opts){
 function v2Predict(){
   var api=(window.__V2_API__||"").replace(/\/$/,"");
   var out=pageNote(
-    "Burada bir motosiklet için servise dönüş ihtimalini hesaplayabilirsin. "
+    "Buradaki hesaplama <b>V2.0 araştırma benchmark'ını</b> çalıştırır; V2.1 değildir. "
     +"<b>30 / 60 / 90 / 120 gün</b>, modelin bugünden itibaren ne kadar ileri baktığı zaman aralıklarıdır. "
     +"<b>Risk grubu</b>, 90 günlük ihtimalin düşük / orta / yüksek özetidir. "
     +"<b>Medyan servis süresi</b>, model eğrisinin %50 dönüş ihtimaline ulaştığı yaklaşık süredir. "
-    +"Sonuçlar <b>gerçek model API'sinden</b> canlı hesaplanır ("+esc(api||"—")+"); erişilemezse sonuç gösterilmez — sahte tahmin yok.",
-    null,"Teknik adı: Live Prediction");
+    +"Sonuçlar mevcut V2.0 API'sinden canlı hesaplanır ("+esc(api||"—")+"); erişilemezse sonuç gösterilmez — sahte tahmin yok. "
+    +"<b>Ürün kararı veya kişisel servis olasılığı olarak kullanma.</b>",
+    null,"Teknik adı: V2.0 Research Prediction");
   out+='<div class="sec"><div id="v2apiStatus" class="chips"><span class="chip"><span class="dot"></span>Model servisine bağlanılıyor…</span></div>'
     +'<p class="copy" style="margin-top:8px;font-size:.8rem" id="v2coldNote" hidden>Render ücretsiz sunucusu uykudaysa ilk istek 50+ saniye sürebilir — beklemede kal.</p></div>';
   out+='<div class="sec"><div class="chips" style="margin-bottom:14px">'
-    +'<button class="subtab active" id="v2mScenario" style="border:1px solid var(--border);border-radius:8px">SENARYO TAHMİNİ</button>'
-    +'<button class="subtab" id="v2mDemo" style="border:1px solid var(--border);border-radius:8px">ÖRNEK MOTORLA DEMO</button>'
+    +'<button class="subtab active" id="v2mScenario" style="border:1px solid var(--border);border-radius:8px">V2.0 ARAŞTIRMA SENARYOSU</button>'
+    +'<button class="subtab" id="v2mDemo" style="border:1px solid var(--border);border-radius:8px">V2.0 · ÖRNEK MOTORLA DEMO</button>'
     +'<button class="subtab" id="v2mReal" style="border:1px solid var(--border);border-radius:8px">GERÇEK RIDEBASE MOTORU · YAKINDA</button>'
     +'</div><div id="v2modeBox"></div></div>';
   return out;
@@ -1670,10 +1687,11 @@ function v2RunScenario(){
       if(!d.v2||d.v2.risk_90d==null){out.innerHTML='<div class="empty">Model sonucu boş döndü.</div>';return;}
       var warnings=(d.warnings||[]).length?finding("warn","Girdi / OOD uyarıları","<ul style=\"margin:0;padding-left:18px\">"+d.warnings.map(function(w){return '<li>'+esc(w)+'</li>';}).join('')+'</ul>'):'';
       var personal=d.decision&&d.decision.prediction_scope==="PERSONAL_CONTEXT";
-      var scenarioLabel=personal?"KISMİ BİLGİYLE KİŞİSEL BAĞLAM":"GENEL / BENZER MOTORLARA DAYALI SENARYO";
-      var scenarioNote=personal
-        ?"Son servis başlangıç noktası biliniyor; bakım kararı deterministiktir. ML sonuçları yalnız müşteri dönüş davranışıdır."
-        :"Son servis tarihi ve kilometresi birlikte bilinmediği için kişisel bakım tarihi hesaplanmadı. Yüzdeler yalnız benzer sentetik kayıtlara dayalı genel müşteri-dönüş senaryosudur.";
+      var scenarioLabel="V2.0 ARAŞTIRMA SENARYOSU · ÜRÜN KARARI İÇİN KULLANMA";
+      var scenarioNote=(personal
+        ?"Bakım durumu deterministik politikadan gelir. "
+        :"GENEL / BENZER MOTORLARA DAYALI SENARYO: Son servis başlangıç noktası eksik olduğu için kişisel bakım tarihi hesaplanmadı. ")
+        +"V2.0 yüzdeleri arbitrary-day auditini geçmedi; yalnız sentetik araştırma karşılaştırmasıdır.";
       out.innerHTML=v2MaintenanceCard(d.maintenance)
         +'<div class="sec">'+v2ResultCard(d.v1,d.v2,d.warning,scenarioLabel,scenarioNote,d.decision)
         +'</div><div class="sec">'+v2CoverageCard(d.coverage,d.provenance)+'</div>'+warnings;
@@ -1743,9 +1761,9 @@ function v2StatusChips(h){
   var v2ok=(h.v2_model_loaded===true);
   return '<span class="chip good"><span class="dot"></span>BACKEND API ONLINE</span>'
     +'<span class="chip '+(v1ok?'good':'warn')+'">V1 '+(v1ok?'LOADED':'—')+'</span>'
-    +'<span class="chip '+(v2ok?'good':'warn')+'">V2 '+(v2ok?'LOADED':'—')+'</span>'
+    +'<span class="chip warn">V2.0 RESEARCH '+(v2ok?'LOADED':'—')+'</span>'
     +'<span class="chip">DATASET '+esc(h.v2_dataset_version||h.dataset_version||"1.3.0")+'</span>'
-    +'<span class="chip">MODEL '+esc((h.v2_run_mode||"FULL"))+' · FINAL</span>'
+    +'<span class="chip bad">LIVE-SCENARIO AUDIT FAILED</span>'
     +'<span class="chip">CHECKSUMS '+esc(h.v2_checksums||"—")+'</span>'
     +'<span class="chip warn">REAL FLEET '+esc(h.v2_real_fleet_validation||"PENDING")+'</span>';
 }
@@ -1941,8 +1959,9 @@ function renderStatus(){
    +kpi("EDA",st("eda")==="complete"?"COMPLETE":esc(st("eda")),null,"plain")
    +kpi("V0",st("v0")==="complete"?"COMPLETE":esc(st("v0")),null,"plain")
    +kpi("V1","ACTIVE · FROZEN","DAYS + KM regression")
-   +kpi("V2",'NOT STARTED',"survival — planned","plain")
-   +kpi("V3",'NOT STARTED',"next-task — planned","plain")
+   +kpi("V2.0",'<span style="color:var(--critical)">AUDIT FAILED</span>',"synthetic research baseline","plain")
+   +kpi("V2.1",'<span style="color:var(--critical)">DATA GATE FAILED</span>',"dynamic landmark · no model","plain")
+   +kpi("V3",'ON HOLD',"V2.1 semantics pending","plain")
    +'</div></div>';
   out+='<div class="sec"><div class="sec-head"><h2>QA</h2><span class="tag">artifact-driven</span></div><div class="grid g3">'
    +kpi("Leakage audit",qa.leakage_audit==="PASS"?'<span style="color:var(--good)">PASS</span>':esc(qa.leakage_audit||"—"),null,"plain")
@@ -1954,10 +1973,10 @@ function renderStatus(){
    +'</div></div>';
   out+='<div class="sec"><div class="sec-head"><h2>Production</h2></div><div class="grid g3">'
    +kpi("Application",esc(ps.application||"PILOT"),null,"cyan")
-   +kpi("Model",'SYNTH. VALIDATED',esc((ps.model||"").replace("SYNTHETICALLY VALIDATED ","")),"")
+   +kpi("Model",'<span style="color:var(--critical)">NOT PRODUCT-VALID</span>',esc(ps.model||""),"")
    +kpi("Real fleet validation",'<span style="color:var(--warning)">PENDING</span>',null,"plain")
    +'</div>'
-   +finding("warn","Ayrım","<b>APPLICATION: PILOT/deployed. MODEL: synthetically validated. REAL FLEET VALIDATION: pending.</b><p>Bu üçü karıştırılmaz.</p>")
+   +finding("bad","Ayrım","<b>APPLICATION yayında olabilir; V2.0 canlı-senaryo için başarısızdır ve V2.1 henüz model değildir.</b><p>API'nin yanıt vermesi model geçerliliği anlamına gelmez. Gerçek filo doğrulaması bekleniyor.</p>")
    +'</div>';
   return out;
 }
