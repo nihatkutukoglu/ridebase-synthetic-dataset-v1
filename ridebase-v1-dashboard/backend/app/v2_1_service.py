@@ -52,14 +52,23 @@ def init_v2_1_history() -> None:
     """Initialize the read-only synthetic source adapter. Never raises."""
     _add_pkg_paths()
     try:
-        from ridebase_ml.v2_1.adapters.synthetic import SyntheticRideBaseSourceAdapter
+        mode = getattr(settings, "V2_1_HISTORY_ADAPTER_MODE", "sqlite").lower()
+        store_path = getattr(settings, "V2_1_HISTORY_STORE_PATH", None)
+        if mode == "sqlite" and store_path and store_path.exists():
+            from ridebase_ml.v2_1.adapters.sqlite import SyntheticSQLiteSourceAdapter
 
-        _STATE["history_adapter"] = SyntheticRideBaseSourceAdapter(
-            settings.V2_1_HISTORY_SOURCE_DIR,
-            settings.V2_1_HISTORY_SCHEMA_CONTRACT,
-        )
-        _STATE["history_error"] = None
-        log.info("V2.1 history adapter ready from %s", settings.V2_1_HISTORY_SOURCE_DIR)
+            _STATE["history_adapter"] = SyntheticSQLiteSourceAdapter(store_path)
+            _STATE["history_error"] = None
+            log.info("V2.1 SQLite history adapter ready from %s", store_path)
+        else:
+            from ridebase_ml.v2_1.adapters.synthetic import SyntheticRideBaseSourceAdapter
+
+            _STATE["history_adapter"] = SyntheticRideBaseSourceAdapter(
+                settings.V2_1_HISTORY_SOURCE_DIR,
+                settings.V2_1_HISTORY_SCHEMA_CONTRACT,
+            )
+            _STATE["history_error"] = None
+            log.info("V2.1 CSV history adapter ready from %s", settings.V2_1_HISTORY_SOURCE_DIR)
     except Exception as exc:  # pragma: no cover - environment-dependent
         _STATE["history_adapter"] = None
         _STATE["history_error"] = f"{type(exc).__name__}: {exc}"
@@ -123,9 +132,18 @@ def health_fields() -> dict[str, Any]:
         out["v2_1_error"] = _STATE["error"]
     if _STATE["history_adapter"] is None and _STATE["history_error"] is None:
         init_v2_1_history()
-    history_ok = _STATE["history_adapter"] is not None
+    adapter = _STATE["history_adapter"]
+    history_ok = adapter is not None
     out["v2_1_history_status"] = "ok" if history_ok else "unavailable"
     out["v2_1_history_source"] = "SYNTHETIC_V1_4" if history_ok else None
-    if not history_ok:
+    if history_ok:
+        adapter_type = getattr(adapter, "adapter_type", "CSV")
+        out["v2_1_history_adapter"] = adapter_type
+        if adapter_type == "SQLITE":
+            manifest = getattr(adapter, "manifest", {})
+            out["v2_1_history_store_loaded"] = True
+            out["v2_1_history_store_version"] = manifest.get("source_dataset_version", "1.4.0")
+            out["v2_1_history_store_hash"] = manifest.get("sqlite_sha256")
+    else:
         out["v2_1_history_error"] = _STATE["history_error"]
     return out

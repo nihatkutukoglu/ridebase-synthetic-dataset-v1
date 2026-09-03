@@ -33,8 +33,10 @@ services:
         value: /app/app/data/ridebase_motorcycle_models_v1.csv
       - key: MAINTENANCE_POLICY_PATH
         value: /app/app/data/maintenance_policies.csv
-      - key: V2_1_HISTORY_SOURCE_DIR
-        value: /app/app/history_data
+      - key: V2_1_HISTORY_STORE_PATH
+        value: /app/app/history_data/v2_1_history_serving.sqlite
+      - key: V2_1_HISTORY_ADAPTER_MODE
+        value: sqlite
       - key: V2_1_HISTORY_SCHEMA_CONTRACT
         value: /app/app/history_config/source_schema_contract_v1_3.json
       - key: ALLOWED_ORIGINS

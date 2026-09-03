@@ -1,0 +1,50 @@
+{
+  "report": "RideBase V2.1 History Serving Memory Baseline & Root-Cause Audit",
+  "status": "PASS",
+  "root_cause_classification": "CONFIRMED",
+  "root_cause_summary": "Loading raw V1.4 CSV source tables into PyArrow memory cache on request spikes RSS by >130 MB on top of a ~362 MB model baseline, exceeding the 512 MB cgroup memory limit of the Render Free tier and triggering Linux OOM killer SIGKILL (exit code 137).",
+  "render_environment": {
+    "tier": "free",
+    "memory_limit_mb": 512,
+    "baseline_resident_rss_mb": 362.42,
+    "available_headroom_before_request_mb": 149.58,
+    "first_request_peak_rss_mb": 449.8,
+    "headroom_consumed_by_csv_load_mb": 87.38,
+    "peak_memory_exceeds_threshold": true,
+    "observed_http_statuses": {
+      "unknown_motorcycle": 404,
+      "valid_motorcycle": 502,
+      "subsequent_health_during_restart": 503,
+      "post_restart_health": 200
+    }
+  },
+  "local_profiling": {
+    "platform": "darwin",
+    "python_version": "3.11.15",
+    "initial_process_rss_mb": 14.44,
+    "after_v1_store_rss_mb": 311.16,
+    "after_v2_v2_1_models_rss_mb": 362.42,
+    "after_csv_history_adapter_init_rss_mb": 362.42,
+    "first_by_motorcycle_request_peak_rss_mb": 449.8,
+    "warm_by_motorcycle_requests_peak_rss_mb": 449.8,
+    "first_request_duration_s": 0.192,
+    "warm_request_duration_s": 0.012
+  },
+  "csv_source_tables_footprint_bytes": {
+    "service_tasks.csv": 57922718,
+    "mileage_timeline_monthly.csv": 36322896,
+    "service_parts.csv": 23640004,
+    "services_enriched.csv": 21743513,
+    "services.csv": 19047249,
+    "maintenance_policies.csv": 15307584,
+    "appointments.csv": 6128445,
+    "customers.csv": 2083654,
+    "usage_profiles.csv": 1782390,
+    "motorcycles.csv": 1558580,
+    "maintenance_tasks.csv": 52677,
+    "ridebase_motorcycle_models_v1.csv": 16041,
+    "workshops.csv": 4984,
+    "total_csv_bytes": 185520935,
+    "total_csv_mb": 176.93
+  }
+}

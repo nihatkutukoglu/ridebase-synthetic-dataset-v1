@@ -47,6 +47,11 @@ class Settings:
         "V2_1_HISTORY_SCHEMA_CONTRACT",
         _ML_ROOT / "config" / "source_schema_contract_v1_3.json",
     )
+    V2_1_HISTORY_STORE_PATH: Path = _path(
+        "V2_1_HISTORY_STORE_PATH",
+        _ML_ROOT / "derived_outputs" / "v2_1_v1_4" / "v2_1_history_serving.sqlite",
+    )
+    V2_1_HISTORY_ADAPTER_MODE: str = os.environ.get("V2_1_HISTORY_ADAPTER_MODE", "sqlite")
 
     ALLOWED_ORIGINS: list[str] = [
         o.strip()

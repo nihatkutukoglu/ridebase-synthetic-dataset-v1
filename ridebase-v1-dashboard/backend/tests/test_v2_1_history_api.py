@@ -173,3 +173,23 @@ def test_scenario_route_remains_separate(client):
     })
     assert response.status_code == 200
     assert response.json()["mode"] == "KISMİ BİLGİYLE SENARYO TAHMİNİ"
+
+
+def test_sqlite_adapter_serving_mode_health(client):
+    health = client.get("/health").json()
+    assert health["v2_1_history_status"] == "ok"
+    assert health["v2_1_history_source"] == "SYNTHETIC_V1_4"
+    assert health["v2_1_history_adapter"] == "SQLITE"
+    assert health["v2_1_history_store_loaded"] is True
+    assert health["v2_1_history_store_version"] == "1.4.0"
+    assert health["v2_1_history_store_hash"]
+
+
+def test_sqlite_serving_does_not_read_csv_source_tables(client):
+    adapter = get_history_adapter()
+    assert adapter.adapter_type == "SQLITE"
+    response = client.post("/api/v2_1/predict/by-motorcycle", json=RICH)
+    assert response.status_code == 200
+    info = adapter.cache_info()
+    assert info["disk_reads"] == 0
+    assert info["disk_reads_by_table"] == {}

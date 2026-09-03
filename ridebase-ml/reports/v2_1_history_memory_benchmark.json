@@ -1,0 +1,38 @@
+{
+  "report": "RideBase V2.1 History Serving Memory & Latency Benchmark Gate",
+  "status": "PASS",
+  "comparison": {
+    "csv_adapter": {
+      "cold_rss_mb": 362.42,
+      "first_request_peak_rss_mb": 449.8,
+      "first_request_delta_mb": 87.38,
+      "headroom_remaining_512mb": 62.2,
+      "headroom_status": "HIGH_RISK_OOM",
+      "p50_latency_ms": 12.0,
+      "first_request_latency_ms": 192.0
+    },
+    "sqlite_adapter": {
+      "cold_rss_mb": 362.97,
+      "after_adapter_init_rss_mb": 364.73,
+      "first_request_peak_rss_mb": 365.06,
+      "first_request_delta_mb": 0.33,
+      "final_peak_rss_mb_100_requests": 366.58,
+      "total_100_requests_delta_mb": 3.61,
+      "headroom_remaining_512mb": 145.42,
+      "headroom_status": "COMFORTABLE_SAFE",
+      "p50_latency_ms": 8.99,
+      "p95_latency_ms": 10.76,
+      "max_latency_ms": 14.94,
+      "min_latency_ms": 6.64,
+      "store_disk_size_mb": 95.21,
+      "monotonic_leak_detected": false
+    }
+  },
+  "gate_checks": {
+    "no_full_csv_load_during_request": true,
+    "peak_rss_comfortably_below_512mb": true,
+    "peak_rss_below_400mb": true,
+    "no_monotonic_memory_leak": true,
+    "usable_latency_under_50ms": true
+  }
+}
