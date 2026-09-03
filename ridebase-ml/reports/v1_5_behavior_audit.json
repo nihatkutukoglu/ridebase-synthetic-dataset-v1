@@ -1,0 +1,1421 @@
+{
+  "report": "RideBase V1.5 generator-level behavior audit before V2.2 training",
+  "status": "PASS",
+  "failed_checks": [],
+  "dataset": {
+    "rows": 259804,
+    "motorcycles": 9212,
+    "events": 225279,
+    "censored": 34525
+  },
+  "generator_events": {
+    "new_event_rows": 23467,
+    "new_no_show_rows": 2075,
+    "new_cancel_rows": 1835,
+    "new_churn_censors": 172,
+    "rebooked_after_miss": 2525
+  },
+  "summary": {
+    "not_due_p30": 0.14467752481429225,
+    "overdue_p30": 0.5357356703500081,
+    "severe_overdue_p30": 0.42745098039215684,
+    "severe_overdue_eventual_return": 0.5916955017301038,
+    "high_usage_overdue_p30": 0.6758918573028315,
+    "low_usage_overdue_p30": 0.3143083630598494,
+    "appointment_yes_p30": 0.8146307903990215,
+    "appointment_no_p30": 0.1719332926752329,
+    "no_show_profile_direction_rate": 1.0,
+    "adherence_direction_rate": 1.0
+  },
+  "checks": {
+    "v1_5_structural_qa": true,
+    "deterministic_regeneration": true,
+    "clear_overdue_response": true,
+    "km_pressure_response": true,
+    "days_pressure_response": true,
+    "no_severe_overdue_dead_zone": true,
+    "smooth_saturation_unit_gate": true,
+    "high_usage_positive_when_overdue": true,
+    "adherence_direction_rate": true,
+    "no_show_profile_direction_rate": true,
+    "observable_repeated_no_show_counteracts": true,
+    "high_churn_counteracts": true,
+    "appointment_strong_positive": true,
+    "recent_breakdown_positive_when_overdue": true,
+    "horizon_monotonicity": true,
+    "all_segments_represented": true,
+    "no_latent_profile_in_modeling_table": true,
+    "no_absolute_year_feature": true
+  },
+  "tables": {
+    "max_due_ratio": [
+      {
+        "group": "<0.50",
+        "rows": 159465,
+        "eventual_return": 0.8432069733170288,
+        "eligible_30": 154151,
+        "event_30": 0.09944145675344306,
+        "eligible_60": 149572,
+        "event_60": 0.24995988554007434,
+        "eligible_90": 145776,
+        "event_90": 0.398927121062452,
+        "eligible_120": 142832,
+        "event_120": 0.5297622381539151
+      },
+      {
+        "group": "0.50-0.75",
+        "rows": 50915,
+        "eventual_return": 0.9007758028086026,
+        "eligible_30": 49260,
+        "event_30": 0.2862362971985384,
+        "eligible_60": 48015,
+        "event_60": 0.5171508903467666,
+        "eligible_90": 47197,
+        "event_90": 0.6759751679132148,
+        "eligible_120": 46731,
+        "event_120": 0.7870578416896706
+      },
+      {
+        "group": "0.75-1.00",
+        "rows": 28832,
+        "eventual_return": 0.9177302996670367,
+        "eligible_30": 27807,
+        "event_30": 0.4169813356349121,
+        "eligible_60": 27189,
+        "event_60": 0.6636139615285593,
+        "eligible_90": 26892,
+        "event_90": 0.8121002528633051,
+        "eligible_120": 26735,
+        "event_120": 0.8959790536749579
+      },
+      {
+        "group": "1.00-1.25",
+        "rows": 11863,
+        "eventual_return": 0.9177273876759673,
+        "eligible_30": 11379,
+        "event_30": 0.5273749890148519,
+        "eligible_60": 11177,
+        "event_60": 0.7705108705377114,
+        "eligible_90": 11083,
+        "event_90": 0.8767481728773797,
+        "eligible_120": 11027,
+        "event_120": 0.9282669810465222
+      },
+      {
+        "group": "1.25-1.50",
+        "rows": 4394,
+        "eventual_return": 0.9021392808375057,
+        "eligible_30": 4181,
+        "event_30": 0.5575221238938053,
+        "eligible_60": 4108,
+        "event_60": 0.7719084712755598,
+        "eligible_90": 4065,
+        "event_90": 0.8676506765067651,
+        "eligible_120": 4036,
+        "event_120": 0.9256689791873142
+      },
+      {
+        "group": "1.50-2.00",
+        "rows": 2975,
+        "eventual_return": 0.8722689075630252,
+        "eligible_30": 2811,
+        "event_30": 0.5371753824261829,
+        "eligible_60": 2726,
+        "event_60": 0.7666911225238444,
+        "eligible_90": 2687,
+        "event_90": 0.8716040193524377,
+        "eligible_120": 2661,
+        "event_120": 0.9248402856069147
+      },
+      {
+        "group": "2.00-2.50",
+        "rows": 804,
+        "eventual_return": 0.8370646766169154,
+        "eligible_30": 753,
+        "event_30": 0.5776892430278885,
+        "eligible_60": 731,
+        "event_60": 0.7797537619699042,
+        "eligible_90": 714,
+        "event_90": 0.8879551820728291,
+        "eligible_120": 708,
+        "event_120": 0.9364406779661016
+      },
+      {
+        "group": "2.50-3.00",
+        "rows": 267,
+        "eventual_return": 0.7640449438202247,
+        "eligible_30": 240,
+        "event_30": 0.5208333333333334,
+        "eligible_60": 228,
+        "event_60": 0.7543859649122807,
+        "eligible_90": 223,
+        "event_90": 0.8789237668161435,
+        "eligible_120": 219,
+        "event_120": 0.9178082191780822
+      },
+      {
+        "group": "3.00+",
+        "rows": 289,
+        "eventual_return": 0.5916955017301038,
+        "eligible_30": 255,
+        "event_30": 0.42745098039215684,
+        "eligible_60": 236,
+        "event_60": 0.6440677966101694,
+        "eligible_90": 223,
+        "event_90": 0.7309417040358744,
+        "eligible_120": 213,
+        "event_120": 0.784037558685446
+      }
+    ],
+    "km_due_ratio": [
+      {
+        "group": "<0.50",
+        "rows": 184322,
+        "eventual_return": 0.8461767992968826,
+        "eligible_30": 178219,
+        "event_30": 0.10916905604901835,
+        "eligible_60": 172965,
+        "event_60": 0.26208192408868847,
+        "eligible_90": 168616,
+        "event_90": 0.41243416994828486,
+        "eligible_120": 165249,
+        "event_120": 0.5445902849639029
+      },
+      {
+        "group": "0.50-0.75",
+        "rows": 38711,
+        "eventual_return": 0.9172586603291054,
+        "eligible_30": 37410,
+        "event_30": 0.3500668270515905,
+        "eligible_60": 36515,
+        "event_60": 0.6187320279337258,
+        "eligible_90": 36005,
+        "event_90": 0.7830301347035133,
+        "eligible_120": 35794,
+        "event_120": 0.8798681343241884
+      },
+      {
+        "group": "0.75-1.00",
+        "rows": 20778,
+        "eventual_return": 0.9279526422177303,
+        "eligible_30": 19998,
+        "event_30": 0.49414941494149417,
+        "eligible_60": 19580,
+        "event_60": 0.7499489274770174,
+        "eligible_90": 19436,
+        "event_90": 0.879604856966454,
+        "eligible_120": 19384,
+        "event_120": 0.940724308708213
+      },
+      {
+        "group": "1.00-1.25",
+        "rows": 9058,
+        "eventual_return": 0.9286818282181497,
+        "eligible_30": 8685,
+        "event_30": 0.580426021876799,
+        "eligible_60": 8547,
+        "event_60": 0.8253188253188253,
+        "eligible_90": 8498,
+        "event_90": 0.9215109437514709,
+        "eligible_120": 8474,
+        "event_120": 0.9617654000472032
+      },
+      {
+        "group": "1.25-1.50",
+        "rows": 3580,
+        "eventual_return": 0.9139664804469274,
+        "eligible_30": 3396,
+        "event_30": 0.6328032979976443,
+        "eligible_60": 3345,
+        "event_60": 0.8547085201793722,
+        "eligible_90": 3324,
+        "event_90": 0.9320096269554753,
+        "eligible_120": 3314,
+        "event_120": 0.9674109837054918
+      },
+      {
+        "group": "1.50-2.00",
+        "rows": 2212,
+        "eventual_return": 0.8851717902350814,
+        "eligible_30": 2086,
+        "event_30": 0.6347075743048898,
+        "eligible_60": 2032,
+        "event_60": 0.8548228346456693,
+        "eligible_90": 2012,
+        "event_90": 0.9304174950298211,
+        "eligible_120": 1996,
+        "event_120": 0.9619238476953907
+      },
+      {
+        "group": "2.00-2.50",
+        "rows": 625,
+        "eventual_return": 0.8368,
+        "eligible_30": 584,
+        "event_30": 0.6284246575342466,
+        "eligible_60": 568,
+        "event_60": 0.8169014084507042,
+        "eligible_90": 555,
+        "event_90": 0.9063063063063063,
+        "eligible_120": 550,
+        "event_120": 0.9418181818181818
+      },
+      {
+        "group": "2.50-3.00",
+        "rows": 242,
+        "eventual_return": 0.7644628099173554,
+        "eligible_30": 216,
+        "event_30": 0.5138888888888888,
+        "eligible_60": 205,
+        "event_60": 0.751219512195122,
+        "eligible_90": 201,
+        "event_90": 0.8805970149253731,
+        "eligible_120": 197,
+        "event_120": 0.9238578680203046
+      },
+      {
+        "group": "3.00+",
+        "rows": 276,
+        "eventual_return": 0.6195652173913043,
+        "eligible_30": 243,
+        "event_30": 0.448559670781893,
+        "eligible_60": 225,
+        "event_60": 0.6755555555555556,
+        "eligible_90": 213,
+        "event_90": 0.7652582159624414,
+        "eligible_120": 204,
+        "event_120": 0.8186274509803921
+      }
+    ],
+    "days_due_ratio": [
+      {
+        "group": "<0.50",
+        "rows": 216040,
+        "eventual_return": 0.8651638585447139,
+        "eligible_30": 208652,
+        "event_30": 0.19645150777370934,
+        "eligible_60": 202956,
+        "event_60": 0.3768156644790004,
+        "eligible_90": 198660,
+        "event_90": 0.5228732507802275,
+        "eligible_120": 195526,
+        "event_120": 0.6379867639086362
+      },
+      {
+        "group": "0.50-0.75",
+        "rows": 27510,
+        "eventual_return": 0.8756815703380589,
+        "eligible_30": 26521,
+        "event_30": 0.2263112250669281,
+        "eligible_60": 25781,
+        "event_60": 0.41127186687870915,
+        "eligible_90": 25256,
+        "event_90": 0.5640243902439024,
+        "eligible_120": 24896,
+        "event_120": 0.6899903598971723
+      },
+      {
+        "group": "0.75-1.00",
+        "rows": 11114,
+        "eventual_return": 0.8930178153680043,
+        "eligible_30": 10752,
+        "event_30": 0.2732514880952381,
+        "eligible_60": 10482,
+        "event_60": 0.506391909940851,
+        "eligible_90": 10291,
+        "event_90": 0.6887571664561267,
+        "eligible_120": 10162,
+        "event_120": 0.813619366266483
+      },
+      {
+        "group": "1.00-1.25",
+        "rows": 3222,
+        "eventual_return": 0.8727498448168839,
+        "eligible_30": 3086,
+        "event_30": 0.3677900194426442,
+        "eligible_60": 3008,
+        "event_60": 0.6060505319148937,
+        "eligible_90": 2954,
+        "event_90": 0.7403520649966148,
+        "eligible_120": 2917,
+        "event_120": 0.8241343846417553
+      },
+      {
+        "group": "1.25-1.50",
+        "rows": 882,
+        "eventual_return": 0.8253968253968254,
+        "eligible_30": 847,
+        "event_30": 0.23376623376623376,
+        "eligible_60": 821,
+        "event_60": 0.40682095006090135,
+        "eligible_90": 796,
+        "event_90": 0.571608040201005,
+        "eligible_120": 776,
+        "event_120": 0.720360824742268
+      },
+      {
+        "group": "1.50-2.00",
+        "rows": 803,
+        "eventual_return": 0.8032378580323786,
+        "eligible_30": 761,
+        "event_30": 0.24967148488830487,
+        "eligible_60": 727,
+        "event_60": 0.4938101788170564,
+        "eligible_90": 704,
+        "event_90": 0.6775568181818182,
+        "eligible_120": 690,
+        "event_120": 0.7956521739130434
+      },
+      {
+        "group": "2.00-2.50",
+        "rows": 193,
+        "eventual_return": 0.7772020725388601,
+        "eligible_30": 182,
+        "event_30": 0.37362637362637363,
+        "eligible_60": 173,
+        "event_60": 0.6127167630057804,
+        "eligible_90": 167,
+        "event_90": 0.7844311377245509,
+        "eligible_120": 164,
+        "event_120": 0.8841463414634146
+      },
+      {
+        "group": "2.50-3.00",
+        "rows": 27,
+        "eventual_return": 0.7037037037037037,
+        "eligible_30": 24,
+        "event_30": 0.5833333333333334,
+        "eligible_60": 23,
+        "event_60": 0.782608695652174,
+        "eligible_90": 22,
+        "event_90": 0.8636363636363636,
+        "eligible_120": 22,
+        "event_120": 0.8636363636363636
+      },
+      {
+        "group": "3.00+",
+        "rows": 13,
+        "eventual_return": 0.0,
+        "eligible_30": 12,
+        "event_30": 0.0,
+        "eligible_60": 11,
+        "event_60": 0.0,
+        "eligible_90": 10,
+        "event_90": 0.0,
+        "eligible_120": 9,
+        "event_120": 0.0
+      }
+    ],
+    "annual_km": [
+      {
+        "group": "3k",
+        "rows": 16618,
+        "eventual_return": 0.7937176555542184,
+        "eligible_30": 15918,
+        "event_30": 0.10459856765925367,
+        "eligible_60": 15325,
+        "event_60": 0.21037520391517128,
+        "eligible_90": 14857,
+        "event_90": 0.313051087029683,
+        "eligible_120": 14487,
+        "event_120": 0.41119624490922896
+      },
+      {
+        "group": "6k",
+        "rows": 84228,
+        "eventual_return": 0.8255568219594435,
+        "eligible_30": 81008,
+        "event_30": 0.12123493975903614,
+        "eligible_60": 78364,
+        "event_60": 0.24267520800367515,
+        "eligible_90": 76250,
+        "event_90": 0.36032786885245904,
+        "eligible_120": 74594,
+        "event_120": 0.47287985628870954
+      },
+      {
+        "group": "12k",
+        "rows": 92770,
+        "eventual_return": 0.8743559340303978,
+        "eligible_30": 89653,
+        "event_30": 0.1776739205603828,
+        "eligible_60": 87243,
+        "event_60": 0.35468748209025364,
+        "eligible_90": 85421,
+        "event_90": 0.5216749979513234,
+        "eligible_120": 84112,
+        "event_120": 0.6622479551074757
+      },
+      {
+        "group": "20k",
+        "rows": 39818,
+        "eventual_return": 0.9180521372243708,
+        "eligible_30": 38604,
+        "event_30": 0.29367423064967363,
+        "eligible_60": 37790,
+        "event_60": 0.5680338713945489,
+        "eligible_90": 37264,
+        "event_90": 0.761968656075569,
+        "eligible_120": 36980,
+        "event_120": 0.8806111411573824
+      },
+      {
+        "group": "30k",
+        "rows": 24951,
+        "eventual_return": 0.9433289246923972,
+        "eligible_30": 24271,
+        "event_30": 0.4909974867125376,
+        "eligible_60": 23897,
+        "event_60": 0.8018579738042432,
+        "eligible_90": 23713,
+        "event_90": 0.9315987011343988,
+        "eligible_120": 23636,
+        "event_120": 0.9745303773904214
+      },
+      {
+        "group": "60k",
+        "rows": 1419,
+        "eventual_return": 0.9499647639182522,
+        "eligible_30": 1383,
+        "event_30": 0.6261749819233551,
+        "eligible_60": 1363,
+        "event_60": 0.8914159941305942,
+        "eligible_90": 1355,
+        "event_90": 0.9616236162361623,
+        "eligible_120": 1353,
+        "event_120": 0.9844789356984479
+      }
+    ],
+    "observable_adherence": [
+      {
+        "group": "AVERAGE",
+        "rows": 17912,
+        "eventual_return": 0.8032603841000446,
+        "eligible_30": 17281,
+        "event_30": 0.09565418667901163,
+        "eligible_60": 16729,
+        "event_60": 0.19307788869627593,
+        "eligible_90": 16275,
+        "event_90": 0.28854070660522274,
+        "eligible_120": 15900,
+        "event_120": 0.3817610062893082
+      },
+      {
+        "group": "GOOD",
+        "rows": 241101,
+        "eventual_return": 0.8728043434079493,
+        "eligible_30": 232819,
+        "event_30": 0.21398597193528018,
+        "eligible_60": 226564,
+        "event_60": 0.4046450451086669,
+        "eligible_90": 221942,
+        "event_90": 0.556920276468627,
+        "eligible_120": 218656,
+        "event_120": 0.6748865798331626
+      },
+      {
+        "group": "POOR",
+        "rows": 791,
+        "eventual_return": 0.5777496839443742,
+        "eligible_30": 737,
+        "event_30": 0.08412483039348712,
+        "eligible_60": 689,
+        "event_60": 0.1741654571843251,
+        "eligible_90": 643,
+        "event_90": 0.2737169517884914,
+        "eligible_120": 606,
+        "event_120": 0.37458745874587457
+      }
+    ],
+    "no_show_history": [
+      {
+        "group": "0",
+        "rows": 220996,
+        "eventual_return": 0.8782014154102337,
+        "eligible_30": 214353,
+        "event_30": 0.19726339262804812,
+        "eligible_60": 209131,
+        "event_60": 0.37670646628189985,
+        "eligible_90": 205161,
+        "event_90": 0.5238130053957624,
+        "eligible_120": 202220,
+        "event_120": 0.6409900108792405
+      },
+      {
+        "group": "1",
+        "rows": 32480,
+        "eventual_return": 0.8167795566502463,
+        "eligible_30": 30718,
+        "event_30": 0.2485838921804805,
+        "eligible_60": 29447,
+        "event_60": 0.45736407783475397,
+        "eligible_90": 28543,
+        "event_90": 0.6131100444942718,
+        "eligible_120": 27951,
+        "event_120": 0.7259132052520483
+      },
+      {
+        "group": "2",
+        "rows": 5151,
+        "eventual_return": 0.7482042321879246,
+        "eligible_30": 4730,
+        "event_30": 0.2744186046511628,
+        "eligible_60": 4449,
+        "event_60": 0.5066307035288828,
+        "eligible_90": 4258,
+        "event_90": 0.6728511038046031,
+        "eligible_120": 4124,
+        "event_120": 0.7856450048496605
+      },
+      {
+        "group": "3+",
+        "rows": 1177,
+        "eventual_return": 0.6941376380628717,
+        "eligible_30": 1036,
+        "event_30": 0.305984555984556,
+        "eligible_60": 955,
+        "event_60": 0.5497382198952879,
+        "eligible_90": 898,
+        "event_90": 0.7182628062360802,
+        "eligible_120": 867,
+        "event_120": 0.8235294117647058
+      }
+    ],
+    "latent_profile_audit_only": [
+      {
+        "group": "CHURN_RISK",
+        "rows": 14577,
+        "eventual_return": 0.8614941345955958,
+        "eligible_30": 14108,
+        "event_30": 0.20676212078253473,
+        "eligible_60": 13734,
+        "event_60": 0.3952235328382117,
+        "eligible_90": 13446,
+        "event_90": 0.5479696564033913,
+        "eligible_120": 13241,
+        "event_120": 0.661203836568235
+      },
+      {
+        "group": "DELAYER",
+        "rows": 30194,
+        "eventual_return": 0.8807378949460157,
+        "eligible_30": 29244,
+        "event_30": 0.21064149911092875,
+        "eligible_60": 28516,
+        "event_60": 0.3961284892691822,
+        "eligible_90": 27973,
+        "event_90": 0.5437028563257427,
+        "eligible_120": 27589,
+        "event_120": 0.6593207437746929
+      },
+      {
+        "group": "HEAVY_USER",
+        "rows": 24404,
+        "eventual_return": 0.8995246680871988,
+        "eligible_30": 23658,
+        "event_30": 0.230281511539437,
+        "eligible_60": 23114,
+        "event_60": 0.43168642381240807,
+        "eligible_90": 22721,
+        "event_90": 0.5858456934113816,
+        "eligible_120": 22456,
+        "event_120": 0.702930174563591
+      },
+      {
+        "group": "NORMAL",
+        "rows": 63909,
+        "eventual_return": 0.8930197624747688,
+        "eligible_30": 61835,
+        "event_30": 0.22678094930055795,
+        "eligible_60": 60346,
+        "event_60": 0.42591058230868656,
+        "eligible_90": 59299,
+        "event_90": 0.5813420125128586,
+        "eligible_120": 58585,
+        "event_120": 0.698625928138602
+      },
+      {
+        "group": "NO_SHOW_PRONE",
+        "rows": 12537,
+        "eventual_return": 0.8827470686767169,
+        "eligible_30": 12165,
+        "event_30": 0.22186600904233456,
+        "eligible_60": 11868,
+        "event_60": 0.4079878665318504,
+        "eligible_90": 11655,
+        "event_90": 0.5527241527241528,
+        "eligible_120": 11503,
+        "event_120": 0.6660871077110319
+      },
+      {
+        "group": "ON_TIME",
+        "rows": 33774,
+        "eventual_return": 0.9007520577959377,
+        "eligible_30": 32659,
+        "event_30": 0.2178572522122539,
+        "eligible_60": 31863,
+        "event_60": 0.4146188368954587,
+        "eligible_90": 31322,
+        "event_90": 0.5726645808058234,
+        "eligible_120": 31009,
+        "event_120": 0.6914444193621206
+      },
+      {
+        "group": "PRICE_SENSITIVE",
+        "rows": 16126,
+        "eventual_return": 0.8855884906362396,
+        "eligible_30": 15602,
+        "event_30": 0.22170234585309576,
+        "eligible_60": 15208,
+        "event_60": 0.4119542346133614,
+        "eligible_90": 14921,
+        "event_90": 0.5619596541786743,
+        "eligible_120": 14728,
+        "event_120": 0.678843020097773
+      },
+      {
+        "group": "WORKSHOP_LOYAL",
+        "rows": 15319,
+        "eventual_return": 0.8991448527971799,
+        "eligible_30": 14827,
+        "event_30": 0.22796250084305658,
+        "eligible_60": 14470,
+        "event_60": 0.4275051831375259,
+        "eligible_90": 14218,
+        "event_90": 0.585736390490927,
+        "eligible_120": 14064,
+        "event_120": 0.7051336746302617
+      }
+    ],
+    "churn_band_audit_only": [
+      {
+        "group": "HIGH",
+        "rows": 1072,
+        "eventual_return": 0.7378731343283582,
+        "eligible_30": 1020,
+        "event_30": 0.12941176470588237,
+        "eligible_60": 978,
+        "event_60": 0.25664621676891614,
+        "eligible_90": 945,
+        "event_90": 0.38095238095238093,
+        "eligible_120": 918,
+        "event_120": 0.4934640522875817
+      },
+      {
+        "group": "LOW",
+        "rows": 195617,
+        "eventual_return": 0.8929285287066052,
+        "eligible_30": 189374,
+        "event_30": 0.22281833831465778,
+        "eligible_60": 184794,
+        "event_60": 0.4184010303364828,
+        "eligible_90": 181539,
+        "event_90": 0.5720864387266648,
+        "eligible_120": 179380,
+        "event_120": 0.6892518675437619
+      },
+      {
+        "group": "MEDIUM",
+        "rows": 14151,
+        "eventual_return": 0.8660872023178574,
+        "eligible_30": 13704,
+        "event_30": 0.2096468184471687,
+        "eligible_60": 13347,
+        "event_60": 0.40001498464074325,
+        "eligible_90": 13071,
+        "event_90": 0.5536684262872007,
+        "eligible_120": 12877,
+        "event_120": 0.6667702104527452
+      }
+    ],
+    "recent_breakdown": [
+      {
+        "group": "NO",
+        "rows": 251550,
+        "eventual_return": 0.8697237129795269,
+        "eligible_30": 243045,
+        "event_30": 0.20503610442510647,
+        "eligible_60": 236554,
+        "event_60": 0.3886089434124978,
+        "eligible_90": 231703,
+        "event_90": 0.5368251597950825,
+        "eligible_120": 228185,
+        "event_120": 0.6530709731139207
+      },
+      {
+        "group": "YES",
+        "rows": 8254,
+        "eventual_return": 0.7874969711654956,
+        "eligible_30": 7792,
+        "event_30": 0.21842915811088295,
+        "eligible_60": 7428,
+        "event_60": 0.4174744211093161,
+        "eligible_90": 7157,
+        "event_90": 0.5717479390806204,
+        "eligible_120": 6977,
+        "event_120": 0.6942812096889781
+      }
+    ],
+    "known_appointment": [
+      {
+        "group": "NO",
+        "rows": 246104,
+        "eventual_return": 0.8641915612911615,
+        "eligible_30": 237755,
+        "event_30": 0.1719332926752329,
+        "eligible_60": 231086,
+        "event_60": 0.36180036869390614,
+        "eligible_90": 226077,
+        "event_90": 0.515886180372174,
+        "eligible_120": 222452,
+        "event_120": 0.6372340999406614
+      },
+      {
+        "group": "YES",
+        "rows": 13700,
+        "eventual_return": 0.9195620437956205,
+        "eligible_30": 13082,
+        "event_30": 0.8146307903990215,
+        "eligible_60": 12896,
+        "event_60": 0.8856234491315137,
+        "eligible_90": 12783,
+        "event_90": 0.9266995228037237,
+        "eligible_120": 12710,
+        "event_120": 0.9528717545239969
+      }
+    ],
+    "riding_intensity": [
+      {
+        "group": "HIGH",
+        "rows": 80600,
+        "eventual_return": 0.923151364764268,
+        "eligible_30": 78206,
+        "event_30": 0.34874562054062347,
+        "eligible_60": 76662,
+        "event_60": 0.6256554746810675,
+        "eligible_90": 75700,
+        "event_90": 0.7983883751651255,
+        "eligible_120": 75182,
+        "event_120": 0.8957995264824027
+      },
+      {
+        "group": "LOW",
+        "rows": 71827,
+        "eventual_return": 0.8136494632937474,
+        "eligible_30": 68977,
+        "event_30": 0.11297968888180118,
+        "eligible_60": 66613,
+        "event_60": 0.226412261870806,
+        "eligible_90": 64725,
+        "event_90": 0.33646967941290074,
+        "eligible_120": 63232,
+        "event_120": 0.4415643977732793
+      },
+      {
+        "group": "MEDIUM",
+        "rows": 107377,
+        "eventual_return": 0.8608081805228308,
+        "eligible_30": 103654,
+        "event_30": 0.1588747178111795,
+        "eligible_60": 100707,
+        "event_60": 0.31757474654194845,
+        "eligible_90": 98435,
+        "event_90": 0.46995479250266675,
+        "eligible_120": 96748,
+        "event_120": 0.605655930871956
+      }
+    ],
+    "category": [
+      {
+        "group": "ADVENTURE",
+        "rows": 1661,
+        "eventual_return": 0.8386514148103552,
+        "eligible_30": 1609,
+        "event_30": 0.11684275947793661,
+        "eligible_60": 1564,
+        "event_60": 0.22442455242966752,
+        "eligible_90": 1527,
+        "event_90": 0.3320235756385069,
+        "eligible_120": 1500,
+        "event_120": 0.43466666666666665
+      },
+      {
+        "group": "BIG_SCOOTER",
+        "rows": 17248,
+        "eventual_return": 0.8264726345083488,
+        "eligible_30": 16618,
+        "event_30": 0.11872668191118065,
+        "eligible_60": 16094,
+        "event_60": 0.24052441903815086,
+        "eligible_90": 15665,
+        "event_90": 0.35876157037982764,
+        "eligible_120": 15323,
+        "event_120": 0.47092605886575734
+      },
+      {
+        "group": "CRUISER",
+        "rows": 299,
+        "eventual_return": 0.7357859531772575,
+        "eligible_30": 283,
+        "event_30": 0.1166077738515901,
+        "eligible_60": 270,
+        "event_60": 0.23703703703703705,
+        "eligible_90": 261,
+        "event_90": 0.3563218390804598,
+        "eligible_120": 254,
+        "event_120": 0.4763779527559055
+      },
+      {
+        "group": "CUB",
+        "rows": 44410,
+        "eventual_return": 0.9047962170682279,
+        "eligible_30": 42938,
+        "event_30": 0.302179887279333,
+        "eligible_60": 41896,
+        "event_60": 0.5483101012029789,
+        "eligible_90": 41226,
+        "event_90": 0.7180420123223209,
+        "eligible_120": 40842,
+        "event_120": 0.8312521424024288
+      },
+      {
+        "group": "EV_SCOOTER",
+        "rows": 663,
+        "eventual_return": 0.8386123680241327,
+        "eligible_30": 631,
+        "event_30": 0.10618066561014262,
+        "eligible_60": 608,
+        "event_60": 0.21875,
+        "eligible_90": 590,
+        "event_90": 0.3288135593220339,
+        "eligible_120": 577,
+        "event_120": 0.43674176776429807
+      },
+      {
+        "group": "MINI_BIKE",
+        "rows": 517,
+        "eventual_return": 0.7949709864603481,
+        "eligible_30": 499,
+        "event_30": 0.10220440881763528,
+        "eligible_60": 483,
+        "event_60": 0.2111801242236025,
+        "eligible_90": 470,
+        "event_90": 0.3127659574468085,
+        "eligible_120": 460,
+        "event_120": 0.4152173913043478
+      },
+      {
+        "group": "NAKED",
+        "rows": 35864,
+        "eventual_return": 0.8142148115101494,
+        "eligible_30": 34557,
+        "event_30": 0.1120467633185751,
+        "eligible_60": 33453,
+        "event_60": 0.2246734224135354,
+        "eligible_90": 32542,
+        "event_90": 0.3319095322967242,
+        "eligible_120": 31786,
+        "event_120": 0.43358711382369597
+      },
+      {
+        "group": "ROADSTER",
+        "rows": 1702,
+        "eventual_return": 0.7696827262044653,
+        "eligible_30": 1630,
+        "event_30": 0.10429447852760736,
+        "eligible_60": 1566,
+        "event_60": 0.2049808429118774,
+        "eligible_90": 1512,
+        "event_90": 0.30753968253968256,
+        "eligible_120": 1468,
+        "event_120": 0.40599455040871935
+      },
+      {
+        "group": "SCOOTER",
+        "rows": 152597,
+        "eventual_return": 0.8768455474222954,
+        "eligible_30": 147410,
+        "event_30": 0.2152228478393596,
+        "eligible_60": 143546,
+        "event_60": 0.40936703217087206,
+        "eligible_90": 140694,
+        "event_90": 0.5663354514051772,
+        "eligible_120": 138681,
+        "event_120": 0.6874121184589093
+      },
+      {
+        "group": "SCRAMBLER",
+        "rows": 1541,
+        "eventual_return": 0.8046722907203114,
+        "eligible_30": 1485,
+        "event_30": 0.10235690235690235,
+        "eligible_60": 1435,
+        "event_60": 0.2062717770034843,
+        "eligible_90": 1396,
+        "event_90": 0.3137535816618911,
+        "eligible_120": 1360,
+        "event_120": 0.42058823529411765
+      },
+      {
+        "group": "SUPERSPORT",
+        "rows": 1852,
+        "eventual_return": 0.8234341252699784,
+        "eligible_30": 1784,
+        "event_30": 0.10033632286995516,
+        "eligible_60": 1723,
+        "event_60": 0.20313406848520024,
+        "eligible_90": 1676,
+        "event_90": 0.301909307875895,
+        "eligible_120": 1641,
+        "event_120": 0.3991468616697136
+      },
+      {
+        "group": "TOURING",
+        "rows": 1450,
+        "eventual_return": 0.8151724137931035,
+        "eligible_30": 1393,
+        "event_30": 0.10696338837042355,
+        "eligible_60": 1344,
+        "event_60": 0.21502976190476192,
+        "eligible_90": 1301,
+        "event_90": 0.32513451191391235,
+        "eligible_120": 1270,
+        "event_120": 0.43070866141732284
+      }
+    ],
+    "no_show_history_overdue": [
+      {
+        "group": "0",
+        "rows": 15211,
+        "eventual_return": 0.9190717244099664,
+        "eligible_30": 14670,
+        "event_30": 0.5401499659168371,
+        "eligible_60": 14431,
+        "event_60": 0.7714642089945257,
+        "eligible_90": 14297,
+        "event_90": 0.8740295166818214,
+        "eligible_120": 14208,
+        "event_120": 0.927857545045045
+      },
+      {
+        "group": "1",
+        "rows": 3872,
+        "eventual_return": 0.8514979338842975,
+        "eligible_30": 3581,
+        "event_30": 0.5386763473889975,
+        "eligible_60": 3473,
+        "event_60": 0.7696515980420385,
+        "eligible_90": 3424,
+        "event_90": 0.8732476635514018,
+        "eligible_120": 3401,
+        "event_120": 0.9217877094972067
+      },
+      {
+        "group": "2",
+        "rows": 1136,
+        "eventual_return": 0.829225352112676,
+        "eligible_30": 1046,
+        "event_30": 0.4780114722753346,
+        "eligible_60": 1006,
+        "event_60": 0.7306163021868787,
+        "eligible_90": 991,
+        "event_90": 0.8506559031281534,
+        "eligible_120": 977,
+        "event_120": 0.9048106448311156
+      },
+      {
+        "group": "3+",
+        "rows": 373,
+        "eventual_return": 0.7372654155495979,
+        "eligible_30": 322,
+        "event_30": 0.4906832298136646,
+        "eligible_60": 296,
+        "event_60": 0.7635135135135135,
+        "eligible_90": 283,
+        "event_90": 0.8833922261484098,
+        "eligible_120": 278,
+        "event_120": 0.9424460431654677
+      }
+    ]
+  },
+  "profile_by_due_audit_only": [
+    {
+      "due": "<0.50",
+      "profile": "CHURN_RISK",
+      "n": 8591,
+      "event_30": 0.09894075194971481
+    },
+    {
+      "due": "<0.50",
+      "profile": "DELAYER",
+      "n": 17127,
+      "event_30": 0.09762363519588953
+    },
+    {
+      "due": "<0.50",
+      "profile": "HEAVY_USER",
+      "n": 14869,
+      "event_30": 0.11675297599031542
+    },
+    {
+      "due": "<0.50",
+      "profile": "NORMAL",
+      "n": 38258,
+      "event_30": 0.11430289089863557
+    },
+    {
+      "due": "<0.50",
+      "profile": "NO_SHOW_PRONE",
+      "n": 6950,
+      "event_30": 0.10589928057553957
+    },
+    {
+      "due": "<0.50",
+      "profile": "ON_TIME",
+      "n": 21101,
+      "event_30": 0.11771953935832424
+    },
+    {
+      "due": "<0.50",
+      "profile": "PRICE_SENSITIVE",
+      "n": 9693,
+      "event_30": 0.11771381409264417
+    },
+    {
+      "due": "<0.50",
+      "profile": "WORKSHOP_LOYAL",
+      "n": 9285,
+      "event_30": 0.11448572967151319
+    },
+    {
+      "due": "0.50-0.75",
+      "profile": "CHURN_RISK",
+      "n": 2725,
+      "event_30": 0.29211009174311925
+    },
+    {
+      "due": "0.50-0.75",
+      "profile": "DELAYER",
+      "n": 5840,
+      "event_30": 0.285958904109589
+    },
+    {
+      "due": "0.50-0.75",
+      "profile": "HEAVY_USER",
+      "n": 4569,
+      "event_30": 0.32217115342525715
+    },
+    {
+      "due": "0.50-0.75",
+      "profile": "NORMAL",
+      "n": 11937,
+      "event_30": 0.31465192259361646
+    },
+    {
+      "due": "0.50-0.75",
+      "profile": "NO_SHOW_PRONE",
+      "n": 2459,
+      "event_30": 0.29442862952419685
+    },
+    {
+      "due": "0.50-0.75",
+      "profile": "ON_TIME",
+      "n": 6120,
+      "event_30": 0.3093137254901961
+    },
+    {
+      "due": "0.50-0.75",
+      "profile": "PRICE_SENSITIVE",
+      "n": 2966,
+      "event_30": 0.2993931220498989
+    },
+    {
+      "due": "0.50-0.75",
+      "profile": "WORKSHOP_LOYAL",
+      "n": 2784,
+      "event_30": 0.3135775862068966
+    },
+    {
+      "due": "0.75-1.00",
+      "profile": "CHURN_RISK",
+      "n": 1562,
+      "event_30": 0.4148527528809219
+    },
+    {
+      "due": "0.75-1.00",
+      "profile": "DELAYER",
+      "n": 3394,
+      "event_30": 0.40836770771950504
+    },
+    {
+      "due": "0.75-1.00",
+      "profile": "HEAVY_USER",
+      "n": 2581,
+      "event_30": 0.4591243703990701
+    },
+    {
+      "due": "0.75-1.00",
+      "profile": "NORMAL",
+      "n": 6843,
+      "event_30": 0.45462516440157824
+    },
+    {
+      "due": "0.75-1.00",
+      "profile": "NO_SHOW_PRONE",
+      "n": 1393,
+      "event_30": 0.41277817659727206
+    },
+    {
+      "due": "0.75-1.00",
+      "profile": "ON_TIME",
+      "n": 3360,
+      "event_30": 0.444047619047619
+    },
+    {
+      "due": "0.75-1.00",
+      "profile": "PRICE_SENSITIVE",
+      "n": 1727,
+      "event_30": 0.4279096699478865
+    },
+    {
+      "due": "0.75-1.00",
+      "profile": "WORKSHOP_LOYAL",
+      "n": 1629,
+      "event_30": 0.4671577655003069
+    },
+    {
+      "due": "1.00-1.25",
+      "profile": "CHURN_RISK",
+      "n": 680,
+      "event_30": 0.538235294117647
+    },
+    {
+      "due": "1.00-1.25",
+      "profile": "DELAYER",
+      "n": 1537,
+      "event_30": 0.49316851008458035
+    },
+    {
+      "due": "1.00-1.25",
+      "profile": "HEAVY_USER",
+      "n": 1004,
+      "event_30": 0.6364541832669323
+    },
+    {
+      "due": "1.00-1.25",
+      "profile": "NORMAL",
+      "n": 2782,
+      "event_30": 0.5585909417685119
+    },
+    {
+      "due": "1.00-1.25",
+      "profile": "NO_SHOW_PRONE",
+      "n": 677,
+      "event_30": 0.4726735598227474
+    },
+    {
+      "due": "1.00-1.25",
+      "profile": "ON_TIME",
+      "n": 1288,
+      "event_30": 0.5822981366459627
+    },
+    {
+      "due": "1.00-1.25",
+      "profile": "PRICE_SENSITIVE",
+      "n": 710,
+      "event_30": 0.5704225352112676
+    },
+    {
+      "due": "1.00-1.25",
+      "profile": "WORKSHOP_LOYAL",
+      "n": 667,
+      "event_30": 0.5877061469265368
+    },
+    {
+      "due": "1.25-1.50",
+      "profile": "CHURN_RISK",
+      "n": 247,
+      "event_30": 0.5263157894736842
+    },
+    {
+      "due": "1.25-1.50",
+      "profile": "DELAYER",
+      "n": 645,
+      "event_30": 0.5147286821705427
+    },
+    {
+      "due": "1.25-1.50",
+      "profile": "HEAVY_USER",
+      "n": 340,
+      "event_30": 0.6647058823529411
+    },
+    {
+      "due": "1.25-1.50",
+      "profile": "NORMAL",
+      "n": 1012,
+      "event_30": 0.6096837944664032
+    },
+    {
+      "due": "1.25-1.50",
+      "profile": "NO_SHOW_PRONE",
+      "n": 303,
+      "event_30": 0.5082508250825083
+    },
+    {
+      "due": "1.25-1.50",
+      "profile": "ON_TIME",
+      "n": 460,
+      "event_30": 0.6260869565217392
+    },
+    {
+      "due": "1.25-1.50",
+      "profile": "PRICE_SENSITIVE",
+      "n": 242,
+      "event_30": 0.6239669421487604
+    },
+    {
+      "due": "1.25-1.50",
+      "profile": "WORKSHOP_LOYAL",
+      "n": 237,
+      "event_30": 0.6624472573839663
+    },
+    {
+      "due": "1.50-2.00",
+      "profile": "CHURN_RISK",
+      "n": 183,
+      "event_30": 0.4426229508196721
+    },
+    {
+      "due": "1.50-2.00",
+      "profile": "DELAYER",
+      "n": 447,
+      "event_30": 0.4899328859060403
+    },
+    {
+      "due": "1.50-2.00",
+      "profile": "HEAVY_USER",
+      "n": 210,
+      "event_30": 0.6047619047619047
+    },
+    {
+      "due": "1.50-2.00",
+      "profile": "NORMAL",
+      "n": 708,
+      "event_30": 0.6200564971751412
+    },
+    {
+      "due": "1.50-2.00",
+      "profile": "NO_SHOW_PRONE",
+      "n": 233,
+      "event_30": 0.51931330472103
+    },
+    {
+      "due": "1.50-2.00",
+      "profile": "ON_TIME",
+      "n": 241,
+      "event_30": 0.6473029045643154
+    },
+    {
+      "due": "1.50-2.00",
+      "profile": "PRICE_SENSITIVE",
+      "n": 162,
+      "event_30": 0.5185185185185185
+    },
+    {
+      "due": "1.50-2.00",
+      "profile": "WORKSHOP_LOYAL",
+      "n": 156,
+      "event_30": 0.5897435897435898
+    },
+    {
+      "due": "2.00-2.50",
+      "profile": "CHURN_RISK",
+      "n": 62,
+      "event_30": 0.46774193548387094
+    },
+    {
+      "due": "2.00-2.50",
+      "profile": "DELAYER",
+      "n": 147,
+      "event_30": 0.5102040816326531
+    },
+    {
+      "due": "2.00-2.50",
+      "profile": "HEAVY_USER",
+      "n": 66,
+      "event_30": 0.8181818181818182
+    },
+    {
+      "due": "2.00-2.50",
+      "profile": "NORMAL",
+      "n": 167,
+      "event_30": 0.6047904191616766
+    },
+    {
+      "due": "2.00-2.50",
+      "profile": "NO_SHOW_PRONE",
+      "n": 77,
+      "event_30": 0.5064935064935064
+    },
+    {
+      "due": "2.00-2.50",
+      "profile": "ON_TIME",
+      "n": 66,
+      "event_30": 0.5757575757575758
+    },
+    {
+      "due": "2.00-2.50",
+      "profile": "PRICE_SENSITIVE",
+      "n": 49,
+      "event_30": 0.5918367346938775
+    },
+    {
+      "due": "2.00-2.50",
+      "profile": "WORKSHOP_LOYAL",
+      "n": 43,
+      "event_30": 0.627906976744186
+    },
+    {
+      "due": "2.50-3.00",
+      "profile": "DELAYER",
+      "n": 50,
+      "event_30": 0.54
+    },
+    {
+      "due": "2.50-3.00",
+      "profile": "NORMAL",
+      "n": 65,
+      "event_30": 0.6153846153846154
+    },
+    {
+      "due": "2.50-3.00",
+      "profile": "NO_SHOW_PRONE",
+      "n": 31,
+      "event_30": 0.3225806451612903
+    },
+    {
+      "due": "3.00+",
+      "profile": "CHURN_RISK",
+      "n": 35,
+      "event_30": 0.3142857142857143
+    },
+    {
+      "due": "3.00+",
+      "profile": "DELAYER",
+      "n": 57,
+      "event_30": 0.3684210526315789
+    },
+    {
+      "due": "3.00+",
+      "profile": "NORMAL",
+      "n": 63,
+      "event_30": 0.5079365079365079
+    },
+    {
+      "due": "3.00+",
+      "profile": "NO_SHOW_PRONE",
+      "n": 42,
+      "event_30": 0.47619047619047616
+    }
+  ],
+  "assumption_status": "SYNTHETIC_NOT_REAL_FLEET_VALIDATED"
+}

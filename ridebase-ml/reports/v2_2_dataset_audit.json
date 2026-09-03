@@ -1,0 +1,514 @@
+{
+  "report": "RideBase V2.2 dynamic-landmark dataset integrity gate",
+  "status": "PASS",
+  "failed_checks": [],
+  "checks": {
+    "landmark_builder_quality": true,
+    "source_schema_unchanged": true,
+    "feature_count_expected": true,
+    "forbidden_feature_scan": true,
+    "identifier_shortcuts_absent": true,
+    "no_absolute_year": true,
+    "no_split_feature": true,
+    "no_latent_profile_feature": true,
+    "unique_landmarks": true,
+    "positive_duration": true,
+    "event_binary": true,
+    "observed_has_next_service": true,
+    "censored_has_no_next_service": true,
+    "horizon_targets_monotone": true,
+    "train_end_respected": true,
+    "validation_end_respected": true,
+    "test_start_respected": true,
+    "unseen_motorcycles_isolated": true,
+    "output_hashes_match": true,
+    "test_not_used_for_selection": true
+  },
+  "dataset": {
+    "rows": 259804,
+    "motorcycles": 9212,
+    "feature_count": 60,
+    "base_v2_1_features": 54,
+    "events": 225279,
+    "censored": 34525,
+    "event_rate": 0.867111360872042
+  },
+  "splits": {
+    "dataset_version": "1.5.0-v2.2-dynamic-landmark",
+    "modeling_table_sha256": "44f88892f9ae2db124028bb58111300511f373716b673740dd201293b9df4449",
+    "landmark_manifest_sha256": "43dfcfb366afa979a80e3f816249f5f0e778bbbe485101d75cd18af4a9a82bbd",
+    "config_sha256": "a68849fea15b1ed0e177dcbbbe5b9ac7b61b57553477408bfa6a05f353b36e7c",
+    "feature_list_sha256": "08bd1890a76489c82e7a027bab4aab31418fcae96f5e0d6cfddb92c9504fa259",
+    "train_end": "2025-06-30",
+    "validation_end": "2025-12-31",
+    "test_start": "2026-01-01",
+    "selection_data": [
+      "TRAIN",
+      "VALIDATION"
+    ],
+    "calibration_data": "VALIDATION",
+    "test_access_status": "SEALED_UNTIL_SELECTION_FREEZE",
+    "split_counts": {
+      "TRAIN": 135448,
+      "TEST": 47417,
+      "VALIDATION": 36451,
+      "UNSEEN_MOTORCYCLE_EXCLUDED": 31747,
+      "UNSEEN_MOTORCYCLE_TEMPORAL_TEST": 8741
+    },
+    "unseen_motorcycle_count": 1346
+  },
+  "null_share": {
+    "days_to_next_known_appointment": 0.9472679404474142,
+    "brand": 0.0,
+    "last_service_was_breakdown": 0.0,
+    "critical_due_task_count": 0.0,
+    "days_until_next_scheduled_due": 0.0,
+    "km_until_next_scheduled_due": 0.0,
+    "recent_service_count_90d": 0.0,
+    "recent_service_count_365d": 0.0,
+    "prior_service_count": 0.0,
+    "prior_periodic_service_count": 0.0,
+    "prior_breakdown_count": 0.0,
+    "prior_repair_count": 0.0,
+    "historical_service_delay_mean_days": 0.0,
+    "historical_on_time_rate": 0.0,
+    "cumulative_service_spend": 0.0,
+    "last_service_was_warranty": 0.0,
+    "category": 0.0,
+    "last_service_task_count": 0.0,
+    "last_service_spend": 0.0,
+    "service_bay_count": 0.0,
+    "appointment_rate": 0.0,
+    "avg_parts_lead_days": 0.0,
+    "customer_volume_index": 0.0,
+    "landmark_month_sin": 0.0,
+    "landmark_month_cos": 0.0,
+    "prior_appointment_count": 0.0,
+    "prior_no_show_count": 0.0,
+    "prior_cancelled_appointment_count": 0.0,
+    "known_appointment_within_30d": 0.0,
+    "due_task_count": 0.0,
+    "maintenance_due_now": 0.0,
+    "km_overdue": 0.0,
+    "ownership_age_days": 0.0,
+    "powertrain_type": 0.0,
+    "policy_group": 0.0,
+    "customer_type": 0.0,
+    "usage_type": 0.0,
+    "riding_intensity": 0.0,
+    "climate_zone": 0.0,
+    "storage_condition": 0.0,
+    "workshop_region": 0.0,
+    "workshop_price_level": 0.0,
+    "last_service_type_code": 0.0,
+    "last_arrival_mode": 0.0,
+    "production_age_days": 0.0,
+    "is_fleet_customer": 0.0,
+    "days_overdue": 0.0,
+    "current_odometer_km_at_landmark": 0.0,
+    "annual_km_baseline": 0.0,
+    "recent_90d_km": 0.0,
+    "recent_vs_baseline_usage_ratio": 0.0,
+    "days_since_last_service": 0.0,
+    "km_since_last_service": 0.0,
+    "avg_km_per_day_since_last_service": 0.0,
+    "oem_interval_days": 0.0,
+    "oem_interval_km": 0.0,
+    "days_due_ratio": 0.0,
+    "km_due_ratio": 0.0,
+    "max_due_ratio": 0.0,
+    "recent_breakdown_count_180d": 0.0
+  },
+  "feature_drift_vs_v2_1": {
+    "interpretation": "Expected world drift from V1.4 to V1.5; documented, not tuned against TEST metrics.",
+    "numeric": [
+      {
+        "feature": "cumulative_service_spend",
+        "v2_1_mean": 637.4236563866361,
+        "v2_2_mean": 1358.494136233468,
+        "standardized_mean_difference": 0.4595400381411114,
+        "v2_1_null_share": 0.0,
+        "v2_2_null_share": 0.0
+      },
+      {
+        "feature": "max_due_ratio",
+        "v2_1_mean": 0.577148460543351,
+        "v2_2_mean": 0.4647870605934377,
+        "standardized_mean_difference": -0.20787915200518478,
+        "v2_1_null_share": 0.0,
+        "v2_2_null_share": 0.0
+      },
+      {
+        "feature": "days_since_last_service",
+        "v2_1_mean": 120.97359845196056,
+        "v2_2_mean": 98.89373142830749,
+        "standardized_mean_difference": -0.20755926478511275,
+        "v2_1_null_share": 0.0,
+        "v2_2_null_share": 0.0
+      },
+      {
+        "feature": "days_due_ratio",
+        "v2_1_mean": 0.3416230946323211,
+        "v2_2_mean": 0.2804794107359045,
+        "standardized_mean_difference": -0.195813337699944,
+        "v2_1_null_share": 0.0,
+        "v2_2_null_share": 0.0
+      },
+      {
+        "feature": "last_service_spend",
+        "v2_1_mean": 340.64214455635965,
+        "v2_2_mean": 471.0657789333498,
+        "standardized_mean_difference": 0.18549634318803193,
+        "v2_1_null_share": 0.0,
+        "v2_2_null_share": 0.0
+      },
+      {
+        "feature": "km_since_last_service",
+        "v2_1_mean": 2114.1541576305963,
+        "v2_2_mean": 1695.1263760373204,
+        "standardized_mean_difference": -0.18525848601682174,
+        "v2_1_null_share": 0.0,
+        "v2_2_null_share": 0.0
+      },
+      {
+        "feature": "km_due_ratio",
+        "v2_1_mean": 0.47481250669999464,
+        "v2_2_mean": 0.3774522635012035,
+        "standardized_mean_difference": -0.17929140932542192,
+        "v2_1_null_share": 0.0,
+        "v2_2_null_share": 0.0
+      },
+      {
+        "feature": "recent_service_count_365d",
+        "v2_1_mean": 2.057035286422339,
+        "v2_2_mean": 2.380486828532278,
+        "standardized_mean_difference": 0.1776902748241298,
+        "v2_1_null_share": 0.0,
+        "v2_2_null_share": 0.0
+      },
+      {
+        "feature": "recent_service_count_90d",
+        "v2_1_mean": 0.5713379094459218,
+        "v2_2_mean": 0.6862134532185802,
+        "standardized_mean_difference": 0.17350599150992158,
+        "v2_1_null_share": 0.0,
+        "v2_2_null_share": 0.0
+      },
+      {
+        "feature": "last_service_task_count",
+        "v2_1_mean": 3.9741240689765265,
+        "v2_2_mean": 3.6489969361518684,
+        "standardized_mean_difference": -0.15477246572813774,
+        "v2_1_null_share": 0.0,
+        "v2_2_null_share": 0.0
+      },
+      {
+        "feature": "km_overdue",
+        "v2_1_mean": 250.21193267430044,
+        "v2_2_mean": 86.8837585256578,
+        "standardized_mean_difference": -0.13382272505566004,
+        "v2_1_null_share": 0.0,
+        "v2_2_null_share": 0.0
+      },
+      {
+        "feature": "critical_due_task_count",
+        "v2_1_mean": 0.898882966504569,
+        "v2_2_mean": 0.81554556511832,
+        "standardized_mean_difference": -0.11710206021348994,
+        "v2_1_null_share": 0.0,
+        "v2_2_null_share": 0.0
+      },
+      {
+        "feature": "historical_service_delay_mean_days",
+        "v2_1_mean": 3.593233850751643,
+        "v2_2_mean": 2.0126784990592586,
+        "standardized_mean_difference": -0.09944604234741178,
+        "v2_1_null_share": 0.0,
+        "v2_2_null_share": 0.0
+      },
+      {
+        "feature": "historical_on_time_rate",
+        "v2_1_mean": 0.9448386743665043,
+        "v2_2_mean": 0.9592714370222607,
+        "standardized_mean_difference": 0.09132867557111526,
+        "v2_1_null_share": 0.0,
+        "v2_2_null_share": 0.0
+      },
+      {
+        "feature": "days_overdue",
+        "v2_1_mean": 3.336945814725842,
+        "v2_2_mean": 1.3772565087527522,
+        "standardized_mean_difference": -0.08483154042564124,
+        "v2_1_null_share": 0.0,
+        "v2_2_null_share": 0.0
+      },
+      {
+        "feature": "prior_repair_count",
+        "v2_1_mean": 0.214837194996126,
+        "v2_2_mean": 0.2617126757093809,
+        "standardized_mean_difference": 0.08270723743694372,
+        "v2_1_null_share": 0.0,
+        "v2_2_null_share": 0.0
+      },
+      {
+        "feature": "prior_service_count",
+        "v2_1_mean": 4.611171892338061,
+        "v2_2_mean": 5.037112592569783,
+        "standardized_mean_difference": 0.08214934494059344,
+        "v2_1_null_share": 0.0,
+        "v2_2_null_share": 0.0
+      },
+      {
+        "feature": "prior_periodic_service_count",
+        "v2_1_mean": 4.21300337562928,
+        "v2_2_mean": 4.5947368015888905,
+        "standardized_mean_difference": 0.08063728904513999,
+        "v2_1_null_share": 0.0,
+        "v2_2_null_share": 0.0
+      },
+      {
+        "feature": "last_service_was_breakdown",
+        "v2_1_mean": 0.03387309658504678,
+        "v2_2_mean": 0.025061199981524535,
+        "standardized_mean_difference": -0.048710659430099626,
+        "v2_1_null_share": 0.0,
+        "v2_2_null_share": 0.0
+      },
+      {
+        "feature": "due_task_count",
+        "v2_1_mean": 14.743276969019744,
+        "v2_2_mean": 14.554860587211898,
+        "standardized_mean_difference": -0.03336773850752349,
+        "v2_1_null_share": 0.0,
+        "v2_2_null_share": 0.0
+      },
+      {
+        "feature": "maintenance_due_now",
+        "v2_1_mean": 0.9426649172055863,
+        "v2_2_mean": 0.9375837169558591,
+        "standardized_mean_difference": -0.021856296372985997,
+        "v2_1_null_share": 0.0,
+        "v2_2_null_share": 0.0
+      },
+      {
+        "feature": "days_until_next_scheduled_due",
+        "v2_1_mean": 23.62461941434584,
+        "v2_2_mean": 24.689699254053057,
+        "standardized_mean_difference": 0.017121029293556096,
+        "v2_1_null_share": 0.0,
+        "v2_2_null_share": 0.0
+      },
+      {
+        "feature": "km_until_next_scheduled_due",
+        "v2_1_mean": 240.75274196876666,
+        "v2_2_mean": 253.76693584394388,
+        "standardized_mean_difference": 0.016260743063908338,
+        "v2_1_null_share": 0.0,
+        "v2_2_null_share": 0.0
+      },
+      {
+        "feature": "ownership_age_days",
+        "v2_1_mean": 1187.631628127908,
+        "v2_2_mean": 1181.731162722668,
+        "standardized_mean_difference": -0.009814706172675726,
+        "v2_1_null_share": 0.0,
+        "v2_2_null_share": 0.0
+      },
+      {
+        "feature": "annual_km_baseline",
+        "v2_1_mean": 13103.435055150852,
+        "v2_2_mean": 13036.122373019662,
+        "standardized_mean_difference": -0.007963007458398806,
+        "v2_1_null_share": 0.0,
+        "v2_2_null_share": 0.0
+      },
+      {
+        "feature": "recent_90d_km",
+        "v2_1_mean": 2257.432185671291,
+        "v2_2_mean": 2242.340676048098,
+        "standardized_mean_difference": -0.007198834091505604,
+        "v2_1_null_share": 0.0,
+        "v2_2_null_share": 0.0
+      },
+      {
+        "feature": "production_age_days",
+        "v2_1_mean": 1565.0600410370619,
+        "v2_2_mean": 1559.612338532124,
+        "standardized_mean_difference": -0.007109826367628774,
+        "v2_1_null_share": 0.0,
+        "v2_2_null_share": 0.0
+      },
+      {
+        "feature": "current_odometer_km_at_landmark",
+        "v2_1_mean": 43867.92649927387,
+        "v2_2_mean": 43624.5120590907,
+        "standardized_mean_difference": -0.006094226555319578,
+        "v2_1_null_share": 0.0,
+        "v2_2_null_share": 0.0
+      },
+      {
+        "feature": "recent_vs_baseline_usage_ratio",
+        "v2_1_mean": 0.614995496190613,
+        "v2_2_mean": 0.6132096182324294,
+        "standardized_mean_difference": -0.005843299530480901,
+        "v2_1_null_share": 0.0,
+        "v2_2_null_share": 0.0
+      },
+      {
+        "feature": "prior_breakdown_count",
+        "v2_1_mean": 0.09110305597626547,
+        "v2_2_mean": 0.09256978337515974,
+        "standardized_mean_difference": 0.00447453179750749,
+        "v2_1_null_share": 0.0,
+        "v2_2_null_share": 0.0
+      },
+      {
+        "feature": "last_service_was_warranty",
+        "v2_1_mean": 0.03803131120031459,
+        "v2_2_mean": 0.037220366122153625,
+        "standardized_mean_difference": -0.00423974248699979,
+        "v2_1_null_share": 0.0,
+        "v2_2_null_share": 0.0
+      },
+      {
+        "feature": "oem_interval_km",
+        "v2_1_mean": 4688.854193839768,
+        "v2_2_mean": 4693.388092562085,
+        "standardized_mean_difference": 0.004165768618700113,
+        "v2_1_null_share": 0.0,
+        "v2_2_null_share": 0.0
+      },
+      {
+        "feature": "avg_km_per_day_since_last_service",
+        "v2_1_mean": 25.114902992074306,
+        "v2_2_mean": 25.045959299258975,
+        "standardized_mean_difference": -0.002845649240385736,
+        "v2_1_null_share": 0.0,
+        "v2_2_null_share": 0.0
+      },
+      {
+        "feature": "is_fleet_customer",
+        "v2_1_mean": 0.04761311472856748,
+        "v2_2_mean": 0.04717402349463442,
+        "standardized_mean_difference": -0.0020619774990909808,
+        "v2_1_null_share": 0.0,
+        "v2_2_null_share": 0.0
+      },
+      {
+        "feature": "landmark_month_cos",
+        "v2_1_mean": -0.043428928686259305,
+        "v2_2_mean": -0.04432683987284852,
+        "standardized_mean_difference": -0.0012515471404278826,
+        "v2_1_null_share": 0.0,
+        "v2_2_null_share": 0.0
+      },
+      {
+        "feature": "landmark_month_sin",
+        "v2_1_mean": 0.03669836130090301,
+        "v2_2_mean": 0.037358967335683675,
+        "standardized_mean_difference": 0.0009514735439636138,
+        "v2_1_null_share": 0.0,
+        "v2_2_null_share": 0.0
+      },
+      {
+        "feature": "oem_interval_days",
+        "v2_1_mean": 360.7931823579569,
+        "v2_2_mean": 360.77863841588277,
+        "standardized_mean_difference": -0.0005161236782691489,
+        "v2_1_null_share": 0.0,
+        "v2_2_null_share": 0.0
+      },
+      {
+        "feature": "appointment_rate",
+        "v2_1_mean": 0.6035493943723937,
+        "v2_2_mean": 0.6035922079721638,
+        "standardized_mean_difference": 0.00034383203788596446,
+        "v2_1_null_share": 0.0,
+        "v2_2_null_share": 0.0
+      },
+      {
+        "feature": "avg_parts_lead_days",
+        "v2_1_mean": 1.6890916948618016,
+        "v2_2_mean": 1.6889924712475561,
+        "standardized_mean_difference": -0.000291206221681608,
+        "v2_1_null_share": 0.0,
+        "v2_2_null_share": 0.0
+      },
+      {
+        "feature": "service_bay_count",
+        "v2_1_mean": 6.299192885871025,
+        "v2_2_mean": 6.2988291173346065,
+        "standardized_mean_difference": -0.00025640005418691786,
+        "v2_1_null_share": 0.0,
+        "v2_2_null_share": 0.0
+      },
+      {
+        "feature": "customer_volume_index",
+        "v2_1_mean": 1.07985574733006,
+        "v2_2_mean": 1.0798811796585122,
+        "standardized_mean_difference": 0.00023133263362344616,
+        "v2_1_null_share": 0.0,
+        "v2_2_null_share": 0.0
+      }
+    ],
+    "categorical": [
+      {
+        "feature": "last_arrival_mode",
+        "total_variation_distance": 0.06167082864602036
+      },
+      {
+        "feature": "last_service_type_code",
+        "total_variation_distance": 0.01926929151084766
+      },
+      {
+        "feature": "riding_intensity",
+        "total_variation_distance": 0.004212064780310443
+      },
+      {
+        "feature": "policy_group",
+        "total_variation_distance": 0.0027360236296570294
+      },
+      {
+        "feature": "brand",
+        "total_variation_distance": 0.002491602082638671
+      },
+      {
+        "feature": "category",
+        "total_variation_distance": 0.002201177863314768
+      },
+      {
+        "feature": "customer_type",
+        "total_variation_distance": 0.0014010544723931477
+      },
+      {
+        "feature": "usage_type",
+        "total_variation_distance": 0.0005998942203476621
+      },
+      {
+        "feature": "workshop_price_level",
+        "total_variation_distance": 0.00035533002025313343
+      },
+      {
+        "feature": "storage_condition",
+        "total_variation_distance": 0.00034574334089394407
+      },
+      {
+        "feature": "climate_zone",
+        "total_variation_distance": 0.000255076288646891
+      },
+      {
+        "feature": "workshop_region",
+        "total_variation_distance": 0.0001812651982177546
+      },
+      {
+        "feature": "powertrain_type",
+        "total_variation_distance": 2.5068621852895184e-05
+      }
+    ],
+    "max_absolute_standardized_mean_difference": 0.4595400381411114,
+    "max_categorical_total_variation": 0.06167082864602036
+  },
+  "forbidden_features": [],
+  "identifier_shortcuts": [],
+  "test_policy": "TEST generated as labels but not read by training/selection until frozen manifest exists."
+}

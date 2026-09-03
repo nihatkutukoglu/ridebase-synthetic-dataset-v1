@@ -1,0 +1,24 @@
+{
+  "dataset_version": "1.5.0-v2.2-dynamic-landmark",
+  "modeling_table_sha256": "44f88892f9ae2db124028bb58111300511f373716b673740dd201293b9df4449",
+  "landmark_manifest_sha256": "43dfcfb366afa979a80e3f816249f5f0e778bbbe485101d75cd18af4a9a82bbd",
+  "config_sha256": "a68849fea15b1ed0e177dcbbbe5b9ac7b61b57553477408bfa6a05f353b36e7c",
+  "feature_list_sha256": "08bd1890a76489c82e7a027bab4aab31418fcae96f5e0d6cfddb92c9504fa259",
+  "train_end": "2025-06-30",
+  "validation_end": "2025-12-31",
+  "test_start": "2026-01-01",
+  "selection_data": [
+    "TRAIN",
+    "VALIDATION"
+  ],
+  "calibration_data": "VALIDATION",
+  "test_access_status": "SEALED_UNTIL_SELECTION_FREEZE",
+  "split_counts": {
+    "TRAIN": 135448,
+    "TEST": 47417,
+    "VALIDATION": 36451,
+    "UNSEEN_MOTORCYCLE_EXCLUDED": 31747,
+    "UNSEEN_MOTORCYCLE_TEMPORAL_TEST": 8741
+  },
+  "unseen_motorcycle_count": 1346
+}
