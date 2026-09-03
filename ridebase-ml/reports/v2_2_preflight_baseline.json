@@ -1,0 +1,42 @@
+{
+  "report": "RideBase V2.2 challenger preflight baseline",
+  "status": "PASS",
+  "captured_at": "2026-09-04",
+  "git": {
+    "branch": "main",
+    "head": "a6b6501aaf1b828f713940ecc0d923f006134b0e",
+    "origin_main": "a6b6501aaf1b828f713940ecc0d923f006134b0e",
+    "ahead": 0,
+    "behind": 0,
+    "pre_existing_untracked_file": "ridebase-ml/reports/v2_1_prompt_6_memory_safe_serving.md"
+  },
+  "frozen_hashes": {
+    "v1_4_generator": "519855d08ac0ebb386bcf4749d05483eb2be7c8e1b6d4bd64262f86d63f00eb9",
+    "v1_4_dataset_metadata": "218dd0dd994fc348bf94e6f1b49714c867503a3cf7a60a960d2cfcc7f4c7f477",
+    "v1_4_source_tables_aggregate": "2e75e64f14154d1536c8bb3ba2e445ffc8efee381e5cdd8cc2d9e3cbba44885e",
+    "v2_1_modeling_table": "427e9e1fd321977f95c65c581df719c779747d0b8026aacefe0a4abb5fecdcc4",
+    "v2_1_feature_contract": "aa8164987383bd2e1acb95456d735eae0586ae5ca9e8d73154a09892047a876a",
+    "v2_1_champion": "52f7b64a040745342860915e42ddc2774357ef444b306ad9c1881a4c809d8def",
+    "v2_1_preprocessor": "6b24e0ebc027f52bebb52841ec551cadb14b63bf2f540687a69ee0445ec9f990",
+    "v2_1_calibrator": "02f9d5955d922621eca65920aa0abd7fbd8a250f174c122e460aa6a61b350945",
+    "v2_1_baseline_hazard": "70d87de08a6b44146a115134ddbd1e68b3972c5f5d5e94b9e7d4cebd732d2dc0",
+    "v2_1_history_serving_sqlite": "a057573c9c35b1155aacabb0cf98269a6e57a87f51fa41d926741b817f2fa657",
+    "v2_1_history_store_manifest": "950ef47221ab89f934580cdfc600f1dd6a428b25a055d90fe8641708eeb671f5",
+    "production_v2_1_service": "471155ef36ef2150ebfa6e7245f2df905fede7d74dad5ec69ee3f902a7cfb633",
+    "production_control_center": "73cf2921f043b2bffcc0b28a7351ff2c91f03e4b6e546b9068f3400f1cefeae6"
+  },
+  "baseline_tests": {
+    "ml": {"passed": 58, "failed": 0},
+    "backend": {"passed": 83, "failed": 0},
+    "control_center": {"passed": 25, "failed": 0},
+    "total_passed": 166
+  },
+  "constraints": {
+    "v2_1_frozen": true,
+    "production_deploy_forbidden": true,
+    "v2_2_separate_challenger": true,
+    "real_fleet_validation": "PENDING",
+    "v3": "ON_HOLD"
+  },
+  "gate": "GATE 0 PASS — V2.1 BASELINE GREEN"
+}

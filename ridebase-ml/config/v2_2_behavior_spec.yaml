@@ -1,0 +1,113 @@
+spec_version: 1.0.0
+challenger: V2.2
+synthetic_world: V1.5
+status: SYNTHETIC_ASSUMPTIONS_NOT_REAL_FLEET_FACTS
+random_seed: 52
+
+semantics:
+  target: probability of the next eligible DELIVERED service return after landmark
+  horizons_days: [30, 60, 90, 120]
+  maintenance_due_is_not_return_risk: true
+  real_fleet_validation: PENDING
+  v2_1_production_status: FROZEN
+  v3_status: ON_HOLD
+
+point_in_time:
+  inclusion_rule: record_effective_date <= landmark_date
+  known_appointment_rule: created_at <= landmark_date and scheduled_at >= landmark_date
+  prior_appointment_outcome_rule: scheduled_at <= landmark_date
+  forbidden:
+    - future_service
+    - future_appointment_outcome
+    - post_landmark_mileage
+    - future_task
+    - future_part
+    - target_or_censor_field
+    - absolute_calendar_year
+    - split_marker
+    - days_observed
+    - latent_profile_feature
+
+relationships:
+  maintenance_pressure:
+    inputs: [km_due_ratio, days_due_ratio, max_due_ratio, maintenance_due_now, due_task_count, critical_due_task_count]
+    direction: generally_increasing_return_hazard
+    transform: smooth_saturating
+    distinction: km_and_time_pressure_remain_separate
+    deterministic_return_forbidden: true
+  riding_intensity:
+    inputs: [annual_km_baseline, recent_90d_km, avg_km_per_day_since_last_service, riding_intensity]
+    direction: generally_increasing_return_hazard
+    interaction: stronger_when_due_or_overdue
+  historical_adherence:
+    observable_inputs: [historical_service_delay_mean_days, historical_on_time_rate, prior_inter_service_days, prior_inter_service_km]
+    direction: adherence_increases_and_chronic_delay_decreases_near_term_return
+  no_show_and_cancellation:
+    observable_inputs: [prior_no_show_count, prior_cancelled_appointment_count, prior_appointment_count]
+    direction: repeated_failures_lower_near_term_return
+    overdue_can_be_counteracted: true
+  churn_and_non_return:
+    mechanism: latent_generator_tendency_only
+    direction: lowers_return_hazard_and_creates_legitimate_censoring
+    exposed_to_model: false
+  breakdown_and_repair:
+    observable_inputs: [prior_breakdown_count, prior_repair_count, last_service_was_breakdown]
+    direction: recent_pressure_generally_increases_near_term_return
+    interaction: stronger_with_high_usage
+  known_appointment_intent:
+    observable_inputs: [known_appointment_within_30d, days_to_next_known_appointment]
+    direction: strongly_increases_near_term_return
+    outcome_after_landmark_forbidden: true
+  segment:
+    inputs: [category, usage_type, powertrain_type]
+    direction: modest_heterogeneity
+    history_must_dominate: true
+  seasonality:
+    inputs: [landmark_month_sin, landmark_month_cos]
+    absolute_year_forbidden: true
+  saturation:
+    direction: diminishing_marginal_effect_after_severe_overdue
+    unbounded_growth_forbidden: true
+
+generator:
+  step_days: 3
+  latent_profiles:
+    - ON_TIME
+    - NORMAL
+    - DELAYER
+    - HEAVY_USER
+    - PRICE_SENSITIVE
+    - CHURN_RISK
+    - WORKSHOP_LOYAL
+    - NO_SHOW_PRONE
+  latent_profiles_in_source_schema: false
+  smooth_functions: [sigmoid, softplus, one_minus_exponential]
+  maximum_step_return_probability: 0.32
+  no_show_rebooking_enabled: true
+  cancellation_enabled: true
+  non_return_enabled: true
+
+machine_checks:
+  horizon_monotonicity_rate_min: 1.0
+  p30_exact_zero_share_max: 0.02
+  overdue_pairwise_trend_rate_min: 0.70
+  severe_overdue_dead_zone_max_relative_drop: 0.10
+  high_usage_overdue_positive_rate_min: 0.70
+  adherence_positive_rate_min: 0.70
+  no_show_negative_rate_min: 0.70
+  appointment_positive_rate_min: 0.90
+  breakdown_positive_rate_min: 0.60
+  calendar_invariance_max_delta: 0.000001
+  deterministic_max_delta: 0.0
+  saturation_max_last_step_gain_ratio: 1.25
+  source_schema_change_allowed: false
+  latent_profile_feature_allowed: false
+
+selection:
+  decision_data: TRAIN_AND_VALIDATION_ONLY
+  calibration_data: VALIDATION_ONLY
+  test_access: ONCE_AFTER_SELECTION_FREEZE
+  acceptance_requires: [statistical_gate, behavioral_gate, integrity_gate, unseen_generalization_gate]
+  exact_probability_targeting_forbidden: true
+
+disclaimer: These are synthetic behavioral assumptions and are not validated on real RideBase fleet data.
