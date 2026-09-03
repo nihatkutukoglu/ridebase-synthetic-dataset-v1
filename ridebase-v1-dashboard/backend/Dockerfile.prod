@@ -13,7 +13,9 @@ ENV PYTHONUNBUFFERED=1 \
     OUTPUTS_DIR=/artifacts/outputs \
     DATASET_DIR=/artifacts/dataset \
     MODEL_CATALOG_PATH=/app/app/data/ridebase_motorcycle_models_v1.csv \
-    MAINTENANCE_POLICY_PATH=/app/app/data/maintenance_policies.csv
+    MAINTENANCE_POLICY_PATH=/app/app/data/maintenance_policies.csv \
+    V2_1_HISTORY_SOURCE_DIR=/app/app/history_data \
+    V2_1_HISTORY_SCHEMA_CONTRACT=/app/app/history_config/source_schema_contract_v1_3.json
 
 WORKDIR /app
 
@@ -31,6 +33,9 @@ COPY ridebase-v1-dashboard/backend/app ./app
 RUN mkdir -p /app/app/data
 COPY ridebase_v1_3/source_tables/ridebase_motorcycle_models_v1.csv /app/app/data/ridebase_motorcycle_models_v1.csv
 COPY ridebase_v1_3/source_tables/maintenance_policies.csv /app/app/data/maintenance_policies.csv
+RUN mkdir -p /app/app/history_data /app/app/history_config
+COPY ridebase_v1_4/source_tables /app/app/history_data
+COPY ridebase-ml/config/source_schema_contract_v1_3.json /app/app/history_config/source_schema_contract_v1_3.json
 # curated ~50 MB artifact subset; comment out if mounting a volume at /artifacts
 COPY ridebase-v1-dashboard/backend/artifacts /artifacts
 

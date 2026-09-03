@@ -13,14 +13,17 @@ Real-fleet validation PENDING.
 from __future__ import annotations
 
 import json
+import time
+from collections import Counter
 from typing import Any, Dict
 
 from fastapi import APIRouter, HTTPException
 
 from .config import settings
-from .v2_1_schemas import (V21BatchPredictRequest, V21PredictRequest,
-                           V21ScenarioRequest)
-from .v2_1_service import V21Unavailable, get_predictor
+from .v2_1_schemas import (V21BatchPredictRequest, V21ByMotorcycleRequest,
+                           V21PredictRequest, V21ScenarioRequest)
+from .v2_1_service import (V21Unavailable, get_history_adapter, get_predictor,
+                           predict_by_motorcycle)
 
 v2_1 = APIRouter(prefix="/api/v2_1", tags=["v2_1"])
 
@@ -39,6 +42,13 @@ def _pred():
 
 def _predict_error(exc: Exception) -> HTTPException:
     return HTTPException(status_code=422, detail=str(exc))
+
+
+def _history_adapter():
+    try:
+        return get_history_adapter()
+    except V21Unavailable as exc:
+        raise HTTPException(status_code=503, detail=f"V2.1 history source unavailable: {exc}")
 
 
 @v2_1.get("/model/info")
@@ -184,3 +194,80 @@ def predict_scenario(req: V21ScenarioRequest) -> Dict[str, Any]:
     }
     shaped["latency_ms"] = result["latency_ms"]
     return shaped
+
+
+@v2_1.post("/predict/by-motorcycle")
+def predict_by_motorcycle_route(req: V21ByMotorcycleRequest) -> Dict[str, Any]:
+    """Synthetic-history mode: ID + date -> frozen 54 features -> frozen V2.1."""
+    from ridebase_ml.v2_1.adapters.base import SourceContractError
+    from ridebase_ml.v2_1.source_contract import HistoryInputError, UnknownMotorcycleError
+
+    started = time.perf_counter()
+    adapter = _history_adapter()
+    if not adapter.motorcycle_exists(req.motorcycle_id):
+        raise HTTPException(status_code=404, detail=f"unknown motorcycle_id {req.motorcycle_id!r}")
+    try:
+        result = predict_by_motorcycle(req.motorcycle_id, req.landmark_date)
+    except UnknownMotorcycleError as exc:
+        # Identifier exists, but it was not observable yet at this landmark.
+        raise HTTPException(status_code=422, detail=str(exc))
+    except HistoryInputError as exc:
+        raise HTTPException(status_code=422, detail=str(exc))
+    except SourceContractError as exc:
+        raise HTTPException(status_code=503, detail=f"history source contract failure: {exc}")
+    except V21Unavailable as exc:
+        raise HTTPException(status_code=503, detail=f"V2.1 unavailable: {exc}")
+    except Exception as exc:
+        raise HTTPException(status_code=503, detail=f"history prediction unavailable: {exc}")
+
+    built = result["built"]
+    pred = result["prediction"]
+    evidence = built["source_evidence"]
+    last_service = evidence["last_eligible_service"]
+    resolved = built["feature_coverage"]["resolved_features"]
+    provenance_summary = Counter(built["provenance"][name] for name in resolved)
+    warnings = [*built["warnings"], *pred.get("warnings", [])]
+    return {
+        "mode": "HISTORY_PIPELINE",
+        "history_source": "SYNTHETIC_V1_4",
+        "prediction": {
+            name: pred[name] for name in (
+                "risk_30d", "risk_60d", "risk_90d", "risk_120d",
+                "median_service_days", "risk_score",
+            )
+        },
+        "context": {
+            "motorcycle_id": req.motorcycle_id,
+            "landmark_date": req.landmark_date.isoformat(),
+            "current_odometer_km": built["features"]["current_odometer_km_at_landmark"],
+            "current_odometer_source_date": (
+                evidence["current_odometer_source"]["period_end_date"]
+                if evidence["current_odometer_source"] else None
+            ),
+            "last_eligible_service_date": last_service["received_date"] if last_service else None,
+            "last_service_odometer_km": last_service["odometer_km"] if last_service else None,
+        },
+        "feature_metadata": {
+            "resolved_count": built["feature_coverage"]["resolved_count"],
+            "contract_count": built["feature_coverage"]["contract_count"],
+            "missing_features": built["feature_coverage"]["missing_features"],
+            "provenance_summary": dict(sorted(provenance_summary.items())),
+            "coverage_ratio": built["feature_coverage"]["ratio"],
+            "coverage_is_confidence": False,
+        },
+        "warnings": warnings,
+        "warning": _SYNTH_WARNING,
+        "model_status": "V2.1 EXPERIMENTAL LIVE",
+        "model_validation": "SYNTHETICALLY_VALIDATED",
+        "real_fleet_validation": "PENDING",
+        "risk_meaning": (
+            "service-return probability within each horizon, measured from the landmark; "
+            "NOT maintenance-needed probability"
+        ),
+        "latency_ms": {
+            "history_build": result["history_build_ms"],
+            "prediction": result["prediction_ms"],
+            "total_service": result["total_ms"],
+            "total_route": round((time.perf_counter() - started) * 1000.0, 3),
+        },
+    }

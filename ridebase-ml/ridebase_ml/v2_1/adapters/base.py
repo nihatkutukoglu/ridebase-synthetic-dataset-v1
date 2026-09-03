@@ -34,6 +34,10 @@ class RideBaseSourceAdapter(ABC):
     def read_table(self, table_name: str) -> Sequence[Mapping[str, Any]]:
         """Read rows from a source table without mutating source state."""
 
+    def motorcycle_exists(self, motorcycle_id: str) -> bool:
+        """Return whether the identifier exists, independent of landmark eligibility."""
+        return bool(self._matching("motorcycles", "motorcycle_id", motorcycle_id))
+
     def get_motorcycle(self, motorcycle_id: str, as_of: date) -> Record | None:
         rows = self._matching("motorcycles", "motorcycle_id", motorcycle_id)
         rows = self._at_or_before(rows, as_of, "observation_start_date", "motorcycles")

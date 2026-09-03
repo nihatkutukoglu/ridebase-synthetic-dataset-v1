@@ -1,0 +1,91 @@
+{
+  "report": "RideBase V2.1 by-motorcycle history API gate",
+  "status": "PASS",
+  "route": "POST /api/v2_1/predict/by-motorcycle",
+  "request_contract": {
+    "required": [
+      "motorcycle_id",
+      "landmark_date"
+    ],
+    "additional_properties": false
+  },
+  "execution_flow": [
+    "synthetic V1.4 source adapter",
+    "history at or before landmark_date",
+    "canonical 54-feature history builder",
+    "frozen V2.1 predictor"
+  ],
+  "response_contract": {
+    "prediction": [
+      "risk_30d",
+      "risk_60d",
+      "risk_90d",
+      "risk_120d",
+      "median_service_days",
+      "risk_score"
+    ],
+    "context": [
+      "motorcycle_id",
+      "landmark_date",
+      "current_odometer_km",
+      "current_odometer_source_date",
+      "last_eligible_service_date",
+      "last_service_odometer_km"
+    ],
+    "feature_metadata": [
+      "resolved_count",
+      "contract_count",
+      "missing_features",
+      "provenance_summary",
+      "coverage_ratio"
+    ]
+  },
+  "source_label": "SYNTHETIC_V1_4",
+  "model_validation": "SYNTHETICALLY_VALIDATED",
+  "real_fleet_validation": "PENDING",
+  "risk_semantics": "service-return probability, NOT maintenance-needed probability",
+  "error_contract": {
+    "unknown_motorcycle": 404,
+    "invalid_or_pre_observation_landmark": 422,
+    "adapter_or_model_unavailable": 503,
+    "fake_prediction_on_failure": false
+  },
+  "golden_api_parity": {
+    "cases": 5,
+    "max_absolute_probability_delta": 0.0,
+    "status": "PASS"
+  },
+  "latency_ms": {
+    "sample": "50 warm deterministic requests on the local API TestClient",
+    "first_total_route": 139.567,
+    "warm_total_route_p50": 11.194,
+    "warm_total_route_p95": 22.521,
+    "warm_history_build_p50": 8.426,
+    "warm_prediction_p50": 2.72,
+    "full_source_reload_per_request": false
+  },
+  "tests": {
+    "new_history_api_tests": 15,
+    "backend_total_passed": 81,
+    "ml_total_passed": 51,
+    "v1_v2_0_existing_v2_1_regression": "PASS",
+    "future_leakage": "PASS",
+    "privacy": "PASS"
+  },
+  "packaging": {
+    "dockerfile_copies_v1_4_source_tables": true,
+    "dockerfile_copies_frozen_schema_contract": true,
+    "render_environment_paths_declared": true,
+    "local_image_build": "NOT_RUN_DOCKER_DAEMON_UNAVAILABLE",
+    "production_build_verification": "DEFERRED_TO_PROMPT_5_DEPLOY"
+  },
+  "preservation": {
+    "source_schema_unchanged": true,
+    "frozen_v2_1_artifacts_unchanged": true,
+    "v1_routes_preserved": true,
+    "v2_0_routes_preserved": true,
+    "v2_1_feature_batch_and_scenario_routes_preserved": true,
+    "model_retrained": false
+  },
+  "gate": "PROMPT 4 PASS — BY-MOTORCYCLE API READY FOR UI"
+}

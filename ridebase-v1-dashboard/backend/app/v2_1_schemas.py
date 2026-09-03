@@ -61,3 +61,12 @@ class V21ScenarioRequest(BaseModel):
     riding_intensity: Optional[str] = Field(default=None, max_length=80)
     last_service_date: Optional[dt.date] = None
     last_service_odometer_km: Optional[float] = Field(default=None, ge=0, le=2_000_000)
+
+
+class V21ByMotorcycleRequest(BaseModel):
+    """Canonical production-style history input; no manual feature overrides."""
+
+    model_config = ConfigDict(extra="forbid")
+
+    motorcycle_id: str = Field(min_length=1, max_length=120)
+    landmark_date: dt.date

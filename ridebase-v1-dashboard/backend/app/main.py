@@ -79,8 +79,9 @@ def _startup():
     from .v2_service import init_v2, v2_loaded
     init_v2()
     log.info("v2 survival bundle loaded=%s", v2_loaded())
-    from .v2_1_service import init_v2_1, v2_1_loaded
+    from .v2_1_service import init_v2_1, init_v2_1_history, v2_1_loaded
     init_v2_1()
+    init_v2_1_history()
     log.info("v2.1 landmark survival predictor loaded=%s", v2_1_loaded())
 
 

@@ -39,6 +39,14 @@ class Settings:
         "MAINTENANCE_POLICY_PATH",
         _REPO_ROOT / "ridebase_v1_3" / "source_tables" / "maintenance_policies.csv",
     )
+    V2_1_HISTORY_SOURCE_DIR: Path = _path(
+        "V2_1_HISTORY_SOURCE_DIR",
+        _REPO_ROOT / "ridebase_v1_4" / "source_tables",
+    )
+    V2_1_HISTORY_SCHEMA_CONTRACT: Path = _path(
+        "V2_1_HISTORY_SCHEMA_CONTRACT",
+        _ML_ROOT / "config" / "source_schema_contract_v1_3.json",
+    )
 
     ALLOWED_ORIGINS: list[str] = [
         o.strip()
