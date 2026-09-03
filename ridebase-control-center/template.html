@@ -1961,11 +1961,11 @@ function v2_1Predict(){
   var out='<div class="sec"><div id="v2_1apiStatus" class="chips"><span class="chip"><span class="dot"></span>Model servisine bağlanılıyor…</span></div>'
     +'<p class="copy" style="margin-top:8px;font-size:.8rem" id="v2_1coldNote" hidden>Render ücretsiz sunucusu uykudaysa ilk istek 50+ saniye sürebilir.</p></div>';
   out+='<div class="sec">'+v2_1SyntheticBanner()+'</div>';
-  out+='<div class="sec">'+finding("warn","KISMİ BİLGİYLE SENARYO TAHMİNİ",
-    "<p>Bu mod örnek bir motorun gizli değerlerini kullanmaz ve uydurma servis geçmişi eklemez. Bildiğin alanlar + "
-    +"model kataloğu + açık türetmeler kullanılır; kalan 54 feature'ın geri kalanı frozen preprocessor'ın kayıtlı "
-    +"eksik-değer işlemesine bırakılır. <b>Bu tam kişisel tahmin değildir.</b> "
-    +"Bilgi kapsamı bir güven skoru <b>değildir</b>.</p>")+'</div>';
+  out+='<div class="sec"><div class="subtabs">'
+    +'<button class="subtab active" id="v2_1mHistory">HISTORY PIPELINE</button>'
+    +'<button class="subtab" id="v2_1mScenario">SCENARIO / WHAT-IF</button>'
+    +'</div></div>';
+  out+='<div class="sec" id="v2_1modeInfo"></div>';
   out+='<div class="sec" id="v2_1formBox"><p class="copy"><span class="dot"></span> Form hazırlanıyor…</p></div>';
   out+='<div class="sec" id="v2_1out"></div>';
   return out;
@@ -1980,11 +1980,14 @@ function v2_1ApiPing(attempt){
   el.innerHTML='<span class="chip"><span class="dot"></span>'+(attempt?'Model servisi uyanıyor… (deneme '+(attempt+1)+')':'Model servisine bağlanılıyor…')+'</span>';
   v2fetch(api+"/health").then(function(r){return r.json();}).then(function(h){
     if(cold)cold.hidden=true;
-    var v1ok=(h.v1==="ok"||h.status==="ok"), v21ok=(h.v2_1_model_loaded===true);
+    var v1ok=(h.v1==="ok"||h.status==="ok"), v21ok=(h.v2_1_model_loaded===true),
+        historyOk=(h.v2_1_history_status==="ok");
     el.innerHTML='<span class="chip good"><span class="dot"></span>BACKEND API ONLINE</span>'
       +'<span class="chip '+(v1ok?'good':'warn')+'">V1 '+(v1ok?'LOADED':'—')+'</span>'
       +'<span class="chip warn">V2.0 RESEARCH '+((h.v2_model_loaded===true)?'LOADED':'—')+'</span>'
       +'<span class="chip '+(v21ok?'good':'bad')+'">V2.1 '+(v21ok?'LOADED':'—')+'</span>'
+      +'<span class="chip '+(historyOk?'good':'bad')+'">HISTORY '+(historyOk?'READY':'—')+'</span>'
+      +'<span class="chip warn">HISTORY SOURCE: '+esc(h.v2_1_history_source||"SYNTHETIC_V1_4")+'</span>'
       +'<span class="chip">CHAMPION '+esc((h.v2_1_champion||"—").toUpperCase())+'</span>'
       +'<span class="chip">DATASET '+esc(h.v2_1_dataset_version||"—")+'</span>'
       +'<span class="chip warn">REAL FLEET '+esc(h.v2_1_real_fleet_validation||"PENDING")+'</span>';
@@ -1996,7 +1999,42 @@ function v2_1ApiPing(attempt){
     if(cold)cold.hidden=false;
   });
 }
-function v2_1Form(){
+var v2_1Active="history";
+function v2_1ModeHistory(){
+  v2_1Active="history";
+  var info=document.getElementById("v2_1modeInfo");
+  if(info)info.innerHTML=finding("warn","HISTORY PIPELINE · HISTORY SOURCE: SYNTHETIC V1.4",
+    "<p><code>motorcycle_id + landmark_date</code> → sentetik V1.4 kaynak geçmişi → point-in-time-safe 54-feature builder → frozen V2.1. "
+    +"Yalnız landmark tarihinde veya öncesinde mevcut kayıtlar kullanılır; tarihsel veri uydurulmaz. "
+    +"Bu kaynak gerçek RideBase müşteri geçmişi değildir.</p>");
+  v2_1HistoryForm();
+  var out=document.getElementById("v2_1out");if(out)out.innerHTML="";
+}
+function v2_1ModeScenario(){
+  v2_1Active="scenario";
+  var info=document.getElementById("v2_1modeInfo");
+  if(info)info.innerHTML=finding("warn","KISMİ BİLGİYLE SENARYO TAHMİNİ",
+    "<p>Bu what-if modu örnek bir motorun gizli değerlerini kullanmaz ve uydurma servis geçmişi eklemez. Bildiğin alanlar + "
+    +"model kataloğu + açık türetmeler kullanılır; kalan 54 feature frozen preprocessor'ın kayıtlı eksik-değer "
+    +"işlemesine bırakılır. <b>Bu tam kişisel tahmin değildir.</b> Bilgi kapsamı bir güven skoru <b>değildir</b>.</p>");
+  v2_1ScenarioForm();
+  var out=document.getElementById("v2_1out");if(out)out.innerHTML="";
+}
+function v2_1HistoryForm(){
+  var box=document.getElementById("v2_1formBox");if(!box)return;
+  function lab(id,text,html){return '<label style="display:flex;flex-direction:column;gap:5px;font-size:.8rem;color:var(--text-2)" for="'+id+'">'+esc(text)+html+'</label>';}
+  var it=v2InputStyle();
+  box.innerHTML=card("1 · Sentetik motosiklet + landmark","açık, yeniden üretilebilir history sorgusu",
+      '<div class="grid g2">'
+      +lab("v21historyId","Motorcycle ID",'<input id="v21historyId" list="v21historyExamples" type="text" value="MC000001" placeholder="ör. MC000001" autocomplete="off" style="'+it+'"><datalist id="v21historyExamples"><option value="MC000001"><option value="MC000002"><option value="MC000010"><option value="MC000100"></datalist>')
+      +lab("v21historyDate","Landmark tarihi",'<input id="v21historyDate" type="date" value="2024-07-31" style="'+it+'">')
+      +'</div><p class="copy" style="margin-top:8px">Landmark tarihi zorunludur. API sunucu tarihini sessizce kullanmaz. Bu demo yalnız donmuş <b>sentetik V1.4</b> kimliklerini sorgular.</p>')
+    +'<div class="sec">'+card("2 · Tahmin","source history → 54 feature → frozen V2.1",
+      '<div id="v2_1historyErr" class="finding bad" style="display:none"></div>'
+      +'<div class="chips" style="margin-top:4px"><button class="subtab" id="v2_1historyRun" style="border:1px solid var(--border);border-radius:8px">HISTORY PIPELINE TAHMİNİNİ ÇALIŞTIR</button></div>')+'</div>';
+  document.getElementById("v2_1historyRun").addEventListener("click",v2_1RunHistory);
+}
+function v2_1ScenarioForm(){
   var box=document.getElementById("v2_1formBox"); if(!box)return;
   var cat=window.__V2_MODELS__||null;
   function lab(id,text,html){return '<label style="display:flex;flex-direction:column;gap:5px;font-size:.8rem;color:var(--text-2)" for="'+id+'">'+esc(text)+html+'</label>';}
@@ -2050,6 +2088,69 @@ function v2_1Form(){
     });
   }
   document.getElementById("v2_1run").addEventListener("click",v2_1RunScenario);
+}
+function v2_1HistoryPayload(){
+  var id=document.getElementById("v21historyId"),ld=document.getElementById("v21historyDate");
+  return {motorcycle_id:id?id.value.trim():"",landmark_date:ld?ld.value:""};
+}
+function v2_1ValidateHistory(p){
+  var e=[];
+  if(!p.motorcycle_id)e.push("Motorcycle ID gir.");
+  if(!p.landmark_date)e.push("Landmark tarihi gir.");
+  return e;
+}
+function v2_1RunHistory(){
+  var api=(window.__V2_API__||"").replace(/\/$/,""),errBox=document.getElementById("v2_1historyErr"),
+      out=document.getElementById("v2_1out"),p=v2_1HistoryPayload(),errs=v2_1ValidateHistory(p);
+  if(errs.length){errBox.style.display="block";errBox.innerHTML='<div>'+errs.map(esc).join("<br>")+'</div>';return;}
+  errBox.style.display="none";
+  out.innerHTML='<p class="copy"><span class="dot"></span> Sentetik geçmiş okunuyor ve 54 feature oluşturuluyor…</p>';
+  var attempt=0;
+  (function run(){
+    v2fetch(api+"/api/v2_1/predict/by-motorcycle",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(p)})
+    .then(function(r){return r.json().then(function(d){if(!r.ok)throw new Error(d.detail||("HTTP "+r.status));return d;});})
+    .then(function(d){out.innerHTML=v2_1HistoryResultCard(d);})
+    .catch(function(e){
+      if(attempt++<1){out.innerHTML='<p class="copy"><span class="dot"></span> Servis uyanıyor, tekrar deneniyor…</p>';setTimeout(run,4000);return;}
+      out.innerHTML='<div class="empty">History API başarısız — '+esc(String(e))+'. Sahte tahmin veya sahte geçmiş üretilmez.</div>';
+    });
+  })();
+}
+function v2_1HistoryResultCard(d){
+  var pr=d.prediction||{},ctx=d.context||{},fm=d.feature_metadata||{},prov=fm.provenance_summary||{};
+  var seq=[pr.risk_30d,pr.risk_60d,pr.risk_90d,pr.risk_120d];
+  var mono=seq.every(function(x,i){return i===0||x>=seq[i-1]-1e-9;}),g='';
+  /* OOD / missing-history warnings ABOVE all results */
+  if((d.warnings||[]).length){
+    g+=finding("warn","Girdi / OOD / HISTORY uyarıları (sonuçların ÜSTÜNDE)",
+      '<ul style="margin:0;padding-left:18px">'+d.warnings.map(function(w){return '<li>'+esc(w)+'</li>';}).join('')+'</ul>');
+  }
+  g+=finding("warn","HISTORY SOURCE: "+esc(d.history_source||"SYNTHETIC_V1_4"),
+    "<p><b>Bu sentetik V1.4 geçmişidir; gerçek RideBase müşteri geçmişi değildir.</b> "
+    +"Yalnız "+esc(ctx.landmark_date||"—")+" tarihinde veya öncesinde bilinen kaynak kayıtları kullanıldı.</p>");
+  g+=finding("","MÜŞTERİNİN KENDİLİĞİNDEN SERVİSE GELME İHTİMALİ",
+    "<p>Bu yüzdeler <b>bakım ihtimali değildir.</b> "+esc(d.risk_meaning||"")+"</p>")
+    +'<div class="grid g4" style="margin-top:6px">'
+    +kpi("30 GÜN",pct(pr.risk_30d),"servise dönme olasılığı","plain")
+    +kpi("60 GÜN",pct(pr.risk_60d),"servise dönme olasılığı","plain")
+    +kpi("90 GÜN",pct(pr.risk_90d),"servise dönme olasılığı","cyan")
+    +kpi("120 GÜN",pct(pr.risk_120d),"servise dönme olasılığı","plain")+'</div>'
+    +'<div class="chips" style="margin-top:12px">'
+    +'<span class="chip '+(mono?'':'bad')+'">HORIZON MONOTONİK: '+(mono?'P30 ≤ P60 ≤ P90 ≤ P120':'HATA')+'</span>'
+    +(pr.median_service_days!=null?'<span class="chip">MEDYAN DÖNÜŞ ~'+n0(pr.median_service_days)+' gün</span>':'')
+    +'<span class="chip">RISK SCORE '+r3(pr.risk_score)+'</span></div>';
+  g+='<div class="sec"><div class="grid g3">'
+    +kpi("CURRENT ODOMETER",ctx.current_odometer_km==null?"—":n0(ctx.current_odometer_km)+" km",ctx.current_odometer_source_date||"history missing","plain")
+    +kpi("LAST SERVICE",ctx.last_eligible_service_date||"—",ctx.last_service_odometer_km==null?"history missing":n0(ctx.last_service_odometer_km)+" km","plain")
+    +kpi("FEATURE COVERAGE",(fm.resolved_count||0)+" / "+(fm.contract_count||54),"coverage is not a confidence score","cyan")
+    +'</div></div>';
+  g+='<div class="sec">'+card("History feature provenance","özet; kişisel veri gösterilmez",
+    '<div class="chips">'+Object.keys(prov).map(function(k){return '<span class="chip">'+esc(k)+' · '+n0(prov[k])+'</span>';}).join('')+'</div>'
+    +((fm.missing_features||[]).length?'<p class="copy" style="margin-top:10px"><b>Eksik history feature’ları:</b> '+fm.missing_features.map(esc).join(', ')+'</p>':'<p class="copy" style="margin-top:10px">54/54 feature çözüldü.</p>')
+    +'<p class="copy" style="margin-top:8px">Feature coverage girdinin kapsamıdır; model güven skoru değildir.</p>')+'</div>';
+  g+=finding("warn","V2.1 EXPERIMENTAL LIVE · SYNTHETICALLY VALIDATED · REAL FLEET VALIDATION PENDING",
+    "<p>"+esc(d.warning||"")+"</p>");
+  return g;
 }
 function v2_1ScenarioPayload(){
   function val(id){var el=document.getElementById(id);return el&&el.value!==""?el.value:null;}
@@ -2133,9 +2234,21 @@ function wireV2_1Predict(){
   v2_1ApiPing(0);
   var api=(window.__V2_API__||"").replace(/\/$/,"");
   if(!api){var b=document.getElementById("v2_1formBox");if(b)b.innerHTML='<div class="empty">Model API yapılandırılmadı — canlı tahmin yok.</div>';return;}
-  if(!window.__V2_MODELS__){
-    v2fetch(api+"/api/v2/motorcycle-models").then(function(r){return r.json();}).then(function(c){window.__V2_MODELS__=c;v2_1Form();}).catch(function(){v2_1Form();});
-  }else{ v2_1Form(); }
+  var history=document.getElementById("v2_1mHistory"),scenario=document.getElementById("v2_1mScenario");
+  function select(mode){
+    v2_1Active=mode;
+    if(history)history.classList.toggle("active",mode==="history");
+    if(scenario)scenario.classList.toggle("active",mode==="scenario");
+    if(mode==="history"){v2_1ModeHistory();return;}
+    if(!window.__V2_MODELS__){
+      v2fetch(api+"/api/v2/motorcycle-models").then(function(r){return r.json();})
+        .then(function(c){window.__V2_MODELS__=c;v2_1ModeScenario();})
+        .catch(function(){v2_1ModeScenario();});
+    }else{v2_1ModeScenario();}
+  }
+  if(history)history.addEventListener("click",function(){select("history");});
+  if(scenario)scenario.addEventListener("click",function(){select("scenario");});
+  select("history");
 }
 
 /* ---------------- V3 placeholder ---------------- */

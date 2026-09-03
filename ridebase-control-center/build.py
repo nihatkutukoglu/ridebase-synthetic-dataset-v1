@@ -458,6 +458,26 @@ def changelog():
           f"{'PASS' if _g.get('parity_pass') else 'FAIL'}. Real-fleet validation PENDING.",
           "PASS", "1.4.0-v2.1-dynamic-landmark", "ridebase-ml/models/v2_1_v1_4/golden_parity.json",
           mtime_iso(_v21g))
+    _history_parity = REPORTS / "v2_1_history_feature_parity.json"
+    if _history_parity.exists():
+        _hp = read_json(_history_parity) or {}
+        _hpf = _hp.get("feature_parity") or {}
+        _hpp = _hp.get("prediction_parity") or {}
+        e("V2.1", "VALIDATION", "History pipeline parity verified",
+          f"{(_hp.get('golden_landmarks') or {}).get('count', '?')} deterministic landmarks; "
+          f"feature classes {_hpf.get('feature_classification_counts')}; max prediction delta "
+          f"{_hpp.get('max_absolute_probability_delta', 0):.2e}; future injection "
+          f"{'PASS' if (_hp.get('future_injection') or {}).get('pass') else 'FAIL'}. TEST used only for parity.",
+          _hp.get("status", "REVIEW"), "1.4.0-v2.1-dynamic-landmark",
+          "ridebase-ml/reports/v2_1_history_feature_parity.json", mtime_iso(_history_parity))
+    _history_api = REPORTS / "v2_1_by_motorcycle_api.json"
+    if _history_api.exists():
+        _ha = read_json(_history_api) or {}
+        e("V2.1", "API", "By-motorcycle history API ready",
+          "POST /api/v2_1/predict/by-motorcycle: motorcycle_id + landmark_date → SYNTHETIC_V1_4 "
+          "history → 54 features → frozen predictor. Scenario route remains separate; real fleet pending.",
+          _ha.get("status", "REVIEW"), "1.4.0-v2.1-dynamic-landmark",
+          "ridebase-ml/reports/v2_1_by_motorcycle_api.json", mtime_iso(_history_api))
     _v2rep = REPORTS / "v2_survival_data_prep_report.md"
     if _v2rep.exists():
         e("V2", "DATA", "V2 survival data preparation (nb13)",
@@ -663,6 +683,8 @@ def v2_1_block():
     gate = read_json(REPORTS / "v2_1_v1_4_data_gate.json") or {}
     model = read_json(MODELS / "v2_1_v1_4" / "metrics.json") or {}
     parity = read_json(MODELS / "v2_1_v1_4" / "golden_parity.json") or {}
+    history_parity = read_json(REPORTS / "v2_1_history_feature_parity.json") or {}
+    history_api = read_json(REPORTS / "v2_1_by_motorcycle_api.json") or {}
     audit = read_json(REPORTS / "v2_1_live_behavior_audit.json") or {}
     counts = gate.get("headline") or {}
     tm = model.get("test_metrics") or {}
@@ -674,18 +696,23 @@ def v2_1_block():
 
     data_ok = gate.get("status") == "PASS"
     model_ok = model.get("status") == "PASS"
+    history_parity_ok = history_parity.get("status") == "PASS"
+    history_api_ok = history_api.get("status") == "PASS"
+    history_live_ready = data_ok and model_ok and history_parity_ok and history_api_ok
     return {
         "version": "V2.1",
         "name": "Dynamic Landmark Survival",
-        "status": "EXPERIMENTAL_LIVE" if (data_ok and model_ok) else
+        "status": "EXPERIMENTAL_LIVE" if history_live_ready else
                   ("MODEL_GATE_FAILED" if data_ok else "DATA_GATE_FAILED"),
         "model_training_allowed": data_ok,
         "model_available": model_ok,
         "prediction_route_available": model_ok,
+        "history_pipeline_available": history_live_ready,
+        "history_source": "SYNTHETIC_V1_4",
         "api_family": [
             "GET /api/v2_1/model/info", "GET /api/v2_1/features", "GET /api/v2_1/metrics",
             "GET /api/v2_1/sample", "POST /api/v2_1/predict", "POST /api/v2_1/predict/batch",
-            "POST /api/v2_1/predict/scenario",
+            "POST /api/v2_1/predict/scenario", "POST /api/v2_1/predict/by-motorcycle",
         ],
         "dataset_version": model.get("data_freeze", {}).get("dataset_version", "1.4.0-v2.1-dynamic-landmark"),
         "parent_dataset": "1.4.0",
@@ -723,12 +750,25 @@ def v2_1_block():
         "calibration_comparison": model.get("calibration_comparison"),
         "grouped_bootstrap": model.get("grouped_bootstrap"),
         "golden_parity": parity,
+        "history_parity": {
+            "status": history_parity.get("status"),
+            "golden_landmarks": (history_parity.get("golden_landmarks") or {}).get("count"),
+            "max_probability_delta": (history_parity.get("prediction_parity") or {}).get(
+                "max_absolute_probability_delta"
+            ),
+            "future_injection_pass": (history_parity.get("future_injection") or {}).get("pass"),
+        },
+        "history_api": {
+            "status": history_api.get("status"),
+            "route": history_api.get("route"),
+            "source_label": history_api.get("source_label"),
+        },
         "v2_0_audit": audit.get("overall_status") or "FAILED",
         "v2_0_failed_checks": audit.get("failed_checks") or [],
         "model_validation": "SYNTHETICALLY_VALIDATED",
         "real_fleet_validation": "PENDING",
         "verdict": ("SYNTHETICALLY VALIDATED — REAL FLEET VALIDATION PENDING"
-                    if (data_ok and model_ok) else "BLOCKED"),
+                    if history_live_ready else "BLOCKED"),
     }
 
 

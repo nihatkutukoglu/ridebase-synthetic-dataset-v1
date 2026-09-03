@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-09-02T21:18:34",
+  "generated_at": "2026-09-03T18:47:35",
   "project": "RideBase ML",
   "current_dataset": "v1.3",
   "environment": "PILOT",
@@ -2394,6 +2394,8 @@
     "model_training_allowed": true,
     "model_available": true,
     "prediction_route_available": true,
+    "history_pipeline_available": true,
+    "history_source": "SYNTHETIC_V1_4",
     "api_family": [
       "GET /api/v2_1/model/info",
       "GET /api/v2_1/features",
@@ -2401,7 +2403,8 @@
       "GET /api/v2_1/sample",
       "POST /api/v2_1/predict",
       "POST /api/v2_1/predict/batch",
-      "POST /api/v2_1/predict/scenario"
+      "POST /api/v2_1/predict/scenario",
+      "POST /api/v2_1/predict/by-motorcycle"
     ],
     "dataset_version": "1.4.0-v2.1-dynamic-landmark",
     "parent_dataset": "1.4.0",
@@ -2606,6 +2609,17 @@
       "deterministic": true,
       "tolerance": 0.0005,
       "parity_pass": true
+    },
+    "history_parity": {
+      "status": "PASS",
+      "golden_landmarks": 300,
+      "max_probability_delta": 0.0,
+      "future_injection_pass": true
+    },
+    "history_api": {
+      "status": "PASS",
+      "route": "POST /api/v2_1/predict/by-motorcycle",
+      "source_label": "SYNTHETIC_V1_4"
     },
     "v2_0_audit": "FAIL",
     "v2_0_failed_checks": [

@@ -230,6 +230,44 @@ class V2ScenarioPredictionTests(unittest.TestCase):
         ):
             self.assertInBoth(text)
 
+    def test_v2_1_history_and_scenario_modes_are_distinct(self):
+        for text in (
+            "HISTORY PIPELINE",
+            "SCENARIO / WHAT-IF",
+            "/api/v2_1/predict/by-motorcycle",
+            "/api/v2_1/predict/scenario",
+            "HISTORY SOURCE: SYNTHETIC V1.4",
+            "KISMİ BİLGİYLE SENARYO TAHMİNİ",
+        ):
+            self.assertInBoth(text)
+
+        for source in (self.template, self.built):
+            history_body = source.split("function v2_1RunHistory(){", 1)[1].split(
+                "function v2_1HistoryResultCard", 1
+            )[0]
+            scenario_body = source.split("function v2_1RunScenario(){", 1)[1].split(
+                "function v2_1ResultCard", 1
+            )[0]
+            self.assertIn("/api/v2_1/predict/by-motorcycle", history_body)
+            self.assertNotIn("/api/v2_1/predict/scenario", history_body)
+            self.assertIn("/api/v2_1/predict/scenario", scenario_body)
+            self.assertNotIn("/api/v2_1/predict/by-motorcycle", scenario_body)
+
+    def test_v2_1_history_result_is_honest_and_failure_has_no_fallback(self):
+        for text in (
+            "V2.1 EXPERIMENTAL LIVE · SYNTHETICALLY VALIDATED · REAL FLEET VALIDATION PENDING",
+            "Bu sentetik V1.4 geçmişidir; gerçek RideBase müşteri geçmişi değildir.",
+            "CURRENT ODOMETER",
+            "LAST SERVICE",
+            "FEATURE COVERAGE",
+            "History feature provenance",
+            "Girdi / OOD / HISTORY uyarıları (sonuçların ÜSTÜNDE)",
+            "Sahte tahmin veya sahte geçmiş üretilmez.",
+        ):
+            self.assertInBoth(text)
+        self.assertNotIn("REAL VALIDATED", self.template.upper())
+        self.assertNotIn("Math.random()", self.template)
+
     def test_v2_1_status_manifest_is_truthful(self):
         import json
         manifest = json.loads((ROOT / "data" / "manifest.json").read_text())
@@ -237,6 +275,10 @@ class V2ScenarioPredictionTests(unittest.TestCase):
         self.assertEqual(v21["status"], "EXPERIMENTAL_LIVE")
         self.assertTrue(v21["model_available"])
         self.assertTrue(v21["prediction_route_available"])
+        self.assertTrue(v21["history_pipeline_available"])
+        self.assertEqual(v21["history_source"], "SYNTHETIC_V1_4")
+        self.assertEqual(v21["history_parity"]["status"], "PASS")
+        self.assertEqual(v21["history_api"]["status"], "PASS")
         self.assertEqual(v21["data_gate_status"], "PASS")
         self.assertEqual(v21["model_gate_status"], "PASS")
         self.assertEqual(v21["real_fleet_validation"], "PENDING")

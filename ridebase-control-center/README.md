@@ -15,8 +15,8 @@ https://ridebase-ml-control-center.vercel.app     https://ridebase-inference-api
   normal browser web app (no Claude iframe / artifact runtime). `build.py` emits
   `public/index.html` (+ `public/fig/`), Vercel serves `public/` as a static site
   (`vercel.json`).
-- **Production API:** <https://ridebase-inference-api.onrender.com> (V1 + V2,
-  `/api/v1/*`, `/api/v2/*`, `/api/predict/service`).
+- **Production API:** <https://ridebase-inference-api.onrender.com> (V1, V2.0,
+  and V2.1; `/api/v1/*`, `/api/v2/*`, `/api/v2_1/*`, `/api/predict/service`).
 - **API base URL** resolves: `?v2api=` query param → build-time
   `NEXT_PUBLIC_API_BASE_URL` / `RIDEBASE_V2_API` → hard-coded Render default.
   No `?v2api=` needed.
@@ -86,6 +86,23 @@ need. Personal maintenance status requires current odometer, last-service
 odometer, and last-service date together. The Türkiye NS200 product policy is
 year-aware: 2016–2023 uses the confirmed 3,000 km RideBase operating cadence;
 current UG2 keeps its separate verified catalog cadence.
+
+## V2.1 history and scenario modes
+
+`V2.1 Landmark → Canlı Tahmin` keeps two non-interchangeable modes:
+
+- **HISTORY PIPELINE** sends only `motorcycle_id + landmark_date` to
+  `POST /api/v2_1/predict/by-motorcycle`. The backend reads immutable synthetic
+  V1.4 history at or before the landmark, builds the canonical 54 features, and
+  invokes the frozen V2.1 predictor. The UI labels this source
+  `SYNTHETIC_V1_4`; it is not real RideBase customer history.
+- **SCENARIO / WHAT-IF** keeps the existing meaningful manual inputs and calls
+  `POST /api/v2_1/predict/scenario`. Unknown history stays missing and is never
+  filled from a sample motorcycle.
+
+Both modes describe V2.1 as experimental live and synthetically validated,
+with real-fleet validation pending. Service-return probability remains separate
+from deterministic maintenance-due status.
 
 ---
 

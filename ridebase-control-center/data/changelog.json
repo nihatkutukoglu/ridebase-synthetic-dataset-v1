@@ -117,7 +117,7 @@
     ]
   },
   {
-    "id": "V2-17",
+    "id": "V2-19",
     "timestamp": "2026-08-31",
     "module": "V2",
     "type": "DATA",
@@ -130,7 +130,7 @@
     ]
   },
   {
-    "id": "V2-18",
+    "id": "V2-20",
     "timestamp": "2026-08-31",
     "module": "V2",
     "type": "MODEL",
@@ -143,7 +143,7 @@
     ]
   },
   {
-    "id": "V2-19",
+    "id": "V2-21",
     "timestamp": "2026-08-31",
     "module": "V2",
     "type": "MODEL",
@@ -156,7 +156,7 @@
     ]
   },
   {
-    "id": "V2-20",
+    "id": "V2-22",
     "timestamp": "2026-08-31",
     "module": "V2",
     "type": "PRODUCTION",
@@ -179,32 +179,6 @@
     "version": "v1.3",
     "artifacts": [
       "ridebase-v1-dashboard/README.md"
-    ]
-  },
-  {
-    "id": "UI-11",
-    "timestamp": "2026-09-02",
-    "module": "UI",
-    "type": "UI",
-    "title": "RideBase ML Control Center",
-    "description": "EDA + V0 + V1 modüllerini tek merkezi yönetim panelinde birleştiren sistem (bu artifact).",
-    "status": "INFO",
-    "version": "v1.3",
-    "artifacts": [
-      "ridebase-control-center/README.md"
-    ]
-  },
-  {
-    "id": "V2-12",
-    "timestamp": "2026-09-02",
-    "module": "V2",
-    "type": "UI",
-    "title": "V2 LIVE PREDICTION REDESIGNED",
-    "description": "Brand→model selection, deterministic model-spec mapping and honest partial-snapshot inference replaced the previous example-snapshot overlay approach.",
-    "status": "PASS",
-    "version": "v1.3",
-    "artifacts": [
-      "ridebase-control-center/template.html"
     ]
   },
   {
@@ -247,8 +221,34 @@
     ]
   },
   {
+    "id": "UI-11",
+    "timestamp": "2026-09-03",
+    "module": "UI",
+    "type": "UI",
+    "title": "RideBase ML Control Center",
+    "description": "EDA + V0 + V1 modüllerini tek merkezi yönetim panelinde birleştiren sistem (bu artifact).",
+    "status": "INFO",
+    "version": "v1.3",
+    "artifacts": [
+      "ridebase-control-center/README.md"
+    ]
+  },
+  {
+    "id": "V2-12",
+    "timestamp": "2026-09-03",
+    "module": "V2",
+    "type": "UI",
+    "title": "V2 LIVE PREDICTION REDESIGNED",
+    "description": "Brand→model selection, deterministic model-spec mapping and honest partial-snapshot inference replaced the previous example-snapshot overlay approach.",
+    "status": "PASS",
+    "version": "v1.3",
+    "artifacts": [
+      "ridebase-control-center/template.html"
+    ]
+  },
+  {
     "id": "V2.1-16",
-    "timestamp": "2026-09-02",
+    "timestamp": "2026-09-03",
     "module": "V2.1",
     "type": "PRODUCTION",
     "title": "V2.1 predictor + /api/v2_1/* packaged",
@@ -260,8 +260,34 @@
     ]
   },
   {
-    "id": "UI-21",
-    "timestamp": "2026-09-02",
+    "id": "V2.1-17",
+    "timestamp": "2026-09-03",
+    "module": "V2.1",
+    "type": "VALIDATION",
+    "title": "History pipeline parity verified",
+    "description": "300 deterministic landmarks; feature classes {'EXACT_PARITY': 54}; max prediction delta 0.00e+00; future injection PASS. TEST used only for parity.",
+    "status": "PASS",
+    "version": "1.4.0-v2.1-dynamic-landmark",
+    "artifacts": [
+      "ridebase-ml/reports/v2_1_history_feature_parity.json"
+    ]
+  },
+  {
+    "id": "V2.1-18",
+    "timestamp": "2026-09-03",
+    "module": "V2.1",
+    "type": "API",
+    "title": "By-motorcycle history API ready",
+    "description": "POST /api/v2_1/predict/by-motorcycle: motorcycle_id + landmark_date → SYNTHETIC_V1_4 history → 54 features → frozen predictor. Scenario route remains separate; real fleet pending.",
+    "status": "PASS",
+    "version": "1.4.0-v2.1-dynamic-landmark",
+    "artifacts": [
+      "ridebase-ml/reports/v2_1_by_motorcycle_api.json"
+    ]
+  },
+  {
+    "id": "UI-23",
+    "timestamp": "2026-09-03",
     "module": "UI",
     "type": "UI",
     "title": "Beginner-friendly metric explanations and terminology added",
@@ -273,8 +299,8 @@
     ]
   },
   {
-    "id": "API-22",
-    "timestamp": "2026-09-02",
+    "id": "API-24",
+    "timestamp": "2026-09-03",
     "module": "API",
     "type": "DEPLOYMENT",
     "title": "Public V1/V2 inference API — deploy blueprint prepared",
@@ -286,8 +312,8 @@
     ]
   },
   {
-    "id": "V1-23",
-    "timestamp": "2026-09-02",
+    "id": "V1-25",
+    "timestamp": "2026-09-03",
     "module": "V1",
     "type": "UI",
     "title": "Dedicated beginner-friendly V1 live prediction added",
