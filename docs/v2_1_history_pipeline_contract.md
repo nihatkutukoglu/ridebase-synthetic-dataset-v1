@@ -1,6 +1,6 @@
 # RideBase V2.1 history pipeline contract
 
-Status: **Prompt 1 contract frozen. Full V1.4 history derivation and API wiring are not implemented in this gate.**
+Status: **Prompt 1 contract frozen; Prompt 2 cached V1.4 history derivation ready. API wiring remains gated to Prompt 4.**
 
 Model status remains **V2.1 EXPERIMENTAL LIVE — SYNTHETICALLY VALIDATED, REAL FLEET VALIDATION PENDING**. V3 remains on hold.
 
@@ -48,7 +48,9 @@ The landmark is a calendar date. Records anywhere on that date are included; rec
 - `get_model_master`
 - `get_maintenance_policy`
 
-`build_features(motorcycle_id, landmark_date, source_adapter)` returns `features`, `provenance`, `source_evidence`, `warnings`, `feature_coverage`, and `landmark`. `features` and `provenance` have exactly the frozen 54 keys. In Prompt 1 only calendar terms and a source-supported current odometer are resolved; unresolved values stay null. The full synthetic derivation is gated to Prompt 2.
+`build_features(motorcycle_id, landmark_date, source_adapter)` returns exactly the Prompt 1 envelope categories: `features`, `provenance`, `source_evidence`, `warnings`, `feature_coverage`, and `landmark`. `features` and `provenance` have exactly the frozen 54 keys. Prompt 2 resolves every feature genuinely supported by V1.4 history; unresolved values stay null. Latency is measured outside the pure builder.
+
+`SyntheticRideBaseSourceAdapter` supports all 13 V1.4 source tables. It lazily reads each needed CSV once per adapter instance and caches motorcycle/key indexes. The current builder uses 11 tables; `services_enriched` and `maintenance_tasks` remain supported but are not needed by the frozen 54-feature semantics.
 
 Coverage is a source-resolution measure, never confidence.
 
@@ -60,7 +62,7 @@ Coverage is a source-resolution measure, never confidence.
 | customers | `first_seen_date <= T` | Table is not versioned. Current `is_active`/`churn_date` and changed attributes must not be treated as historical truth without future versioning. |
 | services / services_enriched | `received_at.date <= T`; only configured eligible statuses in feature derivation | `received_at` is the frozen offline service time. Later completion/delivery fields may be after T and must not influence T. |
 | mileage_timeline_monthly | `period_end_date <= T` | `closing_odometer_km` is current odometer for matching monthly landmarks. `initial_mileage_km` is never current odometer. |
-| service_tasks | completed tasks use `completed_at.date <= T` | Started-but-not-completed tasks are excluded from completed-task features. |
+| service_tasks | completed tasks use `completed_at.date <= T`; declined task rows use `started_at.date <= T` | Only completed rows drive due-task history. Known declined rows still count in the frozen last-service task-row count. |
 | service_parts | inherit eligible parent service and task boundaries | No row timestamp exists. A part added later to an already-eligible parent cannot be detected; append/update audit timestamps are required in a real source. |
 | appointments | `created_at.date <= T` | `scheduled_at` may be future but the booking is known. Status/service link are mutable and unsafe historically without status versioning. Frozen 54-feature pipeline currently uses workshop master `appointment_rate`, not appointment-event aggregates. |
 | usage_profiles | `profile_start_date <= T <= profile_end_date` (open end allowed) | Profile intervals provide point-in-time selection. Overlap is resolved to latest start; overlapping real rows should be rejected/audited by a concrete adapter. |
@@ -120,7 +122,7 @@ Missing behavior is null plus optional frozen-preprocessor imputation unless sta
 | cumulative_service_spend | services | frozen missing-as-zero sum | received <= T | medium | null | SOURCE_SERVICE_HISTORY | service-history-derived |
 | last_service_was_breakdown | services | last eligible flag | received <= T | low | null | SOURCE_SERVICE_HISTORY | service-history-derived |
 | last_service_was_warranty | services | last eligible flag | received <= T | low | null | SOURCE_SERVICE_HISTORY | service-history-derived |
-| last_service_task_count | tasks + services | completed tasks of last service | completed/received <= T | low | null | SOURCE_TASK_HISTORY | task/part-derived |
+| last_service_task_count | tasks + services | known task rows of last service | completed or declined-started/received <= T | low | null | SOURCE_TASK_HISTORY | task/part-derived |
 | last_service_spend | services | frozen last grand total | received <= T | medium | null | SOURCE_SERVICE_HISTORY | service-history-derived |
 | service_bay_count | workshops | linked master | unversioned | high | null | HISTORY_DERIVED | directly available |
 | appointment_rate | workshops | linked master (not event aggregate) | unversioned | high | null | HISTORY_DERIVED | directly available |
@@ -142,3 +144,14 @@ The offline builder remains the frozen semantic reference. Prompt 2 should reuse
 - Historically correct mutable motorcycle/customer state and relationship changes.
 
 These gaps stay explicit; they are not filled with guessed history. A real adapter needs temporal versions or append-only change/audit data.
+
+## Prompt 2 implementation and coverage
+
+- Frozen eligible service status: `DELIVERED`; service ordering remains normalized `received_at` plus `service_id`.
+- Current odometer: latest valid `closing_odometer_km` whose `period_end_date <= T`. There is no service-odometer or `initial_mileage_km` fallback.
+- Frozen helpers `_history_features`, `_primary_policy_table`, and `_due_task_features` are reused rather than reimplemented.
+- Services, mileage, tasks, parts, and appointments are all read through the centralized cutoff adapter.
+- Source evidence exposes only identifiers, dates, counts, selected odometer/service context, and cache diagnostics; it does not expose customer personal data.
+- The deterministic coverage report is in `ridebase-ml/reports/v2_1_history_feature_coverage.json` and `.md`.
+- Across 500 frozen landmarks (100 from each of five modeling roles), resolved feature count p10/p50/p90 is 54/54/54 and median coverage is 100%. This reflects complete synthetic modeling landmarks, not confidence. Dedicated sparse-history tests retain honest nulls.
+- Measured warm build latency: p50 22.660 ms, p95 26.762 ms, max 55.171 ms on the audit host. Cold first use, including 11 CSV loads/index creation, was 1845.078 ms.

@@ -58,7 +58,22 @@ class RideBaseSourceAdapter(ABC):
 
     def get_service_tasks_before(self, motorcycle_id: str, as_of: date) -> list[Record]:
         rows = self._matching("service_tasks", "motorcycle_id", motorcycle_id)
-        return self._at_or_before(rows, as_of, "completed_at", "service_tasks", allow_missing=True)
+        cutoff = _coerce_date(as_of)
+        accepted: list[tuple[date, Record]] = []
+        for raw in rows:
+            # Completed-task semantics use completed_at. Declined tasks have no
+            # completed_at but are known once started and count in the frozen
+            # last-service task-count feature.
+            field = "completed_at" if raw.get("completed_at") not in (None, "") and not pd.isna(raw.get("completed_at")) else "started_at"
+            effective = self._date_value(
+                raw.get(field), f"service_tasks.{field}", allow_missing=True
+            )
+            if effective is not None and effective <= cutoff:
+                row = dict(raw)
+                row["_effective_at"] = effective.isoformat()
+                accepted.append((effective, row))
+        accepted.sort(key=lambda item: item[0])
+        return [row for _, row in accepted]
 
     def get_service_parts_before(self, motorcycle_id: str, as_of: date) -> list[Record]:
         """Filter timestamp-less part rows through their point-in-time-safe parents.
@@ -69,17 +84,26 @@ class RideBaseSourceAdapter(ABC):
         source-schema limitation is explicitly documented.
         """
         rows = self._matching("service_parts", "motorcycle_id", motorcycle_id)
-        service_ids = {str(r.get("service_id")) for r in self.get_services_before(motorcycle_id, as_of)}
-        task_ids = {str(r.get("service_task_id")) for r in self.get_service_tasks_before(motorcycle_id, as_of)}
+        services = {
+            str(row.get("service_id")): row
+            for row in self.get_services_before(motorcycle_id, as_of)
+        }
+        tasks = {
+            str(row.get("service_task_id")): row
+            for row in self.get_service_tasks_before(motorcycle_id, as_of)
+        }
         out: list[Record] = []
         for row in rows:
             service_id = str(row.get("service_id"))
             task_id = row.get("service_task_id")
-            if service_id not in service_ids:
+            if service_id not in services:
                 continue
-            if task_id not in (None, "") and str(task_id) not in task_ids:
+            if task_id not in (None, "") and str(task_id) not in tasks:
                 continue
-            out.append(dict(row))
+            copied = dict(row)
+            parent = tasks[str(task_id)] if task_id not in (None, "") else services[service_id]
+            copied["_effective_at"] = parent.get("_effective_at")
+            out.append(copied)
         return out
 
     def get_appointments_before(self, motorcycle_id: str, as_of: date) -> list[Record]:

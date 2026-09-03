@@ -53,6 +53,9 @@ def sha256(path):
 
 def test_valid_motorcycle_and_exact_frozen_contract():
     result = build_features("MC1", "2025-02-28", MemoryAdapter(base_tables()))
+    assert set(result) == {
+        "features", "provenance", "source_evidence", "warnings", "feature_coverage", "landmark",
+    }
     assert list(result["features"]) == FEATURE_COLUMNS
     assert list(result["provenance"]) == FEATURE_COLUMNS
     assert set(FEATURE_MAPPING) == set(FEATURE_COLUMNS)
@@ -75,7 +78,7 @@ def test_empty_history_stays_missing():
     }
     assert result["features"]["current_odometer_km_at_landmark"] is None
     assert result["provenance"]["current_odometer_km_at_landmark"] == Provenance.MISSING_HISTORY.value
-    assert any("No service history" in warning for warning in result["warnings"])
+    assert any("No eligible DELIVERED service" in warning for warning in result["warnings"])
 
 
 def test_one_and_multiple_service_history_are_visible_at_boundary():
@@ -126,6 +129,7 @@ def test_future_records_for_every_event_source_do_not_change_old_landmark():
 
     baseline = build_features("MC1", "2025-02-28", MemoryAdapter(baseline_tables))
     after = build_features("MC1", "2025-02-28", MemoryAdapter(injected))
+    assert baseline["source_evidence"]["max_effective_at"]["parts"] == "2025-02-01"
     assert after == baseline
 
 
