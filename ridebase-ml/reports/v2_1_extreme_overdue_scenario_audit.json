@@ -1,0 +1,433 @@
+{
+  "audit_summary": {
+    "total_scenarios_audited": 600,
+    "monotonic_passes": 600,
+    "finite_passes": 600,
+    "bounded_passes": 600,
+    "non_zero_passes": 600,
+    "deterministic_passes": 600,
+    "assertion_failures_count": 0,
+    "assertion_failures": []
+  },
+  "sample_records": [
+    {
+      "model_id": "MONDIAL_WING50I",
+      "interval_km": 3000,
+      "due_ratio": 0.5,
+      "days_since_service": 30,
+      "annual_km_baseline": 5000,
+      "km_since_service": 1500.0,
+      "recent_annualized_pace": 18250.0,
+      "maintenance_due_now": 0,
+      "p30": 0.04878,
+      "p60": 0.153589,
+      "p90": 0.26868,
+      "p120": 0.446112,
+      "median_service_days": null,
+      "risk_score": 1.1715,
+      "warnings": [
+        "32/54 features missing \u2014 imputed by the frozen preprocessor: ['customer_type', 'climate_zone', 'storage_condition', 'workshop_region', 'workshop_price_level', 'last_service_type_code']"
+      ]
+    },
+    {
+      "model_id": "MONDIAL_WING50I",
+      "interval_km": 3000,
+      "due_ratio": 0.5,
+      "days_since_service": 30,
+      "annual_km_baseline": 10000,
+      "km_since_service": 1500.0,
+      "recent_annualized_pace": 18250.0,
+      "maintenance_due_now": 0,
+      "p30": 0.207218,
+      "p60": 0.371981,
+      "p90": 0.552268,
+      "p120": 0.746933,
+      "median_service_days": 274.0,
+      "risk_score": 2.363,
+      "warnings": [
+        "32/54 features missing \u2014 imputed by the frozen preprocessor: ['customer_type', 'climate_zone', 'storage_condition', 'workshop_region', 'workshop_price_level', 'last_service_type_code']"
+      ]
+    },
+    {
+      "model_id": "MONDIAL_WING50I",
+      "interval_km": 3000,
+      "due_ratio": 0.5,
+      "days_since_service": 30,
+      "annual_km_baseline": 20000,
+      "km_since_service": 1500.0,
+      "recent_annualized_pace": 18250.0,
+      "maintenance_due_now": 0,
+      "p30": 0.328467,
+      "p60": 0.669291,
+      "p90": 0.804878,
+      "p120": 0.868852,
+      "median_service_days": 227.0,
+      "risk_score": 6.0423,
+      "warnings": [
+        "32/54 features missing \u2014 imputed by the frozen preprocessor: ['customer_type', 'climate_zone', 'storage_condition', 'workshop_region', 'workshop_price_level', 'last_service_type_code']"
+      ]
+    },
+    {
+      "model_id": "MONDIAL_WING50I",
+      "interval_km": 3000,
+      "due_ratio": 0.5,
+      "days_since_service": 30,
+      "annual_km_baseline": 30000,
+      "km_since_service": 1500.0,
+      "recent_annualized_pace": 18250.0,
+      "maintenance_due_now": 0,
+      "p30": 0.404467,
+      "p60": 0.74359,
+      "p90": 0.818792,
+      "p120": 0.88764,
+      "median_service_days": 208.0,
+      "risk_score": 7.6054,
+      "warnings": [
+        "32/54 features missing \u2014 imputed by the frozen preprocessor: ['customer_type', 'climate_zone', 'storage_condition', 'workshop_region', 'workshop_price_level', 'last_service_type_code']"
+      ]
+    },
+    {
+      "model_id": "MONDIAL_WING50I",
+      "interval_km": 3000,
+      "due_ratio": 0.5,
+      "days_since_service": 30,
+      "annual_km_baseline": 60000,
+      "km_since_service": 1500.0,
+      "recent_annualized_pace": 18250.0,
+      "maintenance_due_now": 0,
+      "p30": 0.404467,
+      "p60": 0.764423,
+      "p90": 0.847619,
+      "p120": 0.900943,
+      "median_service_days": 195.0,
+      "risk_score": 8.3034,
+      "warnings": [
+        "32/54 features missing \u2014 imputed by the frozen preprocessor: ['customer_type', 'climate_zone', 'storage_condition', 'workshop_region', 'workshop_price_level', 'last_service_type_code']"
+      ]
+    },
+    {
+      "model_id": "MONDIAL_WING50I",
+      "interval_km": 3000,
+      "due_ratio": 0.5,
+      "days_since_service": 60,
+      "annual_km_baseline": 5000,
+      "km_since_service": 1500.0,
+      "recent_annualized_pace": 9125.0,
+      "maintenance_due_now": 0,
+      "p30": 0.076923,
+      "p60": 0.153589,
+      "p90": 0.26868,
+      "p120": 0.446112,
+      "median_service_days": null,
+      "risk_score": 1.1926,
+      "warnings": [
+        "32/54 features missing \u2014 imputed by the frozen preprocessor: ['customer_type', 'climate_zone', 'storage_condition', 'workshop_region', 'workshop_price_level', 'last_service_type_code']"
+      ]
+    },
+    {
+      "model_id": "MONDIAL_WING50I",
+      "interval_km": 3000,
+      "due_ratio": 0.5,
+      "days_since_service": 60,
+      "annual_km_baseline": 10000,
+      "km_since_service": 1500.0,
+      "recent_annualized_pace": 9125.0,
+      "maintenance_due_now": 0,
+      "p30": 0.207218,
+      "p60": 0.423077,
+      "p90": 0.623762,
+      "p120": 0.746933,
+      "median_service_days": 272.0,
+      "risk_score": 2.4216,
+      "warnings": [
+        "32/54 features missing \u2014 imputed by the frozen preprocessor: ['customer_type', 'climate_zone', 'storage_condition', 'workshop_region', 'workshop_price_level', 'last_service_type_code']"
+      ]
+    },
+    {
+      "model_id": "MONDIAL_WING50I",
+      "interval_km": 3000,
+      "due_ratio": 0.5,
+      "days_since_service": 60,
+      "annual_km_baseline": 20000,
+      "km_since_service": 1500.0,
+      "recent_annualized_pace": 9125.0,
+      "maintenance_due_now": 0,
+      "p30": 0.328467,
+      "p60": 0.702602,
+      "p90": 0.818792,
+      "p120": 0.868852,
+      "median_service_days": 226.0,
+      "risk_score": 6.2928,
+      "warnings": [
+        "32/54 features missing \u2014 imputed by the frozen preprocessor: ['customer_type', 'climate_zone', 'storage_condition', 'workshop_region', 'workshop_price_level', 'last_service_type_code']"
+      ]
+    },
+    {
+      "model_id": "MONDIAL_WING50I",
+      "interval_km": 3000,
+      "due_ratio": 0.5,
+      "days_since_service": 60,
+      "annual_km_baseline": 30000,
+      "km_since_service": 1500.0,
+      "recent_annualized_pace": 9125.0,
+      "maintenance_due_now": 0,
+      "p30": 0.404467,
+      "p60": 0.764423,
+      "p90": 0.847619,
+      "p120": 0.900943,
+      "median_service_days": 196.0,
+      "risk_score": 8.2466,
+      "warnings": [
+        "32/54 features missing \u2014 imputed by the frozen preprocessor: ['customer_type', 'climate_zone', 'storage_condition', 'workshop_region', 'workshop_price_level', 'last_service_type_code']"
+      ]
+    },
+    {
+      "model_id": "MONDIAL_WING50I",
+      "interval_km": 3000,
+      "due_ratio": 0.5,
+      "days_since_service": 60,
+      "annual_km_baseline": 60000,
+      "km_since_service": 1500.0,
+      "recent_annualized_pace": 9125.0,
+      "maintenance_due_now": 0,
+      "p30": 0.404467,
+      "p60": 0.764423,
+      "p90": 0.847619,
+      "p120": 0.900943,
+      "median_service_days": 155.0,
+      "risk_score": 9.2991,
+      "warnings": [
+        "32/54 features missing \u2014 imputed by the frozen preprocessor: ['customer_type', 'climate_zone', 'storage_condition', 'workshop_region', 'workshop_price_level', 'last_service_type_code']"
+      ]
+    },
+    {
+      "model_id": "MONDIAL_WING50I",
+      "interval_km": 3000,
+      "due_ratio": 0.5,
+      "days_since_service": 90,
+      "annual_km_baseline": 5000,
+      "km_since_service": 1500.0,
+      "recent_annualized_pace": 6083.3,
+      "maintenance_due_now": 0,
+      "p30": 0.082963,
+      "p60": 0.198767,
+      "p90": 0.319121,
+      "p120": 0.475309,
+      "median_service_days": null,
+      "risk_score": 1.2058,
+      "warnings": [
+        "32/54 features missing \u2014 imputed by the frozen preprocessor: ['customer_type', 'climate_zone', 'storage_condition', 'workshop_region', 'workshop_price_level', 'last_service_type_code']"
+      ]
+    },
+    {
+      "model_id": "MONDIAL_WING50I",
+      "interval_km": 3000,
+      "due_ratio": 0.5,
+      "days_since_service": 90,
+      "annual_km_baseline": 10000,
+      "km_since_service": 1500.0,
+      "recent_annualized_pace": 6083.3,
+      "maintenance_due_now": 0,
+      "p30": 0.227273,
+      "p60": 0.44863,
+      "p90": 0.656051,
+      "p120": 0.75396,
+      "median_service_days": 262.0,
+      "risk_score": 2.724,
+      "warnings": [
+        "32/54 features missing \u2014 imputed by the frozen preprocessor: ['customer_type', 'climate_zone', 'storage_condition', 'workshop_region', 'workshop_price_level', 'last_service_type_code']"
+      ]
+    },
+    {
+      "model_id": "MONDIAL_WING50I",
+      "interval_km": 3000,
+      "due_ratio": 0.5,
+      "days_since_service": 90,
+      "annual_km_baseline": 20000,
+      "km_since_service": 1500.0,
+      "recent_annualized_pace": 6083.3,
+      "maintenance_due_now": 0,
+      "p30": 0.357798,
+      "p60": 0.702602,
+      "p90": 0.818792,
+      "p120": 0.885714,
+      "median_service_days": 226.0,
+      "risk_score": 7.0465,
+      "warnings": [
+        "32/54 features missing \u2014 imputed by the frozen preprocessor: ['customer_type', 'climate_zone', 'storage_condition', 'workshop_region', 'workshop_price_level', 'last_service_type_code']"
+      ]
+    },
+    {
+      "model_id": "MONDIAL_WING50I",
+      "interval_km": 3000,
+      "due_ratio": 0.5,
+      "days_since_service": 90,
+      "annual_km_baseline": 30000,
+      "km_since_service": 1500.0,
+      "recent_annualized_pace": 6083.3,
+      "maintenance_due_now": 0,
+      "p30": 0.404467,
+      "p60": 0.764423,
+      "p90": 0.847619,
+      "p120": 0.900943,
+      "median_service_days": 160.0,
+      "risk_score": 9.2343,
+      "warnings": [
+        "32/54 features missing \u2014 imputed by the frozen preprocessor: ['customer_type', 'climate_zone', 'storage_condition', 'workshop_region', 'workshop_price_level', 'last_service_type_code']"
+      ]
+    },
+    {
+      "model_id": "MONDIAL_WING50I",
+      "interval_km": 3000,
+      "due_ratio": 0.5,
+      "days_since_service": 90,
+      "annual_km_baseline": 60000,
+      "km_since_service": 1500.0,
+      "recent_annualized_pace": 6083.3,
+      "maintenance_due_now": 0,
+      "p30": 0.556338,
+      "p60": 0.870229,
+      "p90": 0.935115,
+      "p120": 0.969298,
+      "median_service_days": 96.0,
+      "risk_score": 10.4128,
+      "warnings": [
+        "32/54 features missing \u2014 imputed by the frozen preprocessor: ['customer_type', 'climate_zone', 'storage_condition', 'workshop_region', 'workshop_price_level', 'last_service_type_code']"
+      ]
+    },
+    {
+      "model_id": "MONDIAL_WING50I",
+      "interval_km": 3000,
+      "due_ratio": 0.5,
+      "days_since_service": 180,
+      "annual_km_baseline": 5000,
+      "km_since_service": 1500.0,
+      "recent_annualized_pace": 3041.7,
+      "maintenance_due_now": 0,
+      "p30": 0.082963,
+      "p60": 0.198767,
+      "p90": 0.319121,
+      "p120": 0.475309,
+      "median_service_days": 363.0,
+      "risk_score": 1.2669,
+      "warnings": [
+        "32/54 features missing \u2014 imputed by the frozen preprocessor: ['customer_type', 'climate_zone', 'storage_condition', 'workshop_region', 'workshop_price_level', 'last_service_type_code']"
+      ]
+    },
+    {
+      "model_id": "MONDIAL_WING50I",
+      "interval_km": 3000,
+      "due_ratio": 0.5,
+      "days_since_service": 180,
+      "annual_km_baseline": 10000,
+      "km_since_service": 1500.0,
+      "recent_annualized_pace": 3041.7,
+      "maintenance_due_now": 0,
+      "p30": 0.236936,
+      "p60": 0.466463,
+      "p90": 0.656051,
+      "p120": 0.75396,
+      "median_service_days": 257.0,
+      "risk_score": 2.9039,
+      "warnings": [
+        "32/54 features missing \u2014 imputed by the frozen preprocessor: ['customer_type', 'climate_zone', 'storage_condition', 'workshop_region', 'workshop_price_level', 'last_service_type_code']"
+      ]
+    },
+    {
+      "model_id": "MONDIAL_WING50I",
+      "interval_km": 3000,
+      "due_ratio": 0.5,
+      "days_since_service": 180,
+      "annual_km_baseline": 20000,
+      "km_since_service": 1500.0,
+      "recent_annualized_pace": 3041.7,
+      "maintenance_due_now": 0,
+      "p30": 0.404467,
+      "p60": 0.74359,
+      "p90": 0.818792,
+      "p120": 0.88764,
+      "median_service_days": 212.0,
+      "risk_score": 7.4579,
+      "warnings": [
+        "32/54 features missing \u2014 imputed by the frozen preprocessor: ['customer_type', 'climate_zone', 'storage_condition', 'workshop_region', 'workshop_price_level', 'last_service_type_code']"
+      ]
+    },
+    {
+      "model_id": "MONDIAL_WING50I",
+      "interval_km": 3000,
+      "due_ratio": 0.5,
+      "days_since_service": 180,
+      "annual_km_baseline": 30000,
+      "km_since_service": 1500.0,
+      "recent_annualized_pace": 3041.7,
+      "maintenance_due_now": 0,
+      "p30": 0.556338,
+      "p60": 0.869565,
+      "p90": 0.894737,
+      "p120": 0.921053,
+      "median_service_days": 123.0,
+      "risk_score": 9.7734,
+      "warnings": [
+        "32/54 features missing \u2014 imputed by the frozen preprocessor: ['customer_type', 'climate_zone', 'storage_condition', 'workshop_region', 'workshop_price_level', 'last_service_type_code']"
+      ]
+    },
+    {
+      "model_id": "MONDIAL_WING50I",
+      "interval_km": 3000,
+      "due_ratio": 0.5,
+      "days_since_service": 180,
+      "annual_km_baseline": 60000,
+      "km_since_service": 1500.0,
+      "recent_annualized_pace": 3041.7,
+      "maintenance_due_now": 0,
+      "p30": 0.6,
+      "p60": 0.870229,
+      "p90": 0.935115,
+      "p120": 0.969298,
+      "median_service_days": 76.0,
+      "risk_score": 11.0208,
+      "warnings": [
+        "32/54 features missing \u2014 imputed by the frozen preprocessor: ['customer_type', 'climate_zone', 'storage_condition', 'workshop_region', 'workshop_price_level', 'last_service_type_code']"
+      ]
+    }
+  ],
+  "reproduction_case": {
+    "scenario": {
+      "model_id": "BAJAJ_NS200",
+      "current_odometer_km": 42000.0,
+      "last_service_odometer_km": 12000.0,
+      "km_since_last_service": 30000.0,
+      "days_since_last_service": 34,
+      "user_annual_km_baseline": 10000.0,
+      "raw_recent_annualized_rate": 322058.8
+    },
+    "deterministic_maintenance": {
+      "status": "OVERDUE",
+      "label": "BAKIM GEC\u0130KM\u0130\u015e",
+      "action": "SERVICE_NOW_REQUIRED",
+      "action_label": "SERV\u0130S \u015e\u0130MD\u0130 GEREKL\u0130",
+      "progress_pct": 1000.0,
+      "overdue_km": 27000.0,
+      "interval_km": 3000
+    },
+    "v2_0_legacy": {
+      "risk_30d": 0.0797877,
+      "risk_60d": 0.38654509,
+      "risk_90d": 0.49490988,
+      "risk_120d": 0.82370121,
+      "median_service_days": 111
+    },
+    "v2_1_primary": {
+      "risk_30d": 0.227273,
+      "risk_60d": 0.44863,
+      "risk_90d": 0.656051,
+      "risk_120d": 0.75396,
+      "median_service_days": 263.0,
+      "risk_score": 2.681961,
+      "annual_km_used_in_features": 10000.0,
+      "warnings": [
+        "32/54 features missing \u2014 imputed by the frozen preprocessor: ['customer_type', 'climate_zone', 'storage_condition', 'workshop_region', 'workshop_price_level', 'last_service_type_code']"
+      ]
+    }
+  }
+}
