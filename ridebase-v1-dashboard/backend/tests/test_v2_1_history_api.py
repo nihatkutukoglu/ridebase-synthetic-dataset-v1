@@ -193,3 +193,17 @@ def test_sqlite_serving_does_not_read_csv_source_tables(client):
     info = adapter.cache_info()
     assert info["disk_reads"] == 0
     assert info["disk_reads_by_table"] == {}
+
+
+def test_sample_motorcycle_id_works_end_to_end_with_by_motorcycle(client):
+    """FAZ2/K2: GET /api/v2_1/sample's motorcycle_id must be a real, usable
+    History Pipeline input -- this is what the 'Rastgele geçerli ID getir'
+    button in the Control Center wires to."""
+    sample = client.get("/api/v2_1/sample").json()
+    assert sample["motorcycle_id"]
+    response = client.post("/api/v2_1/predict/by-motorcycle", json={
+        "motorcycle_id": sample["motorcycle_id"],
+        "landmark_date": sample["landmark_at"],
+    })
+    assert response.status_code == 200, response.json()
+    assert 0.0 <= response.json()["prediction"]["risk_90d"] <= 1.0

@@ -17,10 +17,15 @@ from .routes import router
 logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)s %(name)s %(message)s")
 log = logging.getLogger("ridebase.api")
 
+_prod = settings.APP_ENV == "production"
 app = FastAPI(
     title="RideBase V1 Intelligence API",
     version="1.0.0",
     description="Next-service days/km prediction + model analytics on RideBase Synthetic Dataset v1.3.",
+    # don't expose the schema/interactive docs in production
+    docs_url=None if _prod else "/docs",
+    redoc_url=None if _prod else "/redoc",
+    openapi_url=None if _prod else "/openapi.json",
 )
 
 app.add_middleware(

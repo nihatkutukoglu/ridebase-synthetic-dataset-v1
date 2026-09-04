@@ -11,7 +11,8 @@ Pipeline (exact training order, reproduced against the frozen TEST predictions):
       -> XGB survival:cox score            (champion = xgb_cox)
       -> S(t) via persisted Breslow baseline cumulative hazard
       -> per-horizon isotonic calibration + cross-horizon monotonicity
-      -> risk_30/60/90/120, median_service_days (raw curve), warnings, provenance
+      -> risk_30/60/90/120, median_service_days (read off the same calibrated
+         curve as risk_Xd -- see _median_days), warnings, provenance
 
 Status: SYNTHETICALLY VALIDATED (RideBase Synthetic Dataset v1.4 / V2.1 landmarks).
 Real-fleet validation PENDING — never presented as production-validated.
@@ -20,6 +21,7 @@ Real-fleet validation PENDING — never presented as production-validated.
 from __future__ import annotations
 
 import json
+import logging
 import time
 from dataclasses import dataclass, field
 from pathlib import Path
@@ -38,7 +40,7 @@ _LEAK_TOKENS = (
     "event_within_", "censor", "future_", "primary_split", "modeling_role",
     "is_unseen_motorcycle_holdout", "snapshot_year", "days_observed",
 )
-_MEDIAN_GRID = np.arange(1, 366)
+log = logging.getLogger(__name__)
 
 
 class PredictionError(ValueError):
@@ -90,14 +92,34 @@ class V21SurvivalPredictor:
         raw = 1.0 - survival_from_score(score, self.baseline)
         return self.calibrator.transform(raw)
 
-    def _median_days(self, score: np.ndarray) -> list[float | None]:
-        # first day the *raw* survival curve crosses 0.5 (consistent with the shown curve)
-        surv = survival_from_score(score, self.baseline, _MEDIAN_GRID.astype(float))
+    def _median_days(self, risk: np.ndarray) -> list[float | None]:
+        """First day the *calibrated* return-probability crosses 0.5, linearly
+        interpolated across the calibrated horizon grid (0, 30, 60, 90, 120 --
+        the only points the isotonic calibrator was actually fit at). Reading
+        this off the raw, uncalibrated survival curve instead (as before) could
+        disagree with risk_Xd by a lot, since calibration can shift probabilities
+        far from the raw curve (FAZ2/K1). Never extrapolates past day 120: if the
+        curve hasn't reached 0.5 there, the median is unknown -> null."""
+        grid = np.concatenate([[0.0], HORIZONS])
         out: list[float | None] = []
-        for row in surv:
-            hit = np.argmax(row < 0.5)
-            out.append(float(_MEDIAN_GRID[hit]) if row[hit] < 0.5 else None)
+        for row in risk:
+            p = np.concatenate([[0.0], row])
+            median = None
+            for i in range(1, len(grid)):
+                if p[i] >= 0.5:
+                    t0, t1, p0, p1 = grid[i - 1], grid[i], p[i - 1], p[i]
+                    median = float(t0) if p1 <= p0 else float(t0 + (0.5 - p0) / (p1 - p0) * (t1 - t0))
+                    break
+            out.append(median)
         return out
+
+    def _median_invariant_ok(self, r: dict[str, Any]) -> bool:
+        """median is None, or <= the smallest horizon whose calibrated risk >= 0.5."""
+        med = r["median_service_days"]
+        if med is None:
+            return True
+        floor = min((h for h in HORIZONS if r[f"risk_{int(h)}d"] >= 0.5), default=None)
+        return floor is not None and med <= floor + 1e-6
 
     def predict(self, rows: Iterable[dict], strict: bool = False) -> dict[str, Any]:
         started = time.perf_counter()
@@ -107,11 +129,14 @@ class V21SurvivalPredictor:
         frame = pd.DataFrame([self._canonical_row(r, strict) for r in rows])
         score = self._score(frame)
         risk = self._calibrated_risk(score)
-        median = self._median_days(score)
+        median = self._median_days(risk)
         preds = []
         for i, raw_row in enumerate(rows):
             r = {f"risk_{int(h)}d": round(float(risk[i, j]), 6) for j, h in enumerate(HORIZONS)}
             r["median_service_days"] = median[i]
+            if not self._median_invariant_ok(r):
+                log.warning("median_service_days invariant violated, dropping to null: %s", r)
+                r["median_service_days"] = None
             r["risk_score"] = round(float(score[i]), 6)
             r["warnings"] = self._warnings(frame.iloc[i])
             preds.append(r)
@@ -150,7 +175,10 @@ class V21SurvivalPredictor:
         missing = [c for c in self.feature_cols
                    if (c in NUMERIC_FEATURES and pd.isna(row[c])) or (c in CATEGORICAL_FEATURES and row[c] in (None, "", np.nan))]
         if missing:
-            w.append(f"{len(missing)}/{len(self.feature_cols)} features missing — imputed by the frozen preprocessor: {missing[:6]}")
+            shown = missing[:6]
+            suffix = f" (+{len(missing) - 6} more)" if len(missing) > 6 else ""
+            w.append(f"{len(missing)}/{len(self.feature_cols)} features missing — "
+                     f"imputed by the frozen preprocessor: {shown}{suffix}")
         odo = row.get("current_odometer_km_at_landmark")
         if pd.notna(odo) and (odo < 0 or odo > 400_000):
             w.append(f"current_odometer_km_at_landmark={odo:.0f} is outside the training range")

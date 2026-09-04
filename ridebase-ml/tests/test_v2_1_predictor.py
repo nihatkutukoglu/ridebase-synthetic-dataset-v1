@@ -85,6 +85,32 @@ def test_scenario_rejects_impossible_history():
                 "current_odometer_km": 5000, "last_service_odometer_km": 9000})
 
 
+def test_median_service_days_consistent_with_calibrated_horizons(predictor):
+    """FAZ2/K1: median_service_days must come off the same calibrated curve as
+    risk_Xd. For 200 random scenarios: median is None, or median <= the
+    smallest horizon whose calibrated risk is already >= 0.5."""
+    import pandas as pd
+
+    from ridebase_ml.v2_1.landmarks import FEATURE_COLUMNS
+
+    frame = pd.read_parquet(
+        ROOT / "ridebase-ml/derived_outputs/v2_1_v1_4/v2_1_modeling_table.parquet",
+        filters=[("modeling_role", "==", "TEST")], columns=FEATURE_COLUMNS,
+    ).sample(200, random_state=42)
+    rows = frame.astype(object).where(frame.notna(), None).to_dict("records")
+    preds = predictor.predict(rows)["predictions"]
+    checked_a_reachable_case = False
+    for p in preds:
+        med = p["median_service_days"]
+        horizons_ge_half = [h for h in (30, 60, 90, 120) if p[f"risk_{h}d"] >= 0.5]
+        if med is None:
+            assert not horizons_ge_half, p
+        else:
+            checked_a_reachable_case = True
+            assert horizons_ge_half and med <= min(horizons_ge_half) + 1e-6, p
+    assert checked_a_reachable_case, "sample never crossed 0.5 -- invariant untested on its true branch"
+
+
 def test_km_pressure_moves_risk(predictor, sample_row):
     """Raising km-since / due-ratio must not leave 90d risk flat (V2.0 failure)."""
     def at(km):

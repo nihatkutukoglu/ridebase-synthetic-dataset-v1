@@ -45,6 +45,11 @@ COPY ridebase-v1-dashboard/backend/artifacts /artifacts
 RUN mkdir -p /artifacts/models/v2_1_v1_4
 COPY ridebase-ml/models/v2_1_v1_4 /artifacts/models/v2_1_v1_4
 
+# Frozen TEST landmark rows -- powers GET /api/v2_1/sample only (one row is read
+# per request; 13 MB on disk, negligible next to the 512 MB instance budget).
+RUN mkdir -p /artifacts/derived_outputs/v2_1_v1_4
+COPY ridebase-ml/derived_outputs/v2_1_v1_4/v2_1_modeling_table.parquet /artifacts/derived_outputs/v2_1_v1_4/v2_1_modeling_table.parquet
+
 EXPOSE 8000
 HEALTHCHECK --interval=30s --timeout=5s --start-period=40s --retries=3 \
     CMD curl -fsS http://localhost:8000/health || exit 1

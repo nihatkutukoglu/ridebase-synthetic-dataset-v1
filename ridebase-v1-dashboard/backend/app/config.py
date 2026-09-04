@@ -67,5 +67,9 @@ class Settings:
     MAX_REQUEST_BYTES: int = int(os.environ.get("MAX_REQUEST_BYTES", 1_000_000))
     SCATTER_SAMPLE: int = int(os.environ.get("SCATTER_SAMPLE", 1500))
 
+    # Bearer token guarding POST /admin/reload. Empty (unset) means the route
+    # always rejects — a misconfigured deploy fails closed, not open.
+    RIDEBASE_ADMIN_TOKEN: str = os.environ.get("RIDEBASE_ADMIN_TOKEN", "")
+
 
 settings = Settings()

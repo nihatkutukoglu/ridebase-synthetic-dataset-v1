@@ -109,7 +109,8 @@ or `make dev` from `ridebase-v1-dashboard/`.
 
 | var | default | meaning |
 |-----|---------|---------|
-| `APP_ENV` | `development` | |
+| `APP_ENV` | `development` | `production` also hides `/docs`, `/redoc`, `/openapi.json` |
+| `RIDEBASE_ADMIN_TOKEN` | unset | Bearer token required by `POST /admin/reload`; unset = route always 401s |
 | `MODEL_DIR` / `REPORTS_DIR` / `OUTPUTS_DIR` / `DATASET_DIR` | repo-relative `ridebase-ml/*` | artifact locations |
 | `MODEL_CATALOG_PATH` | `ridebase_v1_3/source_tables/ridebase_motorcycle_models_v1.csv` | authoritative read-only motorcycle model inventory |
 | `MAINTENANCE_POLICY_PATH` | `ridebase_v1_3/source_tables/maintenance_policies.csv` | frozen policy catalog used for deterministic maintenance-due status |
@@ -140,7 +141,7 @@ No secrets are committed; `.env.example` files are provided.
 | POST | `/api/v1/predict/batch` | up to 200 items |
 | GET | `/api/v1/analytics/{overview,models,features,errors,drift,experiments,verdict}` | normalised section payloads |
 | GET | `/api/v1/analytics/target/{DAYS\|KM}` | per-target metrics + chart data |
-| POST | `/admin/reload` | re-read artifacts without a restart (403 when `APP_ENV=production`) |
+| POST | `/admin/reload` | re-read artifacts without a restart (needs `Authorization: Bearer $RIDEBASE_ADMIN_TOKEN`, else 401) |
 
 ### V2 survival (`/api/v2/*`)
 

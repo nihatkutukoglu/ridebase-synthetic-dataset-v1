@@ -141,7 +141,33 @@ def test_v1_v2_unified(client, v2_sample):
     assert "pending" in body["warning"].lower()
 
 
-def test_admin_reload_blocked_in_production(client, monkeypatch):
+def test_admin_reload_requires_token(client, monkeypatch):
     from app import config as _cfg
-    monkeypatch.setattr(_cfg.settings, "APP_ENV", "production")
-    assert client.post("/admin/reload").status_code == 403
+    monkeypatch.setattr(_cfg.settings, "RIDEBASE_ADMIN_TOKEN", "s3cr3t-token")
+    assert client.post("/admin/reload").status_code == 401
+    assert client.post("/admin/reload", headers={"Authorization": "Bearer wrong"}).status_code == 401
+    r = client.post("/admin/reload", headers={"Authorization": "Bearer s3cr3t-token"})
+    assert r.status_code == 200
+
+
+def test_admin_reload_blocked_when_token_unset(client, monkeypatch):
+    from app import config as _cfg
+    monkeypatch.setattr(_cfg.settings, "RIDEBASE_ADMIN_TOKEN", "")
+    assert client.post("/admin/reload", headers={"Authorization": "Bearer anything"}).status_code == 401
+
+
+def test_docs_hidden_in_production(monkeypatch):
+    # docs_url/openapi_url are bound at FastAPI() construction time, so
+    # reconstruct the app under each APP_ENV rather than hitting a route.
+    import importlib
+    from app import config as _cfg, main as _main
+    try:
+        monkeypatch.setattr(_cfg.settings, "APP_ENV", "production")
+        importlib.reload(_main)
+        assert _main.app.docs_url is None
+        assert _main.app.redoc_url is None
+        assert _main.app.openapi_url is None
+    finally:
+        monkeypatch.setattr(_cfg.settings, "APP_ENV", "development")
+        importlib.reload(_main)
+        assert _main.app.docs_url == "/docs"

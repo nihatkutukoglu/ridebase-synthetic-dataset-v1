@@ -169,19 +169,6 @@
     ]
   },
   {
-    "id": "API-10",
-    "timestamp": "2026-09-02",
-    "module": "API",
-    "type": "API",
-    "title": "V1 production dashboard (FastAPI + Next.js)",
-    "description": "Leakage-safe prediction API + analytics dashboard; frozen modelleri transform-only kullanır.",
-    "status": "PASS",
-    "version": "v1.3",
-    "artifacts": [
-      "ridebase-v1-dashboard/README.md"
-    ]
-  },
-  {
     "id": "V2.0-13",
     "timestamp": "2026-09-02",
     "module": "V2.0",
@@ -247,6 +234,19 @@
     ]
   },
   {
+    "id": "API-10",
+    "timestamp": "2026-09-04",
+    "module": "API",
+    "type": "API",
+    "title": "V1 production dashboard (FastAPI + Next.js)",
+    "description": "Leakage-safe prediction API + analytics dashboard; frozen modelleri transform-only kullanır.",
+    "status": "PASS",
+    "version": "v1.3",
+    "artifacts": [
+      "ridebase-v1-dashboard/README.md"
+    ]
+  },
+  {
     "id": "UI-11",
     "timestamp": "2026-09-04",
     "module": "UI",
@@ -304,7 +304,7 @@
     "module": "API",
     "type": "DEPLOYMENT",
     "title": "Public V1/V2 inference API — deploy blueprint prepared",
-    "description": "render.yaml + Dockerfile.prod (ridebase_ml paketi + artifactlar bundle) + runtime API-URL config (?v2api= / RIDEBASE_V2_API) hazır. Gerçek public deployment BLOCKED_BY_PROVIDER_AUTH — provider hesabı gerekiyor; sahte online API gösterilmiyor.",
+    "description": "render.yaml + Dockerfile.prod (ridebase_ml paketi + artifactlar bundle) + runtime API-URL config (?v2api= / RIDEBASE_V2_API) hazır.",
     "status": "REVIEW",
     "version": "v1.3",
     "artifacts": [
@@ -312,7 +312,20 @@
     ]
   },
   {
-    "id": "V1-25",
+    "id": "API-25",
+    "timestamp": "2026-09-04",
+    "module": "API",
+    "type": "DEPLOYMENT",
+    "title": "Public V1/V2/V2.1 inference API — RESOLVED, deployed",
+    "description": "Render blueprint deployed (ridebase-inference-api). Provider-auth block is resolved; the API base URL in this manifest (v2_api) points at the live service. Current up/down status is not a build-time fact — check System Status (canlı /health) in the app, not this changelog.",
+    "status": "PASS",
+    "version": "v1.4",
+    "artifacts": [
+      "ridebase-v1-dashboard/render.yaml"
+    ]
+  },
+  {
+    "id": "V1-26",
     "timestamp": "2026-09-04",
     "module": "V1",
     "type": "UI",

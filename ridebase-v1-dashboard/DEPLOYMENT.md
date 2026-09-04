@@ -56,7 +56,8 @@ Pick one:
 
 | var | value |
 |-----|-------|
-| `APP_ENV` | `production` |
+| `APP_ENV` | `production` (also hides `/docs`, `/redoc`, `/openapi.json`) |
+| `RIDEBASE_ADMIN_TOKEN` | a generated secret (`openssl rand -hex 32`); required to call `POST /admin/reload` |
 | `ALLOWED_ORIGINS` | `https://<your-frontend-domain>` (comma-separated, no trailing slash) |
 | `MODEL_DIR` / `REPORTS_DIR` / `OUTPUTS_DIR` / `DATASET_DIR` | `/artifacts/models` … (image defaults already set) |
 | `MODEL_CATALOG_PATH` | `/app/app/data/ridebase_motorcycle_models_v1.csv` (`Dockerfile.prod` copies it from v1.3 source tables) |
@@ -195,7 +196,7 @@ shows "Model servisi uyanıyor…" and retries; that is expected, not an outage.
 
 1. Drop new `models/v1_final_*` (+ refreshed `reports/tables/v1_final_tuning_*`,
    `outputs/v1_final_tuning_test_predictions.parquet`) into the artifact location.
-2. `curl -X POST https://<backend>/admin/reload` (or restart the service).
+2. `curl -X POST -H "Authorization: Bearer $RIDEBASE_ADMIN_TOKEN" https://<backend>/admin/reload` (or restart the service).
 3. `GET /health` → `model_generation`, and `GET /api/v1/model/info` → new names/metrics.
    **No frontend change or redeploy.**
 

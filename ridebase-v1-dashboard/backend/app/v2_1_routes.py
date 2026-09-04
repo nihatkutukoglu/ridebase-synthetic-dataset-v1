@@ -96,8 +96,8 @@ def sample() -> Dict[str, Any]:
     if not table.exists():
         raise HTTPException(status_code=404, detail="V2.1 modeling table not available for a sample")
     frame = pd.read_parquet(table, filters=[("modeling_role", "==", "TEST")],
-                            columns=["landmark_id", "landmark_at", *p.feature_cols])
-    row = frame.iloc[0]
+                            columns=["landmark_id", "landmark_at", "motorcycle_id", *p.feature_cols])
+    row = frame.sample(1).iloc[0]
     feats: Dict[str, Any] = {}
     for col in p.feature_cols:
         val = row[col]
@@ -108,6 +108,9 @@ def sample() -> Dict[str, Any]:
                       else str(val))
     return {"landmark_id": str(row["landmark_id"]),
             "landmark_at": pd.to_datetime(row["landmark_at"]).date().isoformat(),
+            # this motorcycle_id/landmark_at pair is also a valid POST /predict/by-motorcycle input,
+            # since both are built from the same V1.4 source history (K2)
+            "motorcycle_id": str(row["motorcycle_id"]),
             "features": feats,
             "note": "Frozen TEST landmark; survival targets are excluded."}
 

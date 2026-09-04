@@ -4,6 +4,11 @@
 <meta charset="utf-8">
 <title>RideBase ML Control Center</title>
 <meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="description" content="RideBase servis-tahmini makine öğrenmesi çalışmasının veri, model, API ve doğrulama durumunu tek panelde gösteren yönetim merkezi.">
+<meta property="og:title" content="RideBase ML Control Center">
+<meta property="og:description" content="RideBase servis-tahmini makine öğrenmesi çalışmasının veri, model, API ve doğrulama durumunu tek panelde gösteren yönetim merkezi.">
+<meta property="og:type" content="website">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%23090c12'/%3E%3Cpath d='M18 5 8 18h7l-2 9 11-14h-7l1-8Z' fill='%23ff7a29'/%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -36,6 +41,9 @@
   ::-webkit-scrollbar{width:9px;height:9px}
   ::-webkit-scrollbar-thumb{background:#2a3140;border-radius:8px}
   :focus-visible{outline:2px solid var(--accent-2);outline-offset:2px;border-radius:4px}
+  .skip-link{position:absolute;left:8px;top:-48px;z-index:100;background:var(--accent);color:var(--accent-ink);
+    padding:10px 16px;border-radius:8px;font:700 .85rem/1 var(--sans);text-decoration:none;transition:top .15s}
+  .skip-link:focus{top:8px}
 
   /* ============ layout shell ============ */
   .shell{display:grid;grid-template-columns:var(--sidebar-w) 1fr;min-height:100vh}
@@ -102,7 +110,7 @@
   .card{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:20px 22px;box-shadow:var(--shadow)}
   .card.tint{background:var(--accent-tint);border-color:transparent}
   .card.cyan-tint{background:var(--accent-2-tint);border-color:transparent}
-  .card h3{font-size:1.02rem;font-weight:700;margin-bottom:3px}
+  .card h2{font-size:1.02rem;font-weight:700;margin-bottom:3px}
   .card .sub{color:var(--muted);font-size:.8rem;margin-bottom:14px}
   .card p.copy{font-size:.87rem;color:var(--text-2);margin:0 0 10px}
 
@@ -192,7 +200,7 @@
   .modcard .mc-top{display:flex;align-items:center;justify-content:space-between;gap:10px}
   .modcard .mc-id{font:800 .95rem/1 var(--mono);color:var(--accent)}
   .modcard .mc-id.cyan{color:var(--accent-2)}
-  .modcard h3{font-size:1.02rem}
+  .modcard h2,.modcard h3{font-size:1.02rem}
   .modcard .mc-tag{font-size:.78rem;color:var(--muted)}
   .modcard .mc-cta{font:700 .72rem/1 var(--sans);color:var(--text-2);letter-spacing:.03em;text-transform:uppercase;margin-top:2px}
 
@@ -358,17 +366,29 @@
     .shell.drawer::after{content:"";position:fixed;inset:0;background:rgba(3,5,9,.5);z-index:40}
     .topbar{display:flex}
   }
+
+  /* ============ print ============ */
+  @media print{
+    .sidebar,.topbar,#ham,.subtabs,button,.paletteBack,#paletteBack{display:none!important}
+    .shell{display:block}
+    .main{padding:0}
+    body{background:#fff;color:#111}
+    .card,.finding,.kpi{border-color:#ccc;background:#fff;break-inside:avoid}
+    a[href]::after{content:" (" attr(href) ")";font-size:.8em;color:#555}
+  }
 </style>
 </head>
 <body>
+<a href="#view" class="skip-link">İçeriğe atla</a>
+<div id="apiHostNotice" hidden style="position:fixed;top:0;left:0;right:0;z-index:9999;background:var(--warning,#f0ad4e);color:#111;padding:8px 16px;font-size:.85rem;text-align:center">Bilinmeyen API adresi yok sayıldı.</div>
 <div class="shell" id="shell">
-  <aside class="sidebar" id="sidebar"></aside>
+  <nav class="sidebar" id="sidebar" aria-label="Ana gezinme"></nav>
   <div class="main">
-    <div class="topbar">
-      <button class="hamburger" id="ham" aria-label="Menü">☰</button>
+    <header class="topbar">
+      <button class="hamburger" id="ham" aria-label="Menü" aria-expanded="false" aria-controls="sidebar">☰</button>
       <span class="logo">RIDE<span class="bolt">⚡</span>BASE</span>
       <span style="margin-left:auto;font-size:.7rem;color:var(--muted)" class="num" id="topDs">v1.3</span>
-    </div>
+    </header>
     <main class="content" id="view" tabindex="-1"></main>
   </div>
 </div>
@@ -395,23 +415,39 @@ var $ = function(s,r){return (r||document).querySelector(s);};
 var M = window.__MANIFEST__ || {};
 var CL = window.__CHANGELOG__ || [];
 function esc(x){return String(x==null?"":x).replace(/[&<>"]/g,function(c){return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c];});}
-function n0(v){return v==null||v!==v?"—":Math.round(v).toLocaleString("en-US");}
-function n1(v){return v==null||v!==v?"—":Number(v).toLocaleString("en-US",{minimumFractionDigits:1,maximumFractionDigits:1});}
-function n2(v){return v==null||v!==v?"—":Number(v).toLocaleString("en-US",{minimumFractionDigits:2,maximumFractionDigits:2});}
+function n0(v){return v==null||v!==v?"—":Math.round(v).toLocaleString("tr-TR");}
+function n1(v){return v==null||v!==v?"—":Number(v).toLocaleString("tr-TR",{minimumFractionDigits:1,maximumFractionDigits:1});}
+function n2(v){return v==null||v!==v?"—":Number(v).toLocaleString("tr-TR",{minimumFractionDigits:2,maximumFractionDigits:2});}
+/* Y5: years and plain integer counts must NOT get thousands separators or a
+   forced decimal (2023 -> "2.023", a count of 1 -> "1,0" would both be wrong). */
+function int0(v){return v==null||v!==v?"—":String(Math.round(v));}
+function raw(v){return v==null||v!==v?"—":String(v);}
 function r3(v){return v==null||v!==v?"—":Number(v).toFixed(3);}
 function pct(v,d){return v==null||v!==v?"—":(v*100).toFixed(d==null?1:d)+"%";}
+/* O7: below 60% known-feature coverage, a decimal-precision percentage overstates
+   confidence the (mostly-imputed) input doesn't have -- round to a whole number
+   and mark it approximate instead. */
+function pctCov(v,ratio){return (ratio!=null&&ratio<0.6)?(v==null||v!==v?"—":"~"+Math.round(v*100)+"%"):pct(v);}
+function lowCoverageBadge(ratio){return (ratio!=null&&ratio<0.6)?'<span class="chip warn">DÜŞÜK BİLGİ KAPSAMI</span>':'';}
 function sgn(v,f){if(v==null||v!==v)return "—";var s=(f||n1)(Math.abs(v));return (v>0?"+":v<0?"−":"")+s;}
 function asNum(v){var x=typeof v==="string"?parseFloat(v):v;return (typeof x==="number"&&isFinite(x))?x:null;}
+/* Y4: these render inside .pill (text-transform:uppercase); with lang="tr" on
+   <html>, an English word here uppercases its "i" to "İ" (wrong glyph). Real
+   Turkish words uppercase correctly, so translate rather than wrap. */
 function statusPill(s){s=(s||"").toLowerCase();
-  if(s==="complete"||s==="pass"||s==="frozen"||s==="baseline")return '<span class="pill ok">'+esc(s||"complete")+'</span>';
-  if(s==="active")return '<span class="pill active">active</span>';
-  if(s==="in_progress"||s==="in progress")return '<span class="pill active">in progress</span>';
-  if(s==="planned")return '<span class="pill plan">coming soon</span>';
-  if(s==="info")return '<span class="pill info">info</span>';
-  if(s==="warning"||s==="review")return '<span class="pill warn">'+esc(s)+'</span>';
-  if(s==="failed"||s==="fail")return '<span class="pill bad">'+esc(s)+'</span>';
+  if(s==="complete"||s==="pass"||s==="frozen"||s==="baseline")
+    return '<span class="pill ok">'+esc({complete:"tamamlandı",pass:"geçti",frozen:"donduruldu",baseline:"referans"}[s]||"tamamlandı")+'</span>';
+  if(s==="active")return '<span class="pill active">aktif</span>';
+  if(s==="in_progress"||s==="in progress")return '<span class="pill active">devam ediyor</span>';
+  if(s==="planned")return '<span class="pill plan">yakında</span>';
+  if(s==="info")return '<span class="pill info">bilgi</span>';
+  if(s==="warning"||s==="review")return '<span class="pill warn">'+esc(s==="review"?"inceleniyor":"uyarı")+'</span>';
+  if(s==="failed"||s==="fail")return '<span class="pill bad">başarısız</span>';
   return '<span class="pill plan">'+esc(s||"—")+'</span>';}
-function card(title,sub,body){return '<div class="card"><h3>'+esc(title)+'</h3>'+(sub?'<div class="sub">'+esc(sub)+'</div>':'')+body+'</div>';}
+/* D2: card() sits directly under a page's <h1> in most call sites (no
+   intervening <h2>), so its own heading must not be an <h3> -- that skips a
+   level. Using <h2> here means no page ever jumps h1->h3. */
+function card(title,sub,body){return '<div class="card"><h2>'+esc(title)+'</h2>'+(sub?'<div class="sub">'+esc(sub)+'</div>':'')+body+'</div>';}
 function kpi(label,value,note,accent){return '<div class="kpi '+(accent||'')+'"><div class="eyebrow">'+esc(label)+'</div><div class="value">'+value+'</div>'+(note?'<div class="note">'+note+'</div>':'')+'</div>';}
 /* V2 explanatory KPI — value keeps its visual weight; small lines below explain the metric for non-technical users. o={xpl,dir,badge,badgeKind,tip,accent} */
 function v2kpi(label,value,o){o=o||{};
@@ -427,6 +463,94 @@ function barRows(items,accent){return '<div class="bars">'+items.map(function(it
   var w=Math.max(1,Math.min(100,it.pct));
   return '<div class="bar"><div class="lbl">'+esc(it.label)+'</div><div class="track"><div class="fill '+(accent||'')+'" style="width:'+w+'%"></div></div><div class="val">'+it.val+'</div></div>';
 }).join('')+'</div>';}
+/* ---------------- O3: inline SVG charts, no library ---------------- */
+function chartFrame(svgInner,w,h,caption){
+  return '<div class="sec"><svg viewBox="0 0 '+w+' '+h+'" style="width:100%;height:auto;max-width:640px" role="img" aria-label="'+esc(caption)+'">'+svgInner+'</svg>'
+    +(caption?'<p class="copy" style="margin-top:6px;font-size:.8rem;color:var(--text-2)">'+esc(caption)+'</p>':'')+'</div>';
+}
+/* Chart 1: 0-120 day return-probability curve through the 4 horizon points. */
+function svgSurvivalCurve(risks,caption){
+  var w=560,h=220,pad={l:44,r:16,t:16,b:34};
+  var pw=w-pad.l-pad.r,ph=h-pad.t-pad.b;
+  var pts=[[0,0]].concat([30,60,90,120].map(function(hz){return [hz,risks["risk_"+hz+"d"]||0];}));
+  function x(d){return pad.l+d/120*pw;}
+  function y(p){return pad.t+(1-p)*ph;}
+  var path=pts.map(function(pt,i){return (i?'L':'M')+x(pt[0]).toFixed(1)+' '+y(pt[1]).toFixed(1);}).join(' ');
+  var area=path+' L'+x(120).toFixed(1)+' '+y(0).toFixed(1)+' L'+x(0).toFixed(1)+' '+y(0).toFixed(1)+' Z';
+  var grid=[0,.25,.5,.75,1].map(function(g){return '<line x1="'+pad.l+'" x2="'+(w-pad.r)+'" y1="'+y(g).toFixed(1)+'" y2="'+y(g).toFixed(1)+'" stroke="var(--border)" stroke-width="1"/>'
+    +'<text x="'+(pad.l-8)+'" y="'+(y(g)+4).toFixed(1)+'" text-anchor="end" font-size="10" fill="var(--text-3)">'+Math.round(g*100)+'%</text>';}).join('');
+  var xticks=[0,30,60,90,120].map(function(hz){return '<text x="'+x(hz).toFixed(1)+'" y="'+(h-10)+'" text-anchor="middle" font-size="10" fill="var(--text-3)">'+hz+'g</text>';}).join('');
+  var dots=[30,60,90,120].map(function(hz){var p=risks["risk_"+hz+"d"]||0;
+    return '<circle cx="'+x(hz).toFixed(1)+'" cy="'+y(p).toFixed(1)+'" r="4" fill="var(--accent-2)"/>'
+      +'<text x="'+x(hz).toFixed(1)+'" y="'+(y(p)-9).toFixed(1)+'" text-anchor="middle" font-size="10" fill="var(--text)">'+Math.round(p*100)+'%</text>';}).join('');
+  var svg='<path d="'+area+'" fill="var(--accent-2-tint)"/><path d="'+path+'" fill="none" stroke="var(--accent-2)" stroke-width="2"/>'
+    +grid+xticks+dots
+    +'<text x="'+pad.l+'" y="12" font-size="10" fill="var(--text-3)">servise dönme olasılığı</text>'
+    +'<text x="'+(w-pad.r)+'" y="'+(h-10)+'" text-anchor="end" font-size="10" fill="var(--text-3)">gün (landmark\'tan itibaren)</text>';
+  return chartFrame(svg,w,h,caption||"0-120 gün arası servise dönme olasılığı; noktalar 30/60/90/120 günlük kalibre tahminler.");
+}
+/* Chart 2: grouped horizon bars (e.g. Brier + AUC per horizon). */
+function svgHorizonBars(horizons,seriesA,seriesB,caption){
+  var w=560,h=220,pad={l:40,r:16,t:20,b:34};
+  var pw=w-pad.l-pad.r,ph=h-pad.t-pad.b;
+  var vals=horizons.map(function(hz){return seriesA.values[hz];}).concat(horizons.map(function(hz){return seriesB.values[hz];})).filter(function(v){return v!=null;});
+  var mx=Math.max.apply(null,vals.concat([0.01]))*1.15;
+  function y(v){return pad.t+(1-v/mx)*ph;}
+  var groupW=pw/horizons.length,barW=groupW*0.32;
+  var bars='',labels='';
+  horizons.forEach(function(hz,i){
+    var gx=pad.l+i*groupW;
+    var a=seriesA.values[hz],b=seriesB.values[hz];
+    if(a!=null)bars+='<rect x="'+(gx+groupW*0.12).toFixed(1)+'" y="'+y(a).toFixed(1)+'" width="'+barW.toFixed(1)+'" height="'+(pad.t+ph-y(a)).toFixed(1)+'" fill="var(--accent-2)"/>';
+    if(b!=null)bars+='<rect x="'+(gx+groupW*0.12+barW+4).toFixed(1)+'" y="'+y(b).toFixed(1)+'" width="'+barW.toFixed(1)+'" height="'+(pad.t+ph-y(b)).toFixed(1)+'" fill="var(--accent)"/>';
+    labels+='<text x="'+(gx+groupW/2).toFixed(1)+'" y="'+(h-10)+'" text-anchor="middle" font-size="10" fill="var(--text-3)">'+hz+'g</text>';
+  });
+  var grid=[0,.5,1].map(function(g){var v=mx*g;return '<line x1="'+pad.l+'" x2="'+(w-pad.r)+'" y1="'+y(v).toFixed(1)+'" y2="'+y(v).toFixed(1)+'" stroke="var(--border)" stroke-width="1"/>'
+    +'<text x="'+(pad.l-6)+'" y="'+(y(v)+4).toFixed(1)+'" text-anchor="end" font-size="10" fill="var(--text-3)">'+v.toFixed(2)+'</text>';}).join('');
+  var legend='<rect x="'+pad.l+'" y="2" width="9" height="9" fill="var(--accent-2)"/><text x="'+(pad.l+13)+'" y="10" font-size="10" fill="var(--text-2)">'+esc(seriesA.label)+'</text>'
+    +'<rect x="'+(pad.l+90)+'" y="2" width="9" height="9" fill="var(--accent)"/><text x="'+(pad.l+103)+'" y="10" font-size="10" fill="var(--text-2)">'+esc(seriesB.label)+'</text>';
+  return chartFrame(grid+bars+labels+legend,w,h,caption||"Ufuk büyüdükçe hata (Brier) ve ayırma gücü (AUC) birlikte artabilir — birbirinin yerine geçmez.");
+}
+/* Chart 4a: abs-error histogram (equal-width bins from build.py). */
+function svgHistogram(hist,unit,caption){
+  var bins=hist.bins||[];if(!bins.length)return'';
+  var w=560,h=200,pad={l:40,r:16,t:16,b:34};
+  var pw=w-pad.l-pad.r,ph=h-pad.t-pad.b;
+  var mxCount=Math.max.apply(null,bins.map(function(b){return b.count;}))||1;
+  var mxEnd=bins[bins.length-1].end;
+  function x(v){return pad.l+v/mxEnd*pw;}
+  function y(c){return pad.t+(1-c/mxCount)*ph;}
+  var bars=bins.map(function(b){var bw=Math.max(1,x(b.end)-x(b.start)-1);
+    return '<rect x="'+x(b.start).toFixed(1)+'" y="'+y(b.count).toFixed(1)+'" width="'+bw.toFixed(1)+'" height="'+(pad.t+ph-y(b.count)).toFixed(1)+'" fill="var(--accent-2)"/>';}).join('');
+  var xticks=[0,0.25,0.5,0.75,1].map(function(f){var v=mxEnd*f;return '<text x="'+x(v).toFixed(1)+'" y="'+(h-10)+'" text-anchor="middle" font-size="10" fill="var(--text-3)">'+Math.round(v)+'</text>';}).join('');
+  var grid='<line x1="'+pad.l+'" x2="'+(w-pad.r)+'" y1="'+(pad.t+ph)+'" y2="'+(pad.t+ph)+'" stroke="var(--border)"/>'
+    +'<text x="'+pad.l+'" y="12" font-size="10" fill="var(--text-3)">motor sayısı (n='+hist.n+')</text>';
+  return chartFrame(grid+bars+xticks
+    +'<text x="'+(w-pad.r)+'" y="'+(h-10)+'" text-anchor="end" font-size="10" fill="var(--text-3)">mutlak hata ('+esc(unit)+')</text>',
+    w,h,caption||("TEST setindeki "+hist.n+" motor için mutlak hata dağılımı; sağa çarpık — çoğu tahmin küçük hatalı, birkaçı çok yanılıyor."));
+}
+/* Chart 4b: predicted-vs-actual scatter (per-bin means) with a 45° reference line. */
+function svgCalibrationScatter(bins,unit,caption){
+  if(!bins.length)return'';
+  var w=420,h=340,pad={l:48,r:16,t:16,b:40};
+  var pw=w-pad.l-pad.r,ph=h-pad.t-pad.b;
+  var vals=[];bins.forEach(function(b){vals.push(asNum(b.mean_pred)||0,asNum(b.mean_actual)||0);});
+  var mx=Math.max.apply(null,vals.concat([1]))*1.08;
+  function x(v){return pad.l+v/mx*pw;}
+  function y(v){return pad.t+(1-v/mx)*ph;}
+  var diag='<line x1="'+x(0).toFixed(1)+'" y1="'+y(0).toFixed(1)+'" x2="'+x(mx).toFixed(1)+'" y2="'+y(mx).toFixed(1)+'" stroke="var(--text-3)" stroke-width="1" stroke-dasharray="4 4"/>';
+  var dots=bins.map(function(b){var p=asNum(b.mean_pred)||0,a=asNum(b.mean_actual)||0;
+    return '<circle cx="'+x(p).toFixed(1)+'" cy="'+y(a).toFixed(1)+'" r="4" fill="var(--accent)"/>';}).join('');
+  var ticks=[0,.25,.5,.75,1].map(function(f){var v=mx*f;
+    return '<text x="'+x(v).toFixed(1)+'" y="'+(h-pad.b+14)+'" text-anchor="middle" font-size="10" fill="var(--text-3)">'+Math.round(v)+'</text>'
+      +'<text x="'+(pad.l-6)+'" y="'+(y(v)+4).toFixed(1)+'" text-anchor="end" font-size="10" fill="var(--text-3)">'+Math.round(v)+'</text>';}).join('');
+  var axes='<line x1="'+pad.l+'" x2="'+pad.l+'" y1="'+pad.t+'" y2="'+(pad.t+ph)+'" stroke="var(--border)"/>'
+    +'<line x1="'+pad.l+'" x2="'+(w-pad.r)+'" y1="'+(pad.t+ph)+'" y2="'+(pad.t+ph)+'" stroke="var(--border)"/>'
+    +'<text x="'+(pad.l+pw/2)+'" y="'+(h-6)+'" text-anchor="middle" font-size="10" fill="var(--text-3)">öngörülen ('+esc(unit)+')</text>'
+    +'<text x="14" y="'+(pad.t+ph/2)+'" text-anchor="middle" font-size="10" fill="var(--text-3)" transform="rotate(-90 14 '+(pad.t+ph/2)+')">gözlenen ('+esc(unit)+')</text>';
+  return chartFrame(axes+ticks+diag+dots,w,h,caption||"Nokta kesikli çizginin üzerindeyse model az, altındaysa çok tahmin ediyor demektir.");
+}
+
 function tbl(cols,rows,hlFn){
   return '<div class="twrap"><table class="tbl"><thead><tr>'+cols.map(function(c){return '<th class="'+(c.n?'n':'')+'">'+esc(c.label)+'</th>';}).join('')+'</tr></thead><tbody>'+
    rows.map(function(row){return '<tr class="'+(hlFn&&hlFn(row)?'hl':'')+'">'+cols.map(function(c){
@@ -445,17 +569,17 @@ function termInfo(tip){return ' <span class="info" title="'+esc(tip)+'" role="im
 
 /* ---------------- routing ---------------- */
 var ROUTES = {
-  overview:{label:"Overview",render:renderOverview},
+  overview:{label:"Genel Bakış",render:renderOverview},
   eda:{label:"EDA",render:renderEda},
-  v0:{label:"V0 Baseline",render:renderV0},
-  v1:{label:"V1 Regression",render:renderV1},
-  v2:{label:"V2 Survival",render:function(sub){return (M.v2?renderV2(sub):renderPlaceholder("v2"));}},
+  v0:{label:"V0 Referans",render:renderV0},
+  v1:{label:"V1 Regresyon",render:renderV1},
+  v2:{label:"V2 Sağkalım",render:function(sub){return (M.v2?renderV2(sub):renderPlaceholder("v2"));}},
   v2_1:{label:"V2.1 Landmark",render:function(sub){return renderV2_1(sub);}},
   v3:{label:"V3 Next Task",render:function(){return renderPlaceholder("v3");}},
-  experiments:{label:"Experiments",render:renderExperiments},
+  experiments:{label:"Deneyler",render:renderExperiments},
   models:{label:"Models",render:renderModels},
   dataset:{label:"Dataset",render:renderDataset},
-  activity:{label:"Activity",render:renderActivity},
+  activity:{label:"Etkinlik",render:renderActivity},
   status:{label:"System Status",render:renderStatus}
 };
 function parseHash(){
@@ -463,13 +587,67 @@ function parseHash(){
   var parts=h.split("/");
   var route=ROUTES[parts[0]]?parts[0]:"overview";
   var sub=parts[1]||((route==="v1"||route==="v2"||route==="v2_1")?"predict":null);
-  return {route:route,sub:sub};
+  /* O6: third hash segment is the predict-page mode (scenario/demo/own etc.) so
+     a link to one mode opens directly on it, not always the first tab. */
+  var mode=parts[2]||null;
+  return {route:route,sub:sub,mode:mode};
 }
+/* O6: a mode switch inside a predict page is a cheap, frequent UI toggle, not
+   a "place" worth a back-button stop -- replaceState updates the shareable
+   link without growing history (module/tab navigation still uses go()'s
+   normal pushState-equivalent hash assignment). */
+function replaceHashMode(routeAndSub,mode){
+  try{history.replaceState(null,"","#"+routeAndSub+"/"+mode);}catch(e){}
+}
+/* O6: "modül değiştirip dönünce form dolu kalıyor" -- snapshot every named
+   input/select/textarea under a container before it gets rebuilt, keyed by
+   the hash it belonged to; restore (in DOM order, dispatching change so
+   dependent dropdowns like brand->model cascade correctly) when that hash
+   is rendered again. Session-memory only, not persisted. */
+var FORM_MEMORY={};
+function snapshotForm(container,key){
+  if(!container||!key)return;
+  var data={};
+  container.querySelectorAll("input[id],select[id],textarea[id]").forEach(function(el){
+    data[el.id]=(el.type==="checkbox"||el.type==="radio")?el.checked:el.value;
+  });
+  if(Object.keys(data).length)FORM_MEMORY[key]=data;
+}
+function restoreForm(container,key){
+  var data=FORM_MEMORY[key];
+  if(!container||!data)return;
+  container.querySelectorAll("input[id],select[id],textarea[id]").forEach(function(el){
+    if(!(el.id in data))return;
+    if(el.type==="checkbox"||el.type==="radio")el.checked=data[el.id];else el.value=data[el.id];
+    el.dispatchEvent(new Event("change",{bubbles:true}));
+  });
+}
+var PREV_HASH=null;
 function go(hash){location.hash=hash;}
+/* Y1: every module's retry-after-503 loop schedules a bare setTimeout that
+   keeps firing (and can throw "Cannot set properties of null" writing into a
+   since-removed element) after the user navigates away. One counter + one
+   timer registry, cleared at the single point every navigation goes through
+   (route()), fixes every call site at once instead of patching each retry
+   loop separately. */
+var VIEW_GEN=0;
+var PENDING_TIMERS=[];
+function retryTimer(fn,ms){
+  var gen=VIEW_GEN;
+  var id=setTimeout(function(){if(gen===VIEW_GEN)fn();},ms);
+  PENDING_TIMERS.push(id);
+  return id;
+}
+function staleView(gen){return gen!==VIEW_GEN;}
+function safeHTML(id,html){var el=document.getElementById(id);if(el)el.innerHTML=html;return el;}
 function route(){
+  VIEW_GEN++;
+  PENDING_TIMERS.forEach(clearTimeout);
+  PENDING_TIMERS.length=0;
+  var view=$("#view");
+  if(PREV_HASH)snapshotForm(view,PREV_HASH);
   var st=parseHash();
   buildSidebar(st);
-  var view=$("#view");
   view.innerHTML=ROUTES[st.route].render(st.sub);
   view.focus();
   window.scrollTo({top:0,behavior:"instant"});
@@ -477,7 +655,39 @@ function route(){
   if(st.route==="v1" && st.sub==="predict" && typeof wireV1Predict==="function")wireV1Predict();
   if(st.route==="v2" && st.sub==="predict" && typeof wireV2Predict==="function")wireV2Predict();
   if(st.route==="v2_1" && st.sub==="predict" && typeof wireV2_1Predict==="function")wireV2_1Predict();
-  $("#shell").classList.remove("drawer");
+  if(st.route==="status" && typeof wireStatusLive==="function")wireStatusLive();
+  PREV_HASH=location.hash;
+  closeDrawer();
+}
+/* O4: manifest is a build-time snapshot and can't tell you the API is down
+   right now. Ping /health on every visit to System Status and drive the API
+   rows from the live response -- red + "erişilemiyor" if it's unreachable,
+   never a stale PASS. */
+function setStatusRow(id,ok,okText,badText){
+  var el=document.getElementById(id);if(!el)return;
+  el.textContent=ok?okText:badText;
+  el.style.color=ok?"var(--good)":"var(--critical)";
+}
+function wireStatusLive(){
+  var api=(window.__V2_API__||"").replace(/\/$/,""),gen=VIEW_GEN;
+  if(!api){safeHTML("liveHealthBox",finding("bad","CANLI DURUM","<p>Public API yapılandırılmadı.</p>"));return;}
+  var t0=(window.performance||{}).now?performance.now():Date.now();
+  v2fetch(api+"/health").then(v2json).then(function(h){
+    if(staleView(gen))return;
+    var ms=Math.round(((window.performance||{}).now?performance.now():Date.now())-t0);
+    var ts=new Date().toLocaleTimeString("tr-TR");
+    safeHTML("liveHealthBox",finding("good","CANLI DURUM",
+      '<p class="copy" style="margin:0"><span class="dot"></span> API erişilebilir · '+ms+' ms · son kontrol: '+esc(ts)+'</p>'));
+    setStatusRow("statusV1",(h.v1==="ok"||h.status==="ok"||h.days_model_loaded===true)&&h.km_model_loaded===true,"YÜKLÜ","ERİŞİLEMİYOR");
+    setStatusRow("statusV2",h.v2_model_loaded===true,"YÜKLÜ (ARAŞTIRMA)","ERİŞİLEMİYOR");
+    setStatusRow("statusV21",h.v2_1_model_loaded===true,"YÜKLÜ","ERİŞİLEMİYOR");
+  }).catch(function(e){
+    if(staleView(gen))return;
+    var ts=new Date().toLocaleTimeString("tr-TR");
+    safeHTML("liveHealthBox",finding("bad","CANLI DURUM",
+      '<p class="copy" style="margin:0"><span class="dot"></span> API\'ye erişilemiyor — '+esc(String(e))+' · son kontrol: '+esc(ts)+'</p>'));
+    ["statusV1","statusV2","statusV21"].forEach(function(id){setStatusRow(id,false,"","ERİŞİLEMİYOR");});
+  });
 }
 window.addEventListener("hashchange",route);
 
@@ -494,18 +704,18 @@ function buildSidebar(st){
   function mod(id){return mods.filter(function(m){return m.id===id;})[0]||{};}
   var html=''
    +'<div class="brand"><span class="logo">RIDE<span class="bolt">⚡</span>BASE</span><small>ML Control Center</small></div>'
-   +'<div class="nav-group">'+navItem("overview","Overview",{ic:dot()})+'</div>'
+   +'<div class="nav-group">'+navItem("overview","Genel Bakış",{ic:dot()})+'</div>'
    +'<div class="nav-group"><div class="glabel">Modules</div>'
      +navItem("eda","EDA",{ic:sq()})
-     +navItem("v0","V0 Baseline",{ic:sq()})
-     +navItem("v1","V1 Regression",{ic:sq()})
-     +navItem("v2","V2 Survival",{ic:sq(),soon:!M.v2,disabled:false})
+     +navItem("v0","V0 Referans",{ic:sq()})
+     +navItem("v1","V1 Regresyon",{ic:sq()})
+     +navItem("v2","V2 Sağkalım",{ic:sq(),soon:!M.v2,disabled:false})
      +navItem("v2_1","V2.1 Landmark",{ic:sq(),disabled:false})
      +navItem("v3","V3 Next Task",{ic:sq(),soon:true,disabled:false})
   +'</div>';
   if(st.route==="v1"){
-    var subs=[["predict","Canlı Tahmin"],["overview","Overview"],["days","DAYS"],["km","KM"],["models","Models"],
-      ["features","Features"],["errors","Errors"],["drift","Drift"],["experiments","Experiments"],["verdict","Verdict"]];
+    var subs=[["predict","Canlı Tahmin"],["overview","Genel Bakış"],["days","DAYS"],["km","KM"],["models","Models"],
+      ["features","Özellikler"],["errors","Errors"],["drift","Sapma"],["experiments","Deneyler"],["verdict","Değerlendirme"]];
     html+='<div class="nav-group">'+subs.map(function(s){
       return navItem("v1",s[1],{sub:true,hash:"v1/"+s[0],subOf:"v1",subKey:s[0]==="overview"?null:s[0]});
     }).join('')+'</div>';
@@ -525,10 +735,10 @@ function buildSidebar(st){
     }).join('')+'</div>';
   }
   html+='<div class="nav-group"><div class="glabel">System</div>'
-     +navItem("experiments","Experiments",{ic:sq()})
+     +navItem("experiments","Deneyler",{ic:sq()})
      +navItem("models","Models",{ic:sq()})
      +navItem("dataset","Dataset",{ic:sq()})
-     +navItem("activity","Activity",{ic:sq()})
+     +navItem("activity","Etkinlik",{ic:sq()})
      +navItem("status","System Status",{ic:sq()})
    +'</div>'
    +'<div class="sidebar-foot">'
@@ -546,9 +756,13 @@ function dot(){return '<svg viewBox="0 0 16 16" fill="currentColor"><circle cx="
 function sq(){return '<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="3" y="3" width="10" height="10" rx="2.5"/></svg>';}
 
 /* ---------------- module header ---------------- */
+/* Y6: lede text may carry a handful of deliberate <b>/</b> tags for emphasis
+   (source strings, not user/API input). Escape everything, then allowlist
+   just those two exact tags back in -- anything else stays inert text. */
+function ledeEsc(s){return esc(s).replace(/&lt;(\/?)b&gt;/g,'<$1b>');}
 function modHead(eyebrow,title,lede,chips,prov){
   return '<div class="mod-head"><div class="eyebrow">'+esc(eyebrow)+'</div><h1>'+esc(title)+'</h1>'
-    +(lede?'<p class="lede">'+esc(lede)+'</p>':'')
+    +(lede?'<p class="lede">'+ledeEsc(lede)+'</p>':'')
     +(chips?'<div class="chips">'+chips+'</div>':'')
     +(prov?'<div class="provenance">'+prov+'</div>':'')+'</div>';
 }
@@ -571,7 +785,8 @@ function renderOverview(){
   out+=pageNote(
     "Bu panel, RideBase servis-tahmini makine öğrenmesi çalışmasının tamamını tek yerde toplar. "
     +"Veri bilimi bilmene gerek yok — her sayfanın başında böyle bir açıklama kutusu var, teknik terimlerin "
-    +"yanında Türkçe karşılığı ve ⓘ ikonuna gelince kısa bir açıklama çıkıyor. "
+    +"yanında Türkçe karşılığı yazılı. Bazı metrik kartlarında ⓘ ikonuna gelince kısa bir açıklama da çıkıyor "
+    +"(ör. V2 Sağkalım · Zaman Aralıkları sayfası). "
     +"<b>Nasıl okumalıyım:</b> 1) İlgili modülün <b>Genel Bakış</b>'ı → özet sonuç. "
     +"2) <b>Zaman Aralıkları</b> → 30/60/90/120 gün. 3) <b>Risk Grupları</b> → hangi motorlar daha riskli. "
     +"4) <b>Modelin Baktığı Bilgiler</b> → model neye bakıyor. 5) <b>Canlı Tahmin</b> → tek bir motor için sonuç.",
@@ -582,9 +797,9 @@ function renderOverview(){
   /* KPI strip */
   out+='<div class="sec"><div class="grid g3">'
    +kpi("Dataset version",esc(M.current_dataset||"v1.3"),"regression benchmark (frozen)","cyan")
-   +kpi("Active model","V1 <small>regression</small>","frozen · DAYS + KM")
+   +kpi("Aktif model","V1 <small>regression</small>","frozen · DAYS + KM")
    +kpi("Completed modules",String(completed.length),completed.join(" · "))
-   +kpi("Experiments",String((M.notebooks||[]).length)+" <small>notebooks</small>","01 → 12")
+   +kpi("Deneyler",String((M.notebooks||[]).length)+" <small>notebooks</small>","01 → 12")
    +kpi("QA status",(qa.leakage_audit==="PASS"&&qa.reproducibility==="PASS")?'PASS':'REVIEW',"leakage · repro · temporal split","plain")
    +kpi("Real-fleet validation",'<span style="color:var(--warning)">PENDING</span>',"synthetic validation only","plain")
    +'</div></div>';
@@ -619,7 +834,7 @@ function renderOverview(){
       +'<div class="mc-top"><span class="mc-id '+idColor+'">'+esc(m.name.split(" ")[0].toUpperCase())+'</span>'+statusPill(m.status)+'</div>'
       +'<h3>'+esc(m.tagline)+'</h3>'
       +'<div class="mc-tag">'+esc(m.purpose)+'</div>'
-      +'<div class="mc-cta">'+(planned?'Coming soon':'Open module →')+'</div>'
+      +'<div class="mc-cta">'+(planned?'Yakında':'Open module →')+'</div>'
       +'</button>';
   });
   out+='</div></div>';
@@ -648,7 +863,7 @@ function renderOverview(){
 
   /* production status split */
   out+='<div class="sec"><div class="sec-head"><h2>Production Status</h2><span class="tag">net ayrım</span></div><div class="grid g3">'
-   +kpi("Application",esc(ps.application||"PILOT"),"deployable — ridebase-v1-dashboard","cyan")
+   +kpi("Uygulama",esc(ps.application||"PILOT"),"deployable — ridebase-v1-dashboard","cyan")
    +kpi("Model",'SYNTH. VALIDATED',"RideBase Synthetic Dataset v1.3","")
    +kpi("Real fleet validation",'<span style="color:var(--warning)">PENDING</span>',"not yet connected to real data","plain")
    +'</div>'
@@ -711,7 +926,7 @@ function initMonthlyChart(){
 function renderV0(){
   var v0=M.v0||{}, d=(v0.metrics&&v0.metrics.DAYS)||{}, k=(v0.metrics&&v0.metrics.KM)||{};
   var cmp=v0.v0_vs_v1||[];
-  var head=modHead("Module · Rule Baseline","V0 — Kural Bazlı Baseline",
+  var head=modHead("Modül · Kural Referansı","V0 — Kural Bazlı Baseline",
     "Makine öğrenmesi kullanmadan oluşturulan ilk, deterministik servis-zamanı baseline'ı. Her V1 modeli için referans zemin. Sentetik v1.2 offline benchmark — production doğrulaması değildir.",
     '<span class="chip good"><span class="dot"></span>COMPLETED</span><span class="chip">DATASET v1.2</span><span class="chip">rule-based</span>',
     'notebook <code>04_v0_rule_baseline.ipynb</code> · <code>v0_rule_baseline_metrics.csv</code>');
@@ -729,7 +944,7 @@ function renderV0(){
    +kpi("±30 gün",pct(d.within_30),null,"plain")
    +kpi("±60 gün",pct(d.within_60),null,"plain")
    +'</div></div>';
-  out+='<div class="sec"><div class="sec-head"><h2>KM performansı</h2><span class="tag">TEST · observed valid-km</span></div><div class="grid g4">'
+  out+='<div class="sec"><div class="sec-head"><h2>KM performansı</h2><span class="tag">TEST · gözlenen geçerli-km</span></div><div class="grid g4">'
    +kpi("MAE",n0(k.mae)+' <small>km</small>',"median "+n0(k.median_ae))
    +kpi("R²",r3(k.r2),"negatif → sabit tahminden kötü","plain")
    +kpi("±1000 km",pct(k.within_1000),null,"plain")
@@ -738,7 +953,7 @@ function renderV0(){
   /* V0 -> V1 */
   if(cmp.length){
     var maeRows=cmp.filter(function(r){return r.metric==="mae";});
-    out+='<div class="sec"><div class="sec-head"><h2>V0 → V1</h2><span class="tag">gerçek artifact</span></div>'
+    out+='<div class="sec"><div class="sec-head"><h2>V0 → V1</h2><span class="tag">gerçek artefakt</span></div>'
      +'<p class="sec-intro">V0, V1 için referans baseline görevi görür. Aşağıdaki karşılaştırma <code>v0_vs_v1_regression_comparison.csv</code> dosyasından.</p>';
     maeRows.forEach(function(r){
       var mx=Math.max(r.v0,r.v1)||1;
@@ -749,7 +964,7 @@ function renderV0(){
         ])
        +finding("good","Kazanım","<b>"+r.target+" MAE "+(r.relative_improvement_pct?r.relative_improvement_pct.toFixed(1):"—")+"% düştü.</b><p>V1, basit regresyonla bile V0 kuralını net biçimde geçiyor.</p>"));
     });
-    out+='<div class="twrap" style="margin-top:14px"><table class="tbl"><thead><tr><th>Target</th><th>Metric</th><th class="n">V0</th><th class="n">V1</th><th class="n">Δ%</th><th>Winner</th></tr></thead><tbody>'
+    out+='<div class="twrap" style="margin-top:14px"><table class="tbl"><thead><tr><th>Target</th><th>Ölçüt</th><th class="n">V0</th><th class="n">V1</th><th class="n">Δ%</th><th>Kazanan</th></tr></thead><tbody>'
      +cmp.map(function(r){return '<tr><td class="k">'+esc(r.target)+'</td><td>'+esc(r.metric)+'</td><td class="n">'+(r.v0==null?'—':n2(r.v0))+'</td><td class="n">'+(r.v1==null?'—':n2(r.v1))+'</td><td class="n">'+(r.relative_improvement_pct==null?'—':r.relative_improvement_pct.toFixed(1))+'</td><td>'+esc(r.winner||'')+'</td></tr>';}).join('')
      +'</tbody></table></div></div>';
   }
@@ -766,14 +981,14 @@ function renderV0(){
 function renderV1(sub){
   sub=sub||"predict";
   var v1=M.v1||{};
-  var head=modHead("Module · Regression","V1 — Next-Service Regression",
+  var head=modHead("Modül · Regresyon","V1 — Next-Service Regression",
     "Bir motosikletin bir sonraki servisine kalan gün ve kilometreyi tahmin eder. Notebook 06–12; final model Notebook 12'de dondurulmuştur.",
     '<span class="chip active"><span class="dot"></span>ACTIVE · FROZEN</span><span class="chip">DATASET v1.3</span><span class="chip warn"><span class="dot"></span>REAL FLEET: PENDING</span>',
     'config <code>models/v1_final_tuning_config.json</code>');
-  var tabs=[["predict","Canlı Tahmin"],["overview","Overview"],["days","DAYS"],["km","KM"],["models","Models"],
-    ["features","Features"],["errors","Errors"],["drift","Drift"],["experiments","Experiments"],["verdict","Verdict"]];
-  var bar='<div class="subtabs">'+tabs.map(function(t){
-    return '<button class="subtab'+(sub===t[0]?' active':'')+'" data-go="v1/'+t[0]+'">'+esc(t[1])+'</button>';
+  var tabs=[["predict","Canlı Tahmin"],["overview","Genel Bakış"],["days","DAYS"],["km","KM"],["models","Models"],
+    ["features","Özellikler"],["errors","Errors"],["drift","Sapma"],["experiments","Deneyler"],["verdict","Değerlendirme"]];
+  var bar='<div class="subtabs" role="tablist" aria-label="V1 bölümleri">'+tabs.map(function(t){
+    return '<button class="subtab'+(sub===t[0]?' active':'')+'" role="tab" aria-selected="'+(sub===t[0])+'" data-go="v1/'+t[0]+'">'+esc(t[1])+'</button>';
   }).join('')+'</div>';
   var body={overview:v1Overview,days:function(){return v1Target("DAYS");},km:function(){return v1Target("KM");},
     models:v1Models,features:v1Features,errors:v1Errors,drift:v1Drift,experiments:v1Experiments,
@@ -805,7 +1020,7 @@ function v1Overview(){
    +'</div></div>';
   var evo=v1.evolution||[];
   if(evo.length){
-    out+='<div class="sec"><div class="sec-head"><h2>Model Evolution</h2><span class="tag">authoritative</span></div>'
+    out+='<div class="sec"><div class="sec-head"><h2>Model Evolution</h2><span class="tag">yetkili kaynak</span></div>'
      +'<div class="twrap"><table class="tbl"><thead><tr><th>Stage</th><th class="n">DAYS MAE</th><th class="n">DAYS R²</th><th class="n">KM MAE</th><th class="n">KM R²</th><th>Status</th></tr></thead><tbody>'
      +evo.map(function(e){return '<tr class="'+(e.status==="frozen"?"hl":"")+'"><td class="k">'+esc(e.stage)+'</td><td class="n">'+n1(e.days_mae)+'</td><td class="n">'+r3(e.days_r2)+'</td><td class="n">'+n0(e.km_mae)+'</td><td class="n">'+r3(e.km_r2)+'</td><td>'+statusPill(e.status)+'</td></tr>';}).join('')
      +'</tbody></table></div></div>';
@@ -850,7 +1065,7 @@ function v1Target(t){
   out+='<div class="sec">'+card("Tolerans doğruluğu","|hata| ≤ eşik (TEST)",
     barRows(tol.map(function(k){return {label:"±"+k.replace("within_",""),val:pct(tn[k]),pct:(tn[k]||0)*100};}),"cyan"))+'</div>';
   out+='<div class="sec">'+card("Metric bands",null,
-    '<div class="twrap"><table class="tbl"><thead><tr><th>Config</th><th class="n">MAE</th><th class="n">Median AE</th><th class="n">RMSE</th><th class="n">R²</th><th class="n">Bias</th><th class="n">P90 AE</th></tr></thead><tbody>'
+    '<div class="twrap"><table class="tbl"><thead><tr><th>Ayar</th><th class="n">MAE</th><th class="n">Medyan AE</th><th class="n">RMSE</th><th class="n">R²</th><th class="n">Yanlılık</th><th class="n">P90 AE</th></tr></thead><tbody>'
    +["base","tuned"].filter(function(c){return b[c];}).map(function(c){var r=b[c];
       return '<tr class="'+(c==="tuned"?"hl":"")+'"><td class="k">'+c+'</td><td class="n">'+n1(asNum(r.mae))+'</td><td class="n">'+n1(asNum(r.median_ae))+'</td><td class="n">'+n1(asNum(r.rmse))+'</td><td class="n">'+r3(asNum(r.r2))+'</td><td class="n">'+sgn(asNum(r.bias))+'</td><td class="n">'+n1(asNum(r.p90_ae))+'</td></tr>';
    }).join('')+'</tbody></table></div>')+'</div>';
@@ -861,14 +1076,14 @@ function v1Models(){
   function isFinal(row){return Object.keys(fr).some(function(k){return fr[k]&&String(fr[k].model)===String(row.model);});}
   function lbTable(rows){
     if(!rows.length)return emptyBox();
-    return '<div class="twrap"><table class="tbl"><thead><tr><th>Model</th><th>Loss</th><th class="n">CV MAE</th><th class="n">±std</th><th class="n">Val MAE</th><th class="n">Val R²</th><th>Overfit</th></tr></thead><tbody>'
+    return '<div class="twrap"><table class="tbl"><thead><tr><th>Model</th><th>Loss</th><th class="n">CV MAE</th><th class="n">±std</th><th class="n">Val MAE</th><th class="n">Val R²</th><th>Aşırı uyum</th></tr></thead><tbody>'
      +rows.map(function(r){var fin=isFinal(r);
        return '<tr class="'+(fin?"hl":"")+'"><td class="k">'+esc(r.model)+(fin?' <span class="pill active" style="margin-left:6px">FINAL</span>':'')+'</td><td>'+esc(r.loss||'')+'</td><td class="n">'+n2(asNum(r.cv_mae))+'</td><td class="n">'+n2(asNum(r.cv_mae_std))+'</td><td class="n">'+n2(asNum(r.val_mae))+'</td><td class="n">'+r3(asNum(r.val_r2))+'</td><td>'+((String(r.overfit_flag)==="True"||r.overfit_flag===true)?'<span class="pill warn">yes</span>':'—')+'</td></tr>';
      }).join('')+'</tbody></table></div>';
   }
   var out='<div class="sec"><div class="sec-head"><h2>KM leaderboard</h2><span class="tag">temporal-CV</span></div>'+lbTable(lbK)+'</div>'
    +'<div class="sec"><div class="sec-head"><h2>DAYS leaderboard</h2><span class="tag">temporal-CV</span></div>'+lbTable(lbD)+'</div>';
-  out+='<div class="sec"><div class="sec-head"><h2>Frozen hyperparameters</h2><span class="tag">nb12 config</span></div><div class="grid g2">';
+  out+='<div class="sec"><div class="sec-head"><h2>Frozen hyperparameters</h2><span class="tag">nb12 yapılandırma</span></div><div class="grid g2">';
   ["DAYS","KM"].forEach(function(t){var f=fr[t];if(!f){out+=emptyBox();return;}
     out+=card(t+" — "+esc(f.model),(f.feature_set||"")+" · "+(f.target_transform||"raw"),
       '<div class="mono-block">'+esc(JSON.stringify(f.hyperparameters||{},null,2))+'</div>'
@@ -914,14 +1129,22 @@ function v1Errors(){
      +spec.map(function(r){return '<tr>'+Object.keys(r).map(function(k){return '<td class="'+(isNaN(r[k])?'':'n')+'">'+esc(isNaN(r[k])?r[k]:n2(asNum(r[k])))+'</td>';}).join('')+'</tr>';}).join('')
      +'</tbody></table></div>')+'</div>';
   }
+  /* O3: real predicted-vs-actual scatter (calibration bin means) + a real
+     abs-error histogram, from the frozen TEST predictions -- not fabricated. */
   if(calib.length){
-    var km=calib.filter(function(r){return String(r.target).toUpperCase()==="KM";});
-    if(km.length){var mmx=Math.max.apply(null,km.map(function(r){return Math.max(asNum(r.mean_pred)||0,asNum(r.mean_actual)||0);}))||1;
-      out+='<div class="sec">'+card("Kalibrasyon (KM, tahmin çeyrekleri)","her binde ortalama tahmin vs gerçek",
-        km.map(function(r){return '<div class="bar"><div class="lbl">bin '+esc(r.bin)+'</div><div class="track"><div class="fill" style="width:'+((asNum(r.mean_pred)||0)/mmx*100)+'%"></div></div><div class="val">pred '+n0(asNum(r.mean_pred))+'</div></div>'
-          +'<div class="bar"><div class="lbl" style="opacity:.5">&nbsp;</div><div class="track"><div class="fill cyan" style="width:'+((asNum(r.mean_actual)||0)/mmx*100)+'%"></div></div><div class="val">act '+n0(asNum(r.mean_actual))+'</div></div>';}).join(''))+'</div>';
-    }
+    ["DAYS","KM"].forEach(function(t){
+      var rows=calib.filter(function(r){return String(r.target).toUpperCase()===t;});
+      if(!rows.length)return;
+      out+='<div class="sec">'+card("Kalibrasyon çeyrekleri ("+t+")","tahmin bini başına ortalama tahmin vs gerçek",
+        svgCalibrationScatter(rows,t==="DAYS"?"gün":"km"))+'</div>';
+    });
   }
+  var hist=v1.error_histogram||{};
+  ["DAYS","KM"].forEach(function(t){
+    if(!hist[t])return;
+    out+='<div class="sec">'+card("Mutlak hata dağılımı ("+t+")",null,
+      svgHistogram(hist[t],t==="DAYS"?"gün":"km"))+'</div>';
+  });
   return out;
 }
 function v1Drift(){
@@ -936,7 +1159,7 @@ function v1Drift(){
     var tgt=rows.filter(function(r){return String(r.quantity||"").indexOf("target")===0;});
     if(tgt.length){
       out+='<div class="sec">'+card("Hedef medyanı — split bazında",null,
-        '<div class="twrap"><table class="tbl"><thead><tr><th>Quantity</th><th>Split</th><th class="n">Mean</th><th class="n">Median</th><th class="n">Std</th></tr></thead><tbody>'
+        '<div class="twrap"><table class="tbl"><thead><tr><th>Miktar</th><th>Bölüm</th><th class="n">Mean</th><th class="n">Medyan</th><th class="n">Std</th></tr></thead><tbody>'
        +tgt.map(function(r){return '<tr><td class="k">'+esc(r.quantity)+'</td><td>'+esc(r.split)+'</td><td class="n">'+n1(asNum(r.mean))+'</td><td class="n">'+n1(asNum(r.median))+'</td><td class="n">'+n1(asNum(r.std))+'</td></tr>';}).join('')
        +'</tbody></table></div>')+'</div>';
     }
@@ -950,7 +1173,7 @@ function v1Drift(){
 function v1Experiments(){
   var v1=M.v1||{}, ek=v1.external_knowledge||{}, cmp=v1.test_comparison||[];
   var out='<div class="sec"><div class="sec-head"><h2>Final tuning — TEST</h2><span class="tag">nb12</span></div>';
-  out+= cmp.length? '<div class="twrap"><table class="tbl"><thead><tr><th>Target</th><th>Baseline</th><th class="n">Base MAE</th><th class="n">Tuned MAE</th><th class="n">Δ%</th><th class="n">R² Δ</th><th>Verdict</th></tr></thead><tbody>'
+  out+= cmp.length? '<div class="twrap"><table class="tbl"><thead><tr><th>Target</th><th>Referans</th><th class="n">Base MAE</th><th class="n">Tuned MAE</th><th class="n">Δ%</th><th class="n">R² Δ</th><th>Değerlendirme</th></tr></thead><tbody>'
    +cmp.map(function(r){return '<tr><td class="k">'+esc(r.target)+'</td><td>'+esc(r.baseline_model||'')+'</td><td class="n">'+n1(asNum(r.baseline_mae))+'</td><td class="n">'+n1(asNum(r.tuned_mae))+'</td><td class="n">'+sgn(asNum(r.mae_improvement_pct),n2)+'%</td><td class="n">'+sgn(asNum(r.r2_gain),function(x){return x.toFixed(4);})+'</td><td>'+(String(r.verdict||"").indexOf("MEANINGFUL")>=0?'<span class="pill ok">'+esc(r.verdict)+'</span>':'<span class="pill plan">'+esc(r.verdict||'')+'</span>')+'</td></tr>';}).join('')
    +'</tbody></table></div>' : emptyBox();
   out+='</div>';
@@ -976,12 +1199,12 @@ function v1Predict(){
   out+='<div class="sec"><div class="sec-head"><h2>V1 — SONRAKİ SERVİS TAHMİNİ</h2><span class="tag">DAYS + KM</span></div>'
     +'<div id="v1apiStatus" class="chips"><span class="chip"><span class="dot"></span>Model servisine bağlanılıyor…</span></div>'
     +'<p class="copy" style="margin-top:8px;font-size:.8rem" id="v1coldNote" hidden>Render ücretsiz sunucusu uykudaysa ilk istek 50+ saniye sürebilir. Ekran 78 saniyeye kadar bekler ve üç kez dener.</p></div>';
-  out+='<div class="sec"><div class="chips" style="margin-bottom:14px">'
-    +'<button class="subtab active" id="v1mScenario" style="border:1px solid var(--border);border-radius:8px">SENARYO TAHMİNİ</button>'
-    +'<button class="subtab" id="v1mDemo" style="border:1px solid var(--border);border-radius:8px">ÖRNEK MOTORLA DEMO</button>'
-    +'<button class="subtab" id="v1mOwn" style="border:1px solid var(--border);border-radius:8px">KENDİ MOTOSİKLETİMLE TAHMİN</button>'
-    +'</div><div id="v1modeBox"></div></div>';
-  out+='<div class="sec"><div class="sec-head"><h2>Modelin testteki tipik hatası</h2><span class="tag">artifact-driven · TEST</span></div><div class="grid g4">'
+  out+='<div class="sec"><div class="chips" style="margin-bottom:14px" role="tablist" aria-label="V1 tahmin modu">'
+    +'<button class="subtab active" id="v1mScenario" role="tab" aria-selected="true" aria-controls="v1modeBox" style="border:1px solid var(--border);border-radius:8px">SENARYO TAHMİNİ</button>'
+    +'<button class="subtab" id="v1mDemo" role="tab" aria-selected="false" aria-controls="v1modeBox" style="border:1px solid var(--border);border-radius:8px">ÖRNEK MOTORLA DEMO</button>'
+    +'<button class="subtab" id="v1mOwn" role="tab" aria-selected="false" aria-controls="v1modeBox" style="border:1px solid var(--border);border-radius:8px">KENDİ MOTOSİKLETİMLE TAHMİN</button>'
+    +'</div><div id="v1modeBox" role="tabpanel"></div></div>';
+  out+='<div class="sec"><div class="sec-head"><h2>Modelin testteki tipik hatası</h2><span class="tag">artefakt kaynaklı · TEST</span></div><div class="grid g4">'
     +kpi("DAYS · MAE",n1(dT.mae)+' <small>gün</small>',"Model DAYS tahminlerinde test verisinde ortalama yaklaşık bu kadar yanıldı.","cyan")
     +kpi("KM · MAE",n0(kT.mae)+' <small>km</small>',"Model KM tahminlerinde test verisinde ortalama yaklaşık bu kadar yanıldı.")
     +kpi("DAYS · R²",r3(dT.r2),"Hedefteki değişkenliği açıklama gücü; doğruluk yüzdesi değildir.","plain")
@@ -992,7 +1215,7 @@ function v1Predict(){
       '<p class="copy">V1 tek bir yaklaşık servis zamanı ve kalan mesafe verir.</p>')
     +card("V2 — olasılık tahmini","30 / 60 / 90 / 120 gün içinde ihtimal ne?",
       '<p class="copy">V2 farklı zaman aralıklarında servise gelme ihtimalini verir.</p>'
-      +'<div class="chips" style="margin-top:12px"><button class="subtab" data-go="v2/predict" style="border:1px solid var(--border);border-radius:8px">V2 Survival → Canlı Tahmin</button></div>')
+      +'<div class="chips" style="margin-top:12px"><button class="subtab" data-go="v2/predict" style="border:1px solid var(--border);border-radius:8px">V2 Sağkalım → Canlı Tahmin</button></div>')
     +'</div></div>';
   return out;
 }
@@ -1004,16 +1227,11 @@ var V1_HUMAN={
   annual_km_baseline:["Yıllık yaklaşık kullanım"," km"], previous_service_count:["Önceki servis sayısı",""],
   days_since_previous_service:["Son servisten bu yana"," gün"],
   km_since_previous_service:["Son servisten bu yana mesafe"," km"],
-  historical_interval_days_median:["Tipik servis aralığı"," gün"],
-  historical_interval_km_median:["Tipik servis aralığı"," km"]
+  historical_interval_days_median:["Tipik servis aralığı (gün)"," gün"],
+  historical_interval_km_median:["Tipik servis aralığı (km)"," km"]
 };
 function v1Json(url,opts){
-  return v2fetch(url,opts).then(function(r){
-    return r.json().catch(function(){return {};}).then(function(d){
-      if(!r.ok)throw new Error((d&&d.detail)?JSON.stringify(d.detail):("HTTP "+r.status));
-      return d;
-    });
-  });
+  return v2fetch(url,opts).then(v2json);
 }
 function v1StatusChips(h){
   var v1ok=(h.v1==="ok"||h.status==="ok"||h.days_model_loaded===true) && h.km_model_loaded===true;
@@ -1037,7 +1255,7 @@ function v1ApiPing(attempt){
   v1Json(api+"/health").then(function(h){
     if(cold)cold.hidden=true; el.innerHTML=v1StatusChips(h);
   }).catch(function(){
-    if(attempt<2){setTimeout(function(){v1ApiPing(attempt+1);},4000);return;}
+    if(attempt<2){retryTimer(function(){v1ApiPing(attempt+1);},4000);return;}
     el.innerHTML='<span class="chip bad"><span class="dot"></span>API\'YE ULAŞILAMADI</span>'
       +'<button class="subtab" id="v1retry" style="padding:4px 10px">Tekrar dene</button>';
     var rb=document.getElementById("v1retry");if(rb)rb.addEventListener("click",function(){v1ApiPing(0);});
@@ -1114,7 +1332,7 @@ function v1ModeScenario(){
     +card("1 · Motosikletini seç",catalog.model_count+" katalog modeli",bike)
     +'<div class="sec">'+card("2 · Kullanım","doğrudan kullanıcı girdileri",use)+'</div>'
     +'<div class="sec">'+card("3 · Servis geçmişi","V1 başlangıç noktası",service)+'</div>'
-    +'<div class="sec">'+card("4 · V1 tahmini","DAYS 114 · KM 113 frozen feature",'<div id="v1scenarioErr" class="finding bad" style="display:none"></div><div class="chips"><button class="subtab" id="v1scenarioRun" style="border:1px solid var(--border);border-radius:8px">V1 DAYS / KM TAHMİNİNİ HESAPLA</button></div><div id="v1scenarioOut" style="margin-top:12px"></div>')+'</div>';
+    +'<div class="sec">'+card("4 · V1 tahmini","DAYS 114 · KM 113 frozen feature",'<div id="v1scenarioErr" class="finding bad" style="display:none"></div><div class="chips"><button class="subtab" id="v1scenarioRun" style="border:1px solid var(--border);border-radius:8px">V1 DAYS / KM TAHMİNİNİ HESAPLA</button></div><div id="v1scenarioOut" style="margin-top:12px" aria-live="polite"></div>')+'</div>';
   var brand=document.getElementById("v1brand"),model=document.getElementById("v1model"),year=document.getElementById("v1year");
   brand.addEventListener("change",function(){
     model.innerHTML=v1ScenarioOptions(v1ModelsForBrand(brand.value),"Model seç");model.disabled=!brand.value;
@@ -1128,6 +1346,7 @@ function v1ModeScenario(){
   });
   document.getElementById("v1scenarioRun").addEventListener("click",v1RunScenario);
   v1ScenarioSpecCard(null);
+  restoreForm(box,location.hash);
 }
 function v1ScenarioPayload(){
   function value(id){var el=document.getElementById(id);return el&&el.value!==""?el.value:null;}
@@ -1149,7 +1368,7 @@ function v1ValidateScenario(p){
 function v1ScenarioMaintenanceCard(m){
   if(!m)return '';
   var kind=m.status==="OVERDUE"?"bad":m.status==="DUE_SOON"?"warn":"good";
-  var urgency=m.maintenance_urgency_score!=null?n1(m.maintenance_urgency_score)+" / 100 · "+m.maintenance_urgency_level:"—";
+  var urgency=m.maintenance_urgency_score!=null?n1(m.maintenance_urgency_score)+" / 100 · "+esc(m.maintenance_urgency_level):"—";
   return finding(kind,"DETERMİNİSTİK BAKIM DURUMU · "+esc(m.label||m.status),
     '<p><b>'+esc(m.action_label||"Bakım durumu hesaplandı.")+'</b> Bu bakım politikası kararıdır; V1 müşterinin bir sonraki servis zaman/mesafe davranışını tahmin eder.</p>')
     +'<div class="grid g3" style="margin-top:10px">'
@@ -1192,12 +1411,13 @@ function v1RunScenario(){
   var err=document.getElementById("v1scenarioErr"),out=document.getElementById("v1scenarioOut"),payload=v1ScenarioPayload(),errors=v1ValidateScenario(payload);
   if(errors.length){err.style.display="block";err.innerHTML=errors.map(esc).join("<br>");return;}
   err.style.display="none";out.innerHTML='<p class="copy"><span class="dot"></span> Frozen V1 DAYS/KM modelleri çalışıyor…</p>';
-  var attempt=0;
+  var attempt=0,gen=VIEW_GEN;
   (function run(){
     v1Json(api+"/api/v1/predict/scenario",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(payload)})
-      .then(function(d){out.innerHTML=v1ScenarioMaintenanceCard(d.maintenance)+'<div class="sec">'+v1ScenarioPredictionCard(d)+'</div><div class="sec">'+v1ScenarioCoverageCard(d)+'</div>';})
+      .then(function(d){if(staleView(gen))return;out.innerHTML=v1ScenarioMaintenanceCard(d.maintenance)+'<div class="sec">'+v1ScenarioPredictionCard(d)+'</div><div class="sec">'+v1ScenarioCoverageCard(d)+'</div>';})
       .catch(function(e){
-        if(attempt++<2){out.innerHTML='<p class="copy"><span class="dot"></span> Model servisi uyanıyor, tekrar deneniyor… (deneme '+(attempt+1)+'/3)</p>';setTimeout(run,4000);return;}
+        if(staleView(gen))return;
+        if(attempt<3){var rp=retryPlan(e,attempt++);out.innerHTML='<p class="copy"><span class="dot"></span> '+rp.message+'</p>';retryTimer(run,rp.delay);return;}
         out.innerHTML='<div class="empty">V1 senaryo API hatası — '+esc(String(e))+'. Sahte tahmin üretilmez.</div>';
       });
   })();
@@ -1208,9 +1428,10 @@ function v1ModeDemo(){
   box.innerHTML=card("Örnek motorla demo","geçerli tam snapshot · gerçek V1 modeli",
     '<p class="copy"><b>Bu senin motosikletin değil.</b> Önce API\'den gelen anonim örnek motosikletin bilgileri gösterilir; tahmin ancak sen butona bastığında çalışır.</p>'
     +'<div id="v1demoPrev" style="margin-top:12px"><p class="copy"><span class="dot"></span> Örnek motor yükleniyor…</p></div>');
-  var attempt=0;
+  var attempt=0,gen=VIEW_GEN;
   (function load(){
     v1Json(api+"/api/v1/sample").then(function(s){
+      if(staleView(gen))return;  // user navigated away while this was in flight
       if(!s.features||!Object.keys(s.features).length)throw new Error("örnek snapshot boş");
       window.__V1_SAMPLE__=s;
       var rows=[];
@@ -1218,18 +1439,20 @@ function v1ModeDemo(){
       Object.keys(V1_HUMAN).forEach(function(k){
         if(s.features[k]==null)return;
         var meta=V1_HUMAN[k],val=s.features[k];
-        if(typeof val==="number")val=(Math.abs(val)>=100?n0(val):n1(val));
+        if(typeof val==="number")val=(k==="production_year"||k==="previous_service_count"?int0(val):Math.abs(val)>=100?n0(val):n1(val));
         rows.push('<tr><td class="k">'+esc(meta[0])+'</td><td>'+esc(val)+esc(meta[1])+'</td></tr>');
       });
-      document.getElementById("v1demoPrev").innerHTML=
+      var prevEl=safeHTML("v1demoPrev",
         '<div class="twrap"><table class="tbl"><thead><tr><th>Örnek motosiklet</th><th>API\'den gelen değer</th></tr></thead><tbody>'+rows.join('')+'</tbody></table></div>'
-        +'<p class="copy" style="margin-top:10px;font-size:.78rem">API snapshot\'ında <b>'+Object.keys(s.features).length+'</b> geçerli alan var. Burada yalnızca anlaşılır olanlar özetleniyor; hiçbir eksik alan tarayıcı tarafından doldurulmuyor.</p>'
+        +'<p class="copy" style="margin-top:10px;font-size:.78rem">Bu snapshot\'ta <b>'+Object.keys(s.features).length+'</b> alan <i>dolu</i> (boş/null olmayan) — bu, API şemasının toplam alan sayısı ya da modelin girdi olarak kullandığı feature sayısı değildir. Burada yalnızca anlaşılır olanlar özetleniyor; hiçbir eksik alan tarayıcı tarafından doldurulmuyor.</p>'
         +'<div class="chips" style="margin-top:12px"><button class="subtab" id="v1demoRun" style="border:1px solid var(--border);border-radius:8px">BU ÖRNEĞİ TAHMİN ET</button></div>'
-        +'<div id="v1demoOut" style="margin-top:12px"></div>';
+        +'<div id="v1demoOut" style="margin-top:12px" aria-live="polite"></div>');
+      if(!prevEl)return;
       document.getElementById("v1demoRun").addEventListener("click",v1RunDemo);
     }).catch(function(e){
-      if(attempt++<2){document.getElementById("v1demoPrev").innerHTML='<p class="copy"><span class="dot"></span> Model servisi uyanıyor… (deneme '+(attempt+1)+'/3)</p>';setTimeout(load,4000);return;}
-      document.getElementById("v1demoPrev").innerHTML='<div class="empty">Örnek motor yüklenemedi — '+esc(String(e))+'. Sahte örnek veya tahmin gösterilmez.</div>';
+      if(staleView(gen))return;
+      if(attempt<3){var rp=retryPlan(e,attempt++);safeHTML("v1demoPrev",'<p class="copy"><span class="dot"></span> '+rp.message+'</p>');retryTimer(load,rp.delay);return;}
+      safeHTML("v1demoPrev",'<div class="empty">Örnek motor yüklenemedi — '+esc(String(e))+'. Sahte örnek veya tahmin gösterilmez.</div>');
     });
   })();
 }
@@ -1237,18 +1460,45 @@ function v1RunDemo(){
   var s=window.__V1_SAMPLE__,api=(window.__V2_API__||"").replace(/\/$/,"");
   var out=document.getElementById("v1demoOut");if(!s||!out)return;
   out.innerHTML='<p class="copy"><span class="dot"></span> Gerçek V1 modeli tahmin yapıyor…</p>';
-  var attempt=0,payload={features:s.features,snapshot_date:s.snapshot_date,strict:true};
+  var attempt=0,gen=VIEW_GEN,payload={features:s.features,snapshot_date:s.snapshot_date,strict:true};
   (function run(){
     v1Json(api+"/api/v1/predict",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(payload)})
       .then(function(d){
+        if(staleView(gen))return;
         if(!d.prediction||d.prediction.next_service_days==null||d.prediction.next_service_km==null)
           throw new Error("V1 sonucu eksik döndü");
         out.innerHTML=v1ResultCard(d,s);
       }).catch(function(e){
-        if(attempt++<2){out.innerHTML='<p class="copy"><span class="dot"></span> Model servisi uyanıyor, tekrar deneniyor… (deneme '+(attempt+1)+'/3)</p>';setTimeout(run,4000);return;}
+        if(staleView(gen))return;
+        if(attempt<3){var rp=retryPlan(e,attempt++);out.innerHTML='<p class="copy"><span class="dot"></span> '+rp.message+'</p>';retryTimer(run,rp.delay);return;}
         out.innerHTML='<div class="empty">API\'ye ulaşılamadı — '+esc(String(e))+'. Sahte tahmin üretilmez.</div>';
       });
   })();
+}
+function v1DemoTimeline(s,p,der){
+  /* D6: a small 3-point timeline so "~202 gün sonra" reads as "on top of
+     what" -- last service -> snapshot ("bugün") -> predicted service date. */
+  var f=(s&&s.features)||{},snap=s&&s.snapshot_date;
+  if(!snap)return'';
+  var lastService=null;
+  if(f.days_since_previous_service!=null){
+    var d0=new Date(snap+"T00:00:00Z");
+    d0.setUTCDate(d0.getUTCDate()-Math.round(f.days_since_previous_service));
+    lastService=d0.toISOString().slice(0,10);
+  }
+  var predicted=(der&&der.estimated_service_date)||null;
+  if(!predicted&&p&&p.next_service_days!=null){
+    var d1=new Date(snap+"T00:00:00Z");
+    d1.setUTCDate(d1.getUTCDate()+Math.round(p.next_service_days));
+    predicted=d1.toISOString().slice(0,10);
+  }
+  var points=[["Son servis",lastService],["Snapshot (bugün)",snap],["Tahmini servis",predicted]]
+    .filter(function(x){return x[1];});
+  if(points.length<2)return'';
+  return '<div class="chips" style="margin-top:10px;flex-wrap:nowrap;overflow-x:auto">'
+    +points.map(function(x,i){return (i?'<span style="color:var(--text-3)">→</span>':'')
+      +'<span class="chip"><b>'+esc(x[0])+':</b>&nbsp;'+esc(x[1])+'</span>';}).join('')
+    +'</div>';
 }
 function v1ResultCard(d,s){
   var p=d.prediction||{},der=d.derived||{},te=d.typical_model_error||{};
@@ -1264,8 +1514,9 @@ function v1ResultCard(d,s){
       +'</div>';
   }
   g+=finding("","Bu sonuç nasıl okunmalı?",
-    '<p>Bu değerler kesin tarih veya kilometre değildir; modelin yaklaşık nokta tahminidir. Örneğin <b>~'+n0(p.next_service_days)
-    +' gün</b>, motorun tam o günde kesin servise geleceği anlamına gelmez.</p>');
+    '<p><b>~'+n0(p.next_service_days)+' gün</b>, <b>snapshot tarihinden itibaren</b> sayılır — motorun bugün itibaren kaç gün sonra servise gelmesinin beklendiğidir, bugünden ne kadar geçtiğinden bağımsız. '
+    +'Bu değerler kesin tarih veya kilometre değildir; modelin yaklaşık nokta tahminidir. Motorun tam o günde kesin servise geleceği anlamına gelmez.</p>'
+    +v1DemoTimeline(s,p,der));
   if(te.days_mae!=null||te.km_mae!=null){
     g+='<div class="grid g2" style="margin-top:12px">'
       +(te.days_mae!=null?kpi("DAYS · TEST MAE","~"+n1(te.days_mae)+' <small>gün</small>',"Testteki ortalama hata; güven yüzdesi değildir.","plain"):'')
@@ -1273,35 +1524,42 @@ function v1ResultCard(d,s){
       +'</div>';
   }
   g+=finding("warn","Doğrulama durumu","<p><b>SENTETİK VERİDE DOĞRULANDI.</b> GERÇEK RIDEBASE FİLO TESTİ BEKLENİYOR.</p>");
-  g+='<div class="chips" style="margin-top:12px"><button class="subtab" data-go="v2/predict" style="border:1px solid var(--border);border-radius:8px">Zamana göre olasılıkları gör: V2 Survival → Canlı Tahmin</button></div>';
+  g+='<div class="chips" style="margin-top:12px"><button class="subtab" data-go="v2/predict" style="border:1px solid var(--border);border-radius:8px">Zamana göre olasılıkları gör: V2 Sağkalım → Canlı Tahmin</button></div>';
   return g;
 }
 function v1ModeOwn(){
   var box=document.getElementById("v1modeBox");if(!box)return;
   var contract=((((M||{}).v1||{}).live_prediction||{}).api)||{};
-  box.innerHTML=finding("warn","GERÇEK MOTOR GİRDİ HATTI BEKLENİYOR",
-    "<p>Gerçek motosiklet için kişisel tahmin, servis geçmişinden feature türetme hattı bağlandıktan sonra aktif olacak.</p>")
-    +card("Neden şimdi tahmin yapmıyor?","eksik alanlar sessizce doldurulmaz",
-      '<p class="copy">V1 DAYS modeli <b>'+esc(contract.feature_count_days||"100+")+'</b>, KM modeli <b>'+esc(contract.feature_count_km||"100+")+'</b> bilgi kullanır. API\'nin basit alan kataloğu tek başına güvenli kişisel tahmin için yeterli değildir. '
+  box.innerHTML=finding("warn","V1 İÇİN GERÇEK MOTOR GİRDİ HATTI BEKLENİYOR",
+    "<p>V1 DAYS/KM modelleri için <code>motorcycle_id</code> → backend geçmiş çekimi hattı henüz bağlı değil. "
+    +"<b>Ama bu, elle veri girmeden gerçek bir motosiklet için tahmin almanın hiç mümkün olmadığı anlamına gelmiyor</b> — "
+    +"V2.1 dynamic-landmark modeli tam olarak bunu, bugün, yapıyor.</p>")
+    +card("Şimdi çalışan alternatif: V2.1 History Pipeline","motorcycle_id + landmark tarihi → gerçek tahmin",
+      '<p class="copy">Kullanıcı yalnızca <code>motorcycle_id</code> + landmark tarihi seçer → backend sentetik servis geçmişini çeker → 54 feature deterministik olarak türetilir → frozen V2.1 modeli çalışır. Kullanıcı hiçbir ML alanını elle doldurmaz. Bu V1\'in DAYS/KM tahmini değil, servise dönme olasılığıdır — ama aynı "sadece ID gir" deneyimi zaten canlı.</p>'
+      +'<div class="chips" style="margin-top:10px"><button class="subtab" data-go="v2_1/predict/history" style="border:1px solid var(--border);border-radius:8px">V2.1 History Pipeline\'a git</button></div>')
+    +card("V1 için neden aynısı yapılmıyor (henüz)","eksik alanlar sessizce doldurulmaz",
+      '<p class="copy">V1 DAYS modeli <b>'+esc(contract.feature_count_days||"100+")+'</b>, KM modeli <b>'+esc(contract.feature_count_km||"100+")+'</b> bilgi kullanır; V1\'in kendi <code>motorcycle_id</code>→geçmiş hattı yok. '
       +'Backend eksik değerleri teknik olarak impute edebilse de, bunu kişisel tahmin gibi sunmak yanıltıcı olur. Bu mod bu nedenle hiçbir inference isteği göndermez.</p>')
-    +finding("","Gerçek RideBase verisi bağlandığında",
-      "<p>Kullanıcı yalnızca <code>motorcycle_id</code> seçer → backend motosiklet ve servis geçmişini çeker → modelin ihtiyaç duyduğu bilgiler deterministik olarak türetilir → V1 DAYS/KM sonucu döner. Kullanıcı 100+ ML alanını elle girmez.</p>")
-    +'<div class="chips" style="margin-top:12px"><span class="chip warn">DEMO READY</span><span class="chip">PERSONAL REAL-MOTOR INPUT: PENDING REAL FEATURE PIPELINE</span></div>';
+    +'<div class="chips" style="margin-top:12px"><span class="chip warn">V1 REAL-MOTOR INPUT: PENDING</span><span class="chip good">V2.1 REAL-MOTOR INPUT: LIVE</span></div>';
 }
 function wireV1Predict(){
   v1ApiPing(0);
   var scenario=document.getElementById("v1mScenario"),demo=document.getElementById("v1mDemo"),own=document.getElementById("v1mOwn");
   function sel(mode){
+    var box=document.getElementById("v1modeBox");
+    if(box&&location.hash)snapshotForm(box,location.hash);
     window.__V1_MODE__=mode;
-    if(scenario)scenario.classList.toggle("active",mode==="scenario");
-    if(demo)demo.classList.toggle("active",mode==="demo");
-    if(own)own.classList.toggle("active",mode==="own");
+    if(scenario){scenario.classList.toggle("active",mode==="scenario");scenario.setAttribute("aria-selected",mode==="scenario");}
+    if(demo){demo.classList.toggle("active",mode==="demo");demo.setAttribute("aria-selected",mode==="demo");}
+    if(own){own.classList.toggle("active",mode==="own");own.setAttribute("aria-selected",mode==="own");}
+    replaceHashMode("v1/predict",mode);
     (mode==="scenario"?v1ModeScenario:mode==="demo"?v1ModeDemo:v1ModeOwn)();
   }
   if(scenario)scenario.addEventListener("click",function(){sel("scenario");});
   if(demo)demo.addEventListener("click",function(){sel("demo");});
   if(own)own.addEventListener("click",function(){sel("own");});
-  sel("scenario");
+  var initialMode=parseHash().mode;
+  sel(["scenario","demo","own"].indexOf(initialMode)>=0?initialMode:"scenario");
 }
 function v1Verdict(){
   var v1=M.v1||{}, vd=v1.verdict||{}, qa=v1.qa||[];
@@ -1332,7 +1590,7 @@ function v2Head(){
     +'<span class="chip '+(live?'good':'bad')+'">V2.1 · '+esc(live?"EXPERIMENTAL LIVE (SYNTHETIC)":(v21.status||"—"))+'</span>'
     +'<span class="chip">SOURCE SCHEMA v1.3 · UNCHANGED</span>'
     +'<span class="chip warn">REAL FLEET: PENDING</span>';
-  return modHead("Module · Survival Analysis","V2.0 Audit + V2.1 Dynamic Landmark",
+  return modHead("Modül · Sağkalım Analizi","V2.0 Audit + V2.1 Dynamic Landmark",
     "V2.0 dondurulmuş araştırma benchmark'ıdır, arbitrary-day canlı senaryo auditini geçemedi ve yalnız karşılaştırma için tutulur. "
     +"Canlı müşteri-dönüş tahmini artık kaynak şemayı değiştirmeyen V2.1 dynamic-landmark modeliyle yapılır — sentetik veride doğrulandı, gerçek filo testi bekleniyor.",
     chips,
@@ -1358,8 +1616,8 @@ function v2Bar(sub){
   var tabs=[["predict","Canlı Tahmin"],["overview","Genel Bakış"],["horizons","Zaman Aralıkları"],["calibration","Güvenilirlik"],["risk","Risk Grupları"],
     ["models","Modeller"],["features","Modelin Baktığı Bilgiler"],["segments","Motor Grupları"],["packaging","Uygulamaya Bağlanma"],
     ["limitations","Sınırlamalar"]];
-  return '<div class="subtabs">'+tabs.map(function(t){
-    return '<button class="subtab'+(sub===t[0]?' active':'')+'" data-go="v2/'+t[0]+'" title="'+esc({overview:"Overview",horizons:"Prediction Horizons",calibration:"Calibration",risk:"Risk Groups",models:"Models",features:"Features",segments:"Segment Analysis",packaging:"Production Packaging",predict:"Live Prediction",limitations:"Limitations"}[t[0]]||"")+'">'+esc(t[1])+'</button>';
+  return '<div class="subtabs" role="tablist" aria-label="V2 bölümleri">'+tabs.map(function(t){
+    return '<button class="subtab'+(sub===t[0]?' active':'')+'" role="tab" aria-selected="'+(sub===t[0])+'" data-go="v2/'+t[0]+'" title="'+esc({overview:"Overview",horizons:"Prediction Horizons",calibration:"Calibration",risk:"Risk Groups",models:"Models",features:"Features",segments:"Segment Analysis",packaging:"Production Packaging",predict:"Live Prediction",limitations:"Limitations"}[t[0]]||"")+'">'+esc(t[1])+'</button>';
   }).join('')+'</div>';
 }
 function renderV2(sub){
@@ -1458,14 +1716,14 @@ function v2Overview(){
   var bva=v.baseline_vs_advanced||[];
   if(bva.length){
     out+='<div class="sec"><div class="sec-head"><h2>Cox baseline → Advanced (TEST)</h2><span class="tag">nb14 → nb15</span></div>'
-     +'<div class="twrap"><table class="tbl"><thead><tr><th>Metric</th><th class="n">Cox baseline</th><th class="n">Advanced</th><th class="n">Δ %</th><th>Verdict</th></tr></thead><tbody>'
+     +'<div class="twrap"><table class="tbl"><thead><tr><th>Ölçüt</th><th class="n">Cox referansı</th><th class="n">Advanced</th><th class="n">Δ %</th><th>Değerlendirme</th></tr></thead><tbody>'
      +bva.map(function(r){return '<tr><td class="k">'+esc(r.metric)+'</td><td class="n">'+r3(r.cox_baseline)+'</td><td class="n">'+r3(r.advanced_champion)+'</td><td class="n">'+pct(r.relative_delta)+'</td><td>'+statusPill(String(r.verdict||"").indexOf("better")>=0?"pass":"info")+' '+esc(r.verdict||"")+'</td></tr>';}).join('')
      +'</tbody></table></div></div>';
   }
   var ff=v.fast_vs_full||[];
   if(ff.length){
     out+='<div class="sec">'+card("FAST → FULL tuning","provisional → FINAL",
-      '<div class="twrap"><table class="tbl"><thead><tr><th>Metric</th><th class="n">FAST</th><th class="n">FULL</th><th class="n">rel Δ</th><th>Direction</th></tr></thead><tbody>'
+      '<div class="twrap"><table class="tbl"><thead><tr><th>Ölçüt</th><th class="n">FAST</th><th class="n">FULL</th><th class="n">rel Δ</th><th>Yön</th></tr></thead><tbody>'
      +ff.map(function(r){return '<tr><td class="k">'+esc(r.metric)+'</td><td class="n">'+r3(r.fast)+'</td><td class="n">'+r3(r.full)+'</td><td class="n">'+pct(r.rel_change)+'</td><td>'+esc(r.direction||"")+'</td></tr>';}).join('')
      +'</tbody></table></div>')+'</div>';
   }
@@ -1492,7 +1750,7 @@ function v2Horizons(){
     +"<b>Brier</b> = hata seviyesi (düşük iyi), <b>AUC</b> = ayırma gücü (yüksek iyi), "
     +"<b>Calibration</b> = yüzde güvenilirliği (düşük hata iyi). 180 günlük satır yalnız teşhis amaçlı.",
     null,"Teknik adı: Prediction Horizons");
-  out+='<div class="sec"><div class="twrap"><table class="tbl"><thead><tr><th>Horizon</th><th class="n">Brier</th><th class="n">AUC</th><th class="n">Calibration error</th><th>Quality</th><th class="n">KM reference risk</th></tr></thead><tbody>'
+  out+='<div class="sec"><div class="twrap"><table class="tbl"><thead><tr><th>Ufuk</th><th class="n"><span lang="en">Brier</span></th><th class="n">AUC</th><th class="n">Kalibrasyon hatası</th><th>Kalite</th><th class="n">KM referans riski</th></tr></thead><tbody>'
    +hs.map(function(h){var r=hz[h]||{};return '<tr class="'+(h==="90"?"hl":"")+'"><td class="k">'+h+' gün</td><td class="n">'+r3(r.brier)+'</td><td class="n">'+r3(r.auc)+'</td><td class="n">'+r3(r.cal_error)+'</td><td>'+statusPill(r.verdict==="GOOD"?"pass":r.verdict==="POOR"?"fail":"info")+' '+esc(r.verdict||"n/a")+'</td><td class="n">'+r3(r.km_reference_risk)+'</td></tr>';}).join('')
    +'</tbody></table></div></div>';
   var barItems=hs.map(function(h){var r=hz[h]||{};return {label:h+"d Brier",val:r3(r.brier),pct:(r.brier||0)/0.08*100};});
@@ -1521,7 +1779,7 @@ function v2Calibration(){
         badgeKind:(vd==="GOOD"?"good":vd==="POOR"?"crit":vd==="MODERATE"?"warn":""),
         tip:"Proje eşiği: <0.03 iyi · 0.03–0.07 orta · >0.07 zayıf. Kalibrasyon haritaları yalnız VALIDATION'da öğrenildi, TEST'e sadece uygulandı."});}).join('')
    +'</div></div>';
-  out+='<div class="sec"><div class="sec-head"><h2>Calibration curves</h2><span class="tag">nb15 figures</span></div>'
+  out+='<div class="sec"><div class="sec-head"><h2>Calibration curves</h2><span class="tag">nb15 grafikler</span></div>'
    +'<div class="grid g2">'
    +["07_calibration_30d","08_calibration_60d","09_calibration_90d","010_calibration_120d"].map(function(fn,i){var h=["30","60","90","120"][i];
      return '<figure class="fig"><img loading="lazy" alt="calibration '+h+'d" src="fig/'+fn+'.png">'
@@ -1567,8 +1825,8 @@ function v2Models(){
     +"seçilen nihai model %60 XGBoost-Cox + %40 CoxNet.",
     null,"Teknik adı: Survival Models / Champion");
   if(!lb.length)return note+'<div class="sec">'+emptyBox()+'</div>';
-  var out=note+'<div class="sec"><div class="sec-head"><h2>TEST leaderboard</h2><span class="tag">nb15 · frozen candidates</span></div>'
-   +'<div class="twrap"><table class="tbl"><thead><tr><th>Model</th><th>Calibration</th><th class="n">IPCW-C</th><th class="n">IBS</th><th class="n">Brier@90</th><th class="n">AUC@90</th><th class="n">Cal@90</th></tr></thead><tbody>'
+  var out=note+'<div class="sec"><div class="sec-head"><h2>TEST leaderboard</h2><span class="tag">nb15 · frozen adaylar</span></div>'
+   +'<div class="twrap"><table class="tbl"><thead><tr><th>Model</th><th>Kalibrasyon</th><th class="n">IPCW-C</th><th class="n">IBS</th><th class="n"><span lang="en">Brier</span>@90</th><th class="n">AUC@90</th><th class="n">Cal@90</th></tr></thead><tbody>'
    +lb.map(function(r){var fin=String(r.model).indexOf("ENSEMBLE")>=0;
      return '<tr class="'+(fin?"hl":"")+'"><td class="k">'+esc(r.model)+(fin?' <span class="pill active" style="margin-left:6px">CHAMPION</span>':'')+'</td><td>'+esc(r.calibration||"raw")+'</td><td class="n">'+r3(r.ipcw_c_index)+'</td><td class="n">'+r3(r.ibs)+'</td><td class="n">'+r3(r.brier_90)+'</td><td class="n">'+r3(r.auc_90)+'</td><td class="n">'+r3(r.cal_error_90)+'</td></tr>';}).join('')
    +'</tbody></table></div></div>';
@@ -1617,7 +1875,7 @@ function v2Segments(){
   seg.forEach(function(r){(by[r.segment_type]=by[r.segment_type]||[]).push(r);});
   var out=note;
   Object.keys(by).forEach(function(t){
-    out+='<div class="sec"><div class="sec-head"><h2>'+esc(t)+'</h2></div><div class="twrap"><table class="tbl"><thead><tr><th>Segment</th><th class="n">n</th><th class="n">IPCW-C</th><th class="n">Brier@90</th><th class="n">AUC@90</th><th class="n">Cal@90</th><th>Note</th></tr></thead><tbody>'
+    out+='<div class="sec"><div class="sec-head"><h2>'+esc(t)+'</h2></div><div class="twrap"><table class="tbl"><thead><tr><th>Segment</th><th class="n">n</th><th class="n">IPCW-C</th><th class="n"><span lang="en">Brier</span>@90</th><th class="n">AUC@90</th><th class="n">Cal@90</th><th>Note</th></tr></thead><tbody>'
      +by[t].map(function(r){return '<tr><td class="k">'+esc(r.segment)+'</td><td class="n">'+n0(r.n)+'</td><td class="n">'+r3(r.ipcw_c)+'</td><td class="n">'+r3(r.brier_90)+'</td><td class="n">'+r3(r.auc_90)+'</td><td class="n">'+r3(r.cal_error_90)+'</td><td>'+esc(r.note||"")+'</td></tr>';}).join('')
      +'</tbody></table></div></div>';
   });
@@ -1699,6 +1957,26 @@ function v2fetch(url,opts){
   return fetch(url,opts).then(function(r){if(ctl)clearTimeout(to);return r;},
     function(e){if(ctl)clearTimeout(to);throw e;});
 }
+/* Y2: parse + status-check a fetch Response uniformly, tagging the thrown
+   Error with .status so retry loops can tell 503 (cold start) from 429 (rate
+   limited) from anything else, instead of one generic "waking up" message. */
+function v2json(r){
+  return r.json().catch(function(){return {};}).then(function(d){
+    if(!r.ok){var err=new Error((d&&d.detail)?String(d.detail):("HTTP "+r.status));err.status=r.status;throw err;}
+    return d;
+  });
+}
+/* 503/429 need different copy + an exponential backoff (4s/8s/16s), not one
+   flat retry message -- see FAZ4/Y2. */
+function retryPlan(e,attempt){
+  var status=e&&e.status;
+  var delay=[4000,8000,16000][attempt]!=null?[4000,8000,16000][attempt]:16000;
+  var label=' (deneme '+(attempt+1)+'/3)';
+  var message=status===503?'Model servisi uyanıyor, ~50 saniye sürebilir…'+label
+    :status===429?'Çok fazla istek geldi, birkaç saniye sonra tekrar deneniyor…'+label
+    :'Servise ulaşılamadı, tekrar deneniyor…'+label;
+  return {message:message,delay:delay};
+}
 function v2Predict(){
   var api=(window.__V2_API__||"").replace(/\/$/,"");
   var out=pageNote(
@@ -1711,11 +1989,11 @@ function v2Predict(){
     null,"Teknik adı: V2.0 Research Prediction");
   out+='<div class="sec"><div id="v2apiStatus" class="chips"><span class="chip"><span class="dot"></span>Model servisine bağlanılıyor…</span></div>'
     +'<p class="copy" style="margin-top:8px;font-size:.8rem" id="v2coldNote" hidden>Render ücretsiz sunucusu uykudaysa ilk istek 50+ saniye sürebilir — beklemede kal.</p></div>';
-  out+='<div class="sec"><div class="chips" style="margin-bottom:14px">'
-    +'<button class="subtab active" id="v2mScenario" style="border:1px solid var(--border);border-radius:8px">V2.0 ARAŞTIRMA SENARYOSU</button>'
-    +'<button class="subtab" id="v2mDemo" style="border:1px solid var(--border);border-radius:8px">V2.0 · ÖRNEK MOTORLA DEMO</button>'
-    +'<button class="subtab" id="v2mReal" style="border:1px solid var(--border);border-radius:8px">GERÇEK RIDEBASE MOTORU · YAKINDA</button>'
-    +'</div><div id="v2modeBox"></div></div>';
+  out+='<div class="sec"><div class="chips" style="margin-bottom:14px" role="tablist" aria-label="V2 tahmin modu">'
+    +'<button class="subtab active" id="v2mScenario" role="tab" aria-selected="true" aria-controls="v2modeBox" style="border:1px solid var(--border);border-radius:8px">V2.0 ARAŞTIRMA SENARYOSU</button>'
+    +'<button class="subtab" id="v2mDemo" role="tab" aria-selected="false" aria-controls="v2modeBox" style="border:1px solid var(--border);border-radius:8px">V2.0 · ÖRNEK MOTORLA DEMO</button>'
+    +'<button class="subtab" id="v2mReal" role="tab" aria-selected="false" aria-controls="v2modeBox" style="border:1px solid var(--border);border-radius:8px">GERÇEK RIDEBASE MOTORU · YAKINDA</button>'
+    +'</div><div id="v2modeBox" role="tabpanel"></div></div>';
   return out;
 }
 function v2FieldOpts(key){var c=window.__V2_CAT__||{};return (c.options&&c.options[key])||[];}
@@ -1787,7 +2065,7 @@ function v2ModeScenario(){
     +'<div class="sec">'+card("2 · Kullanım","yalnız anlamlı ürün bilgileri",use)+'</div>'
     +'<div class="sec">'+card("3 · Servis geçmişi","varsa son servis bilgisi",service)+'</div>'
     +'<div class="sec">'+card("4 · Bilgi kapsamı","117 alan backend tarafından sayılır",'<div id="v2coveragePreview"><p class="copy">Seçimler tamamlanınca tahmin yanıtı; <code>USER_INPUT</code>, <code>MODEL_MASTER</code>, <code>DERIVED</code> ve <code>MISSING_PREPROCESSOR</code> kaynaklarını ayrı ayrı gösterecek. Bu oran güven skoru değildir.</p></div>')+'</div>'
-    +'<div class="sec">'+card("5 · Tahmin","V2.1 primary (müşteri servis dönüşü) · V2.0 legacy research",'<div id="v2scenarioErr" class="finding bad" style="display:none"></div><div class="chips" style="margin-top:4px"><button class="subtab" id="v2scenarioRun" style="border:1px solid var(--border);border-radius:8px">V2.1 MÜŞTERİ SERVİS DÖNÜŞ TAHMİNİNİ HESAPLA</button></div><div id="v2scenarioOut" style="margin-top:12px"></div>')+'</div>';
+    +'<div class="sec">'+card("5 · Tahmin","V2.1 primary (müşteri servis dönüşü) · V2.0 legacy research",'<div id="v2scenarioErr" class="finding bad" style="display:none"></div><div class="chips" style="margin-top:4px"><button class="subtab" id="v2scenarioRun" style="border:1px solid var(--border);border-radius:8px">V2.1 MÜŞTERİ SERVİS DÖNÜŞ TAHMİNİNİ HESAPLA</button></div><div id="v2scenarioOut" style="margin-top:12px" aria-live="polite"></div>')+'</div>';
   var brand=document.getElementById("v2brand"),model=document.getElementById("v2model"),year=document.getElementById("v2year");
   brand.addEventListener("change",function(){
     var models=v2ModelsForBrand(brand.value);
@@ -1802,6 +2080,7 @@ function v2ModeScenario(){
   });
   document.getElementById("v2scenarioRun").addEventListener("click",v2RunScenario);
   v2SpecCard(null);
+  restoreForm(box,location.hash);
 }
 function v2ScenarioPayload(){
   function val(id){var el=document.getElementById(id);return el&&el.value!==""?el.value:null;}
@@ -1849,12 +2128,12 @@ function v2MaintenanceCard(m, p){
   var daysSince = m.days_since_service != null ? m.days_since_service : (p && p.last_service_date ? Math.round((new Date(p.snapshot_date||new Date()) - new Date(p.last_service_date)) / 86400000) : null);
   var kmSince = m.km_since_service;
 
-  var paceNotes = [];
+  var paceNotes = [], rawPace = null;
   if (userAnnual != null) {
     paceNotes.push('<b>Modelde kullanılan tahmini yıllık km:</b> ' + n0(userAnnual) + ' km/yıl (kullanıcı girişi — birincil model girdisi)');
   }
   if (kmSince != null && daysSince != null && daysSince > 0) {
-    var rawPace = Math.round(kmSince * 365.0 / daysSince);
+    rawPace = Math.round(kmSince * 365.0 / daysSince);
     var paceLabel = '<b>Son dönem kullanım temposu (yıllıklandırılmış):</b> ' + n0(rawPace) + ' km/yıl (' + n0(daysSince) + ' günlük pencere)';
     if (daysSince < 90) {
       paceLabel += ' · <span class="chip warn" style="font-size:.72rem">DÜŞÜK GÜVEN: KISA GÖZLEM PENCERESİ (&lt;90 gün) — model girdisi kullanıcı değeriyle korundu</span>';
@@ -1869,14 +2148,36 @@ function v2MaintenanceCard(m, p){
 
   var recent = paceNotes.length ? '<div class="card" style="margin-top:10px;padding:10px 14px;background:rgba(255,255,255,0.03);border:1px solid var(--border);border-radius:8px"><p class="copy" style="margin:0;font-size:.85rem;line-height:1.6">' + paceNotes.join('<br>') + '</p></div>' : '';
 
+  /* O8: user-entered annual km vs. what their own service history implies —
+     warn instead of silently using the user's (possibly stale) value. */
+  var paceMismatch = '';
+  if (userAnnual != null && rawPace != null && userAnnual > 0 && rawPace > 0) {
+    var mismatchRatio = Math.max(userAnnual, rawPace) / Math.min(userAnnual, rawPace);
+    if (mismatchRatio > 1.5) {
+      paceMismatch = finding("warn", "GİRİLEN YILLIK KM İLE GÖZLENEN TEMPO ÇELİŞİYOR",
+        '<p>Girdiğin <b>' + n0(userAnnual) + ' km/yıl</b>, servis geçmişinden hesaplanan <b>' + n0(rawPace)
+        + ' km/yıl</b> gözlenen tempoyle uyuşmuyor (' + mismatchRatio.toFixed(1) + 'x fark). Model şu an senin girdiğin değeri kullanıyor.</p>'
+        + '<div class="chips" style="margin-top:8px"><button class="subtab" id="v2paceFixBtn" data-km="' + rawPace
+        + '" style="border:1px solid var(--border);border-radius:8px">Gözlenen tempoyu kullan (' + n0(rawPace) + ' km/yıl)</button></div>');
+    }
+  }
+
   var policyNote=policy.source_authority
     ?'<p class="copy" style="margin-top:8px">Politika kaynağı: <b>'+esc(policy.source_authority)+'</b>. '+esc(policy.note||"")+'</p>':'';
-  return finding(kind,(m.status==="OVERDUE"?"SERVİS ŞİMDİ GEREKLİ · ":"DETERMİNİSTİK BAKIM DURUMU · ")+m.label,
+  return paceMismatch+finding(kind,(m.status==="OVERDUE"?"SERVİS ŞİMDİ GEREKLİ · ":"DETERMİNİSTİK BAKIM DURUMU · ")+m.label,
       '<p><b>'+esc(m.action_label||"Bu deterministik bakım kararıdır.")+'</b> V2.1 müşteri servis dönüş yüzdeleri yalnız müşterinin belirtilen süre içinde servise geri dönme olasılığını tahmin eder; bu bakım kararını değiştirmez.</p>')
     +'<div class="grid g4" style="margin-top:10px">'
     +kpi("BAKIM İLERLEMESİ",n1(m.progress_pct)+"%","kilometre ve zaman periyotlarından yüksek olan","cyan")
-    +kpi(m.status==="OVERDUE"?"GECİKME":"KALAN",delta,"belirleyici ölçüt: "+m.driving_metric,"plain")
-    +kpi("ANA PERİYOT",policy.interval_km!=null?n0(policy.interval_km)+" km":"—",(policy.task_code||"bakım politikası")+(policy.year_specific?" · yıl/pazar kuralı":""),"plain")
+    +kpi(m.status==="OVERDUE"?"GECİKME":"KALAN",delta,"belirleyici ölçüt: "+esc(m.driving_metric),"plain")
+    +(function(){
+      /* O9: show whichever dimension is actually binding first; the other
+         only as a secondary note -- don't always lead with km. */
+      var kmText=policy.interval_km!=null?n0(policy.interval_km)+" km":null;
+      var timeText=policy.interval_months!=null?n0(policy.interval_months)+" ay":(policy.interval_days!=null?n0(policy.interval_days)+" gün":null);
+      var lead=(m.driving_metric==="TIME"&&timeText)?timeText:(kmText||timeText);
+      var secondary=(lead===kmText)?timeText:kmText;
+      return kpi("ANA PERİYOT",lead||"—",(secondary?"ikincil: "+secondary+" · ":"")+esc(policy.task_code||"bakım politikası")+(policy.year_specific?" · yıl/pazar kuralı":""),"plain");
+    })()
     +kpi("SON SERVİSTEN BERİ",since,"doğrudan kullanıcı girdilerinden","plain")+'</div>'+recent+policyNote;
 }
 
@@ -2116,6 +2417,7 @@ function v2UrgencyCard(u, m, p){
 
 function v2_1PrimaryCard(d, p){
   var pr=d.prediction||{}, cov=d.feature_coverage||{}, prov=d.provenance||{};
+  var covRatio=cov.contract?cov.resolved/cov.contract:null;
   var seq=[pr.risk_30d,pr.risk_60d,pr.risk_90d,pr.risk_120d];
   var mono=seq.every(function(x,i){return i===0||x>=seq[i-1]-1e-9;});
   var g='';
@@ -2129,18 +2431,19 @@ function v2_1PrimaryCard(d, p){
     '<p><b>MÜŞTERİNİN KENDİLİĞİNDEN SERVİSE GELME İHTİMALİ:</b> Bu yüzdeler müşterinin belirtilen süre içinde servise geri dönme olasılığını tahmin eder. Bakım gerekliliği yukarıdaki deterministik bakım politikasından gelir.</p>'
     +'<p class="copy" style="margin:4px 0 0 0;font-size:.84rem">Bakım aciliyeti deterministik bakım politikasından hesaplanır. V2.1 yüzdeleri müşterinin servise dönme davranışını tahmin eder.</p>')
     +'<div class="grid g4" style="margin-top:6px">'
-    +kpi("30 GÜN",pct(pr.risk_30d),"servise dönme olasılığı","plain")
-    +kpi("60 GÜN",pct(pr.risk_60d),"servise dönme olasılığı","plain")
-    +kpi("90 GÜN",pct(pr.risk_90d),"servise dönme olasılığı","cyan")
-    +kpi("120 GÜN",pct(pr.risk_120d),"servise dönme olasılığı","plain")+'</div>'
+    +kpi("30 GÜN",pctCov(pr.risk_30d,covRatio),"servise dönme olasılığı","plain")
+    +kpi("60 GÜN",pctCov(pr.risk_60d,covRatio),"servise dönme olasılığı","plain")
+    +kpi("90 GÜN",pctCov(pr.risk_90d,covRatio),"servise dönme olasılığı","cyan")
+    +kpi("120 GÜN",pctCov(pr.risk_120d,covRatio),"servise dönme olasılığı","plain")+'</div>'
     +'<div class="chips" style="margin-top:12px">'
     +'<span class="chip '+(mono?'good':'bad')+'">HORIZON MONOTONİK: '+(mono?'P30 ≤ P60 ≤ P90 ≤ P120':'HATA')+'</span>'
     +(pr.median_service_days!=null?'<span class="chip">MEDYAN DÖNÜŞ SÜRESİ ~'+n0(pr.median_service_days)+' gün</span>':'<span class="chip">MEDYAN DÖNÜŞ: 365g içinde yok</span>')
-    +(pr.risk_score!=null?'<span class="chip">RISK SCORE '+r3(pr.risk_score)+'</span>':'')
     +'<span class="chip cyan">'+(cov.resolved||0)+' / '+(cov.contract||54)+' feature çözüldü</span>'
+    +lowCoverageBadge(covRatio)
     +'<span class="chip good">CHAMPION (xgb_cox + isotonic)</span>'
     +'<span class="chip warn">GERÇEK FİLO TESTİ BEKLENİYOR</span>'
     +'</div>';
+  g+=svgSurvivalCurve(pr);
 
   return g;
 }
@@ -2179,7 +2482,7 @@ function v2RunScenario(){
   if(errs.length){errBox.style.display="block";errBox.innerHTML='<div>'+errs.map(esc).join("<br>")+'</div>';return;}
   errBox.style.display="none";
   out.innerHTML='<p class="copy"><span class="dot"></span> V2.1 Senaryo ve bakım durumu hesaplanıyor… (servis uykudaysa ilk istek 50+ sn sürebilir)</p>';
-  var attempt=0;
+  var attempt=0,gen=VIEW_GEN;
   var p21 = {
     brand: p.brand,
     model_id: p.model_id,
@@ -2194,12 +2497,11 @@ function v2RunScenario(){
   };
 
   (function run(){
-    var fetch21 = v2fetch(api+"/api/v2_1/predict/scenario",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(p21)})
-      .then(function(r){return r.json().then(function(d){if(!r.ok)throw new Error(d.detail||("V2.1 HTTP "+r.status));return d;});});
-    var fetch20 = v2fetch(api+"/api/v2/predict/scenario",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(p)})
-      .then(function(r){return r.json().then(function(d){if(!r.ok)throw new Error(d.detail||("V2.0 HTTP "+r.status));return d;});});
+    var fetch21 = v2fetch(api+"/api/v2_1/predict/scenario",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(p21)}).then(v2json);
+    var fetch20 = v2fetch(api+"/api/v2/predict/scenario",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(p)}).then(v2json);
 
     Promise.allSettled([fetch21, fetch20]).then(function(resList){
+      if(staleView(gen))return;
       var r21 = resList[0], r20 = resList[1];
       if(r21.status!=="fulfilled" && r20.status!=="fulfilled"){
         throw (r21.reason || r20.reason || new Error("API çağrısı başarısız"));
@@ -2244,8 +2546,15 @@ function v2RunScenario(){
       }
 
       out.innerHTML = html;
+      var paceFixBtn=document.getElementById("v2paceFixBtn");
+      if(paceFixBtn)paceFixBtn.addEventListener("click",function(){
+        var f=document.getElementById("v2annual");
+        if(f)f.value=paceFixBtn.dataset.km;
+        v2RunScenario();
+      });
     }).catch(function(e){
-      if(attempt++<1){out.innerHTML='<p class="copy"><span class="dot"></span> Servis uyanıyor, tekrar deneniyor…</p>';setTimeout(run,4000);return;}
+      if(staleView(gen))return;
+      if(attempt<3){var rp=retryPlan(e,attempt++);out.innerHTML='<p class="copy"><span class="dot"></span> '+rp.message+'</p>';retryTimer(run,rp.delay);return;}
       out.innerHTML='<div class="empty">API\'ye ulaşılamadı — '+esc(String(e))+'. Sahte tahmin üretilmez.</div>';
     });
   })();
@@ -2261,41 +2570,46 @@ function v2ModeDemo(){
     '<p class="copy">Bu mod, veriye dokunmadan modelin nasıl çalıştığını görmen içindir. '
     +'Önce örnek motosikletin bilgileri gösterilir, sonra tahmin edilir.</p>'
     +'<div id="v2demoPrev"><p class="copy"><span class="dot"></span> Örnek motor yükleniyor…</p></div>');
-  var attempt=0;
+  var attempt=0,gen=VIEW_GEN;
   (function load(){
-    v2fetch(api+"/api/v2/sample").then(function(r){return r.json();}).then(function(s){
+    v2fetch(api+"/api/v2/sample").then(v2json).then(function(s){
+      if(staleView(gen))return;
       window.__V2_SAMPLE__=s;
       var shown={};
       Object.keys(s.features||{}).forEach(function(k){shown[k]=s.features[k];});
       Object.keys(s.display||{}).forEach(function(k){shown[k]=s.display[k];});
       var rows=Object.keys(V2_HUMAN).filter(function(k){return shown[k]!=null;}).map(function(k){
-        var val=shown[k]; if(typeof val==="number")val=(Math.abs(val)>=100?n0(val):n1(val));
+        var val=shown[k]; if(typeof val==="number")val=(k==="production_year"?int0(val):Math.abs(val)>=100?n0(val):n1(val));
         return '<tr><td class="k">'+esc(V2_HUMAN[k])+'</td><td>'+esc(val)+'</td></tr>';
       }).join('');
-      document.getElementById("v2demoPrev").innerHTML=
+      var prevEl=safeHTML("v2demoPrev",
         '<div class="twrap"><table class="tbl"><thead><tr><th>Örnek motosiklet</th><th>Değer</th></tr></thead><tbody>'+rows+'</tbody></table></div>'
         +'<div class="chips" style="margin-top:12px"><button class="subtab" id="v2demoRun" style="border:1px solid var(--border);border-radius:8px">Bu örneği tahmin et</button></div>'
-        +'<div id="v2demoOut" style="margin-top:12px"></div>';
+        +'<div id="v2demoOut" style="margin-top:12px" aria-live="polite"></div>');
+      if(!prevEl)return;
       document.getElementById("v2demoRun").addEventListener("click",function(){
-        var o=document.getElementById("v2demoOut");
+        var o=document.getElementById("v2demoOut");if(!o)return;
         o.innerHTML='<p class="copy"><span class="dot"></span> Tahmin ediliyor…</p>';
-        var a2=0;
+        var a2=0,runGen=VIEW_GEN;
         (function run(){
           v2fetch(api+"/api/predict/service",{method:"POST",headers:{"Content-Type":"application/json"},
-            body:JSON.stringify({features:window.__V2_SAMPLE__.features,snapshot_date:window.__V2_SAMPLE__.snapshot_date})}).then(function(r){return r.json();}).then(function(d){
+            body:JSON.stringify({features:window.__V2_SAMPLE__.features,snapshot_date:window.__V2_SAMPLE__.snapshot_date})}).then(v2json).then(function(d){
+            if(staleView(runGen))return;
             var v2=d.v2||d.prediction||{},v1=d.v1||null;
             if(v2.risk_90d==null){o.innerHTML='<div class="empty">Model sonucu boş döndü.</div>';return;}
             o.innerHTML=v2ResultCard(v1,v2,d.warning,"ÖRNEK MOTOR DEMOSU",
               "Bu sonuç <b>hazır örnek bir motosiklete</b> aittir — senin motorun değil.");
           }).catch(function(e){
-            if(a2++<1){o.innerHTML='<p class="copy"><span class="dot"></span> Servis uyanıyor, tekrar deneniyor…</p>';setTimeout(run,4000);return;}
+            if(staleView(runGen))return;
+            if(a2<3){var rp=retryPlan(e,a2++);o.innerHTML='<p class="copy"><span class="dot"></span> '+rp.message+'</p>';retryTimer(run,rp.delay);return;}
             o.innerHTML='<div class="empty">API\'ye ulaşılamadı — '+esc(String(e))+'. Sahte tahmin üretilmez.</div>';
           });
         })();
       });
     }).catch(function(e){
-      if(attempt++<1){setTimeout(load,4000);return;}
-      document.getElementById("v2demoPrev").innerHTML='<div class="empty">Örnek motor yüklenemedi — '+esc(String(e))+'</div>';
+      if(staleView(gen))return;
+      if(attempt<3){var rp=retryPlan(e,attempt++);safeHTML("v2demoPrev",'<p class="copy"><span class="dot"></span> '+rp.message+'</p>');retryTimer(load,rp.delay);return;}
+      safeHTML("v2demoPrev",'<div class="empty">Örnek motor yüklenemedi — '+esc(String(e))+'</div>');
     });
   })();
 }
@@ -2330,7 +2644,7 @@ function v2ApiPing(attempt){
     window.__V2_ONLINE__=true; if(cold)cold.hidden=true;
     el.innerHTML=v2StatusChips(h);
   }).catch(function(){
-    if(attempt<2){setTimeout(function(){v2ApiPing(attempt+1);},4000);return;}
+    if(attempt<2){retryTimer(function(){v2ApiPing(attempt+1);},4000);return;}
     window.__V2_ONLINE__=false;
     el.innerHTML='<span class="chip bad"><span class="dot"></span>API\'YE ULAŞILAMADI</span>'
       +'<span class="chip">'+esc(api)+'</span>'
@@ -2384,16 +2698,20 @@ function wireV2Predict(){
   if(!window.__V2_MODELS__)v2fetch(api+"/api/v2/motorcycle-models").then(function(r){return r.json();}).then(function(c){window.__V2_MODELS__=c;if(v2Active==="scenario")v2ModeScenario();}).catch(function(e){var box=document.getElementById("v2modeBox");if(box)box.innerHTML='<div class="empty">Motosiklet kataloğu yüklenemedi — '+esc(String(e))+'. Tahmin butonu açılmaz.</div>';});
   var scenario=document.getElementById("v2mScenario"),demo=document.getElementById("v2mDemo"),real=document.getElementById("v2mReal");
   function sel(mode){
+    var box=document.getElementById("v2modeBox");
+    if(box&&location.hash)snapshotForm(box,location.hash);
     v2Active=mode;
-    if(scenario)scenario.classList.toggle("active",mode==="scenario");
-    if(demo)demo.classList.toggle("active",mode==="demo");
-    if(real)real.classList.toggle("active",mode==="real");
+    if(scenario){scenario.classList.toggle("active",mode==="scenario");scenario.setAttribute("aria-selected",mode==="scenario");}
+    if(demo){demo.classList.toggle("active",mode==="demo");demo.setAttribute("aria-selected",mode==="demo");}
+    if(real){real.classList.toggle("active",mode==="real");real.setAttribute("aria-selected",mode==="real");}
+    replaceHashMode("v2/predict",mode);
     (mode==="scenario"?v2ModeScenario:mode==="demo"?v2ModeDemo:v2ModeReal)();
   }
   if(scenario)scenario.addEventListener("click",function(){sel("scenario");});
   if(demo)demo.addEventListener("click",function(){sel("demo");});
   if(real)real.addEventListener("click",function(){sel("real");});
-  sel("scenario");
+  var initialMode=parseHash().mode;
+  sel(["scenario","demo","real"].indexOf(initialMode)>=0?initialMode:"scenario");
 }
 var v2Active="scenario";
 
@@ -2422,7 +2740,7 @@ function v2_1Head(){
     +'<span class="chip">CHAMPION '+esc((v.champion||"xgb_cox").toUpperCase())+'</span>'
     +'<span class="chip">CALIBRATION '+esc((v.calibration_method||"isotonic").toUpperCase())+'</span>'
     +'<span class="chip warn">REAL FLEET: '+esc(v.real_fleet_validation||"PENDING")+'</span>';
-  return modHead("Module · V2.1 Dynamic Landmark","Servise Dönme Olasılığı (Landmark Survival)",
+  return modHead("Modül · V2.1 Dinamik Landmark","Servise Dönme Olasılığı (Landmark Survival)",
     "Bir <b>landmark tarihinde</b>, yalnız o tarihe kadar bilinen bilgiyle: bir sonraki uygun gerçek servisin "
     +"<b>30 / 60 / 90 / 120 gün</b> içinde gerçekleşme olasılığı. Bu bir <b>servise dönme</b> olasılığıdır — "
     +"“bakım gerekli mi” olasılığı değildir. Bakım kararı ayrı, deterministik bakım motorundan gelir.",
@@ -2430,8 +2748,8 @@ function v2_1Head(){
 }
 function v2_1Bar(sub){
   var tabs=[["predict","Canlı Tahmin"],["overview","Genel Bakış"]];
-  return '<div class="subtabs">'+tabs.map(function(t){
-    return '<button class="subtab'+(sub===t[0]?' active':'')+'" data-go="v2_1/'+t[0]+'">'+esc(t[1])+'</button>';
+  return '<div class="subtabs" role="tablist" aria-label="V2.1 bölümleri">'+tabs.map(function(t){
+    return '<button class="subtab'+(sub===t[0]?' active':'')+'" role="tab" aria-selected="'+(sub===t[0])+'" data-go="v2_1/'+t[0]+'">'+esc(t[1])+'</button>';
   }).join('')+'</div>';
 }
 function v2_1Overview(){
@@ -2464,6 +2782,7 @@ function v2_1Overview(){
     +kpi("BRIER@90",r3(br["90"]),"AUC@90 "+r3(au["90"]),"plain")
     +kpi("BRIER@120",r3(br["120"]),"AUC@120 "+r3(au["120"]),"plain")
     +'</div></div>';
+  out+=svgHorizonBars(["30","60","90","120"],{label:"Brier",values:br},{label:"AUC",values:au});
   out+='<div class="sec"><div class="grid g3">'
     +kpi("UNSEEN-MOTORCYCLE C-INDEX",r3(um.ipcw_c_index),"IBS "+r3(um.ibs)+" · genelleme tutarlı","cyan")
     +kpi("P30 TAM-SIFIR ORANI",r3(p30.exact_zero_share),(p30.unique_probability_levels||"—")+" farklı seviye · medyan "+r3(p30.median),"plain")
@@ -2494,13 +2813,13 @@ function v2_1Predict(){
   var out='<div class="sec"><div id="v2_1apiStatus" class="chips"><span class="chip"><span class="dot"></span>Model servisine bağlanılıyor…</span></div>'
     +'<p class="copy" style="margin-top:8px;font-size:.8rem" id="v2_1coldNote" hidden>Render ücretsiz sunucusu uykudaysa ilk istek 50+ saniye sürebilir.</p></div>';
   out+='<div class="sec">'+v2_1SyntheticBanner()+'</div>';
-  out+='<div class="sec"><div class="subtabs">'
-    +'<button class="subtab active" id="v2_1mHistory">HISTORY PIPELINE</button>'
-    +'<button class="subtab" id="v2_1mScenario">SCENARIO / WHAT-IF</button>'
+  out+='<div class="sec"><div class="subtabs" role="tablist" aria-label="V2.1 tahmin modu">'
+    +'<button class="subtab active" id="v2_1mHistory" role="tab" aria-selected="true" aria-controls="v2_1formBox">HISTORY PIPELINE</button>'
+    +'<button class="subtab" id="v2_1mScenario" role="tab" aria-selected="false" aria-controls="v2_1formBox">SCENARIO / WHAT-IF</button>'
     +'</div></div>';
   out+='<div class="sec" id="v2_1modeInfo"></div>';
-  out+='<div class="sec" id="v2_1formBox"><p class="copy"><span class="dot"></span> Form hazırlanıyor…</p></div>';
-  out+='<div class="sec" id="v2_1out"></div>';
+  out+='<div class="sec" id="v2_1formBox" role="tabpanel"><p class="copy"><span class="dot"></span> Form hazırlanıyor…</p></div>';
+  out+='<div class="sec" id="v2_1out" aria-live="polite"></div>';
   return out;
 }
 function v2_1ApiPing(attempt){
@@ -2525,7 +2844,7 @@ function v2_1ApiPing(attempt){
       +'<span class="chip">DATASET '+esc(h.v2_1_dataset_version||"—")+'</span>'
       +'<span class="chip warn">REAL FLEET '+esc(h.v2_1_real_fleet_validation||"PENDING")+'</span>';
   }).catch(function(){
-    if(attempt<2){setTimeout(function(){v2_1ApiPing(attempt+1);},4000);return;}
+    if(attempt<2){retryTimer(function(){v2_1ApiPing(attempt+1);},4000);return;}
     el.innerHTML='<span class="chip bad"><span class="dot"></span>API\'YE ULAŞILAMADI</span><span class="chip">'+esc(api)+'</span>'
       +'<button class="subtab" id="v2_1retry" style="padding:4px 10px">Tekrar dene</button>';
     var rb=document.getElementById("v2_1retry");if(rb)rb.addEventListener("click",function(){v2_1ApiPing(0);});
@@ -2561,11 +2880,29 @@ function v2_1HistoryForm(){
       '<div class="grid g2">'
       +lab("v21historyId","Motorcycle ID",'<input id="v21historyId" list="v21historyExamples" type="text" value="MC000001" placeholder="ör. MC000001" autocomplete="off" style="'+it+'"><datalist id="v21historyExamples"><option value="MC000001"><option value="MC000002"><option value="MC000010"><option value="MC000100"></datalist>')
       +lab("v21historyDate","Landmark tarihi",'<input id="v21historyDate" type="date" value="2024-07-31" style="'+it+'">')
-      +'</div><p class="copy" style="margin-top:8px">Landmark tarihi zorunludur. API sunucu tarihini sessizce kullanmaz. Bu demo yalnız donmuş <b>sentetik V1.4</b> kimliklerini sorgular.</p>')
+      +'</div><div class="chips" style="margin-top:8px"><button class="subtab" id="v21historyRandom" style="border:1px solid var(--border);border-radius:8px">RASTGELE GEÇERLİ ID GETİR</button></div>'
+      +'<p class="copy" style="margin-top:8px">Landmark tarihi zorunludur. API sunucu tarihini sessizce kullanmaz. Bu demo yalnız donmuş <b>sentetik V1.4</b> kimliklerini sorgular.</p>')
     +'<div class="sec">'+card("2 · Tahmin","source history → 54 feature → frozen V2.1",
       '<div id="v2_1historyErr" class="finding bad" style="display:none"></div>'
       +'<div class="chips" style="margin-top:4px"><button class="subtab" id="v2_1historyRun" style="border:1px solid var(--border);border-radius:8px">HISTORY PIPELINE TAHMİNİNİ ÇALIŞTIR</button></div>')+'</div>';
   document.getElementById("v2_1historyRun").addEventListener("click",v2_1RunHistory);
+  document.getElementById("v21historyRandom").addEventListener("click",v2_1FillRandomId);
+  restoreForm(box,location.hash);
+}
+function v2_1FillRandomId(){
+  var api=(window.__V2_API__||"").replace(/\/$/,""),btn=document.getElementById("v21historyRandom"),
+      errBox=document.getElementById("v2_1historyErr");
+  if(!api||!btn)return;
+  btn.disabled=true;var prevText=btn.textContent;btn.textContent="Getiriliyor…";
+  v2fetch(api+"/api/v2_1/sample").then(function(r){return r.json();}).then(function(s){
+    if(!s.motorcycle_id||!s.landmark_at)throw new Error("örnek yanıtında motorcycle_id/landmark_at yok");
+    var id=document.getElementById("v21historyId"),date=document.getElementById("v21historyDate");
+    if(id)id.value=s.motorcycle_id;
+    if(date)date.value=s.landmark_at;
+    if(errBox){errBox.style.display="none";errBox.innerHTML="";}
+  }).catch(function(e){
+    if(errBox){errBox.style.display="block";errBox.innerHTML="Rastgele ID alınamadı — "+esc(String(e))+".";}
+  }).then(function(){btn.disabled=false;btn.textContent=prevText;});
 }
 function v2_1ScenarioForm(){
   var box=document.getElementById("v2_1formBox"); if(!box)return;
@@ -2621,6 +2958,7 @@ function v2_1ScenarioForm(){
     });
   }
   document.getElementById("v2_1run").addEventListener("click",v2_1RunScenario);
+  restoreForm(box,location.hash);
 }
 function v2_1HistoryPayload(){
   var id=document.getElementById("v21historyId"),ld=document.getElementById("v21historyDate");
@@ -2638,13 +2976,14 @@ function v2_1RunHistory(){
   if(errs.length){errBox.style.display="block";errBox.innerHTML='<div>'+errs.map(esc).join("<br>")+'</div>';return;}
   errBox.style.display="none";
   out.innerHTML='<p class="copy"><span class="dot"></span> Sentetik geçmiş okunuyor ve 54 feature oluşturuluyor…</p>';
-  var attempt=0;
+  var attempt=0,gen=VIEW_GEN;
   (function run(){
     v2fetch(api+"/api/v2_1/predict/by-motorcycle",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(p)})
-    .then(function(r){return r.json().then(function(d){if(!r.ok)throw new Error(d.detail||("HTTP "+r.status));return d;});})
-    .then(function(d){out.innerHTML=v2_1HistoryResultCard(d);})
+    .then(v2json)
+    .then(function(d){if(staleView(gen))return;out.innerHTML=v2_1HistoryResultCard(d);})
     .catch(function(e){
-      if(attempt++<1){out.innerHTML='<p class="copy"><span class="dot"></span> Servis uyanıyor, tekrar deneniyor…</p>';setTimeout(run,4000);return;}
+      if(staleView(gen))return;
+      if(attempt<3){var rp=retryPlan(e,attempt++);out.innerHTML='<p class="copy"><span class="dot"></span> '+rp.message+'</p>';retryTimer(run,rp.delay);return;}
       out.innerHTML='<div class="empty">History API başarısız — '+esc(String(e))+'. Sahte tahmin veya sahte geçmiş üretilmez.</div>';
     });
   })();
@@ -2661,25 +3000,32 @@ function v2_1HistoryResultCard(d){
   g+=finding("warn","HISTORY SOURCE: "+esc(d.history_source||"SYNTHETIC_V1_4"),
     "<p><b>Bu sentetik V1.4 geçmişidir; gerçek RideBase müşteri geçmişi değildir.</b> "
     +"Yalnız "+esc(ctx.landmark_date||"—")+" tarihinde veya öncesinde bilinen kaynak kayıtları kullanıldı.</p>");
+  var covRatio=fm.coverage_ratio!=null?fm.coverage_ratio:(fm.contract_count?fm.resolved_count/fm.contract_count:null);
   g+=finding("","MÜŞTERİNİN KENDİLİĞİNDEN SERVİSE GELME İHTİMALİ",
     "<p>Bu yüzdeler <b>bakım ihtimali değildir.</b> "+esc(d.risk_meaning||"")+"</p>")
     +'<div class="grid g4" style="margin-top:6px">'
-    +kpi("30 GÜN",pct(pr.risk_30d),"servise dönme olasılığı","plain")
-    +kpi("60 GÜN",pct(pr.risk_60d),"servise dönme olasılığı","plain")
-    +kpi("90 GÜN",pct(pr.risk_90d),"servise dönme olasılığı","cyan")
-    +kpi("120 GÜN",pct(pr.risk_120d),"servise dönme olasılığı","plain")+'</div>'
+    +kpi("30 GÜN",pctCov(pr.risk_30d,covRatio),"servise dönme olasılığı","plain")
+    +kpi("60 GÜN",pctCov(pr.risk_60d,covRatio),"servise dönme olasılığı","plain")
+    +kpi("90 GÜN",pctCov(pr.risk_90d,covRatio),"servise dönme olasılığı","cyan")
+    +kpi("120 GÜN",pctCov(pr.risk_120d,covRatio),"servise dönme olasılığı","plain")+'</div>'
     +'<div class="chips" style="margin-top:12px">'
     +'<span class="chip '+(mono?'':'bad')+'">HORIZON MONOTONİK: '+(mono?'P30 ≤ P60 ≤ P90 ≤ P120':'HATA')+'</span>'
     +(pr.median_service_days!=null?'<span class="chip">MEDYAN DÖNÜŞ ~'+n0(pr.median_service_days)+' gün</span>':'')
-    +'<span class="chip">RISK SCORE '+r3(pr.risk_score)+'</span></div>';
+    +lowCoverageBadge(covRatio)+'</div>';
+  g+=svgSurvivalCurve(pr);
   g+='<div class="sec"><div class="grid g3">'
-    +kpi("CURRENT ODOMETER",ctx.current_odometer_km==null?"—":n0(ctx.current_odometer_km)+" km",ctx.current_odometer_source_date||"history missing","plain")
-    +kpi("LAST SERVICE",ctx.last_eligible_service_date||"—",ctx.last_service_odometer_km==null?"history missing":n0(ctx.last_service_odometer_km)+" km","plain")
+    +kpi("CURRENT ODOMETER",ctx.current_odometer_km==null?"—":n0(ctx.current_odometer_km)+" km",esc(ctx.current_odometer_source_date||"history missing"),"plain")
+    +kpi("LAST SERVICE",esc(ctx.last_eligible_service_date||"—"),ctx.last_service_odometer_km==null?"history missing":n0(ctx.last_service_odometer_km)+" km","plain")
     +kpi("FEATURE COVERAGE",(fm.resolved_count||0)+" / "+(fm.contract_count||54),"coverage is not a confidence score","cyan")
     +'</div></div>';
+  var missing=fm.missing_features||[],missingShown=missing.slice(0,6).map(esc).join(', '),
+      missingRest=missing.length>6?missing.slice(6).map(esc).join(', '):'';
   g+='<div class="sec">'+card("History feature provenance","özet; kişisel veri gösterilmez",
     '<div class="chips">'+Object.keys(prov).map(function(k){return '<span class="chip">'+esc(k)+' · '+n0(prov[k])+'</span>';}).join('')+'</div>'
-    +((fm.missing_features||[]).length?'<p class="copy" style="margin-top:10px"><b>Eksik history feature’ları:</b> '+fm.missing_features.map(esc).join(', ')+'</p>':'<p class="copy" style="margin-top:10px">54/54 feature çözüldü.</p>')
+    +(missing.length?'<p class="copy" style="margin-top:10px"><b>Eksik history feature’ları ('+missing.length+'):</b> '+missingShown
+        +(missingRest?', … ve '+(missing.length-6)+' alan daha':'')+'</p>'
+        +(missingRest?'<details style="margin-top:6px"><summary style="cursor:pointer;color:var(--text-2)">Tam liste</summary><p class="copy" style="margin-top:6px">'+missing.map(esc).join(', ')+'</p></details>':'')
+      :'<p class="copy" style="margin-top:10px">54/54 feature çözüldü.</p>')
     +'<p class="copy" style="margin-top:8px">Feature coverage girdinin kapsamıdır; model güven skoru değildir.</p>')+'</div>';
   g+=finding("warn","V2.1 EXPERIMENTAL LIVE · SYNTHETICALLY VALIDATED · REAL FLEET VALIDATION PENDING",
     "<p>"+esc(d.warning||"")+"</p>");
@@ -2714,19 +3060,21 @@ function v2_1RunScenario(){
   if(errs.length){errBox.style.display="block";errBox.innerHTML='<div>'+errs.map(esc).join("<br>")+'</div>';return;}
   errBox.style.display="none";
   out.innerHTML='<p class="copy"><span class="dot"></span> Hesaplanıyor… (servis uykudaysa ilk istek 50+ sn sürebilir)</p>';
-  var attempt=0;
+  var attempt=0,gen=VIEW_GEN;
   (function run(){
     v2fetch(api+"/api/v2_1/predict/scenario",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(p)})
-    .then(function(r){return r.json().then(function(d){if(!r.ok)throw new Error(d.detail||("HTTP "+r.status));return d;});})
-    .then(function(d){ out.innerHTML=v2_1ResultCard(d,p); })
+    .then(v2json)
+    .then(function(d){ if(staleView(gen))return; out.innerHTML=v2_1ResultCard(d,p); })
     .catch(function(e){
-      if(attempt++<1){out.innerHTML='<p class="copy"><span class="dot"></span> Servis uyanıyor, tekrar deneniyor…</p>';setTimeout(run,4000);return;}
+      if(staleView(gen))return;
+      if(attempt<3){var rp=retryPlan(e,attempt++);out.innerHTML='<p class="copy"><span class="dot"></span> '+rp.message+'</p>';retryTimer(run,rp.delay);return;}
       out.innerHTML='<div class="empty">API\'ye ulaşılamadı — '+esc(String(e))+'. Sahte tahmin üretilmez.</div>';
     });
   })();
 }
 function v2_1ResultCard(d,p){
   var pr=d.prediction||{}, cov=d.feature_coverage||{}, prov=d.provenance||{};
+  var covRatio=cov.contract?cov.resolved/cov.contract:null;
   var seq=[pr.risk_30d,pr.risk_60d,pr.risk_90d,pr.risk_120d];
   var mono=seq.every(function(x,i){return i===0||x>=seq[i-1]-1e-9;});
   var g='';
@@ -2742,14 +3090,15 @@ function v2_1ResultCard(d,p){
     "<p>Bu yüzdeler <b>bakım ihtimali değildir.</b> Bakım kararı ayrı deterministik bakım motorundan / V1'den gelir; "
     +"V2.1 yalnız müşterinin davranışını (servise dönme) tahmin eder.</p>")
     +'<div class="grid g4" style="margin-top:6px">'
-    +kpi("30 GÜN",pct(pr.risk_30d),"servise dönme olasılığı","plain")
-    +kpi("60 GÜN",pct(pr.risk_60d),"servise dönme olasılığı","plain")
-    +kpi("90 GÜN",pct(pr.risk_90d),"servise dönme olasılığı","cyan")
-    +kpi("120 GÜN",pct(pr.risk_120d),"servise dönme olasılığı","plain")+'</div>'
+    +kpi("30 GÜN",pctCov(pr.risk_30d,covRatio),"servise dönme olasılığı","plain")
+    +kpi("60 GÜN",pctCov(pr.risk_60d,covRatio),"servise dönme olasılığı","plain")
+    +kpi("90 GÜN",pctCov(pr.risk_90d,covRatio),"servise dönme olasılığı","cyan")
+    +kpi("120 GÜN",pctCov(pr.risk_120d,covRatio),"servise dönme olasılığı","plain")+'</div>'
     +'<div class="chips" style="margin-top:12px">'
     +'<span class="chip '+(mono?'':'bad')+'">HORIZON MONOTONİK: '+(mono?'P30 ≤ P60 ≤ P90 ≤ P120':'HATA')+'</span>'
     +(pr.median_service_days!=null?'<span class="chip">MEDYAN DÖNÜŞ SÜRESİ ~'+n0(pr.median_service_days)+' gün</span>':'<span class="chip">MEDYAN DÖNÜŞ: 365g içinde yok</span>')
-    +'<span class="chip">risk_score '+r3(pr.risk_score)+'</span></div>';
+    +lowCoverageBadge(covRatio)+'</div>';
+  g+=svgSurvivalCurve(pr);
   /* feature coverage — explicitly not a confidence score */
   g+='<div class="sec">'+card("TAHMİN İÇİN KULLANILAN BİLGİ DÜZEYİ",
     (cov.resolved||0)+" / "+(cov.contract||54)+" feature çözüldü",
@@ -2769,9 +3118,12 @@ function wireV2_1Predict(){
   if(!api){var b=document.getElementById("v2_1formBox");if(b)b.innerHTML='<div class="empty">Model API yapılandırılmadı — canlı tahmin yok.</div>';return;}
   var history=document.getElementById("v2_1mHistory"),scenario=document.getElementById("v2_1mScenario");
   function select(mode){
+    var box=document.getElementById("v2_1formBox");
+    if(box&&location.hash)snapshotForm(box,location.hash);
     v2_1Active=mode;
-    if(history)history.classList.toggle("active",mode==="history");
-    if(scenario)scenario.classList.toggle("active",mode==="scenario");
+    if(history){history.classList.toggle("active",mode==="history");history.setAttribute("aria-selected",mode==="history");}
+    if(scenario){scenario.classList.toggle("active",mode==="scenario");scenario.setAttribute("aria-selected",mode==="scenario");}
+    replaceHashMode("v2_1/predict",mode);
     if(mode==="history"){v2_1ModeHistory();return;}
     if(!window.__V2_MODELS__){
       v2fetch(api+"/api/v2/motorcycle-models").then(function(r){return r.json();})
@@ -2781,7 +3133,8 @@ function wireV2_1Predict(){
   }
   if(history)history.addEventListener("click",function(){select("history");});
   if(scenario)scenario.addEventListener("click",function(){select("scenario");});
-  select("history");
+  var initialMode=parseHash().mode;
+  select(["history","scenario"].indexOf(initialMode)>=0?initialMode:"history");
 }
 
 /* ---------------- V3 placeholder ---------------- */
@@ -2816,14 +3169,17 @@ function renderPlaceholder(id){
 /* ---------------- EXPERIMENTS ---------------- */
 function renderExperiments(){
   var nbs=M.notebooks||[];
-  var head=modHead("System · Experiment Registry","Notebook & Experiment Registry",
-    "RideBase ML boru hattındaki 12 notebook. Her kart ilgili modüle bağlanır.",
-    '<span class="chip">'+nbs.length+' notebook</span><span class="chip">01 → 12</span>',null);
+  var notebookCount=nbs.filter(function(n){return n.kind!=="phase";}).length;
+  var phaseCount=nbs.length-notebookCount;
+  var head=modHead("Sistem · Deney Kayıt Defteri","Notebook & Experiment Registry",
+    "RideBase ML boru hattındaki "+notebookCount+" notebook, artı V2.1'in "+phaseCount+" fazı (notebook değil, ridebase_ml.v2_1 paketi). Her kart ilgili modüle bağlanır.",
+    '<span class="chip">'+notebookCount+' notebook</span><span class="chip">01 → 12</span>'
+    +(phaseCount?'<span class="chip cyan">V2.1 · '+phaseCount+' faz</span>':''),null);
   var out=head+'<div class="sec"><div class="grid g2">';
   nbs.forEach(function(nb){
     out+='<button class="modcard" '+(nb.module?'data-go="'+esc(nb.module==='v1'?'v1/experiments':nb.module)+'"':'')+'>'
-     +'<div class="mc-top"><span class="mc-id">NB '+esc(nb.n)+'</span>'+statusPill(nb.status)+'</div>'
-     +'<h3>'+esc(nb.title)+'</h3>'
+     +'<div class="mc-top"><span class="mc-id">'+(nb.kind==="phase"?esc(nb.n):"NB "+esc(nb.n))+'</span>'+statusPill(nb.status)+'</div>'
+     +'<h2>'+esc(nb.title)+'</h2>'
      +'<div class="mc-tag">'+esc(nb.result)+'</div>'
      +'<div class="chips" style="margin-top:6px"><span class="chip">'+esc(nb.dataset)+'</span><span class="chip"><code style="font-size:.9em">'+esc(nb.file)+'</code></span></div>'
      +'</button>';
@@ -2835,23 +3191,27 @@ function renderExperiments(){
 /* ---------------- MODELS ---------------- */
 function renderModels(){
   var reg=M.models||[];
-  var head=modHead("System · Model Registry","Model Registry",
-    "V0 kural baseline, V1 DAYS ve V1 KM modelleri; V2/V3 planlandı. Metrikler TEST setinden, artifactlardan okunur.",
+  var head=modHead("Sistem · Model Kayıt Defteri","Model Registry",
+    "V0 kural baseline, V1 regresyon, V2.0 (audit failed, araştırma) ve V2.1 (dynamic-landmark, canlı) survival modelleri; V3 planlandı. Metrikler TEST setinden, artifactlardan okunur. Regresyon MAE/R² kullanır, survival C-index/IBS/kalibrasyon kullanır — birbirinin yerine geçmez.",
     '<span class="chip">'+reg.length+' kayıt</span>',null);
-  var out=head+'<div class="sec"><div class="twrap"><table class="tbl"><thead><tr><th>Model</th><th>Target</th><th class="n">Dataset</th><th>Family</th><th class="n">MAE</th><th class="n">R²</th><th>Status</th><th class="n">Updated</th></tr></thead><tbody>';
+  var out=head+'<div class="sec"><div class="twrap"><table class="tbl"><thead><tr><th>Model</th><th>Target</th><th class="n">Dataset</th><th>Aile</th>'
+    +'<th class="n">MAE</th><th class="n">R²</th><th class="n">C-index</th><th class="n">IBS</th><th>Kalibrasyon</th>'
+    +'<th>Status</th><th class="n">Updated</th></tr></thead><tbody>';
   reg.forEach(function(m){
-    out+='<tr class="'+(m.status==="FROZEN"?"hl":"")+'"><td class="k">'+esc(m.name)+'</td><td>'+esc(m.target)+'</td><td class="n">'+esc(m.dataset_version||"—")+'</td><td>'+esc(m.model_family||"—")+'</td>'
-     +'<td class="n">'+(m.mae==null?"—":(m.mae>200?n0(m.mae):n1(m.mae)))+'</td><td class="n">'+(m.r2==null?"—":r3(m.r2))+'</td><td>'+statusPill((m.status||"").toLowerCase())+'</td><td class="n">'+esc(m.last_updated||"—")+'</td></tr>';
+    out+='<tr class="'+(m.status==="FROZEN"?"hl":"")+'" title="'+(m.artifact_hash?"artifact_hash: "+esc(m.artifact_hash):"")+'"><td class="k">'+esc(m.name)+'</td><td>'+esc(m.target)+'</td><td class="n">'+esc(m.dataset_version||"—")+'</td><td>'+esc(m.model_family||"—")+'</td>'
+     +'<td class="n">'+(m.mae==null?"—":(m.mae>200?n0(m.mae):n1(m.mae)))+'</td><td class="n">'+(m.r2==null?"—":r3(m.r2))+'</td>'
+     +'<td class="n">'+(m.c_index==null?"—":r3(m.c_index))+'</td><td class="n">'+(m.ibs==null?"—":r3(m.ibs))+'</td><td>'+esc(m.calibration_method||"—")+'</td>'
+     +'<td>'+statusPill((m.status||"").toLowerCase())+'</td><td class="n">'+esc(m.updated_at||m.last_updated||"—")+'</td></tr>';
   });
   out+='</tbody></table></div></div>';
-  out+='<div class="sec">'+card("Artifact yolları",null,'<div class="mono-block">'+reg.filter(function(m){return m.artifact;}).map(function(m){return m.name+"  →  "+m.artifact;}).join("\n")+'</div>')+'</div>';
+  out+='<div class="sec">'+card("Artifact yolları","satırın üzerine gelince artifact_hash görünür",'<div class="mono-block">'+reg.filter(function(m){return m.artifact;}).map(function(m){return m.name+"  →  "+m.artifact+(m.artifact_hash?"  ("+m.artifact_hash+")":"");}).join("\n")+'</div>')+'</div>';
   return out;
 }
 
 /* ---------------- DATASET ---------------- */
 function renderDataset(){
   var ds=M.datasets||[];
-  var head=modHead("System · Dataset Registry","Dataset Registry",
+  var head=modHead("Sistem · Veri Seti Kayıt Defteri","Dataset Registry",
     "RideBase sentetik veri seti sürümleri. V1.2 realism benchmark, V1.3 regression calibration benchmark.",
     '<span class="chip cyan">current: '+esc(M.current_dataset||"v1.3")+'</span>',null);
   var out=head+'<div class="sec"><div class="grid g2">';
@@ -2862,7 +3222,11 @@ function renderDataset(){
        +(d.generator_version?'<span class="chip">gen '+esc(d.generator_version)+'</span>':'')
        +(d.regression_calibration_experiment?'<span class="chip">regression_calibration_experiment</span>':'')+'</div>'
       +'<table class="tbl" style="margin-top:12px"><tr><td class="k">Version</td><td class="n">'+esc(d.version)+'</td></tr>'
-      +'<tr><td class="k">Used by</td><td>'+esc(d.used_by||"—")+'</td></tr></table>');
+      +'<tr><td class="k">Used by</td><td>'+esc(d.used_by||"—")+'</td></tr>'
+      +(d.landmarks!=null?'<tr><td class="k">Landmarks</td><td class="n">'+n0(d.landmarks)+'</td></tr>':'')
+      +(d.motorcycles!=null?'<tr><td class="k">Motosiklet</td><td class="n">'+n0(d.motorcycles)+'</td></tr>':'')
+      +(d.updated_at?'<tr><td class="k">Updated</td><td class="n">'+esc(d.updated_at)+'</td></tr>':'')
+      +'</table>');
   });
   out+='</div></div>';
   return out;
@@ -2889,17 +3253,20 @@ function renderStatus(){
   var qa=M.qa||{}, ps=M.production_status||{}, mods=M.modules||[];
   function st(id){var m=mods.filter(function(x){return x.id===id;})[0];return m?m.status:"planned";}
   var head=modHead("System · Status","System Status",
-    "Dataset, model, API, dashboard, QA ve gerçek-filo doğrulama durumları tek bakışta.",null,null);
-  var out=head+'<div class="sec"><div class="grid g3">'
+    "Dataset, model, API, dashboard, QA ve gerçek-filo doğrulama durumları tek bakışta. API satırları sayfa açılışında canlı /health'ten okunur — build zamanı manifest'i PASS göstermez.",null,null);
+  var out=head+'<div class="sec" id="liveHealthBox">'
+   +finding("warn","CANLI DURUM",'<p class="copy" style="margin:0"><span class="dot"></span> /health kontrol ediliyor…</p>')
+   +'</div>';
+  out+='<div class="sec"><div class="grid g3">'
    +kpi("Dataset "+esc(M.current_dataset||"v1.3"),"FROZEN","regression benchmark","cyan")
    +kpi("EDA",st("eda")==="complete"?"COMPLETE":esc(st("eda")),null,"plain")
    +kpi("V0",st("v0")==="complete"?"COMPLETE":esc(st("v0")),null,"plain")
-   +kpi("V1","ACTIVE · FROZEN","DAYS + KM regression")
-   +kpi("V2.0",'<span style="color:var(--critical)">AUDIT FAILED</span>',"synthetic research baseline (kept)","plain")
-   +kpi("V2.1",'<span style="color:var(--good)">SYNTHETICALLY VALIDATED</span>',"dynamic landmark · experimental live · real fleet PENDING","cyan")
+   +kpi("V1",'<span id="statusV1">canlı durum bilinmiyor</span>',"DAYS + KM regression")
+   +kpi("V2.0",'<span id="statusV2">canlı durum bilinmiyor</span>',"synthetic research baseline (kept)","plain")
+   +kpi("V2.1",'<span id="statusV21">canlı durum bilinmiyor</span>',"dynamic landmark · experimental live · real fleet PENDING","cyan")
    +kpi("V3",'ON HOLD',"V2.1 tamamlanana kadar beklemede","plain")
    +'</div></div>';
-  out+='<div class="sec"><div class="sec-head"><h2>QA</h2><span class="tag">artifact-driven</span></div><div class="grid g3">'
+  out+='<div class="sec"><div class="sec-head"><h2>QA</h2><span class="tag">artefakt kaynaklı</span></div><div class="grid g3">'
    +kpi("Leakage audit",qa.leakage_audit==="PASS"?'<span style="color:var(--good)">PASS</span>':esc(qa.leakage_audit||"—"),null,"plain")
    +kpi("Model QA",qa.model_qa?'<span style="color:var(--good)">'+esc(qa.model_qa)+'</span>':"—",null,"plain")
    +kpi("Reproducibility",qa.reproducibility==="PASS"?'<span style="color:var(--good)">PASS</span>':esc(qa.reproducibility||"—"),null,"plain")
@@ -2908,7 +3275,7 @@ function renderStatus(){
    +kpi("API tests",'<span style="color:var(--good)">PASS</span>',esc(qa.api_tests||""),"plain")
    +'</div></div>';
   out+='<div class="sec"><div class="sec-head"><h2>Production</h2></div><div class="grid g3">'
-   +kpi("Application",esc(ps.application||"PILOT"),null,"cyan")
+   +kpi("Uygulama",esc(ps.application||"PILOT"),null,"cyan")
    +kpi("Model",'<span style="color:var(--critical)">NOT PRODUCT-VALID</span>',esc(ps.model||""),"")
    +kpi("Real fleet validation",'<span style="color:var(--warning)">PENDING</span>',null,"plain")
    +'</div>'
@@ -2971,9 +3338,57 @@ $("#paletteBack").addEventListener("click",function(e){if(e.target===$("#palette
    (3) the live public RideBase inference API (Render). All point at a REAL backend —
    no fake host, no fake prediction. */
 var V2_DEFAULT_API="https://ridebase-inference-api.onrender.com";
-try{var _q=new URLSearchParams(location.search).get("v2api");
-  window.__V2_API__=(_q||M.v2_api||window.__V2_API__||V2_DEFAULT_API||"").replace(/\/$/,"");}catch(e){}
-$("#ham").addEventListener("click",function(){$("#shell").classList.toggle("drawer");});
+var ALLOWED_API_HOSTS=["ridebase-inference-api.onrender.com","localhost","127.0.0.1"];
+function allowedApiUrl(u){
+  try{
+    var p=new URL(u);
+    if(ALLOWED_API_HOSTS.indexOf(p.hostname)===-1)return null;
+    if(p.protocol!=="https:"&&p.hostname!=="localhost"&&p.hostname!=="127.0.0.1")return null;
+    return p.origin;
+  }catch(e){return null;}
+}
+try{
+  var _q=new URLSearchParams(location.search).get("v2api");
+  var _qSafe=_q?allowedApiUrl(_q):null;
+  if(_q&&!_qSafe){
+    var notice=document.getElementById("apiHostNotice");
+    if(notice)notice.hidden=false;
+  }
+  window.__V2_API__=(_qSafe||M.v2_api||window.__V2_API__||V2_DEFAULT_API||"").replace(/\/$/,"");
+}catch(e){}
+/* D2: mobile drawer needs a real focus trap + Escape-to-close, not just a
+   CSS slide-in -- keyboard/screen-reader users otherwise get stuck or lose
+   their place. */
+function drawerFocusables(){return Array.prototype.slice.call($("#sidebar").querySelectorAll("a[href],button:not([disabled])"));}
+function setDrawer(open){
+  $("#shell").classList.toggle("drawer",open);
+  $("#ham").setAttribute("aria-expanded",open?"true":"false");
+  if(open){var f=drawerFocusables();if(f.length)f[0].focus();}
+}
+function closeDrawer(){if($("#shell").classList.contains("drawer"))setDrawer(false);}
+/* D2: ArrowLeft/ArrowRight roving between role="tab" siblings inside any
+   role="tablist" -- one delegated listener covers every tab bar in the app
+   (subtabs, predict-mode switchers) without per-render wiring. */
+document.addEventListener("keydown",function(e){
+  if(e.key!=="ArrowRight"&&e.key!=="ArrowLeft")return;
+  var tab=e.target.closest('[role="tab"]');if(!tab)return;
+  var list=tab.closest('[role="tablist"]');if(!list)return;
+  var tabs=Array.prototype.slice.call(list.querySelectorAll('[role="tab"]'));
+  var i=tabs.indexOf(tab);if(i<0)return;
+  e.preventDefault();
+  var next=tabs[(i+(e.key==="ArrowRight"?1:-1)+tabs.length)%tabs.length];
+  next.focus();next.click();
+});
+$("#ham").addEventListener("click",function(){setDrawer(!$("#shell").classList.contains("drawer"));});
+document.addEventListener("keydown",function(e){
+  if(!$("#shell").classList.contains("drawer"))return;
+  if(e.key==="Escape"){setDrawer(false);$("#ham").focus();return;}
+  if(e.key!=="Tab")return;
+  var f=drawerFocusables();if(!f.length)return;
+  var first=f[0],last=f[f.length-1];
+  if(e.shiftKey&&document.activeElement===first){e.preventDefault();last.focus();}
+  else if(!e.shiftKey&&document.activeElement===last){e.preventDefault();first.focus();}
+});
 if(!location.hash)location.hash="#overview";
 route();
 </script>

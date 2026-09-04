@@ -27,3 +27,17 @@ def test_settings_dev_defaults_resolve():
     # loaded with no *_DIR env in the normal test run
     assert cfg.settings.MODEL_DIR.name == "models"
     assert cfg.settings.MODEL_DIR.parent.name == "ridebase-ml"
+
+
+def test_prod_image_ships_every_artifact_a_route_reads_from_disk():
+    """FAZ2/K2 regression guard: GET /api/v2_1/sample 404'lüyordu because
+    Dockerfile.prod never COPY'd v2_1_modeling_table.parquet into the image
+    that MODEL_DIR=/artifacts/models points routes.py/v2_1_routes.py at.
+    Every *_DIR-relative artifact a live route touches must have a COPY line."""
+    dockerfile = (Path(__file__).resolve().parents[1] / "Dockerfile.prod").read_text()
+    for artifact in (
+        "ridebase-ml/models/v2_1_v1_4",  # MODEL_DIR/v2_1_v1_4 -- predictor + calibrator
+        "ridebase-ml/derived_outputs/v2_1_v1_4/v2_1_modeling_table.parquet",  # GET /api/v2_1/sample
+        "ridebase-ml/derived_outputs/v2_1_v1_4/v2_1_history_serving.sqlite",  # /predict/by-motorcycle
+    ):
+        assert f"COPY {artifact} " in dockerfile, f"{artifact} has no COPY line in Dockerfile.prod"

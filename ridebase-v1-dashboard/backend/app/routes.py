@@ -2,9 +2,11 @@
 predict endpoint runs the frozen models."""
 from __future__ import annotations
 
+import secrets
+
 import numpy as np
 import pandas as pd
-from fastapi import APIRouter, HTTPException, Query
+from fastapi import APIRouter, Depends, Header, HTTPException, Query
 
 from . import analytics
 from .artifacts import get_store, read_predictions
@@ -38,11 +40,15 @@ def health():
     return h
 
 
-@router.post("/admin/reload", tags=["admin"])
+def _require_admin_token(authorization: str = Header(default="")):
+    given = authorization[len("Bearer "):] if authorization.startswith("Bearer ") else ""
+    # RIDEBASE_ADMIN_TOKEN unset -> fail closed, never fall open.
+    if not settings.RIDEBASE_ADMIN_TOKEN or not secrets.compare_digest(given, settings.RIDEBASE_ADMIN_TOKEN):
+        raise HTTPException(status_code=401, detail="unauthorized")
+
+
+@router.post("/admin/reload", tags=["admin"], dependencies=[Depends(_require_admin_token)])
 def reload_artifacts():
-    # never a public unauthenticated reload in production
-    if settings.APP_ENV == "production":
-        raise HTTPException(status_code=403, detail="reload disabled in production")
     store = get_store(reload=True)
     return {"reloaded": True, "generation": store.generation, "health": store.health()}
 

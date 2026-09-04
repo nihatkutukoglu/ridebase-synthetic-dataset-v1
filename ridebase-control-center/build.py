@@ -16,6 +16,7 @@ from __future__ import annotations
 
 import csv
 import datetime as dt
+import hashlib
 import json
 import os
 import re
@@ -54,6 +55,18 @@ def read_json(p: Path):
 
 def mtime_iso(p: Path) -> str | None:
     return dt.datetime.fromtimestamp(p.stat().st_mtime).date().isoformat() if p.exists() else None
+
+
+def file_hash(p: Path) -> str | None:
+    """Short sha256 of an artifact file -- lets CI/a reader tell 'the same file
+    the manifest describes' from 'someone swapped the artifact' (Y3)."""
+    if not p or not p.exists() or not p.is_file():
+        return None
+    h = hashlib.sha256()
+    with p.open("rb") as f:
+        for chunk in iter(lambda: f.read(1 << 20), b""):
+            h.update(chunk)
+    return h.hexdigest()[:16]
 
 
 def section(md: str | None, title: str) -> str | None:
@@ -107,6 +120,34 @@ NOTEBOOKS = [
 ]
 
 
+def v2_1_phase_entries(v2_1: dict) -> list[dict]:
+    """Y3: the Experiment Registry only ever listed nb01-12 (V1); V2.1's
+    Phase 1-3 work was invisible. It isn't notebook-based (ridebase_ml.v2_1 is
+    a package, not nb13-15) so these carry kind='phase', not a fake 'NB'
+    label, and are built from the same v2_1_block() the rest of the UI trusts."""
+    v2_1 = v2_1 or {}
+    tm = v2_1.get("test_metrics") or {}
+    c_index, ibs = tm.get("ipcw_c_index"), tm.get("ibs")
+    return [
+        {"n": "V2.1-P1", "title": "Data Gate — Dynamic Landmark Dataset",
+         "file": "reports/v2_1_v1_4_data_gate.json", "dataset": v2_1.get("dataset_version"),
+         "kind": "phase", "module": "v2_1",
+         "result": f"{v2_1.get('landmarks') or 0:,} landmark · {v2_1.get('motorcycles') or 0:,} motosiklet",
+         "status": "complete" if v2_1.get("data_gate_status") == "PASS" else "review"},
+        {"n": "V2.1-P2", "title": "Model Training — xgb_cox + isotonic",
+         "file": "models/v2_1_v1_4/metrics.json", "dataset": v2_1.get("dataset_version"),
+         "kind": "phase", "module": "v2_1",
+         "result": (f"IPCW C-index {c_index:.4f} · IBS {ibs:.4f}"
+                    if c_index is not None and ibs is not None else "metrics not available"),
+         "status": "complete" if v2_1.get("model_gate_status") == "PASS" else "review"},
+        {"n": "V2.1-P3", "title": "History Pipeline + /api/v2_1/*",
+         "file": "reports/v2_1_by_motorcycle_api.json", "dataset": v2_1.get("dataset_version"),
+         "kind": "phase", "module": "v2_1",
+         "result": (v2_1.get("history_api") or {}).get("route") or "predict/by-motorcycle",
+         "status": "complete" if v2_1.get("history_pipeline_available") else "review"},
+    ]
+
+
 # ----------------------------------------------------------------- dataset registry
 def dataset_entry(ver_dir: str, label: str, purpose: str, used_by: str):
     meta = read_json(ROOT / ver_dir / "derived_outputs" / "dataset_metadata.json") or {}
@@ -133,6 +174,29 @@ DATASETS = [
 # v1 (original) — only referenced historically
 DATASETS.insert(0, {"version": "v1", "label": "v1", "purpose": "Original synthetic build",
                     "status": "SUPERSEDED", "used_by": "—", "quality": None})
+
+
+def v1_4_dataset_entry(v2_1: dict) -> dict:
+    """v1.4 doesn't follow the derived_outputs/{dataset_metadata,quality_report}.json
+    layout the other datasets use, so read its metadata directly + reuse the
+    landmark/motorcycle counts v2_1_block() already computed from the real data
+    gate (Y3 -- this registry was missing the dataset V2.1 actually runs on)."""
+    meta_path = ROOT / "ridebase_v1_4" / "dataset_metadata.json"
+    meta = read_json(meta_path) or {}
+    return {
+        "version": (v2_1 or {}).get("dataset_version") or meta.get("dataset_version") or "1.4.0",
+        "label": "v1.4",
+        "purpose": "V2.1 dynamic-landmark behavioral dataset (continuing stochastic service-event process)",
+        "generator_version": meta.get("generator_version"),
+        "status": "FROZEN",
+        "used_by": "V2.1",
+        "quality": (v2_1 or {}).get("data_gate_status"),
+        "landmarks": (v2_1 or {}).get("landmarks"),
+        "motorcycles": (v2_1 or {}).get("motorcycles"),
+        "regression_calibration_experiment": None,
+        "updated_at": mtime_iso(meta_path),
+        "artifact_hash": file_hash(meta_path),
+    }
 
 
 # ----------------------------------------------------------------- V0
@@ -197,6 +261,52 @@ def bands(target: str):
     return {"available": bool(out), "source": src, "configs": out}
 
 
+def v1_error_histogram():
+    """O3: real per-row abs-error bins for the frozen V1 tuned model, straight
+    from the TEST predictions parquet the README already documents as the
+    scatter/histogram source. Returns {} (no chart) if pandas/the file aren't
+    available -- never a fabricated distribution."""
+    path = ML / "outputs" / "v1_final_tuning_test_predictions.parquet"
+    if not path.exists():
+        return {}
+    try:
+        import pandas as pd
+    except ImportError:
+        return {}
+    try:
+        df = pd.read_parquet(path)
+    except Exception:
+        return {}
+    out = {}
+    for target, col in (("DAYS", "tuned_days_abs_error"), ("KM", "tuned_km_abs_error")):
+        if col not in df.columns:
+            continue
+        errs = df[col].dropna()
+        if errs.empty:
+            continue
+        counts, edges = np_histogram(errs.tolist(), bins=12)
+        out[target] = {
+            "n": int(len(errs)),
+            "bins": [{"start": round(edges[i], 1), "end": round(edges[i + 1], 1), "count": int(counts[i])}
+                     for i in range(len(counts))],
+        }
+    return out
+
+
+def np_histogram(values: list[float], bins: int) -> tuple[list[int], list[float]]:
+    """Stdlib equal-width histogram -- no numpy dependency for one aggregation."""
+    lo, hi = min(values), max(values)
+    if lo == hi:
+        hi = lo + 1.0
+    width = (hi - lo) / bins
+    counts = [0] * bins
+    for v in values:
+        idx = min(bins - 1, int((v - lo) / width))
+        counts[idx] += 1
+    edges = [lo + i * width for i in range(bins + 1)]
+    return counts, edges
+
+
 def v1_block():
     cfg = read_json(MODELS / "v1_final_tuning_config.json") or {}
     frozen = cfg.get("frozen", {})
@@ -253,6 +363,7 @@ def v1_block():
         "temporal_drift": read_csv("v1_final_tuning_temporal_drift"),
         "worst_segments": read_csv("v1_final_tuning_worst_segments"),
         "calibration_bins": read_csv("v1_final_tuning_calibration_bins"),
+        "error_histogram": v1_error_histogram(),
         "specialist": read_csv("v1_final_tuning_specialist"),
         "qa": read_csv("v1_final_tuning_qa") or read_csv("v1_3_final_qa"),
         "evolution": evo,
@@ -299,7 +410,11 @@ def v1_block():
 
 
 # ----------------------------------------------------------------- models registry
-def models_block(v1):
+def models_block(v1, v2, v2_1):
+    """Y3: one row per real model generation, survival rows carry C-index/IBS/
+    calibration instead of MAE/R² (which don't apply to them). Sourced from the
+    same v2_block()/v2_1_block() artifacts the rest of the UI already trusts —
+    nothing here is hand-typed."""
     frozen = v1["frozen"]
     tb = v1["bands"]
 
@@ -310,7 +425,7 @@ def models_block(v1):
             "name": name, "target": target, "dataset_version": "1.3.0",
             "status": "FROZEN" if f else "N/A",
             "model_family": f.get("model"), "transform": transform or f.get("target_transform"),
-            "mae": b.get("mae"), "r2": b.get("r2"),
+            "mae": b.get("mae"), "r2": b.get("r2"), "c_index": None, "ibs": None, "calibration_method": None,
             "artifact": f"models/v1_final_{target_key.lower()}_model.joblib",
             "last_updated": mtime_iso(MODELS / f"v1_final_{target_key.lower()}_model.joblib"),
         }
@@ -320,17 +435,48 @@ def models_block(v1):
     for tgt, mm in v0["metrics"].items():
         reg.append({"name": f"V0 rule · {tgt}", "target": f"next_service_{tgt.lower()}", "dataset_version": "1.2",
                     "status": "BASELINE", "model_family": "deterministic rule",
-                    "mae": mm.get("mae"), "r2": mm.get("r2"),
+                    "mae": mm.get("mae"), "r2": mm.get("r2"), "c_index": None, "ibs": None, "calibration_method": None,
                     "artifact": "models/v0_rule_baseline_config.json",
                     "last_updated": mtime_iso(MODELS / "v0_rule_baseline_config.json")})
     reg.append(m("DAYS", "V1 · next-service DAYS", "days_to_next_service", None))
     reg.append(m("KM", "V1 · next-service KM", "km_to_next_service", "log1p"))
-    reg.append({"name": "V2 · survival", "target": "time-to-next-service", "dataset_version": None,
-                "status": "PLANNED", "model_family": None, "mae": None, "r2": None,
-                "artifact": None, "last_updated": None})
+
+    v2_tm = (v2 or {}).get("test_metrics") or {}
+    v2_cfg_path = MODELS / "v2_advanced_config.json"
+    reg.append({
+        "name": "V2.0 · survival (research)", "target": "time-to-next-service",
+        "dataset_version": "1.3.0" if v2 else None,
+        "status": "failed",  # live-scenario audit FAILED — kept as research baseline only, not product-facing
+        "model_family": (v2 or {}).get("selected_model"),
+        "mae": None, "r2": None,
+        "c_index": v2_tm.get("ipcw_c_index"), "ibs": v2_tm.get("ibs"),
+        "calibration_method": (v2 or {}).get("calibration_method"),
+        "artifact": "models/v2_advanced_config.json" if v2_cfg_path.exists() else None,
+        "last_updated": mtime_iso(v2_cfg_path) if v2_cfg_path.exists() else None,
+    })
+
+    v21_tm = (v2_1 or {}).get("test_metrics") or {}
+    v21_artifact = MODELS / "v2_1_v1_4" / "champion_model.joblib"
+    reg.append({
+        "name": "V2.1 · dynamic-landmark survival", "target": "time-to-next-service (landmark)",
+        "dataset_version": (v2_1 or {}).get("dataset_version"),
+        "status": "active" if (v2_1 or {}).get("status") == "EXPERIMENTAL_LIVE" else "review",
+        "model_family": (v2_1 or {}).get("champion"),
+        "mae": None, "r2": None,
+        "c_index": v21_tm.get("ipcw_c_index"), "ibs": v21_tm.get("ibs"),
+        "calibration_method": (v2_1 or {}).get("calibration_method"),
+        "artifact": "models/v2_1_v1_4/champion_model.joblib" if v21_artifact.exists() else None,
+        "last_updated": mtime_iso(v21_artifact) if v21_artifact.exists() else None,
+    })
+
     reg.append({"name": "V3 · next-task", "target": "next maintenance tasks", "dataset_version": None,
                 "status": "PLANNED", "model_family": None, "mae": None, "r2": None,
+                "c_index": None, "ibs": None, "calibration_method": None,
                 "artifact": None, "last_updated": None})
+
+    for row in reg:
+        row["updated_at"] = row.get("last_updated")
+        row["artifact_hash"] = file_hash(ML / row["artifact"]) if row.get("artifact") else None
     return reg
 
 
@@ -540,9 +686,19 @@ def changelog():
       "PASS", "v1.3", "docs/ml_glossary_tr.md", dt.date.today().isoformat())
     e("API", "DEPLOYMENT", "Public V1/V2 inference API — deploy blueprint prepared",
       "render.yaml + Dockerfile.prod (ridebase_ml paketi + artifactlar bundle) + runtime API-URL config "
-      "(?v2api= / RIDEBASE_V2_API) hazır. Gerçek public deployment BLOCKED_BY_PROVIDER_AUTH — provider hesabı "
-      "gerekiyor; sahte online API gösterilmiyor.",
+      "(?v2api= / RIDEBASE_V2_API) hazır.",
       "REVIEW", "v1.3", "ridebase-v1-dashboard/render.yaml", dt.date.today().isoformat())
+    # Y3: the entry above used to end "public deployment BLOCKED_BY_PROVIDER_AUTH" --
+    # false since the Render deploy went live. This offline build script cannot
+    # itself assert current liveness (see System Status / GET /health for that,
+    # O4); it can only record that the deploy config + artifact bundling this
+    # entry described are, as of the render.yaml/Dockerfile.prod on disk, done.
+    _render_yaml = ROOT / "ridebase-v1-dashboard" / "render.yaml"
+    e("API", "DEPLOYMENT", "Public V1/V2/V2.1 inference API — RESOLVED, deployed",
+      "Render blueprint deployed (ridebase-inference-api). Provider-auth block is resolved; the API base URL "
+      "in this manifest (v2_api) points at the live service. Current up/down status is not a build-time fact — "
+      "check System Status (canlı /health) in the app, not this changelog.",
+      "PASS", "v1.4", "ridebase-v1-dashboard/render.yaml", mtime_iso(_render_yaml) or dt.date.today().isoformat())
     e("V1", "UI", "Dedicated beginner-friendly V1 live prediction added",
       "V1 Regression → Canlı Tahmin ekranı gerçek /api/v1/sample + /api/v1/predict akışını kullanır. "
       "Demo sonucu gerçek frozen modelden gelir ve açıkça örnek motor olarak etiketlenir. Kişisel gerçek-motor "
@@ -816,16 +972,16 @@ def build_manifest():
         ).rstrip("/"),
         "modules": MODULES,
         "notebooks": [
-            {"n": n, "title": t, "file": f, "dataset": d, "result": r, "status": s, "module": m}
+            {"n": n, "title": t, "file": f, "dataset": d, "result": r, "status": s, "module": m, "kind": "notebook"}
             for (n, t, f, d, r, s, m) in NOTEBOOKS
-        ],
-        "datasets": DATASETS,
+        ] + v2_1_phase_entries(v2_1),
+        "datasets": DATASETS + [v1_4_dataset_entry(v2_1)],
         "timeline": [{"label": a, "detail": b, "kind": c} for (a, b, c) in TIMELINE],
         "v0": v0,
         "v1": v1,
         "v2": v2,
         "v2_1": v2_1,
-        "models": models_block(v1),
+        "models": models_block(v1, v2, v2_1),
         "qa": {
             "leakage_audit": _qa_flag(v1["qa"], "leak") or "PASS",
             "model_qa": "PASS" if v1["qa"] else None,

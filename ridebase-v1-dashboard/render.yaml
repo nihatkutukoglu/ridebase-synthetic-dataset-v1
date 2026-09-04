@@ -20,7 +20,9 @@ services:
     autoDeploy: false
     envVars:
       - key: APP_ENV
-        value: production             # disables /admin/reload (403)
+        value: production             # hides /docs, /redoc, /openapi.json
+      - key: RIDEBASE_ADMIN_TOKEN
+        sync: false                   # set in Render dashboard; guards POST /admin/reload
       - key: MODEL_DIR
         value: /artifacts/models
       - key: REPORTS_DIR

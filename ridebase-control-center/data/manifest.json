@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-09-04T19:36:04",
+  "generated_at": "2026-09-04T23:24:38",
   "project": "RideBase ML",
   "current_dataset": "v1.3",
   "environment": "PILOT",
@@ -72,7 +72,8 @@
       "dataset": "v1.2",
       "result": "structure audit",
       "status": "complete",
-      "module": null
+      "module": null,
+      "kind": "notebook"
     },
     {
       "n": "02",
@@ -81,7 +82,8 @@
       "dataset": "v1.2",
       "result": "distributions + quality + survival targets",
       "status": "complete",
-      "module": "eda"
+      "module": "eda",
+      "kind": "notebook"
     },
     {
       "n": "03",
@@ -90,7 +92,8 @@
       "dataset": "prod extract",
       "result": "read-only feasibility (BLOCKED w/o extract)",
       "status": "complete",
-      "module": null
+      "module": null,
+      "kind": "notebook"
     },
     {
       "n": "04",
@@ -99,7 +102,8 @@
       "dataset": "v1.2",
       "result": "deterministic rule baseline",
       "status": "complete",
-      "module": "v0"
+      "module": "v0",
+      "kind": "notebook"
     },
     {
       "n": "05",
@@ -108,7 +112,8 @@
       "dataset": "v1.2",
       "result": "leakage-safe train-only preprocessing",
       "status": "complete",
-      "module": null
+      "module": null,
+      "kind": "notebook"
     },
     {
       "n": "06",
@@ -117,7 +122,8 @@
       "dataset": "v1.2",
       "result": "LazyPredict classical benchmark vs V0",
       "status": "complete",
-      "module": "v1"
+      "module": "v1",
+      "kind": "notebook"
     },
     {
       "n": "07",
@@ -126,7 +132,8 @@
       "dataset": "v1.2",
       "result": "feature engineering + tuned boosting",
       "status": "complete",
-      "module": "v1"
+      "module": "v1",
+      "kind": "notebook"
     },
     {
       "n": "08",
@@ -135,7 +142,8 @@
       "dataset": "v1.2",
       "result": "raw/log/residual/normalized target trials",
       "status": "complete",
-      "module": "v1"
+      "module": "v1",
+      "kind": "notebook"
     },
     {
       "n": "09",
@@ -144,7 +152,8 @@
       "dataset": "v1.2",
       "result": "AutoGluon + boosting ensembles",
       "status": "complete",
-      "module": "v1"
+      "module": "v1",
+      "kind": "notebook"
     },
     {
       "n": "10",
@@ -153,7 +162,8 @@
       "dataset": "v1.3",
       "result": "leakage-safe final benchmark, native-cat + ensembles",
       "status": "complete",
-      "module": "v1"
+      "module": "v1",
+      "kind": "notebook"
     },
     {
       "n": "11",
@@ -162,7 +172,8 @@
       "dataset": "v1.3",
       "result": "A/B: manufacturer schedule features",
       "status": "complete",
-      "module": "v1"
+      "module": "v1",
+      "kind": "notebook"
     },
     {
       "n": "12",
@@ -171,7 +182,38 @@
       "dataset": "v1.3",
       "result": "temporal-CV Optuna, HGB/LGBM/XGB/CatBoost",
       "status": "active",
-      "module": "v1"
+      "module": "v1",
+      "kind": "notebook"
+    },
+    {
+      "n": "V2.1-P1",
+      "title": "Data Gate — Dynamic Landmark Dataset",
+      "file": "reports/v2_1_v1_4_data_gate.json",
+      "dataset": "1.4.0-v2.1-dynamic-landmark",
+      "kind": "phase",
+      "module": "v2_1",
+      "result": "256,841 landmark · 8,907 motosiklet",
+      "status": "complete"
+    },
+    {
+      "n": "V2.1-P2",
+      "title": "Model Training — xgb_cox + isotonic",
+      "file": "models/v2_1_v1_4/metrics.json",
+      "dataset": "1.4.0-v2.1-dynamic-landmark",
+      "kind": "phase",
+      "module": "v2_1",
+      "result": "IPCW C-index 0.7527 · IBS 0.1020",
+      "status": "complete"
+    },
+    {
+      "n": "V2.1-P3",
+      "title": "History Pipeline + /api/v2_1/*",
+      "file": "reports/v2_1_by_motorcycle_api.json",
+      "dataset": "1.4.0-v2.1-dynamic-landmark",
+      "kind": "phase",
+      "module": "v2_1",
+      "result": "POST /api/v2_1/predict/by-motorcycle",
+      "status": "complete"
     }
   ],
   "datasets": [
@@ -212,6 +254,20 @@
       "used_by": "V1 final (nb10–12)",
       "quality": "PASS",
       "regression_calibration_experiment": true
+    },
+    {
+      "version": "1.4.0-v2.1-dynamic-landmark",
+      "label": "v1.4",
+      "purpose": "V2.1 dynamic-landmark behavioral dataset (continuing stochastic service-event process)",
+      "generator_version": null,
+      "status": "FROZEN",
+      "used_by": "V2.1",
+      "quality": "PASS",
+      "landmarks": 256841,
+      "motorcycles": 8907,
+      "regression_calibration_experiment": null,
+      "updated_at": "2026-09-02",
+      "artifact_hash": "218dd0dd994fc348"
     }
   ],
   "timeline": [
@@ -1414,6 +1470,138 @@
         "bias": "566.6874812103227"
       }
     ],
+    "error_histogram": {
+      "DAYS": {
+        "n": 1282,
+        "bins": [
+          {
+            "start": 0.0,
+            "end": 23.4,
+            "count": 896
+          },
+          {
+            "start": 23.4,
+            "end": 46.8,
+            "count": 226
+          },
+          {
+            "start": 46.8,
+            "end": 70.3,
+            "count": 82
+          },
+          {
+            "start": 70.3,
+            "end": 93.7,
+            "count": 42
+          },
+          {
+            "start": 93.7,
+            "end": 117.1,
+            "count": 18
+          },
+          {
+            "start": 117.1,
+            "end": 140.5,
+            "count": 8
+          },
+          {
+            "start": 140.5,
+            "end": 163.9,
+            "count": 5
+          },
+          {
+            "start": 163.9,
+            "end": 187.3,
+            "count": 2
+          },
+          {
+            "start": 187.3,
+            "end": 210.7,
+            "count": 1
+          },
+          {
+            "start": 210.7,
+            "end": 234.2,
+            "count": 1
+          },
+          {
+            "start": 234.2,
+            "end": 257.6,
+            "count": 0
+          },
+          {
+            "start": 257.6,
+            "end": 281.0,
+            "count": 1
+          }
+        ]
+      },
+      "KM": {
+        "n": 1282,
+        "bins": [
+          {
+            "start": 1.9,
+            "end": 652.9,
+            "count": 581
+          },
+          {
+            "start": 652.9,
+            "end": 1303.9,
+            "count": 385
+          },
+          {
+            "start": 1303.9,
+            "end": 1954.9,
+            "count": 172
+          },
+          {
+            "start": 1954.9,
+            "end": 2605.9,
+            "count": 88
+          },
+          {
+            "start": 2605.9,
+            "end": 3256.9,
+            "count": 29
+          },
+          {
+            "start": 3256.9,
+            "end": 3907.9,
+            "count": 12
+          },
+          {
+            "start": 3907.9,
+            "end": 4558.9,
+            "count": 8
+          },
+          {
+            "start": 4558.9,
+            "end": 5209.9,
+            "count": 4
+          },
+          {
+            "start": 5209.9,
+            "end": 5860.8,
+            "count": 1
+          },
+          {
+            "start": 5860.8,
+            "end": 6511.8,
+            "count": 1
+          },
+          {
+            "start": 6511.8,
+            "end": 7162.8,
+            "count": 0
+          },
+          {
+            "start": 7162.8,
+            "end": 7813.8,
+            "count": 1
+          }
+        ]
+      }
+    },
     "specialist": [
       {
         "target": "DAYS",
@@ -2646,8 +2834,13 @@
       "model_family": "deterministic rule",
       "mae": 67.41054109598393,
       "r2": -2.7934328237780446,
+      "c_index": null,
+      "ibs": null,
+      "calibration_method": null,
       "artifact": "models/v0_rule_baseline_config.json",
-      "last_updated": "2026-08-31"
+      "last_updated": "2026-08-31",
+      "updated_at": "2026-08-31",
+      "artifact_hash": "ae97bf48829c0f20"
     },
     {
       "name": "V0 rule · KM",
@@ -2657,8 +2850,13 @@
       "model_family": "deterministic rule",
       "mae": 4515.311594202899,
       "r2": -3.3196202867163924,
+      "c_index": null,
+      "ibs": null,
+      "calibration_method": null,
       "artifact": "models/v0_rule_baseline_config.json",
-      "last_updated": "2026-08-31"
+      "last_updated": "2026-08-31",
+      "updated_at": "2026-08-31",
+      "artifact_hash": "ae97bf48829c0f20"
     },
     {
       "name": "V1 · next-service DAYS",
@@ -2669,8 +2867,13 @@
       "transform": "raw",
       "mae": 21.963199961193467,
       "r2": 0.6666527374598262,
+      "c_index": null,
+      "ibs": null,
+      "calibration_method": null,
       "artifact": "models/v1_final_days_model.joblib",
-      "last_updated": "2026-08-31"
+      "last_updated": "2026-08-31",
+      "updated_at": "2026-08-31",
+      "artifact_hash": "d9324dc9ab592a45"
     },
     {
       "name": "V1 · next-service KM",
@@ -2681,19 +2884,45 @@
       "transform": "log1p",
       "mae": 939.991936306075,
       "r2": 0.4628012619073232,
+      "c_index": null,
+      "ibs": null,
+      "calibration_method": null,
       "artifact": "models/v1_final_km_model.joblib",
-      "last_updated": "2026-08-31"
+      "last_updated": "2026-08-31",
+      "updated_at": "2026-08-31",
+      "artifact_hash": "fc5d4c4fa4f0a4af"
     },
     {
-      "name": "V2 · survival",
+      "name": "V2.0 · survival (research)",
       "target": "time-to-next-service",
-      "dataset_version": null,
-      "status": "PLANNED",
-      "model_family": null,
+      "dataset_version": "1.3.0",
+      "status": "failed",
+      "model_family": "ENSEMBLE[XGB_COX+COXNET]",
       "mae": null,
       "r2": null,
-      "artifact": null,
-      "last_updated": null
+      "c_index": 0.9130898584811172,
+      "ibs": 0.048769333339906164,
+      "calibration_method": "isotonic_ipcw",
+      "artifact": "models/v2_advanced_config.json",
+      "last_updated": "2026-08-31",
+      "updated_at": "2026-08-31",
+      "artifact_hash": "85c737ea672d0fde"
+    },
+    {
+      "name": "V2.1 · dynamic-landmark survival",
+      "target": "time-to-next-service (landmark)",
+      "dataset_version": "1.4.0-v2.1-dynamic-landmark",
+      "status": "active",
+      "model_family": "xgb_cox",
+      "mae": null,
+      "r2": null,
+      "c_index": 0.7526812034629026,
+      "ibs": 0.10199462240085244,
+      "calibration_method": "isotonic",
+      "artifact": "models/v2_1_v1_4/champion_model.joblib",
+      "last_updated": "2026-09-02",
+      "updated_at": "2026-09-02",
+      "artifact_hash": "52f7b64a04074534"
     },
     {
       "name": "V3 · next-task",
@@ -2703,8 +2932,13 @@
       "model_family": null,
       "mae": null,
       "r2": null,
+      "c_index": null,
+      "ibs": null,
+      "calibration_method": null,
       "artifact": null,
-      "last_updated": null
+      "last_updated": null,
+      "updated_at": null,
+      "artifact_hash": null
     }
   ],
   "qa": {

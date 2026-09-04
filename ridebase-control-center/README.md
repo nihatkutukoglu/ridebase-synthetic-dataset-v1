@@ -28,6 +28,14 @@ https://ridebase-ml-control-center.vercel.app     https://ridebase-inference-api
 Redeploy the frontend after a rebuild: `python3 build.py && vercel --prod` (or
 push — Vercel builds `public/` from `vercel.json`).
 
+- **Vercel Toolbar / Comments:** if enabled on the project, Vercel injects
+  `vercel.live` / `_next-live/feedback/feedback.js` into every visitor's page
+  load. `vercel.json`'s CSP (`script-src 'self' 'unsafe-inline'`) already
+  blocks that script from *running* — but it's cleaner (and avoids a CSP
+  violation line in the console) to turn it off at the source: Vercel
+  dashboard → this project → Settings → Toolbar → disable for Production.
+  Not settable from `vercel.json`; needs the account owner.
+
 ## V1 live prediction
 
 The authoritative Control Center now includes **V1 Regression → Canlı Tahmin**

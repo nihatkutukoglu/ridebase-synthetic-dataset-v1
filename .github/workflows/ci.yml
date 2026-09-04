@@ -6,12 +6,14 @@ on:
       - "ridebase-v1-dashboard/**"
       - "ridebase-ml/ridebase_ml/**"
       - "ridebase-ml/pyproject.toml"
+      - "ridebase-control-center/**"
       - ".github/workflows/ci.yml"
   pull_request:
     paths:
       - "ridebase-v1-dashboard/**"
       - "ridebase-ml/ridebase_ml/**"
       - "ridebase-ml/pyproject.toml"
+      - "ridebase-control-center/**"
       - ".github/workflows/ci.yml"
 
 defaults:
@@ -52,6 +54,31 @@ jobs:
           else
             echo "V2 FINAL bundle not present — skipping V2 smoke (production lane should FAIL here)."
           fi
+
+  control-center:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Build (regenerates manifest.json + public/index.html)
+        working-directory: ridebase-control-center
+        run: python3 build.py
+      - name: Pytest (template/manifest contract checks)
+        working-directory: ridebase-control-center
+        run: python3 -m pytest tests/ -q
+      # Y3: manifest.json's V2.1 claims (champion / dataset_version / model_validation)
+      # must match what the live API's own GET /health reports. Fails the build on a
+      # real mismatch; skips only if the live service itself is unreachable (Render
+      # free-tier cold start / network), since that's an availability question, not
+      # a manifest-correctness one.
+      - name: Manifest vs. live /health
+        working-directory: ridebase-control-center
+        run: python3 scripts/check_manifest_vs_live_health.py
 
   frontend:
     runs-on: ubuntu-latest

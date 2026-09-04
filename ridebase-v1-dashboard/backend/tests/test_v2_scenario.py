@@ -171,6 +171,26 @@ def test_overdue_mileage_is_a_strong_separate_maintenance_signal(client):
     assert provenance["maintenance_overdue_km_pre_service"]["source"] == "DERIVED"
 
 
+def test_driving_metric_and_determining_dimension_share_vocabulary(client):
+    """O9: same card used to show 'belirleyici ölçüt: DAYS' next to a
+    'BELİRLEYİCİ ÖLÇÜT: TIME' chip for the same concept -- both fields must
+    use the same KM/TIME/BOTH vocabulary."""
+    response = client.post(
+        "/api/v2/predict/scenario",
+        json=_payload(
+            # barely any km used, but the service is nearly two years old -> time-driven
+            current_odometer_km=9_050,
+            last_service_odometer_km=9_000,
+            last_service_date=(dt.date.today() - dt.timedelta(days=700)).isoformat(),
+        ),
+    )
+    assert response.status_code == 200
+    maintenance = response.json()["maintenance"]
+    assert maintenance["driving_metric"] in ("KM", "TIME")
+    assert maintenance["driving_metric"] != "DAYS"
+    assert maintenance["driving_metric"] == maintenance["determining_dimension"]
+
+
 def test_current_ns200_ug2_keeps_separate_verified_policy(client):
     response = client.post(
         "/api/v2/predict/scenario",

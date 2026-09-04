@@ -341,7 +341,9 @@ def _maintenance_assessment(req: V2ScenarioRequest, model: Dict[str, Any]) -> Di
         if interval_days:
             day_ratio = days_since / float(interval_days)
             result["time_progress_ratio"] = round(day_ratio, 4)
-            progress.append(("DAYS", day_ratio))
+            # "TIME" (not "DAYS") to match determining_dimension's vocabulary
+            # (KM/TIME/BOTH) -- both fields describe the same binding constraint (O9).
+            progress.append(("TIME", day_ratio))
             result["overdue_days"] = round(max(0.0, days_since - float(interval_days)), 2)
             result["remaining_days"] = round(max(0.0, float(interval_days) - days_since), 2)
 
