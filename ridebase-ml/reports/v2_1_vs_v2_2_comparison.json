@@ -1,0 +1,101 @@
+{
+  "decision": "CHALLENGER_ACCEPTED",
+  "interpretation": "Accepted for offline/shadow evaluation, not promoted. Higher probabilities alone are not an acceptance criterion.",
+  "cross_world_warning": "V2.1 metrics use V1.4 and V2.2 metrics use V1.5; metric deltas are contextual rather than paired causal estimates.",
+  "statistical_comparison": [
+    {
+      "criterion": "IPCW C-index",
+      "v2_1": 0.7526812034629026,
+      "v2_2": 0.7080294174790148,
+      "v2_2_gate": "PASS"
+    },
+    {
+      "criterion": "Harrell C",
+      "v2_1": 0.7527365929375829,
+      "v2_2": 0.7081075711914845,
+      "v2_2_gate": "REPORT"
+    },
+    {
+      "criterion": "IBS 30-120",
+      "v2_1": 0.10199462240085244,
+      "v2_2": 0.12377525321960173,
+      "v2_2_gate": "PASS"
+    },
+    {
+      "criterion": "P30 exact-zero share",
+      "v2_1": 0.0,
+      "v2_2": 0.0,
+      "v2_2_gate": "PASS"
+    },
+    {
+      "criterion": "P90 calibration error",
+      "v2_1": 0.046368871839030275,
+      "v2_2": 0.07475231276219303,
+      "v2_2_gate": "PASS"
+    },
+    {
+      "criterion": "Unseen motorcycle IPCW C",
+      "v2_1": 0.756368284912511,
+      "v2_2": 0.7157219992618538,
+      "v2_2_gate": "PASS"
+    }
+  ],
+  "behavioral_comparison": {
+    "overdue_response": {
+      "v2_1": true,
+      "v2_2": true
+    },
+    "severe_overdue_dead_region_prevented": {
+      "v2_1": "not_explicitly_gated",
+      "v2_2": true
+    },
+    "annual_km_response": {
+      "v2_1": true,
+      "v2_2": true
+    },
+    "adherence_response": {
+      "v2_1": "not_in_frozen_audit",
+      "v2_2": true
+    },
+    "no_show_response": {
+      "v2_1": "not_in_54_feature_contract",
+      "v2_2": true
+    },
+    "appointment_response": {
+      "v2_1": "aggregate_rate_only",
+      "v2_2": true
+    },
+    "breakdown_response": {
+      "v2_1": "not_in_frozen_audit",
+      "v2_2": true
+    },
+    "horizon_monotonicity": {
+      "v2_1": true,
+      "v2_2": true
+    },
+    "calendar_invariance": {
+      "v2_1": true,
+      "v2_2": true
+    },
+    "determinism": {
+      "v2_1": true,
+      "v2_2": true
+    },
+    "ood": {
+      "v2_1": "not_in_frozen_audit",
+      "v2_2": true
+    }
+  },
+  "all_v2_2_acceptance_gates": {
+    "leakage_integrity": true,
+    "generator_behavior": true,
+    "model_behavior": true,
+    "dedicated_product_audit": true,
+    "test_statistics": true,
+    "assumptions_documented": true,
+    "v2_1_untouched": true,
+    "no_deploy": true
+  },
+  "production": "V2.1 REMAINS PRODUCTION CHAMPION",
+  "real_fleet_validation": "PENDING"
+}

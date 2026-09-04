@@ -1,0 +1,16 @@
+{
+  "baseline_hazard.joblib": "34a93c14cada14938504215f044d2672ffcd3f7afc4c786ef7bc3b21f823e187",
+  "calibration_validation.json": "60d23db759c3965d9f8ec5d9b09d84d20f9f120f23d2167ecf8547bb4915a79a",
+  "calibrator.joblib": "c82a726113eb4390a611b044fa54c949a1d76d9c1ad7445042dbd85947878226",
+  "candidate_eligibility.json": "efb98467e5b8d4486fcb7a50cfe93265a39c6e697040e19c455e8f248a519e99",
+  "candidate_validation_metrics.json": "610b525967e880a6749d1e61bb834610b87032174538abdb953463bbcfe68289",
+  "challenger_model.joblib": "c8e7a620e1cf013c019c4e20c1df72ef6e3fbf4550b50f314226a93edc6c46d8",
+  "feature_list.json": "1ecc0056ad1cd2455966bcf6e58e567d8e4a0351e47da4db5917c26e1e5076c3",
+  "frozen_test_predictions.parquet": "fdd7ab03a375632c2664c85ee82acf263862e41d6a80bd75bb5a585e7644b3bc",
+  "massive_behavior_audit.json": "6c597a8ba5434e4308baf963ed1f9cd6e4af708aec6f36ba7d82e62f9d3c905b",
+  "model_card.json": "860a754a56ae3b4ca06f4a3c035c494f9c352e5302639215328e9571394396c5",
+  "preprocessor.joblib": "45e1bc25d633c1e51941212ceded73729dab1b079aabadaa94cd14aaf509c34e",
+  "test_evaluation.json": "3844c4be08a81998be8eb9b820b732a3116283f2dabb58dc84cfe9d9e989f94e",
+  "test_first_touch.json": "f507ad4b45ab51c717d2d6a17d1f191975eff811dff1c6305f16175a358042d5",
+  "v2_2_selection_manifest.json": "62fc781238bfd771514103ae69aba3196a9d071c5ec30b69786d2d037e712a1e"
+}

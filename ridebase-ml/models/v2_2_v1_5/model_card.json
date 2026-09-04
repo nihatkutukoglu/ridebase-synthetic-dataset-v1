@@ -1,0 +1,18 @@
+{
+  "name": "RideBase V2.2 Dynamic-Landmark Survival Challenger",
+  "decision": "CHALLENGER_ACCEPTED",
+  "deployment_status": "OFFLINE_SHADOW_ONLY",
+  "production_champion": "V2.1 xgb_cox + isotonic",
+  "challenger": "xgb_cox_extended60 + isotonic",
+  "training_world": "V1.5 synthetic behavior generator",
+  "feature_contract": "extended60_with_frozen_v2_1_base54",
+  "prediction_semantics": "P(eligible service return within 30/60/90/120d after landmark)",
+  "not_predicted": "maintenance need; this remains deterministic policy",
+  "limitations": [
+    "Synthetic assumptions are not validated on real RideBase fleet data.",
+    "V2.2 is not authorized for production or Control Center promotion.",
+    "OOD inputs require warnings and human review."
+  ],
+  "real_fleet_validation": "PENDING",
+  "v3": "ON_HOLD"
+}

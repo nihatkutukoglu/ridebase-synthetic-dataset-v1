@@ -22,7 +22,10 @@ def test_selection_is_frozen_before_test() -> None:
     assert manifest["status"] == "PASS"
     assert manifest["selection_split"] == "VALIDATION"
     assert manifest["test_status"] == "SEALED_NOT_READ"
-    assert not (MODEL_DIR / "test_first_touch.json").exists()
+    first_touch = MODEL_DIR / "test_first_touch.json"
+    if first_touch.exists():
+        recorded = json.loads(first_touch.read_text())
+        assert recorded["selection_manifest_sha256"] == _sha256(MODEL_DIR / "v2_2_selection_manifest.json")
 
 
 def test_selection_artifact_hashes_match() -> None:

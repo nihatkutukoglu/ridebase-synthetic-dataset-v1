@@ -1,0 +1,11 @@
+{
+  "selection_frozen_before_test": true,
+  "frozen_selection_manifest": "/Users/nihatkutukoglu/Downloads/ridebase_synthetic_dataset_v1/ridebase-ml/models/v2_2_v1_5/v2_2_selection_manifest.json",
+  "frozen_selection_manifest_sha256": "62fc781238bfd771514103ae69aba3196a9d071c5ec30b69786d2d037e712a1e",
+  "test_first_touch_selection_sha256": "62fc781238bfd771514103ae69aba3196a9d071c5ec30b69786d2d037e712a1e",
+  "hash_chain_verified": true,
+  "model": "xgb_cox_extended60",
+  "calibration": "isotonic",
+  "selection_split": "VALIDATION",
+  "production_promotion": false
+}

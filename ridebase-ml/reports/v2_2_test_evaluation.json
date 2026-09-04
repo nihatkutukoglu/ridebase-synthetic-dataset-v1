@@ -1,0 +1,174 @@
+{
+  "report": "RideBase V2.2 One-time TEST Evaluation",
+  "status": "PASS",
+  "failed_checks": [],
+  "first_touch": {
+    "timestamp_utc": "2026-09-04T00:06:56.949062+00:00",
+    "commit": "88e2138cdf1f528ed374c4e37b8dc98aadcb6936",
+    "selection_manifest_sha256": "62fc781238bfd771514103ae69aba3196a9d071c5ec30b69786d2d037e712a1e",
+    "protocol": "first and only outcome-bearing TEST model evaluation after frozen TRAIN+VALIDATION selection"
+  },
+  "test_checks": {
+    "test_opened_after_selection_freeze": true,
+    "ipcw_c_not_materially_degraded": true,
+    "ibs_acceptable": true,
+    "p90_calibration_acceptable": true,
+    "p30_usable": true,
+    "unseen_motorcycle_metrics_present": true,
+    "v2_1_remains_production_champion": true,
+    "no_deployment_performed": true
+  },
+  "test_metrics": {
+    "ipcw_c_index": 0.7080294174790148,
+    "harrell_c_index": 0.7081075711914845,
+    "ibs_30_120": 0.12377525321960173,
+    "ipcw_brier": {
+      "30": 0.11596457305332057,
+      "60": 0.14168845956593681,
+      "90": 0.12475205184407721,
+      "120": 0.09380592344426171
+    },
+    "time_dependent_auc": {
+      "30": 0.7460291615486634,
+      "60": 0.7586527100533001,
+      "90": 0.777209452710242,
+      "120": 0.7945641047022138
+    },
+    "mean_time_dependent_auc": 0.7652264858652527,
+    "horizons": {
+      "30": {
+        "rows": 40168,
+        "event_rate": 0.20695578570005974,
+        "brier": 0.1367090146483006,
+        "auc": 0.734782563380248,
+        "calibration_error": 0.028588890411928213,
+        "exact_zero_share": 0.0,
+        "unique_probability_levels": 79
+      },
+      "60": {
+        "rows": 34644,
+        "event_rate": 0.4173594273178617,
+        "brier": 0.193381415398327,
+        "auc": 0.7582908326214072,
+        "calibration_error": 0.05396132279499621,
+        "exact_zero_share": 0.0,
+        "unique_probability_levels": 183
+      },
+      "90": {
+        "rows": 30486,
+        "event_rate": 0.6042445712786197,
+        "brier": 0.19323202189971309,
+        "auc": 0.7770280131059093,
+        "calibration_error": 0.07475231276219303,
+        "exact_zero_share": 0.0,
+        "unique_probability_levels": 134
+      },
+      "120": {
+        "rows": 27473,
+        "event_rate": 0.7547046190805519,
+        "brier": 0.16103097232776853,
+        "auc": 0.7943017951378789,
+        "calibration_error": 0.08250350174316157,
+        "exact_zero_share": 0.0,
+        "unique_probability_levels": 138
+      }
+    }
+  },
+  "unseen_motorcycle_metrics": {
+    "ipcw_c_index": 0.7157219992618538,
+    "harrell_c_index": 0.7158008735860352,
+    "ibs_30_120": 0.12209869535505968,
+    "ipcw_brier": {
+      "30": 0.11602249007580906,
+      "60": 0.1406087821562961,
+      "90": 0.12190742171399059,
+      "120": 0.09153727431397563
+    },
+    "time_dependent_auc": {
+      "30": 0.7538678915173896,
+      "60": 0.7683144790514875,
+      "90": 0.7902974995911751,
+      "120": 0.8105443269043446
+    },
+    "mean_time_dependent_auc": 0.7763392371753869,
+    "horizons": {
+      "30": {
+        "rows": 7415,
+        "event_rate": 0.21024949426837491,
+        "brier": 0.13658481272447195,
+        "auc": 0.7417091881442847,
+        "calibration_error": 0.025655960947143928,
+        "exact_zero_share": 0.0,
+        "unique_probability_levels": 44
+      },
+      "60": {
+        "rows": 6407,
+        "event_rate": 0.4290619634774465,
+        "brier": 0.191282273126988,
+        "auc": 0.7679523007620843,
+        "calibration_error": 0.054799138356170805,
+        "exact_zero_share": 0.0,
+        "unique_probability_levels": 80
+      },
+      "90": {
+        "rows": 5684,
+        "event_rate": 0.6148838845883181,
+        "brier": 0.1866840702287693,
+        "auc": 0.7898170132755076,
+        "calibration_error": 0.07264324877207567,
+        "exact_zero_share": 0.0,
+        "unique_probability_levels": 62
+      },
+      "120": {
+        "rows": 5173,
+        "event_rate": 0.7653199304078872,
+        "brier": 0.15382405917361805,
+        "auc": 0.8098901300105322,
+        "calibration_error": 0.08648069559272381,
+        "exact_zero_share": 0.0,
+        "unique_probability_levels": 69
+      }
+    }
+  },
+  "grouped_motorcycle_bootstrap": {
+    "p90_brier_95ci": [
+      0.18959504323027643,
+      0.19698533225081685
+    ],
+    "p90_auc_95ci": [
+      0.7693325933544964,
+      0.7843488669543637
+    ]
+  },
+  "comparison_to_frozen_v2_1": {
+    "warning": "Different synthetic worlds: V2.1 uses V1.4; V2.2 uses V1.5. This is contextual, not a paired causal estimate.",
+    "v2_1_production_champion": "xgb_cox + isotonic; unchanged",
+    "v2_2_offline_challenger": "xgb_cox_extended60 + isotonic",
+    "ipcw_c_index": {
+      "v2_1": 0.7526812034629026,
+      "v2_2": 0.7080294174790148,
+      "delta": -0.04465178598388775
+    },
+    "ibs_30_120": {
+      "v2_1": 0.10199462240085244,
+      "v2_2": 0.12377525321960173,
+      "delta": 0.021780630818749286
+    },
+    "p90_calibration_error": {
+      "v2_1": 0.046368871839030275,
+      "v2_2": 0.07475231276219303,
+      "delta": 0.028383440923162757
+    }
+  },
+  "p30_distribution": {
+    "min": 0.0699269749944678,
+    "p10": 0.0699269749944678,
+    "median": 0.0699269749944678,
+    "p90": 0.41409691629955947,
+    "max": 0.871900826446281,
+    "exact_zero_share": 0.0,
+    "unique_probability_levels_8dp": 94
+  },
+  "production_status": "V2.1 REMAINS PRODUCTION CHAMPION; V2.2 OFFLINE ONLY; NO DEPLOY",
+  "reality_gap": "REAL FLEET VALIDATION PENDING"
+}
