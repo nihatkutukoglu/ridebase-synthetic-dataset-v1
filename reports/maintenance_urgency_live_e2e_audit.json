@@ -1,0 +1,659 @@
+{
+  "audit": "maintenance_urgency_live_e2e",
+  "timestamp_utc": "2026-09-04T15:54:34.322242+00:00",
+  "frontend": "https://ridebase-ml-control-center.vercel.app",
+  "backend": "https://ridebase-inference-api.onrender.com",
+  "cases_total": 6,
+  "cases_passed": 6,
+  "status": "PASS",
+  "cases": [
+    {
+      "name": "A_NORMAL",
+      "request": {
+        "brand": "Bajaj",
+        "model_id": "BAJAJ_NS200",
+        "production_year": 2020,
+        "snapshot_date": "2026-09-04",
+        "current_odometer_km": 12900,
+        "annual_km_baseline": 10000,
+        "usage_type": "COMMUTER",
+        "riding_intensity": "MEDIUM",
+        "last_service_date": "2026-09-03",
+        "last_service_odometer_km": 12000
+      },
+      "http": {
+        "v2_status": 200,
+        "v2_latency_seconds": 1.487086,
+        "v2_1_status": 200,
+        "v2_1_latency_seconds": 1.103188
+      },
+      "deterministic_maintenance": {
+        "status": "NOT_DUE",
+        "progress_ratio": 0.3,
+        "maintenance_urgency_score": 14,
+        "maintenance_urgency_level": "NORMAL",
+        "maintenance_urgency_reason": "Bakım periyodu içinde — kalan: 2.100 km (%30 ilerleme)",
+        "determining_dimension": "KM"
+      },
+      "v2_1_probabilities": {
+        "risk_30d": 0.029106,
+        "risk_60d": 0.066398,
+        "risk_90d": 0.116279,
+        "risk_120d": 0.191958,
+        "median_service_days": null
+      },
+      "v2_0_legacy_probabilities": {
+        "risk_30d": 0.34257308,
+        "risk_60d": 0.40339237,
+        "risk_90d": 0.44562521,
+        "risk_120d": 0.58548083,
+        "median_service_days": 159
+      },
+      "provenance": {
+        "v2_annual_km_baseline": "USER_INPUT",
+        "v2_1_annual_km_baseline": "USER_INPUT",
+        "v2_coverage": {
+          "known_or_derived": 28,
+          "total": 117,
+          "missing": 89,
+          "ratio": 0.2393,
+          "verdict": "LIMITED_INFORMATION",
+          "groups": [
+            {
+              "key": "snapshot_context",
+              "label": "Anlık / atölye bağlamı",
+              "known": 5,
+              "total": 37,
+              "missing": 32
+            },
+            {
+              "key": "motorcycle",
+              "label": "Motosiklet / model",
+              "known": 14,
+              "total": 17,
+              "missing": 3
+            },
+            {
+              "key": "usage",
+              "label": "Kullanım",
+              "known": 3,
+              "total": 18,
+              "missing": 15
+            },
+            {
+              "key": "service_history",
+              "label": "Servis geçmişi",
+              "known": 6,
+              "total": 45,
+              "missing": 39
+            }
+          ],
+          "history_features_missing": 39,
+          "note": "This is input coverage, not a model confidence score."
+        },
+        "v2_1_feature_coverage": {
+          "resolved": 22,
+          "contract": 54,
+          "note": "coverage is not a confidence score"
+        }
+      },
+      "frontend": {
+        "source": "BACKEND_CANONICAL",
+        "score": 14,
+        "level": "NORMAL",
+        "determining_dimension": "KM"
+      },
+      "checks": {
+        "http_200": true,
+        "target_progress_ratio": true,
+        "frontend_backend_score": true,
+        "frontend_backend_level": true,
+        "frontend_backend_dimension": true,
+        "frontend_uses_backend_canonical": true,
+        "annual_usage_provenance_preserved": true,
+        "v2_1_horizons_monotonic": true
+      },
+      "pass": true
+    },
+    {
+      "name": "B_NEAR_DUE",
+      "request": {
+        "brand": "Bajaj",
+        "model_id": "BAJAJ_NS200",
+        "production_year": 2020,
+        "snapshot_date": "2026-09-04",
+        "current_odometer_km": 14700,
+        "annual_km_baseline": 10000,
+        "usage_type": "COMMUTER",
+        "riding_intensity": "MEDIUM",
+        "last_service_date": "2026-09-03",
+        "last_service_odometer_km": 12000
+      },
+      "http": {
+        "v2_status": 200,
+        "v2_latency_seconds": 1.271995,
+        "v2_1_status": 200,
+        "v2_1_latency_seconds": 0.449037
+      },
+      "deterministic_maintenance": {
+        "status": "DUE_SOON",
+        "progress_ratio": 0.9,
+        "maintenance_urgency_score": 44,
+        "maintenance_urgency_level": "YAKLAŞIYOR",
+        "maintenance_urgency_reason": "Bakım periyoduna 300 km kaldı (%90 ilerleme)",
+        "determining_dimension": "KM"
+      },
+      "v2_1_probabilities": {
+        "risk_30d": 0.128641,
+        "risk_60d": 0.26025,
+        "risk_90d": 0.444072,
+        "risk_120d": 0.629536,
+        "median_service_days": 329.0
+      },
+      "v2_0_legacy_probabilities": {
+        "risk_30d": 0.4,
+        "risk_60d": 0.40339237,
+        "risk_90d": 0.4469811,
+        "risk_120d": 0.64206312,
+        "median_service_days": 150
+      },
+      "provenance": {
+        "v2_annual_km_baseline": "USER_INPUT",
+        "v2_1_annual_km_baseline": "USER_INPUT",
+        "v2_coverage": {
+          "known_or_derived": 28,
+          "total": 117,
+          "missing": 89,
+          "ratio": 0.2393,
+          "verdict": "LIMITED_INFORMATION",
+          "groups": [
+            {
+              "key": "snapshot_context",
+              "label": "Anlık / atölye bağlamı",
+              "known": 5,
+              "total": 37,
+              "missing": 32
+            },
+            {
+              "key": "motorcycle",
+              "label": "Motosiklet / model",
+              "known": 14,
+              "total": 17,
+              "missing": 3
+            },
+            {
+              "key": "usage",
+              "label": "Kullanım",
+              "known": 3,
+              "total": 18,
+              "missing": 15
+            },
+            {
+              "key": "service_history",
+              "label": "Servis geçmişi",
+              "known": 6,
+              "total": 45,
+              "missing": 39
+            }
+          ],
+          "history_features_missing": 39,
+          "note": "This is input coverage, not a model confidence score."
+        },
+        "v2_1_feature_coverage": {
+          "resolved": 22,
+          "contract": 54,
+          "note": "coverage is not a confidence score"
+        }
+      },
+      "frontend": {
+        "source": "BACKEND_CANONICAL",
+        "score": 44,
+        "level": "YAKLAŞIYOR",
+        "determining_dimension": "KM"
+      },
+      "checks": {
+        "http_200": true,
+        "target_progress_ratio": true,
+        "frontend_backend_score": true,
+        "frontend_backend_level": true,
+        "frontend_backend_dimension": true,
+        "frontend_uses_backend_canonical": true,
+        "annual_usage_provenance_preserved": true,
+        "v2_1_horizons_monotonic": true
+      },
+      "pass": true
+    },
+    {
+      "name": "C_JUST_DUE",
+      "request": {
+        "brand": "Bajaj",
+        "model_id": "BAJAJ_NS200",
+        "production_year": 2020,
+        "snapshot_date": "2026-09-04",
+        "current_odometer_km": 15000,
+        "annual_km_baseline": 10000,
+        "usage_type": "COMMUTER",
+        "riding_intensity": "MEDIUM",
+        "last_service_date": "2026-09-03",
+        "last_service_odometer_km": 12000
+      },
+      "http": {
+        "v2_status": 200,
+        "v2_latency_seconds": 1.13713,
+        "v2_1_status": 200,
+        "v2_1_latency_seconds": 0.602928
+      },
+      "deterministic_maintenance": {
+        "status": "OVERDUE",
+        "progress_ratio": 1.0,
+        "maintenance_urgency_score": 50,
+        "maintenance_urgency_level": "GECİKMİŞ",
+        "maintenance_urgency_reason": "Bakım periyodu 1.0× seviyesinde aşıldı",
+        "determining_dimension": "KM"
+      },
+      "v2_1_probabilities": {
+        "risk_30d": 0.148218,
+        "risk_60d": 0.30303,
+        "risk_90d": 0.487448,
+        "risk_120d": 0.629536,
+        "median_service_days": 310.0
+      },
+      "v2_0_legacy_probabilities": {
+        "risk_30d": 0.4,
+        "risk_60d": 0.40339237,
+        "risk_90d": 0.4469811,
+        "risk_120d": 0.64206312,
+        "median_service_days": 150
+      },
+      "provenance": {
+        "v2_annual_km_baseline": "USER_INPUT",
+        "v2_1_annual_km_baseline": "USER_INPUT",
+        "v2_coverage": {
+          "known_or_derived": 28,
+          "total": 117,
+          "missing": 89,
+          "ratio": 0.2393,
+          "verdict": "LIMITED_INFORMATION",
+          "groups": [
+            {
+              "key": "snapshot_context",
+              "label": "Anlık / atölye bağlamı",
+              "known": 5,
+              "total": 37,
+              "missing": 32
+            },
+            {
+              "key": "motorcycle",
+              "label": "Motosiklet / model",
+              "known": 14,
+              "total": 17,
+              "missing": 3
+            },
+            {
+              "key": "usage",
+              "label": "Kullanım",
+              "known": 3,
+              "total": 18,
+              "missing": 15
+            },
+            {
+              "key": "service_history",
+              "label": "Servis geçmişi",
+              "known": 6,
+              "total": 45,
+              "missing": 39
+            }
+          ],
+          "history_features_missing": 39,
+          "note": "This is input coverage, not a model confidence score."
+        },
+        "v2_1_feature_coverage": {
+          "resolved": 22,
+          "contract": 54,
+          "note": "coverage is not a confidence score"
+        }
+      },
+      "frontend": {
+        "source": "BACKEND_CANONICAL",
+        "score": 50,
+        "level": "GECİKMİŞ",
+        "determining_dimension": "KM"
+      },
+      "checks": {
+        "http_200": true,
+        "target_progress_ratio": true,
+        "frontend_backend_score": true,
+        "frontend_backend_level": true,
+        "frontend_backend_dimension": true,
+        "frontend_uses_backend_canonical": true,
+        "annual_usage_provenance_preserved": true,
+        "v2_1_horizons_monotonic": true
+      },
+      "pass": true
+    },
+    {
+      "name": "D_OVERDUE",
+      "request": {
+        "brand": "Bajaj",
+        "model_id": "BAJAJ_NS200",
+        "production_year": 2020,
+        "snapshot_date": "2026-09-04",
+        "current_odometer_km": 16500,
+        "annual_km_baseline": 10000,
+        "usage_type": "COMMUTER",
+        "riding_intensity": "MEDIUM",
+        "last_service_date": "2026-09-03",
+        "last_service_odometer_km": 12000
+      },
+      "http": {
+        "v2_status": 200,
+        "v2_latency_seconds": 1.003974,
+        "v2_1_status": 200,
+        "v2_1_latency_seconds": 0.430873
+      },
+      "deterministic_maintenance": {
+        "status": "OVERDUE",
+        "progress_ratio": 1.5,
+        "maintenance_urgency_score": 75,
+        "maintenance_urgency_level": "ÇOK GECİKMİŞ",
+        "maintenance_urgency_reason": "1.500 km gecikmiş (kilometre periyodu 1.5× seviyesinde)",
+        "determining_dimension": "KM"
+      },
+      "v2_1_probabilities": {
+        "risk_30d": 0.227273,
+        "risk_60d": 0.44863,
+        "risk_90d": 0.656051,
+        "risk_120d": 0.75396,
+        "median_service_days": 263.0
+      },
+      "v2_0_legacy_probabilities": {
+        "risk_30d": 0.4,
+        "risk_60d": 0.40339237,
+        "risk_90d": 0.4469811,
+        "risk_120d": 0.64206312,
+        "median_service_days": 146
+      },
+      "provenance": {
+        "v2_annual_km_baseline": "USER_INPUT",
+        "v2_1_annual_km_baseline": "USER_INPUT",
+        "v2_coverage": {
+          "known_or_derived": 28,
+          "total": 117,
+          "missing": 89,
+          "ratio": 0.2393,
+          "verdict": "LIMITED_INFORMATION",
+          "groups": [
+            {
+              "key": "snapshot_context",
+              "label": "Anlık / atölye bağlamı",
+              "known": 5,
+              "total": 37,
+              "missing": 32
+            },
+            {
+              "key": "motorcycle",
+              "label": "Motosiklet / model",
+              "known": 14,
+              "total": 17,
+              "missing": 3
+            },
+            {
+              "key": "usage",
+              "label": "Kullanım",
+              "known": 3,
+              "total": 18,
+              "missing": 15
+            },
+            {
+              "key": "service_history",
+              "label": "Servis geçmişi",
+              "known": 6,
+              "total": 45,
+              "missing": 39
+            }
+          ],
+          "history_features_missing": 39,
+          "note": "This is input coverage, not a model confidence score."
+        },
+        "v2_1_feature_coverage": {
+          "resolved": 22,
+          "contract": 54,
+          "note": "coverage is not a confidence score"
+        }
+      },
+      "frontend": {
+        "source": "BACKEND_CANONICAL",
+        "score": 75,
+        "level": "ÇOK GECİKMİŞ",
+        "determining_dimension": "KM"
+      },
+      "checks": {
+        "http_200": true,
+        "target_progress_ratio": true,
+        "frontend_backend_score": true,
+        "frontend_backend_level": true,
+        "frontend_backend_dimension": true,
+        "frontend_uses_backend_canonical": true,
+        "annual_usage_provenance_preserved": true,
+        "v2_1_horizons_monotonic": true
+      },
+      "pass": true
+    },
+    {
+      "name": "E_CRITICAL",
+      "request": {
+        "brand": "Bajaj",
+        "model_id": "BAJAJ_NS200",
+        "production_year": 2020,
+        "snapshot_date": "2026-09-04",
+        "current_odometer_km": 27000,
+        "annual_km_baseline": 10000,
+        "usage_type": "COMMUTER",
+        "riding_intensity": "MEDIUM",
+        "last_service_date": "2026-09-03",
+        "last_service_odometer_km": 12000
+      },
+      "http": {
+        "v2_status": 200,
+        "v2_latency_seconds": 1.166589,
+        "v2_1_status": 200,
+        "v2_1_latency_seconds": 0.510851
+      },
+      "deterministic_maintenance": {
+        "status": "OVERDUE",
+        "progress_ratio": 5.0,
+        "maintenance_urgency_score": 100,
+        "maintenance_urgency_level": "KRİTİK",
+        "maintenance_urgency_reason": "12.000 km gecikmiş (kilometre periyodu 5.0× seviyesinde)",
+        "determining_dimension": "KM"
+      },
+      "v2_1_probabilities": {
+        "risk_30d": 0.236936,
+        "risk_60d": 0.466463,
+        "risk_90d": 0.656051,
+        "risk_120d": 0.75396,
+        "median_service_days": 261.0
+      },
+      "v2_0_legacy_probabilities": {
+        "risk_30d": 0.4,
+        "risk_60d": 0.41041482,
+        "risk_90d": 0.4469811,
+        "risk_120d": 0.64206312,
+        "median_service_days": 142
+      },
+      "provenance": {
+        "v2_annual_km_baseline": "USER_INPUT",
+        "v2_1_annual_km_baseline": "USER_INPUT",
+        "v2_coverage": {
+          "known_or_derived": 28,
+          "total": 117,
+          "missing": 89,
+          "ratio": 0.2393,
+          "verdict": "LIMITED_INFORMATION",
+          "groups": [
+            {
+              "key": "snapshot_context",
+              "label": "Anlık / atölye bağlamı",
+              "known": 5,
+              "total": 37,
+              "missing": 32
+            },
+            {
+              "key": "motorcycle",
+              "label": "Motosiklet / model",
+              "known": 14,
+              "total": 17,
+              "missing": 3
+            },
+            {
+              "key": "usage",
+              "label": "Kullanım",
+              "known": 3,
+              "total": 18,
+              "missing": 15
+            },
+            {
+              "key": "service_history",
+              "label": "Servis geçmişi",
+              "known": 6,
+              "total": 45,
+              "missing": 39
+            }
+          ],
+          "history_features_missing": 39,
+          "note": "This is input coverage, not a model confidence score."
+        },
+        "v2_1_feature_coverage": {
+          "resolved": 22,
+          "contract": 54,
+          "note": "coverage is not a confidence score"
+        }
+      },
+      "frontend": {
+        "source": "BACKEND_CANONICAL",
+        "score": 100,
+        "level": "KRİTİK",
+        "determining_dimension": "KM"
+      },
+      "checks": {
+        "http_200": true,
+        "target_progress_ratio": true,
+        "frontend_backend_score": true,
+        "frontend_backend_level": true,
+        "frontend_backend_dimension": true,
+        "frontend_uses_backend_canonical": true,
+        "annual_usage_provenance_preserved": true,
+        "v2_1_horizons_monotonic": true
+      },
+      "pass": true
+    },
+    {
+      "name": "F_NS200_EXTREME",
+      "request": {
+        "brand": "Bajaj",
+        "model_id": "BAJAJ_NS200",
+        "production_year": 2020,
+        "snapshot_date": "2026-09-04",
+        "current_odometer_km": 42000,
+        "annual_km_baseline": 10000,
+        "usage_type": "COMMUTER",
+        "riding_intensity": "MEDIUM",
+        "last_service_date": "2026-08-01",
+        "last_service_odometer_km": 12000
+      },
+      "http": {
+        "v2_status": 200,
+        "v2_latency_seconds": 1.087026,
+        "v2_1_status": 200,
+        "v2_1_latency_seconds": 0.414718
+      },
+      "deterministic_maintenance": {
+        "status": "OVERDUE",
+        "progress_ratio": 10.0,
+        "maintenance_urgency_score": 100,
+        "maintenance_urgency_level": "KRİTİK",
+        "maintenance_urgency_reason": "27.000 km gecikmiş (kilometre periyodu 10.0× seviyesinde)",
+        "determining_dimension": "KM"
+      },
+      "v2_1_probabilities": {
+        "risk_30d": 0.236936,
+        "risk_60d": 0.466463,
+        "risk_90d": 0.656051,
+        "risk_120d": 0.75396,
+        "median_service_days": 259.0
+      },
+      "v2_0_legacy_probabilities": {
+        "risk_30d": 0.07670512,
+        "risk_60d": 0.37683637,
+        "risk_90d": 0.42940815,
+        "risk_120d": 0.57852047,
+        "median_service_days": 158
+      },
+      "provenance": {
+        "v2_annual_km_baseline": "USER_INPUT",
+        "v2_1_annual_km_baseline": "USER_INPUT",
+        "v2_coverage": {
+          "known_or_derived": 28,
+          "total": 117,
+          "missing": 89,
+          "ratio": 0.2393,
+          "verdict": "LIMITED_INFORMATION",
+          "groups": [
+            {
+              "key": "snapshot_context",
+              "label": "Anlık / atölye bağlamı",
+              "known": 5,
+              "total": 37,
+              "missing": 32
+            },
+            {
+              "key": "motorcycle",
+              "label": "Motosiklet / model",
+              "known": 14,
+              "total": 17,
+              "missing": 3
+            },
+            {
+              "key": "usage",
+              "label": "Kullanım",
+              "known": 3,
+              "total": 18,
+              "missing": 15
+            },
+            {
+              "key": "service_history",
+              "label": "Servis geçmişi",
+              "known": 6,
+              "total": 45,
+              "missing": 39
+            }
+          ],
+          "history_features_missing": 39,
+          "note": "This is input coverage, not a model confidence score."
+        },
+        "v2_1_feature_coverage": {
+          "resolved": 22,
+          "contract": 54,
+          "note": "coverage is not a confidence score"
+        }
+      },
+      "frontend": {
+        "source": "BACKEND_CANONICAL",
+        "score": 100,
+        "level": "KRİTİK",
+        "determining_dimension": "KM"
+      },
+      "checks": {
+        "http_200": true,
+        "target_progress_ratio": true,
+        "frontend_backend_score": true,
+        "frontend_backend_level": true,
+        "frontend_backend_dimension": true,
+        "frontend_uses_backend_canonical": true,
+        "annual_usage_provenance_preserved": true,
+        "v2_1_horizons_monotonic": true
+      },
+      "pass": true
+    }
+  ]
+}

@@ -39,8 +39,44 @@
           "risk_120d": 0.82370121
         }
       }
+    },
+    {
+      "stage": "post_backend_deploy",
+      "timestamp_utc": "2026-09-04T15:51:11Z",
+      "classification": "CURRENT",
+      "render_deploy_id": "dep-dadegu1t0dsc7389ekag",
+      "git_commit": "2ecedf4cff79a289d932ff44ebc6346affaaa0a6",
+      "http_status": 200,
+      "latency_seconds": 1.179737,
+      "field_presence": {
+        "maintenance_urgency_score": true,
+        "maintenance_urgency_level": true,
+        "maintenance_urgency_reason": true,
+        "determining_dimension": true,
+        "progress_ratio": true
+      },
+      "response_excerpt": {
+        "mode": "SCENARIO_PARTIAL",
+        "maintenance": {
+          "status": "OVERDUE",
+          "progress_ratio": 10.0,
+          "km_progress_ratio": 10.0,
+          "time_progress_ratio": 0.1862,
+          "maintenance_urgency_score": 100,
+          "maintenance_urgency_level": "KRİTİK",
+          "maintenance_urgency_reason": "27.000 km gecikmiş (kilometre periyodu 10.0× seviyesinde)",
+          "determining_dimension": "KM"
+        },
+        "v2": {
+          "risk_30d": 0.0797877,
+          "risk_60d": 0.38654509,
+          "risk_90d": 0.49490988,
+          "risk_120d": 0.82370121
+        }
+      },
+      "v2_probability_regression_vs_pre_hardening": "EXACT_MATCH"
     }
   ],
-  "current_classification": "STALE",
-  "conclusion": "The live response is healthy at the transport level but does not yet serve four canonical urgency fields. Frontend rendering alone is not accepted as backend verification."
+  "current_classification": "CURRENT",
+  "conclusion": "Render was stale before hardening, then manually deployed from commit 2ecedf4. The post-deploy live response is HTTP 200 and includes all five required canonical fields. V2.0 probabilities for the identical request are unchanged."
 }
