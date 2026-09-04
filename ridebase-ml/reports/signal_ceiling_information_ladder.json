@@ -1,0 +1,158 @@
+{
+  "study": "RIDEBASE_V1_5_INFORMATION_LADDER",
+  "tiers": {
+    "M0_O0": {
+      "tier_name": "Tier O0 (Core 54 Observable)",
+      "feature_count": 54,
+      "elapsed_seconds": 10.11,
+      "overall_metrics": {
+        "ipcw_c_index": 0.727087,
+        "harrell_c_index": 0.727261,
+        "ibs_30_120": 0.396367,
+        "mean_dynamic_auc": 0.800256,
+        "auc_horizons": {
+          "30": 0.7744,
+          "60": 0.7992,
+          "90": 0.8156,
+          "120": 0.828
+        },
+        "brier_horizons": {
+          "30": 0.1806,
+          "60": 0.341,
+          "90": 0.4714,
+          "120": 0.5727
+        },
+        "ece_90d": 0.4777
+      },
+      "temporal_slice_c_index": {
+        "slice_jul_aug": 0.745178,
+        "slice_sep_oct": 0.724778,
+        "slice_nov_dec": 0.712239
+      }
+    },
+    "M1_O1": {
+      "tier_name": "Tier O1 (Extended 60 Observable)",
+      "feature_count": 60,
+      "elapsed_seconds": 10.3,
+      "overall_metrics": {
+        "ipcw_c_index": 0.736649,
+        "harrell_c_index": 0.736888,
+        "ibs_30_120": 0.386154,
+        "mean_dynamic_auc": 0.81296,
+        "auc_horizons": {
+          "30": 0.7996,
+          "60": 0.8095,
+          "90": 0.8211,
+          "120": 0.8316
+        },
+        "brier_horizons": {
+          "30": 0.1707,
+          "60": 0.3299,
+          "90": 0.4604,
+          "120": 0.5657
+        },
+        "ece_90d": 0.4664
+      },
+      "temporal_slice_c_index": {
+        "slice_jul_aug": 0.75434,
+        "slice_sep_oct": 0.734312,
+        "slice_nov_dec": 0.721967
+      }
+    },
+    "M2_O2": {
+      "tier_name": "Tier O2 (Max 95 Observable)",
+      "feature_count": 95,
+      "elapsed_seconds": 11.32,
+      "overall_metrics": {
+        "ipcw_c_index": 0.736747,
+        "harrell_c_index": 0.73698,
+        "ibs_30_120": 0.383007,
+        "mean_dynamic_auc": 0.812544,
+        "auc_horizons": {
+          "30": 0.7983,
+          "60": 0.8091,
+          "90": 0.8211,
+          "120": 0.8321
+        },
+        "brier_horizons": {
+          "30": 0.1694,
+          "60": 0.3265,
+          "90": 0.4568,
+          "120": 0.5619
+        },
+        "ece_90d": 0.4628
+      },
+      "temporal_slice_c_index": {
+        "slice_jul_aug": 0.754161,
+        "slice_sep_oct": 0.734644,
+        "slice_nov_dec": 0.721847
+      }
+    },
+    "M3_O2_L1": {
+      "tier_name": "Tier O2 + L1 (95 Obs + 7 Latent Stable)",
+      "feature_count": 102,
+      "elapsed_seconds": 11.43,
+      "overall_metrics": {
+        "ipcw_c_index": 0.742967,
+        "harrell_c_index": 0.743219,
+        "ibs_30_120": 0.373594,
+        "mean_dynamic_auc": 0.820437,
+        "auc_horizons": {
+          "30": 0.8085,
+          "60": 0.8171,
+          "90": 0.8278,
+          "120": 0.8373
+        },
+        "brier_horizons": {
+          "30": 0.1641,
+          "60": 0.3181,
+          "90": 0.4464,
+          "120": 0.5485
+        },
+        "ece_90d": 0.4527
+      },
+      "temporal_slice_c_index": {
+        "slice_jul_aug": 0.761248,
+        "slice_sep_oct": 0.742008,
+        "slice_nov_dec": 0.726339
+      }
+    },
+    "M4_O2_L1_L2": {
+      "tier_name": "Tier O2 + L1 + L2 (110 Obs + Latent Dynamic)",
+      "feature_count": 110,
+      "elapsed_seconds": 11.6,
+      "overall_metrics": {
+        "ipcw_c_index": 0.746963,
+        "harrell_c_index": 0.747208,
+        "ibs_30_120": 0.367108,
+        "mean_dynamic_auc": 0.824421,
+        "auc_horizons": {
+          "30": 0.8122,
+          "60": 0.8209,
+          "90": 0.8319,
+          "120": 0.8419
+        },
+        "brier_horizons": {
+          "30": 0.1598,
+          "60": 0.3112,
+          "90": 0.4392,
+          "120": 0.5421
+        },
+        "ece_90d": 0.4452
+      },
+      "temporal_slice_c_index": {
+        "slice_jul_aug": 0.765141,
+        "slice_sep_oct": 0.745643,
+        "slice_nov_dec": 0.730789
+      }
+    }
+  },
+  "gaps": {
+    "observable_feature_gain_m2_minus_m1": 9.8e-05,
+    "latent_stable_gap_m3_minus_m2": 0.00622,
+    "latent_dynamic_gap_m4_minus_m3": 0.003996,
+    "total_oracle_gap_m4_minus_m2": 0.010216,
+    "total_observable_over_core_m2_minus_m0": 0.00966,
+    "ibs_reduction_oracle_m2_minus_m4": 0.015899
+  }
+}
