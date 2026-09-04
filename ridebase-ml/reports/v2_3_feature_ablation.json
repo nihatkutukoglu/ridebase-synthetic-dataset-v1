@@ -1,0 +1,144 @@
+{
+  "status": "FAIL",
+  "test_rows_read": false,
+  "validation_period": "2025-11-01..2025-12-31",
+  "results": {
+    "CORE54": {
+      "feature_count": 54,
+      "ipcw_c_index": 0.7091210591290575,
+      "harrell_c_index": 0.7092918147414311,
+      "ibs": 0.1730142139007096,
+      "mean_auc": 0.7794132338721271,
+      "calibration_error": 0.01585608437046761,
+      "resolution": {
+        "p30_exact_zero_share": 0.0,
+        "p30_unique_8dp": 11990,
+        "p30_largest_plateau_share": 0.0011108466238197254,
+        "horizon_monotonicity": true
+      }
+    },
+    "EXTENDED60": {
+      "feature_count": 60,
+      "ipcw_c_index": 0.720136704547301,
+      "harrell_c_index": 0.7203864270544313,
+      "ibs": 0.16820012226519346,
+      "mean_auc": 0.7947291746823145,
+      "calibration_error": 0.015772289938267677,
+      "resolution": {
+        "p30_exact_zero_share": 0.0,
+        "p30_unique_8dp": 11726,
+        "p30_largest_plateau_share": 0.0015869237483138936,
+        "horizon_monotonicity": true
+      }
+    },
+    "V2_3_FULL95": {
+      "feature_count": 95,
+      "ipcw_c_index": 0.72073121468386,
+      "harrell_c_index": 0.7209811361288361,
+      "ibs": 0.16798515557655266,
+      "mean_auc": 0.7954675229186075,
+      "calibration_error": 0.014688766120278317,
+      "resolution": {
+        "p30_exact_zero_share": 0.0,
+        "p30_unique_8dp": 12059,
+        "p30_largest_plateau_share": 0.0012695389986511149,
+        "horizon_monotonicity": true
+      }
+    },
+    "MINUS_APPOINTMENT": {
+      "feature_count": 86,
+      "ipcw_c_index": 0.719688987620171,
+      "harrell_c_index": 0.7199324855481802,
+      "ibs": 0.16857139070159977,
+      "mean_auc": 0.7939320341867314,
+      "calibration_error": 0.015143696710575425,
+      "resolution": {
+        "p30_exact_zero_share": 0.0,
+        "p30_unique_8dp": 12054,
+        "p30_largest_plateau_share": 0.0011108466238197254,
+        "horizon_monotonicity": true
+      }
+    },
+    "MINUS_ADHERENCE": {
+      "feature_count": 87,
+      "ipcw_c_index": 0.7204424623370903,
+      "harrell_c_index": 0.7206911844062706,
+      "ibs": 0.1682398399034967,
+      "mean_auc": 0.7949485774604722,
+      "calibration_error": 0.0150870685642176,
+      "resolution": {
+        "p30_exact_zero_share": 0.0,
+        "p30_unique_8dp": 12134,
+        "p30_largest_plateau_share": 0.0007934618741569468,
+        "horizon_monotonicity": true
+      }
+    },
+    "MINUS_ENGAGEMENT": {
+      "feature_count": 91,
+      "ipcw_c_index": 0.7203821705918089,
+      "harrell_c_index": 0.720628324046316,
+      "ibs": 0.16819882150180424,
+      "mean_auc": 0.7947784692629613,
+      "calibration_error": 0.015512618999837927,
+      "resolution": {
+        "p30_exact_zero_share": 0.0,
+        "p30_unique_8dp": 11972,
+        "p30_largest_plateau_share": 0.00119019281123542,
+        "horizon_monotonicity": true
+      }
+    },
+    "MINUS_WORKSHOP": {
+      "feature_count": 92,
+      "ipcw_c_index": 0.7206151265762613,
+      "harrell_c_index": 0.7208613741694537,
+      "ibs": 0.16807967345510622,
+      "mean_auc": 0.7950782676502617,
+      "calibration_error": 0.01598294021029681,
+      "resolution": {
+        "p30_exact_zero_share": 0.0,
+        "p30_unique_8dp": 12118,
+        "p30_largest_plateau_share": 0.0008728080615726414,
+        "horizon_monotonicity": true
+      }
+    },
+    "MINUS_USAGE": {
+      "feature_count": 89,
+      "ipcw_c_index": 0.7202146633568551,
+      "harrell_c_index": 0.7204672223708508,
+      "ibs": 0.16815404529702296,
+      "mean_auc": 0.7951451120659528,
+      "calibration_error": 0.015221186462688753,
+      "resolution": {
+        "p30_exact_zero_share": 0.0,
+        "p30_unique_8dp": 12126,
+        "p30_largest_plateau_share": 0.0009521542489883361,
+        "horizon_monotonicity": true
+      }
+    },
+    "MINUS_BREAKDOWN": {
+      "feature_count": 90,
+      "ipcw_c_index": 0.7205835055376572,
+      "harrell_c_index": 0.7208311566037631,
+      "ibs": 0.16804788550236266,
+      "mean_auc": 0.7951888307758969,
+      "calibration_error": 0.01468366324623955,
+      "resolution": {
+        "p30_exact_zero_share": 0.0,
+        "p30_unique_8dp": 12111,
+        "p30_largest_plateau_share": 0.0007934618741569468,
+        "horizon_monotonicity": true
+      }
+    }
+  },
+  "delta_full_vs_extended60": {
+    "ipcw_c_index": 0.0005945101365589789,
+    "ibs": -0.00021496668864079416,
+    "mean_auc": 0.0007383482362929294,
+    "calibration_error": -0.0010835238179893597
+  },
+  "checks": {
+    "full_improves_discrimination": false,
+    "full_ibs_stable": true,
+    "full_calibration_acceptable": true
+  }
+}
