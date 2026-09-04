@@ -1,0 +1,242 @@
+{
+  "raw": {
+    "calibration": {
+      "horizons": {
+        "30": {
+          "brier": 0.16804590384355167,
+          "calibration_error": 0.16757156480025506,
+          "exact_zero_share": 0.0,
+          "unique_probability_levels": 3286
+        },
+        "60": {
+          "brier": 0.3242295071548536,
+          "calibration_error": 0.325772781039875,
+          "exact_zero_share": 0.0,
+          "unique_probability_levels": 5438
+        },
+        "90": {
+          "brier": 0.4564325072103971,
+          "calibration_error": 0.4604059404261471,
+          "exact_zero_share": 0.0,
+          "unique_probability_levels": 7324
+        },
+        "120": {
+          "brier": 0.5649167212691084,
+          "calibration_error": 0.5706777183492358,
+          "exact_zero_share": 0.0,
+          "unique_probability_levels": 9082
+        }
+      },
+      "mean_brier": 0.3784061598694777,
+      "mean_calibration_error": 0.38110700115387824
+    },
+    "resolution": {
+      "p30_exact_zero_share": 0.0,
+      "p30_unique_8dp": 3288,
+      "p30_largest_plateau_share": 0.4917876696024756,
+      "p30_min": 1e-06,
+      "p30_median": 1.0381443689144731e-06,
+      "p30_max": 0.999999
+    }
+  },
+  "isotonic": {
+    "calibration": {
+      "horizons": {
+        "30": {
+          "brier": 0.12424967310689491,
+          "calibration_error": 0.009386579988486672,
+          "exact_zero_share": 0.0,
+          "unique_probability_levels": 49
+        },
+        "60": {
+          "brier": 0.17520604139573648,
+          "calibration_error": 0.019109781344280576,
+          "exact_zero_share": 0.0,
+          "unique_probability_levels": 72
+        },
+        "90": {
+          "brier": 0.18509734673708508,
+          "calibration_error": 0.024231598563882295,
+          "exact_zero_share": 0.0,
+          "unique_probability_levels": 100
+        },
+        "120": {
+          "brier": 0.1709719399216515,
+          "calibration_error": 0.015053006684616293,
+          "exact_zero_share": 0.0,
+          "unique_probability_levels": 105
+        }
+      },
+      "mean_brier": 0.163881250290342,
+      "mean_calibration_error": 0.01694524164531646
+    },
+    "resolution": {
+      "p30_exact_zero_share": 0.0,
+      "p30_unique_8dp": 49,
+      "p30_largest_plateau_share": 0.49988098071887643,
+      "p30_min": 0.0757679180887372,
+      "p30_median": 0.12653607215794316,
+      "p30_max": 0.8427672955974843
+    }
+  },
+  "platt": {
+    "calibration": {
+      "horizons": {
+        "30": {
+          "brier": 0.12888206074197367,
+          "calibration_error": 0.041117252811182524,
+          "exact_zero_share": 0.0,
+          "unique_probability_levels": 5976
+        },
+        "60": {
+          "brier": 0.17790670905338238,
+          "calibration_error": 0.05088941132677928,
+          "exact_zero_share": 0.0,
+          "unique_probability_levels": 12041
+        },
+        "90": {
+          "brier": 0.18707311510442384,
+          "calibration_error": 0.046901919845985775,
+          "exact_zero_share": 0.0,
+          "unique_probability_levels": 11958
+        },
+        "120": {
+          "brier": 0.17345566069600546,
+          "calibration_error": 0.04229463511891411,
+          "exact_zero_share": 0.0,
+          "unique_probability_levels": 11881
+        }
+      },
+      "mean_brier": 0.16682938639894634,
+      "mean_calibration_error": 0.04530080477571542
+    },
+    "resolution": {
+      "p30_exact_zero_share": 0.0,
+      "p30_unique_8dp": 5991,
+      "p30_largest_plateau_share": 0.49170832341505993,
+      "p30_min": 0.12671884067840547,
+      "p30_median": 0.12748489483474038,
+      "p30_max": 0.959539810829682
+    }
+  },
+  "beta": {
+    "calibration": {
+      "horizons": {
+        "30": {
+          "brier": 0.1263538339424298,
+          "calibration_error": 0.020240412275038318,
+          "exact_zero_share": 0.0,
+          "unique_probability_levels": 5977
+        },
+        "60": {
+          "brier": 0.17633933635892435,
+          "calibration_error": 0.03221114623175921,
+          "exact_zero_share": 0.0,
+          "unique_probability_levels": 12043
+        },
+        "90": {
+          "brier": 0.18573737020407968,
+          "calibration_error": 0.03602164015123682,
+          "exact_zero_share": 0.0,
+          "unique_probability_levels": 12005
+        },
+        "120": {
+          "brier": 0.1725894711151203,
+          "calibration_error": 0.041183457937716536,
+          "exact_zero_share": 0.0,
+          "unique_probability_levels": 11917
+        }
+      },
+      "mean_brier": 0.1652550029051385,
+      "mean_calibration_error": 0.03241416414893772
+    },
+    "resolution": {
+      "p30_exact_zero_share": 0.0,
+      "p30_unique_8dp": 5992,
+      "p30_largest_plateau_share": 0.49170832341505993,
+      "p30_min": 0.10583091876782301,
+      "p30_median": 0.10686344792868042,
+      "p30_max": 0.8578558273627241
+    }
+  },
+  "isotonic_beta_blend_0.75": {
+    "calibration": {
+      "horizons": {
+        "30": {
+          "brier": 0.12445965539018498,
+          "calibration_error": 0.013057322608546877,
+          "exact_zero_share": 0.0,
+          "unique_probability_levels": 5974
+        },
+        "60": {
+          "brier": 0.17510904568954083,
+          "calibration_error": 0.015033456747517476,
+          "exact_zero_share": 0.0,
+          "unique_probability_levels": 12035
+        },
+        "90": {
+          "brier": 0.184601849853338,
+          "calibration_error": 0.013413099703033518,
+          "exact_zero_share": 0.0,
+          "unique_probability_levels": 11999
+        },
+        "120": {
+          "brier": 0.17064302027436393,
+          "calibration_error": 0.014415746417786214,
+          "exact_zero_share": 0.0,
+          "unique_probability_levels": 11906
+        }
+      },
+      "mean_brier": 0.16370339280185695,
+      "mean_calibration_error": 0.013979906369221022
+    },
+    "resolution": {
+      "p30_exact_zero_share": 0.0,
+      "p30_unique_8dp": 5989,
+      "p30_largest_plateau_share": 0.49170832341505993,
+      "p30_min": 0.08328366825850865,
+      "p30_median": 0.12161791610062747,
+      "p30_max": 0.8394845453310278
+    }
+  },
+  "isotonic_beta_blend_0.50": {
+    "calibration": {
+      "horizons": {
+        "30": {
+          "brier": 0.12488034295720415,
+          "calibration_error": 0.020905686237551027,
+          "exact_zero_share": 0.0,
+          "unique_probability_levels": 5975
+        },
+        "60": {
+          "brier": 0.1752655962813403,
+          "calibration_error": 0.019682520781436216,
+          "exact_zero_share": 0.0,
+          "unique_probability_levels": 12039
+        },
+        "90": {
+          "brier": 0.18454335480325476,
+          "calibration_error": 0.011784611567019912,
+          "exact_zero_share": 0.0,
+          "unique_probability_levels": 12003
+        },
+        "120": {
+          "brier": 0.17080296892417954,
+          "calibration_error": 0.01821278172261987,
+          "exact_zero_share": 0.0,
+          "unique_probability_levels": 11917
+        }
+      },
+      "mean_brier": 0.1638730657414947,
+      "mean_calibration_error": 0.017646400077156756
+    },
+    "resolution": {
+      "p30_exact_zero_share": 0.0,
+      "p30_unique_8dp": 5990,
+      "p30_largest_plateau_share": 0.49170832341505993,
+      "p30_min": 0.0907994184282801,
+      "p30_median": 0.11669976004331178,
+      "p30_max": 0.8362017950645713
+    }
+  }
+}

@@ -1,0 +1,12 @@
+{
+  "n_estimators": 360,
+  "max_depth": 4,
+  "learning_rate": 0.035,
+  "min_child_weight": 24,
+  "subsample": 0.84,
+  "colsample_bytree": 0.84,
+  "reg_alpha": 0.02,
+  "reg_lambda": 2.5,
+  "gamma": 0,
+  "max_delta_step": 0
+}
