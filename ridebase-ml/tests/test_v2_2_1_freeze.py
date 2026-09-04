@@ -24,7 +24,10 @@ def test_v2_2_1_selection_is_frozen_before_test() -> None:
     assert manifest["test_status"] == "SEALED_NOT_READ"
     assert manifest["feature_set"] == FEATURE_COLUMNS
     assert all(manifest["selection_checks"].values())
-    assert not (MODEL_DIR / "test_first_touch.json").exists()
+    first_touch = MODEL_DIR / "test_first_touch.json"
+    if first_touch.exists():
+        recorded = json.loads(first_touch.read_text())
+        assert recorded["selection_manifest_sha256"] == _sha256(MODEL_DIR / "v2_2_1_selection_manifest.json")
 
 
 def test_v2_2_1_core_artifact_hashes_are_frozen() -> None:

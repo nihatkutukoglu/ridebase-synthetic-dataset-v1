@@ -1,0 +1,15 @@
+{
+  "baseline_hazard.joblib": "34a93c14cada14938504215f044d2672ffcd3f7afc4c786ef7bc3b21f823e187",
+  "behavior_audit.json": "638beedca665b3fa370c54b1172ba5714423bc2e03adbf9cd02d99a90cbafedf",
+  "calibration_search.json": "6598e9d69eaa9937b5ab6a1be4d10a39e298440aaf869fcafe428d1355ff2b0b",
+  "calibrator.joblib": "a52b74463d6c95d185ab6a724639586b00ae112b069d832c56f6fbb21a6b8014",
+  "challenger_model.joblib": "d28b2e8a443da8383a59112ea23542fd9d83b7a3d66a9ef49d1cade704dac854",
+  "feature_list.json": "1ecc0056ad1cd2455966bcf6e58e567d8e4a0351e47da4db5917c26e1e5076c3",
+  "frozen_test_predictions.parquet": "4b546d8fd3a96200b8442bad3f7a235b76dc6e4f57c2ca3df18bf52f8e7ed9eb",
+  "hyperparameters.json": "5e3618ee3e4595864656366a9941c119940fe2f0273f5aba206fc561d5e3a8a0",
+  "preprocessor.joblib": "5ad3e63e7e2c1b0a9a9fab1ed8001a933336cbfa2ac08d18b9f3c4f9eeacc643",
+  "test_evaluation.json": "597a50be04c46cbc496d4719a9c0fedf24209e28ba9ae2277e231e511df8d12d",
+  "test_first_touch.json": "44846d83c1aa7d7c8ea6453635444ea15b82658540f0896bdda4324daccb207b",
+  "v2_2_1_selection_manifest.json": "9cff911374422d21709590c1fa38618eef0e75f961f286fd603724feab5d8566",
+  "validation_metrics.json": "b5cd578376aa5b319230fab81d9705a4a507c96c2acc6337616b2ec86000f5ed"
+}

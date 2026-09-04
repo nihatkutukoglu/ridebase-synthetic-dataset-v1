@@ -44,5 +44,10 @@ def test_calibration_recovery_improves_without_ranking_regression() -> None:
     assert report["selected_metrics"]["behavior"]["status"] == "PASS"
 
 
-def test_no_v2_2_1_test_first_touch_exists_during_search() -> None:
-    assert not (ROOT / "models/v2_2_1_v1_5/test_first_touch.json").exists()
+def test_search_artifacts_remain_test_free_after_first_touch() -> None:
+    for filename in [
+        "v2_2_1_feature_ablation.json", "v2_2_1_xgb_search.json",
+        "v2_2_1_ensemble_search.json", "v2_2_1_recovery_selection.json",
+    ]:
+        report = json.loads((ROOT / "reports" / filename).read_text())
+        assert report["test_rows_read"] is False
