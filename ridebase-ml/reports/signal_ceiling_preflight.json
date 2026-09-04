@@ -1,0 +1,31 @@
+{
+  "study": "RIDEBASE_V1_5_SIGNAL_CEILING_ORACLE_GAP",
+  "status": "PASS",
+  "git": {
+    "starting_head": "1b060438420e769b5fe17f1b2a66dcb2d13efaf4",
+    "expected_head": "1b06043ef6ef22e865f12660a927a419eb5ce9b6",
+    "branch": "main",
+    "working_tree_clean": true
+  },
+  "baseline_tests": {
+    "ridebase_ml": "109 passed",
+    "backend": "83 passed",
+    "control_center": "25 passed",
+    "total": "217 passed"
+  },
+  "datasets": {
+    "v1_4_source_tables": true,
+    "v1_5_source_tables": true,
+    "v2_1_modeling_table": "/Users/nihatkutukoglu/Downloads/ridebase_synthetic_dataset_v1/ridebase-ml/derived_outputs/v2_1_v1_4/v2_1_modeling_table.parquet",
+    "v2_2_modeling_table": "/Users/nihatkutukoglu/Downloads/ridebase_synthetic_dataset_v1/ridebase-ml/derived_outputs/v2_2_v1_5/v2_2_modeling_table.parquet",
+    "v2_3_modeling_table": "/Users/nihatkutukoglu/Downloads/ridebase_synthetic_dataset_v1/ridebase-ml/derived_outputs/v2_3_v1_5/v2_3_modeling_table.parquet",
+    "v1_5_generator_audit": "/Users/nihatkutukoglu/Downloads/ridebase_synthetic_dataset_v1/ridebase_v1_5/reports/v1_5_generator_event_audit.parquet"
+  },
+  "rules": {
+    "v1_5_test_sealed": true,
+    "v2_1_production_untouched": true,
+    "no_deploy": true,
+    "real_fleet_pending": true,
+    "v3_on_hold": true
+  }
+}

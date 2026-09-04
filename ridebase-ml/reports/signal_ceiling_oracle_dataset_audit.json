@@ -1,0 +1,39 @@
+{
+  "dataset_name": "oracle_study_dataset",
+  "timestamp": "2026-09-04T08:51:38Z",
+  "splits_included": [
+    "TRAIN",
+    "VALIDATION"
+  ],
+  "test_split_included": false,
+  "total_rows": 171899,
+  "train_rows": 135448,
+  "validation_rows": 36451,
+  "tier_o0_feature_count": 54,
+  "tier_o1_feature_count": 60,
+  "tier_o2_feature_count": 95,
+  "tier_l1_feature_count": 7,
+  "tier_l2_feature_count": 8,
+  "tier_h_feature_count": 2,
+  "oracle_columns": [
+    "oracle_latent_profile",
+    "oracle_latent_adherence",
+    "oracle_latent_no_show_tendency",
+    "oracle_latent_price_sensitivity",
+    "oracle_latent_loyalty",
+    "oracle_latent_churn_tendency",
+    "oracle_latent_frailty",
+    "oracle_latent_is_churned_at_landmark",
+    "oracle_latent_step_hazard_periodic",
+    "oracle_latent_step_hazard_appointment_create",
+    "oracle_latent_step_hazard_direct_periodic",
+    "oracle_latent_step_hazard_breakdown",
+    "oracle_latent_step_hazard_repair",
+    "oracle_latent_step_hazard_tire",
+    "oracle_latent_step_hazard_total",
+    "oracle_true_hazard_instantaneous",
+    "oracle_true_propensity_proxy"
+  ],
+  "future_leakage_check": "PASS - All oracle variables computed strictly at or before landmark timestamp",
+  "production_contamination_check": "PASS - Zero oracle columns exist in production packages or APIs"
+}
