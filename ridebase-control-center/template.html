@@ -1624,7 +1624,7 @@ function v2ModeScenario(){
     +'<div class="sec">'+card("2 · Kullanım","yalnız anlamlı ürün bilgileri",use)+'</div>'
     +'<div class="sec">'+card("3 · Servis geçmişi","varsa son servis bilgisi",service)+'</div>'
     +'<div class="sec">'+card("4 · Bilgi kapsamı","117 alan backend tarafından sayılır",'<div id="v2coveragePreview"><p class="copy">Seçimler tamamlanınca tahmin yanıtı; <code>USER_INPUT</code>, <code>MODEL_MASTER</code>, <code>DERIVED</code> ve <code>MISSING_PREPROCESSOR</code> kaynaklarını ayrı ayrı gösterecek. Bu oran güven skoru değildir.</p></div>')+'</div>'
-    +'<div class="sec">'+card("5 · Tahmin","frozen V1 + V2 modelleri",'<div id="v2scenarioErr" class="finding bad" style="display:none"></div><div class="chips" style="margin-top:4px"><button class="subtab" id="v2scenarioRun" style="border:1px solid var(--border);border-radius:8px">V1 + V2 SENARYO TAHMİNİNİ HESAPLA</button></div><div id="v2scenarioOut" style="margin-top:12px"></div>')+'</div>';
+    +'<div class="sec">'+card("5 · Tahmin","V2.1 primary (müşteri servis dönüşü) · V2.0 legacy research",'<div id="v2scenarioErr" class="finding bad" style="display:none"></div><div class="chips" style="margin-top:4px"><button class="subtab" id="v2scenarioRun" style="border:1px solid var(--border);border-radius:8px">V2.1 MÜŞTERİ SERVİS DÖNÜŞ TAHMİNİNİ HESAPLA</button></div><div id="v2scenarioOut" style="margin-top:12px"></div>')+'</div>';
   var brand=document.getElementById("v2brand"),model=document.getElementById("v2model"),year=document.getElementById("v2year");
   brand.addEventListener("change",function(){
     var models=v2ModelsForBrand(brand.value);
@@ -1669,9 +1669,10 @@ function v2CoverageCard(c,p){
     +'<p class="copy" style="margin-top:10px">Hizmet geçmişi bağlı olmadığı için <b>'+c.history_features_missing+'</b> geçmiş-temelli özellik bilinmiyor. <b>Bu oran modelin güven skoru değildir;</b> modele ne kadar bilgi sağlandığını gösterir.</p>'
     +'<details style="margin-top:12px"><summary style="cursor:pointer;color:var(--text-2)">Teknik feature provenance tablosu ('+c.total+')</summary><div class="twrap" style="margin-top:8px;max-height:360px;overflow:auto"><table class="tbl"><thead><tr><th>Feature</th><th>Kaynak</th><th>Açıklama</th></tr></thead><tbody>'+prov+'</tbody></table></div></details>');
 }
-function v2MaintenanceCard(m){
+function v2MaintenanceCard(m, p){
   if(!m||m.status==="UNKNOWN"){
-    return finding("warn","KİŞİSEL BAKIM DURUMU · HESAPLANAMADI","<p><b>Güncel kilometre, son servis tarihi ve son servis kilometresi birlikte gerekli.</b> Bu başlangıç noktası tamamlanmadığı için kişisel bakım tarihi, kalan mesafe veya gecikme hesaplanamaz.</p>");
+    return finding("warn","GENEL / BENZER MOTORLARA DAYALI SENARYO · KİŞİSEL BAKIM HESAPLANAMADI",
+      "<p><b>Güncel kilometre, son servis tarihi ve son servis kilometresi birlikte gerekli.</b> Bu başlangıç noktası tamamlanmadığı için kişisel bakım tarihi hesaplanmadı, kalan mesafe veya gecikme belirlenemez.</p>");
   }
   var policy=m.policy||{},kind=m.status==="OVERDUE"?"bad":m.status==="DUE_SOON"?"warn":"good";
   var delta=m.status==="OVERDUE"
@@ -1679,38 +1680,168 @@ function v2MaintenanceCard(m){
     :(m.driving_metric==="KM"?n0(m.remaining_km)+" km kaldı":n0(m.remaining_days)+" gün kaldı");
   var since=(m.km_since_service!=null?n0(m.km_since_service)+" km":"—")
     +(m.days_since_service!=null?" · "+n0(m.days_since_service)+" gün":"");
-  var recent=m.recent_annualized_km!=null
-    ?'<p class="copy" style="margin-top:10px">Son servis sonrası kullanım temposu yıllıklandırıldığında yaklaşık <b>'+n0(m.recent_annualized_km)+' km/yıl</b>.</p>':'';
+
+  /* Robust annual usage semantics (Phase 4) */
+  var userAnnual = (p && p.annual_km_baseline != null) ? Number(p.annual_km_baseline) : null;
+  var daysSince = m.days_since_service != null ? m.days_since_service : (p && p.last_service_date ? Math.round((new Date(p.snapshot_date||new Date()) - new Date(p.last_service_date)) / 86400000) : null);
+  var kmSince = m.km_since_service;
+
+  var paceNotes = [];
+  if (userAnnual != null) {
+    paceNotes.push('<b>Modelde kullanılan tahmini yıllık km:</b> ' + n0(userAnnual) + ' km/yıl (kullanıcı girişi — birincil model girdisi)');
+  }
+  if (kmSince != null && daysSince != null && daysSince > 0) {
+    var rawPace = Math.round(kmSince * 365.0 / daysSince);
+    var paceLabel = '<b>Son dönem kullanım temposu (yıllıklandırılmış):</b> ' + n0(rawPace) + ' km/yıl (' + n0(daysSince) + ' günlük pencere)';
+    if (daysSince < 90) {
+      paceLabel += ' · <span class="chip warn" style="font-size:.72rem">DÜŞÜK GÜVEN: KISA GÖZLEM PENCERESİ (&lt;90 gün) — model girdisi kullanıcı değeriyle korundu</span>';
+    }
+    if (rawPace > 50000) {
+      paceLabel += ' · <span class="chip warn" style="font-size:.72rem">AŞIRI TEMPO / OOD DİAGNOSTİK</span>';
+    }
+    paceNotes.push(paceLabel);
+  } else if (m.recent_annualized_km != null) {
+    paceNotes.push('<b>Son dönem kullanım temposu (yıllıklandırılmış):</b> ' + n0(m.recent_annualized_km) + ' km/yıl');
+  }
+
+  var recent = paceNotes.length ? '<div class="card" style="margin-top:10px;padding:10px 14px;background:rgba(255,255,255,0.03);border:1px solid var(--border);border-radius:8px"><p class="copy" style="margin:0;font-size:.85rem;line-height:1.6">' + paceNotes.join('<br>') + '</p></div>' : '';
+
   var policyNote=policy.source_authority
     ?'<p class="copy" style="margin-top:8px">Politika kaynağı: <b>'+esc(policy.source_authority)+'</b>. '+esc(policy.note||"")+'</p>':'';
   return finding(kind,(m.status==="OVERDUE"?"SERVİS ŞİMDİ GEREKLİ · ":"DETERMİNİSTİK BAKIM DURUMU · ")+m.label,
-      '<p><b>'+esc(m.action_label||"Bu deterministik bakım kararıdır.")+'</b> V2 yüzdeleri yalnız müşterinin kendiliğinden servise dönme davranışını tahmin eder; bu bakım kararını değiştirmez.</p>')
+      '<p><b>'+esc(m.action_label||"Bu deterministik bakım kararıdır.")+'</b> V2.1 müşteri servis dönüş yüzdeleri yalnız müşterinin belirtilen süre içinde servise geri dönme olasılığını tahmin eder; bu bakım kararını değiştirmez.</p>')
     +'<div class="grid g4" style="margin-top:10px">'
     +kpi("BAKIM İLERLEMESİ",n1(m.progress_pct)+"%","kilometre ve zaman periyotlarından yüksek olan","cyan")
     +kpi(m.status==="OVERDUE"?"GECİKME":"KALAN",delta,"belirleyici ölçüt: "+m.driving_metric,"plain")
     +kpi("ANA PERİYOT",policy.interval_km!=null?n0(policy.interval_km)+" km":"—",(policy.task_code||"bakım politikası")+(policy.year_specific?" · yıl/pazar kuralı":""),"plain")
     +kpi("SON SERVİSTEN BERİ",since,"doğrudan kullanıcı girdilerinden","plain")+'</div>'+recent+policyNote;
 }
+
+function v2_1PrimaryCard(d, p){
+  var pr=d.prediction||{}, cov=d.feature_coverage||{}, prov=d.provenance||{};
+  var seq=[pr.risk_30d,pr.risk_60d,pr.risk_90d,pr.risk_120d];
+  var mono=seq.every(function(x,i){return i===0||x>=seq[i-1]-1e-9;});
+  var g='';
+
+  if((d.warnings||[]).length){
+    g+=finding("warn","Girdi / OOD uyarıları (V2.1)",
+      '<ul style="margin:0;padding-left:18px">'+d.warnings.map(function(w){return '<li>'+esc(w)+'</li>';}).join('')+'</ul>');
+  }
+
+  g+=finding("good","V2.1 MÜŞTERİ SERVİS DÖNÜŞ TAHMİNİ",
+    '<p><b>MÜŞTERİNİN KENDİLİĞİNDEN SERVİSE GELME İHTİMALİ:</b> Bu yüzdeler müşterinin belirtilen süre içinde servise geri dönme olasılığını tahmin eder. Bakım gerekliliği yukarıdaki deterministik bakım politikasından gelir.</p>')
+    +'<div class="grid g4" style="margin-top:6px">'
+    +kpi("30 GÜN",pct(pr.risk_30d),"servise dönme olasılığı","plain")
+    +kpi("60 GÜN",pct(pr.risk_60d),"servise dönme olasılığı","plain")
+    +kpi("90 GÜN",pct(pr.risk_90d),"servise dönme olasılığı","cyan")
+    +kpi("120 GÜN",pct(pr.risk_120d),"servise dönme olasılığı","plain")+'</div>'
+    +'<div class="chips" style="margin-top:12px">'
+    +'<span class="chip '+(mono?'good':'bad')+'">HORIZON MONOTONİK: '+(mono?'P30 ≤ P60 ≤ P90 ≤ P120':'HATA')+'</span>'
+    +(pr.median_service_days!=null?'<span class="chip">MEDYAN DÖNÜŞ SÜRESİ ~'+n0(pr.median_service_days)+' gün</span>':'<span class="chip">MEDYAN DÖNÜŞ: 365g içinde yok</span>')
+    +(pr.risk_score!=null?'<span class="chip">RISK SCORE '+r3(pr.risk_score)+'</span>':'')
+    +'<span class="chip cyan">'+(cov.resolved||0)+' / '+(cov.contract||54)+' feature çözüldü</span>'
+    +'<span class="chip good">CHAMPION (xgb_cox + isotonic)</span>'
+    +'<span class="chip warn">GERÇEK FİLO TESTİ BEKLENİYOR</span>'
+    +'</div>';
+
+  return g;
+}
+
+function v2LegacyCard(v1, v2, warn, decision){
+  if(!v2 || v2.risk_90d==null) return '';
+  var body = '<div class="finding bad" style="margin-top:8px"><b>V2.0 ARAŞTIRMA SENARYOSU · ÜRÜN KARARI İÇİN KULLANMA</b><br>Arbitrary-day canlı senaryo auditini geçmedi. Ürün kararı için kullanılmaz.</div>';
+  body += '<div class="grid g4" style="margin-top:10px;opacity:0.85">'
+    +kpi("30 GÜN (V2.0)",pct(v2.risk_30d),"müşterinin kendiliğinden gelme ihtimali","plain")
+    +kpi("60 GÜN (V2.0)",pct(v2.risk_60d),"müşterinin kendiliğinden gelme ihtimali","plain")
+    +kpi("90 GÜN (V2.0)",pct(v2.risk_90d),"müşterinin kendiliğinden gelme ihtimali","plain")
+    +kpi("120 GÜN (V2.0)",pct(v2.risk_120d),"müşterinin kendiliğinden gelme ihtimali","plain")+'</div>'
+    +'<div class="chips" style="margin-top:10px">'
+    +'<span class="chip warn">V2.0 ARAŞTIRMA SENARYOSU</span>'
+    +'<span class="chip">90G SEGMENT: '+esc(v2.risk_group_90d||"—")+'</span>'
+    +(v2.median_service_days!=null?'<span class="chip">MEDYAN ~'+n0(v2.median_service_days)+' gün</span>':'')
+    +'</div>';
+
+  if(v1){
+    body += '<div class="card" style="margin-top:12px;padding:10px 14px;background:rgba(255,255,255,0.02);border:1px solid var(--border);border-radius:8px">'
+      +'<p class="copy" style="margin:0"><b>V1 Nokta Tahmini:</b> ~<b>'+n0(v1.next_service_days)+'</b> gün · ~<b>'+n0(v1.next_service_km)+'</b> km sonra servis'
+      +(v1.estimated_service_date?' (tahmini tarih: '+esc(v1.estimated_service_date)+')':'')+'</p></div>';
+  }else if(decision&&decision.show_v1_point_estimate===false){
+    body += '<div class="finding warn" style="margin-top:8px"><p>'+esc(decision.v1_suppressed_reason||"Kişisel servis başlangıç noktası bilinmiyor veya bakım gecikmiş.")+'</p></div>';
+  }
+
+  return '<details class="sec" style="margin-top:18px;border:1px solid var(--border);border-radius:8px;padding:12px 16px;background:var(--card-bg)">'
+    +'<summary style="cursor:pointer;font-weight:600;color:var(--text-2)">V2.0 LEGACY ARAŞTIRMA KARŞILAŞTIRMASI · <span style="font-weight:400;font-size:.85rem">Legacy araştırma sonucunu göster</span></summary>'
+    +body
+    +'</details>';
+}
+
 function v2RunScenario(){
   var api=(window.__V2_API__||"").replace(/\/$/,"");
   var errBox=document.getElementById("v2scenarioErr"),out=document.getElementById("v2scenarioOut"),p=v2ScenarioPayload(),errs=v2ValidateScenario(p);
   if(errs.length){errBox.style.display="block";errBox.innerHTML='<div>'+errs.map(esc).join("<br>")+'</div>';return;}
   errBox.style.display="none";
-  out.innerHTML='<p class="copy"><span class="dot"></span> Hesaplanıyor… (servis uykudaysa ilk istek 50+ sn sürebilir)</p>';
+  out.innerHTML='<p class="copy"><span class="dot"></span> V2.1 Senaryo ve bakım durumu hesaplanıyor… (servis uykudaysa ilk istek 50+ sn sürebilir)</p>';
   var attempt=0;
+  var p21 = {
+    brand: p.brand,
+    model_id: p.model_id,
+    production_year: p.production_year,
+    landmark_date: p.snapshot_date,
+    current_odometer_km: p.current_odometer_km,
+    annual_km_baseline: p.annual_km_baseline,
+    usage_type: p.usage_type,
+    riding_intensity: p.riding_intensity,
+    last_service_date: p.last_service_date,
+    last_service_odometer_km: p.last_service_odometer_km
+  };
+
   (function run(){
-    v2fetch(api+"/api/v2/predict/scenario",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(p)}).then(function(r){return r.json().then(function(d){if(!r.ok)throw new Error(d.detail||("HTTP "+r.status));return d;});}).then(function(d){
-      if(!d.v2||d.v2.risk_90d==null){out.innerHTML='<div class="empty">Model sonucu boş döndü.</div>';return;}
-      var warnings=(d.warnings||[]).length?finding("warn","Girdi / OOD uyarıları","<ul style=\"margin:0;padding-left:18px\">"+d.warnings.map(function(w){return '<li>'+esc(w)+'</li>';}).join('')+'</ul>'):'';
-      var personal=d.decision&&d.decision.prediction_scope==="PERSONAL_CONTEXT";
-      var scenarioLabel="V2.0 ARAŞTIRMA SENARYOSU · ÜRÜN KARARI İÇİN KULLANMA";
-      var scenarioNote=(personal
-        ?"Bakım durumu deterministik politikadan gelir. "
-        :"GENEL / BENZER MOTORLARA DAYALI SENARYO: Son servis başlangıç noktası eksik olduğu için kişisel bakım tarihi hesaplanmadı. ")
-        +"V2.0 yüzdeleri arbitrary-day auditini geçmedi; yalnız sentetik araştırma karşılaştırmasıdır.";
-      out.innerHTML=v2MaintenanceCard(d.maintenance)
-        +'<div class="sec">'+v2ResultCard(d.v1,d.v2,d.warning,scenarioLabel,scenarioNote,d.decision)
-        +'</div><div class="sec">'+v2CoverageCard(d.coverage,d.provenance)+'</div>'+warnings;
+    var fetch21 = v2fetch(api+"/api/v2_1/predict/scenario",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(p21)})
+      .then(function(r){return r.json().then(function(d){if(!r.ok)throw new Error(d.detail||("V2.1 HTTP "+r.status));return d;});});
+    var fetch20 = v2fetch(api+"/api/v2/predict/scenario",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(p)})
+      .then(function(r){return r.json().then(function(d){if(!r.ok)throw new Error(d.detail||("V2.0 HTTP "+r.status));return d;});});
+
+    Promise.allSettled([fetch21, fetch20]).then(function(resList){
+      var r21 = resList[0], r20 = resList[1];
+      if(r21.status!=="fulfilled" && r20.status!=="fulfilled"){
+        throw (r21.reason || r20.reason || new Error("API çağrısı başarısız"));
+      }
+      var d21 = r21.status==="fulfilled"?r21.value:null;
+      var d20 = r20.status==="fulfilled"?r20.value:null;
+      var d = {
+        maintenance: d20 ? d20.maintenance : null,
+        decision: d20 ? d20.decision : null,
+        v1: d20 ? d20.v1 : null,
+        v2: d20 ? d20.v2 : null,
+        v2_1: d21
+      };
+
+      var html = '';
+      if(d.maintenance){
+        html += v2MaintenanceCard(d.maintenance, p);
+      }
+      if(d21 && d21.prediction){
+        html += '<div class="sec">' + v2_1PrimaryCard(d21, p21) + '</div>';
+        if(d21.feature_coverage){
+          html += '<div class="sec">' + card("TAHMİN İÇİN KULLANILAN BİLGİ DÜZEYİ (V2.1)",
+            (d21.feature_coverage.resolved||0)+" / "+(d21.feature_coverage.contract||54)+" feature çözüldü",
+            '<p class="copy">'+esc(d21.feature_coverage.note||"coverage is not a confidence score")+" — modele ne kadar bilgi verildiğini gösterir, "
+            +"modelin ne kadar emin olduğunu değil. Kalan alanlar frozen preprocessor tarafından impute edilir.</p>"
+            +'<details style="margin-top:10px"><summary style="cursor:pointer;color:var(--text-2)">Teknik feature provenance tablosu</summary>'
+            +'<div class="twrap" style="margin-top:8px;max-height:320px;overflow:auto"><table class="tbl"><thead><tr><th>Feature</th><th>Kaynak</th></tr></thead><tbody>'
+            +Object.keys(d21.provenance||{}).map(function(k){return '<tr><td class="k"><code>'+esc(k)+'</code></td><td>'+esc(d21.provenance[k])+'</td></tr>';}).join('')
+            +'</tbody></table></div></details>') + '</div>';
+        }
+      } else if(r21.status!=="fulfilled"){
+        html += finding("bad","V2.1 API Hatası","<p>"+esc(String(r21.reason))+"</p>");
+      }
+
+      if(d.v2){
+        /* V2.0 ARAŞTIRMA SENARYOSU · arbitrary-day auditini geçmedi */
+        html += v2LegacyCard(d.v1, d.v2, d20.warning, d.decision);
+      }
+
+      out.innerHTML = html;
     }).catch(function(e){
       if(attempt++<1){out.innerHTML='<p class="copy"><span class="dot"></span> Servis uyanıyor, tekrar deneniyor…</p>';setTimeout(run,4000);return;}
       out.innerHTML='<div class="empty">API\'ye ulaşılamadı — '+esc(String(e))+'. Sahte tahmin üretilmez.</div>';

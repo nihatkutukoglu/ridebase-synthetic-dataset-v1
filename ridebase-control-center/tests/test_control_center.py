@@ -291,6 +291,29 @@ class V2ScenarioPredictionTests(unittest.TestCase):
         v3 = [m for m in manifest["modules"] if m["id"] == "v3"][0]
         self.assertEqual(v3["status"], "planned")
 
+    def test_v2_1_primary_and_v2_0_legacy_scenario_product_contract(self):
+        """Phase 9 Test: V2.1 is primary prediction, V2.0 is demoted legacy, and annual usage semantics are robust."""
+        for text in (
+            "V2.1 MÜŞTERİ SERVİS DÖNÜŞ TAHMİNİ",
+            "Bu yüzdeler müşterinin belirtilen süre içinde servise geri dönme olasılığını tahmin eder. Bakım gerekliliği yukarıdaki deterministik bakım politikasından gelir.",
+            "V2.0 LEGACY ARAŞTIRMA KARŞILAŞTIRMASI",
+            "Arbitrary-day canlı senaryo auditini geçmedi. Ürün kararı için kullanılmaz.",
+            "Legacy araştırma sonucunu göster",
+            "Modelde kullanılan tahmini yıllık km",
+            "Son dönem kullanım temposu (yıllıklandırılmış)",
+            "DÜŞÜK GÜVEN: KISA GÖZLEM PENCERESİ",
+            "HORIZON MONOTONİK",
+            "P30 ≤ P60 ≤ P90 ≤ P120",
+        ):
+            self.assertInBoth(text)
+
+        for source in (self.template, self.built):
+            scenario_body = self.function_body(source, "v2RunScenario", "v2ModeDemo")
+            self.assertIn("/api/v2_1/predict/scenario", scenario_body)
+            self.assertIn("/api/v2/predict/scenario", scenario_body)
+            self.assertIn("v2_1PrimaryCard", scenario_body)
+            self.assertIn("v2LegacyCard", scenario_body)
+
 
 if __name__ == "__main__":
     unittest.main()
