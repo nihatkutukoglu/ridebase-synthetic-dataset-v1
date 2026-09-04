@@ -1717,6 +1717,170 @@ function v2MaintenanceCard(m, p){
     +kpi("SON SERVİSTEN BERİ",since,"doğrudan kullanıcı girdilerinden","plain")+'</div>'+recent+policyNote;
 }
 
+function v2CalculateUrgency(m, p){
+  if(!m || m.status==="UNKNOWN") return null;
+
+  var score = null, level = null, reason = null, dim = null;
+  if(m.maintenance_urgency_score != null && m.maintenance_urgency_level != null){
+    score = Number(m.maintenance_urgency_score);
+    level = m.maintenance_urgency_level;
+    reason = m.maintenance_urgency_reason;
+    dim = m.determining_dimension;
+  }
+
+  var kmRatio = m.km_progress_ratio != null ? Number(m.km_progress_ratio) : 0;
+  var timeRatio = m.time_progress_ratio != null ? Number(m.time_progress_ratio) : 0;
+  if(kmRatio === 0 && timeRatio === 0 && m.progress_pct != null){
+    if(m.driving_metric === "TIME") timeRatio = m.progress_pct / 100;
+    else kmRatio = m.progress_pct / 100;
+  }
+
+  var maxRatio = m.progress_ratio != null ? Number(m.progress_ratio) : Math.max(kmRatio, timeRatio);
+  if(!dim){
+    if(Math.abs(kmRatio - timeRatio) < 0.001) dim = "BOTH";
+    else if(timeRatio > kmRatio) dim = "TIME";
+    else dim = "KM";
+  }
+
+  if(score == null){
+    if(maxRatio <= 0){
+      score = 0;
+    } else if(maxRatio < 0.80){
+      score = maxRatio * 47.5;
+    } else if(maxRatio < 1.00){
+      score = 38.0 + (maxRatio - 0.80) * 60.0;
+    } else if(maxRatio < 1.50){
+      score = 50.0 + (maxRatio - 1.00) * 50.0;
+    } else if(maxRatio < 2.00){
+      score = 75.0 + (maxRatio - 1.50) * 30.0;
+    } else if(maxRatio < 5.00){
+      score = 90.0 + (maxRatio - 2.00) * (10.0 / 3.0);
+    } else {
+      score = 100.0;
+    }
+    score = Math.max(0, Math.min(100, Math.round(score * 10) / 10));
+  }
+
+  if(!level){
+    if(score >= 90.0) level = "KRİTİK";
+    else if(score >= 75.0) level = "ÇOK GECİKMİŞ";
+    else if(score >= 50.0) level = "GECİKMİŞ";
+    else if(score >= 25.0) level = "YAKLAŞIYOR";
+    else level = "NORMAL";
+  }
+
+  var overdueKm = m.overdue_km != null ? Math.max(0, Number(m.overdue_km)) : 0;
+  var overdueDays = m.overdue_days != null ? Math.max(0, Number(m.overdue_days)) : 0;
+
+  if(!reason){
+    if(level === "KRİTİK" || level === "ÇOK GECİKMİŞ" || level === "GECİKMİŞ"){
+      if(dim === "KM" && overdueKm > 0){
+        reason = Number(overdueKm).toLocaleString("tr-TR") + " km gecikmiş (kilometre periyodu " + (Math.round(kmRatio * 10) / 10) + "× seviyesinde)";
+      } else if(dim === "TIME" && overdueDays > 0){
+        reason = Number(overdueDays).toLocaleString("tr-TR") + " gün gecikmiş (zaman periyodu " + (Math.round(timeRatio * 10) / 10) + "× seviyesinde)";
+      } else if(dim === "BOTH"){
+        reason = Number(overdueKm).toLocaleString("tr-TR") + " km ve " + Number(overdueDays).toLocaleString("tr-TR") + " gün gecikmiş";
+      } else {
+        reason = "Bakım periyodu aşılmış (" + (Math.round(maxRatio * 100)) + "% ilerleme)";
+      }
+    } else if(level === "YAKLAŞIYOR"){
+      var remKm = m.remaining_km != null ? Number(m.remaining_km) : null;
+      var remDays = m.remaining_days != null ? Number(m.remaining_days) : null;
+      if(dim === "KM" && remKm != null){
+        reason = "Bakım eşiğine " + Number(remKm).toLocaleString("tr-TR") + " km kaldı (" + Math.round(kmRatio * 100) + "% tamamlandı)";
+      } else if(dim === "TIME" && remDays != null){
+        reason = "Bakım eşiğine " + Number(remDays).toLocaleString("tr-TR") + " gün kaldı (" + Math.round(timeRatio * 100) + "% tamamlandı)";
+      } else {
+        reason = "Bakım periyodu yaklaşıyor (" + Math.round(maxRatio * 100) + "% ilerleme)";
+      }
+    } else {
+      reason = "Bakım periyodu içinde, acil işlem gerektirmiyor (" + Math.round(maxRatio * 100) + "% ilerleme)";
+    }
+  }
+
+  return {
+    score: score,
+    level: level,
+    reason: reason,
+    determining_dimension: dim,
+    km_progress_ratio: kmRatio,
+    time_progress_ratio: timeRatio,
+    progress_ratio: maxRatio,
+    overdue_km: overdueKm,
+    overdue_days: overdueDays
+  };
+}
+
+function v2UrgencyCard(u, m, p){
+  if(!u) return '';
+  var policy = (m && m.policy) || {};
+  var color = u.score >= 90 ? "#ef4444" : u.score >= 75 ? "#f97316" : u.score >= 50 ? "#eab308" : u.score >= 25 ? "#06b6d4" : "#22c55e";
+  var accentKind = u.score >= 75 ? "bad" : u.score >= 50 ? "warn" : u.score >= 25 ? "plan" : "good";
+
+  var bar = '<div style="margin:12px 0 8px 0">'
+    +'<div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:6px">'
+    +'<span style="font-size:0.75rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)">DETERMİNİSTİK ŞİDDET BANDI (0–100)</span>'
+    +'<span style="font-size:1.1rem;font-weight:800;color:'+color+'">'+n1(u.score)+' / 100 · '+esc(u.level)+'</span>'
+    +'</div>'
+    +'<div style="height:12px;background:rgba(255,255,255,0.08);border-radius:6px;overflow:hidden;position:relative;border:1px solid rgba(255,255,255,0.06)">'
+    +'<div style="width:'+Math.max(1, Math.min(100, u.score))+'%;height:100%;background:'+color+';border-radius:6px;transition:width 0.4s ease;"></div>'
+    +'</div>'
+    +'<div style="display:flex;justify-content:space-between;font-size:0.68rem;color:var(--text-3);margin-top:4px">'
+    +'<span>0 NORMAL</span>'
+    +'<span>25 YAKLAŞIYOR</span>'
+    +'<span>50 GECİKMİŞ</span>'
+    +'<span>75 ÇOK GECİKMİŞ</span>'
+    +'<span>90 KRİTİK 100</span>'
+    +'</div></div>';
+
+  var header = finding(accentKind, "BAKIM ACİLİYETİ · " + n1(u.score) + " / 100 (" + u.level + ")",
+    '<p style="font-size:1.02rem;font-weight:600;margin:0 0 4px 0;color:var(--text)">' + esc(u.reason) + '</p>'
+    +'<p class="copy" style="margin:0;font-size:.84rem">Bakım aciliyeti deterministik bakım politikasından hesaplanır. V2.1 yüzdeleri müşterinin servise dönme davranışını tahmin eder.</p>'
+    + bar
+  );
+
+  var kpis = '<div class="grid g4" style="margin-top:10px">'
+    +kpi("BAKIM ACİLİYETİ", n1(u.score) + ' <small>/ 100</small>', "deterministik aciliyet", accentKind)
+    +kpi("SEVİYE", esc(u.level), "şiddet bandı", accentKind)
+    +kpi("BELİRLEYİCİ ÖLÇÜT", esc(u.determining_dimension), "ilerleme: " + n1(u.progress_ratio * 100) + "%", "plain")
+    +kpi("ACİLİYET GEREKÇESİ", esc(u.reason), "deterministik kural", "plain")
+    +'</div>';
+
+  var intervalDesc = (policy.interval_km != null ? n0(policy.interval_km) + " km" : "—")
+    + (policy.interval_months != null ? " veya " + n0(policy.interval_months) + " ay" : "");
+  var sinceDesc = (m.km_since_service != null ? n0(m.km_since_service) + " km" : "—")
+    + (m.days_since_service != null ? " · " + n0(m.days_since_service) + " gün" : "");
+  var overdueDesc = m.status === "OVERDUE"
+    ? ((u.overdue_km > 0 ? n0(u.overdue_km) + " km" : "") + (u.overdue_km > 0 && u.overdue_days > 0 ? " · " : "") + (u.overdue_days > 0 ? n0(u.overdue_days) + " gün" : ""))
+    : "Gecikme yok (bakım eşiği içinde)";
+  var kmProgDesc = u.km_progress_ratio != null ? (n1(u.km_progress_ratio * 100) + "% (" + r3(u.km_progress_ratio) + "×)") : "—";
+  var timeProgDesc = u.time_progress_ratio != null ? (n1(u.time_progress_ratio * 100) + "% (" + r3(u.time_progress_ratio) + "×)") : "—";
+  var dimDesc = u.determining_dimension === "KM" ? "KM (kilometre periyodu baskın)" : u.determining_dimension === "TIME" ? "TIME (zaman periyodu baskın)" : "BOTH (eşit ilerleme)";
+
+  var explanationRows = [
+    {k: "Ana periyot", v: intervalDesc},
+    {k: "Son servisten beri", v: sinceDesc},
+    {k: "Gecikme", v: overdueDesc},
+    {k: "KM ilerlemesi", v: kmProgDesc},
+    {k: "Zaman ilerlemesi", v: timeProgDesc},
+    {k: "Belirleyici ölçüt", v: dimDesc},
+    {k: "Aciliyet skoru", v: '<b>' + n1(u.score) + ' / 100</b> (parçalı doğrusal fonksiyon, model ağırlığı içermez)'},
+    {k: "Seviye", v: '<span class="chip ' + (accentKind === "bad" ? "bad" : accentKind === "warn" ? "warn" : "good") + '">' + esc(u.level) + '</span> (0–24: Normal, 25–49: Yaklaşıyor, 50–74: Gecikmiş, 75–89: Çok Gecikmiş, 90–100: Kritik)'}
+  ];
+
+  var expTable = '<table class="tbl" style="margin-top:6px"><thead><tr><th>Parametre</th><th>Değer</th></tr></thead><tbody>'
+    + explanationRows.map(function(r){return '<tr><td class="k">'+esc(r.k)+'</td><td>'+r.v+'</td></tr>';}).join('')
+    +'</tbody></table>';
+
+  var explanationPanel = '<details open class="card" style="margin-top:10px;padding:10px 14px;background:rgba(255,255,255,0.02);border:1px solid var(--border);border-radius:8px">'
+    +'<summary style="cursor:pointer;font-weight:600;color:var(--text-2);font-size:.88rem">Neden bu skor? (Deterministik Açıklama Paneli)</summary>'
+    +'<p class="copy" style="margin:8px 0 4px 0;font-size:.8rem;color:var(--text-3)">Bu skor yapay zeka/makine öğrenmesi ağırlıklarından bağımsızdır; saf bakım politikası ilerleme oranlarından hesaplanır.</p>'
+    +'<div class="twrap" style="margin-top:6px">'+expTable+'</div>'
+    +'</details>';
+
+  return header + kpis + explanationPanel;
+}
+
 function v2_1PrimaryCard(d, p){
   var pr=d.prediction||{}, cov=d.feature_coverage||{}, prov=d.provenance||{};
   var seq=[pr.risk_30d,pr.risk_60d,pr.risk_90d,pr.risk_120d];
@@ -1729,7 +1893,8 @@ function v2_1PrimaryCard(d, p){
   }
 
   g+=finding("good","V2.1 MÜŞTERİ SERVİS DÖNÜŞ TAHMİNİ",
-    '<p><b>MÜŞTERİNİN KENDİLİĞİNDEN SERVİSE GELME İHTİMALİ:</b> Bu yüzdeler müşterinin belirtilen süre içinde servise geri dönme olasılığını tahmin eder. Bakım gerekliliği yukarıdaki deterministik bakım politikasından gelir.</p>')
+    '<p><b>MÜŞTERİNİN KENDİLİĞİNDEN SERVİSE GELME İHTİMALİ:</b> Bu yüzdeler müşterinin belirtilen süre içinde servise geri dönme olasılığını tahmin eder. Bakım gerekliliği yukarıdaki deterministik bakım politikasından gelir.</p>'
+    +'<p class="copy" style="margin:4px 0 0 0;font-size:.84rem">Bakım aciliyeti deterministik bakım politikasından hesaplanır. V2.1 yüzdeleri müşterinin servise dönme davranışını tahmin eder.</p>')
     +'<div class="grid g4" style="margin-top:6px">'
     +kpi("30 GÜN",pct(pr.risk_30d),"servise dönme olasılığı","plain")
     +kpi("60 GÜN",pct(pr.risk_60d),"servise dönme olasılığı","plain")
@@ -1819,6 +1984,10 @@ function v2RunScenario(){
       var html = '';
       if(d.maintenance){
         html += v2MaintenanceCard(d.maintenance, p);
+        var urgency = v2CalculateUrgency(d.maintenance, p);
+        if(urgency){
+          html += '<div class="sec" style="margin-top:14px">' + v2UrgencyCard(urgency, d.maintenance, p) + '</div>';
+        }
       }
       if(d21 && d21.prediction){
         html += '<div class="sec">' + v2_1PrimaryCard(d21, p21) + '</div>';

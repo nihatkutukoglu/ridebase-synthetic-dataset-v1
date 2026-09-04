@@ -314,6 +314,37 @@ class V2ScenarioPredictionTests(unittest.TestCase):
             self.assertIn("v2_1PrimaryCard", scenario_body)
             self.assertIn("v2LegacyCard", scenario_body)
 
+    def test_deterministic_maintenance_urgency_score_ui_and_explanation_panel(self):
+        """Urgency UI tests: 0-100 severity score, bands, explanation panel, and decoupling microcopy."""
+        for text in (
+            "function v2CalculateUrgency",
+            "function v2UrgencyCard",
+            "BAKIM ACİLİYETİ",
+            "DETERMİNİSTİK ŞİDDET BANDI (0–100)",
+            "KRİTİK",
+            "ÇOK GECİKMİŞ",
+            "GECİKMİŞ",
+            "YAKLAŞIYOR",
+            "NORMAL",
+            "Bakım aciliyeti deterministik bakım politikasından hesaplanır. V2.1 yüzdeleri müşterinin servise dönme davranışını tahmin eder.",
+            "Neden bu skor? (Deterministik Açıklama Paneli)",
+            "Ana periyot",
+            "Son servisten beri",
+            "Gecikme",
+            "KM ilerlemesi",
+            "Zaman ilerlemesi",
+            "Belirleyici ölçüt",
+            "Aciliyet skoru",
+            "Seviye",
+        ):
+            self.assertInBoth(text)
+
+        for source in (self.template, self.built):
+            scenario_body = self.function_body(source, "v2RunScenario", "v2ModeDemo")
+            self.assertIn("v2CalculateUrgency", scenario_body)
+            self.assertIn("v2UrgencyCard", scenario_body)
+
 
 if __name__ == "__main__":
     unittest.main()
+
