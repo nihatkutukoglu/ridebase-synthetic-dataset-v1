@@ -17,6 +17,16 @@ from .config import settings
 from .predictor import predict as v1_predict
 from .v2_schemas import V2ScenarioRequest
 
+try:
+    from ridebase_ml.policy.urgency import calculate_maintenance_urgency
+except ImportError:
+    import sys
+    from pathlib import Path
+    _ml_root = Path(__file__).resolve().parents[3] / "ridebase-ml"
+    if str(_ml_root) not in sys.path:
+        sys.path.insert(0, str(_ml_root))
+    from ridebase_ml.policy.urgency import calculate_maintenance_urgency
+
 
 MODEL_FEATURES = (
     "brand", "category", "powertrain_type", "engine_displacement_cc",
@@ -350,6 +360,26 @@ def _maintenance_assessment(req: V2ScenarioRequest, model: Dict[str, Any]) -> Di
             result["label"] = "BAKIM PERİYODU İÇİNDE"
             result["action"] = "NO_IMMEDIATE_SERVICE"
             result["action_label"] = "HEMEN SERVİS GEREKMİYOR"
+
+    km_ratio_val = (km_since / float(policy["interval_km"])) if (km_since is not None and policy.get("interval_km")) else None
+    day_ratio_val = (days_since / float(policy["interval_days"])) if (days_since is not None and policy.get("interval_days")) else None
+
+    urgency = calculate_maintenance_urgency(
+        progress_ratio=result.get("progress_ratio"),
+        km_ratio=km_ratio_val,
+        day_ratio=day_ratio_val,
+        overdue_km=result.get("overdue_km"),
+        overdue_days=result.get("overdue_days"),
+        interval_km=float(policy["interval_km"]) if policy.get("interval_km") else None,
+        interval_days=float(policy["interval_days"]) if policy.get("interval_days") else None,
+        remaining_km=result.get("remaining_km"),
+        remaining_days=result.get("remaining_days"),
+    )
+    result["urgency"] = urgency
+    result["maintenance_urgency_score"] = urgency["maintenance_urgency_score"]
+    result["maintenance_urgency_level"] = urgency["maintenance_urgency_level"]
+    result["maintenance_urgency_reason"] = urgency["maintenance_urgency_reason"]
+    result["determining_dimension"] = urgency["determining_dimension"]
 
     if days_since and days_since >= 30 and km_since is not None and km_since >= 500:
         annualized = km_since * 365.0 / days_since
