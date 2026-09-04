@@ -1,0 +1,76 @@
+{
+  "scenario_inputs": {
+    "brand": "Bajaj",
+    "model_id": "BAJAJ_NS200",
+    "model_name": "Pulsar NS200 UG2",
+    "production_year": 2019,
+    "snapshot_date_or_landmark_date": "2026-09-04",
+    "current_odometer_km": 40000,
+    "last_service_date": "2026-08-01",
+    "last_service_odometer_km": 10000,
+    "annual_km_baseline_user_input": 24000,
+    "riding_intensity": "HIGH"
+  },
+  "resolved_policy": {
+    "source": "live RideBase Türkiye operational maintenance policy (maintenance_policies.csv), not the broader OEM interval used elsewhere",
+    "task_code": "ENGINE_OIL_CHANGE",
+    "interval_km": 3000,
+    "interval_months": 6,
+    "interval_days": 182.62,
+    "trigger_mode": "WHICHEVER_FIRST",
+    "note": "actual live policy interval differs from the 5000 km OEM-interval figure used in the earlier (incorrect) audit -- this run used the real endpoint response, not an assumption"
+  },
+  "deterministic_maintenance_result": {
+    "km_since_service": 30000.0,
+    "days_since_service": 34,
+    "overdue_km": 27000.0,
+    "overdue_days": 0.0,
+    "km_progress_ratio": 10.0,
+    "time_progress_ratio": 0.1862,
+    "progress_ratio": 10.0,
+    "determining_dimension": "KM",
+    "status": "OVERDUE",
+    "maintenance_due_now": true,
+    "maintenance_urgency_score": 100,
+    "maintenance_urgency_score_exact": 100.0,
+    "maintenance_urgency_level": "KRİTİK",
+    "maintenance_urgency_reason": "27.000 km gecikmiş (kilometre periyodu 10.0× seviyesinde)",
+    "saturation_rule_confirmed": "ratio 10.0x >= 5.0x threshold -> score correctly saturated at 100, per calculate_maintenance_urgency() in ridebase_ml/policy/urgency.py"
+  },
+  "diagnostic_pace_vs_user_baseline": {
+    "recent_annualized_km_from_short_window": 322058.8,
+    "user_supplied_annual_km_baseline": 24000,
+    "annual_baseline_ratio": 13.419,
+    "note": "these two figures are computed and reported separately, never merged -- confirms current odometer / short-window pace is not confused with the user's own annual estimate"
+  },
+  "v2_1_prediction": {
+    "endpoint": "POST /api/v2_1/predict/scenario",
+    "risk_30d": 0.357798,
+    "risk_60d": 0.702602,
+    "risk_90d": 0.818792,
+    "risk_120d": 0.88764,
+    "median_service_days": 225.0,
+    "risk_score": 7.110708,
+    "horizon_monotonic": true,
+    "p30_exact_zero": false,
+    "deterministic_on_repeat": true,
+    "warnings": ["33/54 features missing — imputed by the frozen preprocessor: ['customer_type', 'usage_type', 'climate_zone', 'storage_condition', 'workshop_region', 'workshop_price_level']"],
+    "provenance_current_odometer": "USER_INPUT"
+  },
+  "semantic_separation_check": {
+    "maintenance_due": true,
+    "maintenance_urgency_score": 100,
+    "service_return_risk_p30": 0.357798,
+    "artificially_synchronized": false,
+    "evidence": "urgency score is saturated at 100 (KRITIK) while V2.1's P30 is only 35.8%, nowhere near 100% -- the two numbers move independently, proving they are computed by separate systems (deterministic policy vs ML survival model), not coupled"
+  },
+  "v2_0_legacy_block_seen_in_same_v2_response_for_reference_only": {
+    "note": "the /api/v2/predict/scenario response also carries its own V2.0 (legacy/failed) risk numbers alongside the maintenance block -- these are NOT the reported V2.1 numbers above and are shown here only to document what that legacy endpoint still returns",
+    "risk_30d": 0.2142208,
+    "risk_60d": 0.59653366,
+    "risk_90d": 0.88178566,
+    "risk_120d": 0.94197468
+  },
+  "model_probabilities_modified": false,
+  "model_retrained": false
+}
