@@ -10,12 +10,15 @@ from . import analytics
 from .artifacts import get_store, read_predictions
 from .config import settings
 from .predictor import PredictionError, predict
-from .schemas import BatchPredictRequest, PredictRequest
+from .schemas import BatchPredictRequest, PredictRequest, V1ScenarioRequest
+from .v1_scenario import catalog_response as v1_catalog_response
+from .v1_scenario import predict_scenario as v1_predict_scenario
 from .v2_1_routes import v2_1 as v2_1_router
 from .v2_1_service import health_fields as v2_1_health_fields
 from .v2_routes import unified as v2_unified_router
 from .v2_routes import v2 as v2_router
 from .v2_service import health_fields as v2_health_fields
+from .v2_scenario import ScenarioInputError
 
 router = APIRouter()
 
@@ -89,6 +92,14 @@ def features(mode: str = Query("all", pattern="^(all|simple|days|km)$")):
     }
 
 
+@api.get("/motorcycle-models")
+def motorcycle_models():
+    try:
+        return v1_catalog_response(get_store())
+    except RuntimeError as exc:
+        raise HTTPException(status_code=503, detail=str(exc))
+
+
 @api.get("/sample")
 def sample_motorcycle():
     """An anonymised snapshot row from the held-out TEST predictions - target
@@ -132,6 +143,16 @@ def do_predict(req: PredictRequest):
         return predict(store, req.features, req.snapshot_date, strict=req.strict)
     except PredictionError as exc:
         raise HTTPException(exc.status, exc.detail)
+
+
+@api.post("/predict/scenario")
+def do_predict_scenario(req: V1ScenarioRequest):
+    try:
+        return v1_predict_scenario(req, get_store())
+    except ScenarioInputError as exc:
+        raise HTTPException(status_code=422, detail=str(exc))
+    except PredictionError as exc:
+        raise HTTPException(status_code=exc.status, detail=exc.detail)
 
 
 @api.post("/predict/batch")

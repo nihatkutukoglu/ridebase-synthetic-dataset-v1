@@ -275,21 +275,24 @@ def v1_block():
         "live_prediction": {
             "in_artifact": True,
             "route": "#v1/predict",
-            "mode": "DEMO_READY_PERSONAL_PIPELINE_PENDING",
-            "reason": ("Vercel Control Center public FastAPI backend'indeki frozen V1 modellerini çağırır. "
-                       "Demo gerçek model çıktısıdır; kişisel gerçek-motor girdisi servis geçmişinden "
-                       "deterministik feature türetme hattı bağlanana kadar kapalıdır."),
+            "mode": "SCENARIO_READY_REAL_MOTOR_PIPELINE_PENDING",
+            "reason": ("Doğal marka/model/yıl, kullanım ve son-servis girdileriyle dürüst kısıtlı-bilgi "
+                       "senaryosu çalışır. Demo gerçek model çıktısıdır; motorcycle_id tabanlı gerçek RideBase "
+                       "hattı servis geçmişi bağlanana kadar kapalıdır."),
             "api": {
                 "repo": "ridebase-v1-dashboard/backend",
-                "endpoint": "POST /api/v1/predict",
+                "endpoint": "POST /api/v1/predict/scenario",
+                "raw_endpoint": "POST /api/v1/predict",
+                "catalog": "GET /api/v1/motorcycle-models",
                 "sample": "GET /api/v1/sample",
                 "health": "GET /health",
                 "features": "GET /api/v1/features",
                 "feature_count_days": frozen_feature_count("DAYS"),
                 "feature_count_km": frozen_feature_count("KM"),
-                "contract": "{ features: {<canonical snapshot cols>}, snapshot_date } -> "
-                            "{ prediction:{next_service_days, next_service_km}, derived:{estimated_service_date, "
-                            "estimated_service_odometer_km}, typical_model_error, warning }",
+                "contract": "{ brand, model_id, production_year, snapshot_date, current_odometer_km, "
+                            "annual_km_baseline?, usage_type?, riding_intensity?, last_service_date, "
+                            "last_service_odometer_km } -> { prediction, derived, maintenance, decision, "
+                            "coverage, provenance, warnings, model }",
             },
         },
     }

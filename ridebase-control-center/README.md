@@ -33,12 +33,19 @@ push — Vercel builds `public/` from `vercel.json`).
 The authoritative Control Center now includes **V1 Regression → Canlı Tahmin**
 at `#v1/predict`:
 
+- **Senaryo tahmini** loads the 39-model catalog through the V1 API and accepts
+  brand, model, year, odometer, usage, and last-service inputs. It calls
+  `POST /api/v1/predict/scenario`, which resolves model-master fields, derives
+  only defensible context, and runs the frozen DAYS/KM models. It reports
+  target-specific coverage for the 114 DAYS and 113 KM feature contracts plus
+  per-feature provenance. This is a partial-input scenario, not a
+  real-fleet-validated personal prediction.
 - **Örnek motorla demo** loads an anonymised, complete snapshot from
   `GET /api/v1/sample`, shows the understandable motorcycle fields first, and
   runs the frozen DAYS/KM models only after the user clicks the prediction
   button (`POST /api/v1/predict`). No static or fallback prediction is used.
-- **Kendi motosikletimle tahmin** is intentionally non-predictive until the
-  real RideBase service-history feature-derivation pipeline is connected. The
+- **Kendi motosikletimle tahmin** remains intentionally non-predictive until the
+  `motorcycle_id`-based real RideBase service-history pipeline is connected. The
   frontend never overlays a few user fields onto sample/default values and
   presents that as a personal result.
 - V1 point timing is shown in the combined V2 scenario only when both last-service

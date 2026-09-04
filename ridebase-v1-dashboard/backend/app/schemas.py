@@ -11,7 +11,7 @@ from __future__ import annotations
 import datetime as dt
 from typing import Any, Dict, List, Optional
 
-from pydantic import BaseModel, Field, field_validator
+from pydantic import BaseModel, ConfigDict, Field, field_validator
 
 from .artifacts import DERIVED_FROM_DATE, contains_leak
 
@@ -62,3 +62,24 @@ class PredictResponse(BaseModel):
     input_diagnostics: Dict[str, Any]
     model: Dict[str, Any]
     warning: str
+
+
+class V1ScenarioRequest(BaseModel):
+    """Natural product inputs for a transparent partial V1 scenario.
+
+    The server resolves model-master fields and deterministic service context.
+    Callers never submit the frozen model's 100+ raw feature columns directly.
+    """
+
+    model_config = ConfigDict(extra="forbid")
+
+    brand: str = Field(min_length=1, max_length=80)
+    model_id: str = Field(min_length=1, max_length=120)
+    production_year: int = Field(ge=1900, le=2100)
+    snapshot_date: dt.date
+    current_odometer_km: Optional[float] = Field(default=None, ge=0, le=2_000_000)
+    annual_km_baseline: Optional[float] = Field(default=None, ge=0, le=200_000)
+    usage_type: Optional[str] = Field(default=None, max_length=80)
+    riding_intensity: Optional[str] = Field(default=None, max_length=80)
+    last_service_date: Optional[dt.date] = None
+    last_service_odometer_km: Optional[float] = Field(default=None, ge=0, le=2_000_000)

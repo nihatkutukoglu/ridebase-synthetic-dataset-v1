@@ -970,14 +970,15 @@ function v1Predict(){
   var out=pageNote(
     "V1, bir motosikletin yaklaşık <b>kaç gün</b> ve <b>kaç kilometre</b> sonra servise geleceğini tahmin eder. "
     +"Tek bir yaklaşık sonuç verir; 30 / 60 / 90 / 120 günlük olasılıklar V2'nin konusudur.",
-    "Bu ekran frozen V1 modellerini <code>POST /api/v1/predict</code> üzerinden çalıştırır. "
+    "Senaryo modu doğal girdileri <code>POST /api/v1/predict/scenario</code> üzerinden frozen V1 modellerine taşır. "
     +"Demo snapshot'ı <code>GET /api/v1/sample</code> ile gelir; tarayıcıda model yüklenmez ve tahmin uydurulmaz.",
     "Teknik adı: V1 point prediction (nokta tahmini)");
   out+='<div class="sec"><div class="sec-head"><h2>V1 — SONRAKİ SERVİS TAHMİNİ</h2><span class="tag">DAYS + KM</span></div>'
     +'<div id="v1apiStatus" class="chips"><span class="chip"><span class="dot"></span>Model servisine bağlanılıyor…</span></div>'
     +'<p class="copy" style="margin-top:8px;font-size:.8rem" id="v1coldNote" hidden>Render ücretsiz sunucusu uykudaysa ilk istek 50+ saniye sürebilir. Ekran 78 saniyeye kadar bekler ve üç kez dener.</p></div>';
   out+='<div class="sec"><div class="chips" style="margin-bottom:14px">'
-    +'<button class="subtab active" id="v1mDemo" style="border:1px solid var(--border);border-radius:8px">ÖRNEK MOTORLA DEMO</button>'
+    +'<button class="subtab active" id="v1mScenario" style="border:1px solid var(--border);border-radius:8px">SENARYO TAHMİNİ</button>'
+    +'<button class="subtab" id="v1mDemo" style="border:1px solid var(--border);border-radius:8px">ÖRNEK MOTORLA DEMO</button>'
     +'<button class="subtab" id="v1mOwn" style="border:1px solid var(--border);border-radius:8px">KENDİ MOTOSİKLETİMLE TAHMİN</button>'
     +'</div><div id="v1modeBox"></div></div>';
   out+='<div class="sec"><div class="sec-head"><h2>Modelin testteki tipik hatası</h2><span class="tag">artifact-driven · TEST</span></div><div class="grid g4">'
@@ -1041,6 +1042,165 @@ function v1ApiPing(attempt){
       +'<button class="subtab" id="v1retry" style="padding:4px 10px">Tekrar dene</button>';
     var rb=document.getElementById("v1retry");if(rb)rb.addEventListener("click",function(){v1ApiPing(0);});
   });
+}
+
+var V1_USAGE_LABELS={
+  COMMUTER:"Günlük ulaşım (COMMUTER)",COURIER:"Kurye / teslimat (COURIER)",
+  WEEKEND:"Hafta sonu / hobi (WEEKEND)",SEASONAL:"Mevsimsel kullanım (SEASONAL)",
+  TOURING:"Uzun yol / gezi (TOURING)",OFFROAD:"Arazi kullanımı (OFFROAD)",TRACK:"Pist kullanımı (TRACK)"
+};
+var V1_INTENSITY_LABELS={LOW:"Az / seyrek (LOW)",MEDIUM:"Düzenli / orta (MEDIUM)",HIGH:"Sık / yoğun (HIGH)"};
+function v1ModelsForBrand(brand){
+  return ((window.__V1_MODELS__||{}).models||[]).filter(function(m){return m.brand===brand;})
+    .sort(function(a,b){return a.model_name.localeCompare(b.model_name);});
+}
+function v1ModelById(id){
+  return ((window.__V1_MODELS__||{}).models||[]).filter(function(m){return m.model_id===id;})[0]||null;
+}
+function v1ScenarioOptions(items,placeholder,labels){
+  return '<option value="">'+esc(placeholder)+'</option>'+(items||[]).map(function(item){
+    var value=typeof item==="object"?item.model_id:item;
+    var text=typeof item==="object"?(item.model_name+(item.variant_or_generation?' · '+item.variant_or_generation:'')):((labels||{})[item]||item);
+    return '<option value="'+esc(value)+'">'+esc(text)+'</option>';
+  }).join('');
+}
+function v1ScenarioSpecCard(model){
+  var el=document.getElementById("v1specCard");if(!el)return;
+  if(!model){el.innerHTML='<div class="empty">Model seçince katalogdaki teknik özellikler burada görünür.</div>';return;}
+  var rows=[
+    ["Marka",model.brand],["Model",model.model_name],["Kategori",model.category],
+    ["Motor",model.powertrain_type==="EV"?"Elektrik":(model.engine_displacement_cc!=null?model.engine_displacement_cc+" cc":"—")],
+    ["Güç aktarma",model.powertrain_type],["Soğutma",model.cooling_type],["Şanzıman",model.transmission_type]
+  ];
+  el.innerHTML='<div class="twrap"><table class="tbl"><tbody>'+rows.map(function(x){return '<tr><td class="k">'+esc(x[0])+'</td><td>'+esc(x[1]==null?'—':x[1])+'</td></tr>';}).join('')+'</tbody></table></div>'
+    +'<p class="copy" style="margin-top:8px">Bu özellikler seçilen <code>'+esc(model.model_id)+'</code> katalog kaydından gelir; kullanıcı tarafından uydurulmaz.</p>';
+}
+function v1LoadScenarioCatalog(){
+  if(window.__V1_MODELS__||window.__V1_MODELS_LOADING__)return;
+  window.__V1_MODELS_LOADING__=true;
+  var api=(window.__V2_API__||"").replace(/\/$/,"");
+  v1Json(api+"/api/v1/motorcycle-models").then(function(data){
+    window.__V1_MODELS__=data;window.__V1_MODELS_LOADING__=false;
+    if(window.__V1_MODE__==="scenario")v1ModeScenario();
+  }).catch(function(e){
+    window.__V1_MODELS_LOADING__=false;
+    var box=document.getElementById("v1modeBox");
+    if(box&&window.__V1_MODE__==="scenario")box.innerHTML='<div class="empty">Model kataloğu yüklenemedi — '+esc(String(e))+'.</div>';
+  });
+}
+function v1ModeScenario(){
+  var box=document.getElementById("v1modeBox");if(!box)return;
+  var catalog=window.__V1_MODELS__;
+  if(!catalog){box.innerHTML='<p class="copy"><span class="dot"></span> V1 motosiklet kataloğu yükleniyor…</p>';v1LoadScenarioCatalog();return;}
+  function label(id,text,html){return '<label style="display:flex;flex-direction:column;gap:5px;font-size:.8rem;color:var(--text-2)" for="'+id+'">'+esc(text)+html+'</label>';}
+  var options=catalog.input_options||{};
+  var bike='<div class="grid g3">'
+    +label("v1brand","Marka",'<select id="v1brand" style="'+v2SelectStyle()+'">'+v1ScenarioOptions(catalog.brands,"Marka seç")+'</select>')
+    +label("v1model","Model",'<select id="v1model" disabled style="'+v2SelectStyle()+'"><option value="">Önce marka seç</option></select>')
+    +label("v1year","Model yılı",'<input id="v1year" type="number" inputmode="numeric" placeholder="Model seç" disabled style="'+v2InputStyle()+'">')
+    +'</div><p class="copy" id="v1yearNote" style="margin-top:8px"></p><div id="v1specCard" style="margin-top:12px"></div>';
+  var use='<div class="grid g2">'
+    +label("v1odo","Güncel kilometre",'<input id="v1odo" type="number" min="0" max="2000000" inputmode="decimal" placeholder="örn. 12000" style="'+v2InputStyle()+'">')
+    +label("v1annual","Yıllık yaklaşık km",'<input id="v1annual" type="number" min="0" max="200000" inputmode="decimal" placeholder="örn. 10000" style="'+v2InputStyle()+'">')
+    +label("v1usage","Kullanım tipi",'<select id="v1usage" style="'+v2SelectStyle()+'">'+v1ScenarioOptions(options.usage_type,"Seçmek istemiyorum",V1_USAGE_LABELS)+'</select>')
+    +label("v1intensity","Kullanım yoğunluğu",'<select id="v1intensity" style="'+v2SelectStyle()+'">'+v1ScenarioOptions(options.riding_intensity,"Seçmek istemiyorum",V1_INTENSITY_LABELS)+'</select>')
+    +'</div>';
+  var service='<div class="grid g2">'
+    +label("v1lastdate","Son servis tarihi",'<input id="v1lastdate" type="date" style="'+v2InputStyle()+'">')
+    +label("v1lastodo","Son servis kilometresi",'<input id="v1lastodo" type="number" min="0" max="2000000" inputmode="decimal" placeholder="örn. 9000" style="'+v2InputStyle()+'">')
+    +'</div><p class="copy" style="margin-top:8px">V1 tarih/mesafe tahmini için güncel kilometre ve iki son-servis alanı birlikte gereklidir.</p>';
+  box.innerHTML=finding("warn","KISITLI BİLGİYLE V1 SENARYO TAHMİNİ",
+    "<p>Doğal ürün girdileri, model kataloğu ve güvenli türetmeler kullanılır. Bilinmeyen geçmiş alanları frozen preprocessor tarafından işlenir. <b>Bu gerçek filo kaydıyla doğrulanmış kişisel tahmin değildir.</b></p>")
+    +card("1 · Motosikletini seç",catalog.model_count+" katalog modeli",bike)
+    +'<div class="sec">'+card("2 · Kullanım","doğrudan kullanıcı girdileri",use)+'</div>'
+    +'<div class="sec">'+card("3 · Servis geçmişi","V1 başlangıç noktası",service)+'</div>'
+    +'<div class="sec">'+card("4 · V1 tahmini","DAYS 114 · KM 113 frozen feature",'<div id="v1scenarioErr" class="finding bad" style="display:none"></div><div class="chips"><button class="subtab" id="v1scenarioRun" style="border:1px solid var(--border);border-radius:8px">V1 DAYS / KM TAHMİNİNİ HESAPLA</button></div><div id="v1scenarioOut" style="margin-top:12px"></div>')+'</div>';
+  var brand=document.getElementById("v1brand"),model=document.getElementById("v1model"),year=document.getElementById("v1year");
+  brand.addEventListener("change",function(){
+    model.innerHTML=v1ScenarioOptions(v1ModelsForBrand(brand.value),"Model seç");model.disabled=!brand.value;
+    year.value="";year.disabled=true;document.getElementById("v1yearNote").textContent="";v1ScenarioSpecCard(null);
+  });
+  model.addEventListener("change",function(){
+    var selected=v1ModelById(model.value);year.value="";year.disabled=!selected;v1ScenarioSpecCard(selected);
+    if(!selected)return;
+    year.max=new Date().getFullYear();
+    document.getElementById("v1yearNote").textContent="Katalog referans aralığı "+selected.year_min+"–"+selected.year_max+"; düşük güvenli aralıklar uyarı üretir, girilen yılı değiştirmez.";
+  });
+  document.getElementById("v1scenarioRun").addEventListener("click",v1RunScenario);
+  v1ScenarioSpecCard(null);
+}
+function v1ScenarioPayload(){
+  function value(id){var el=document.getElementById(id);return el&&el.value!==""?el.value:null;}
+  var p={brand:value("v1brand"),model_id:value("v1model"),production_year:Number(value("v1year")),snapshot_date:new Date().toISOString().slice(0,10)};
+  [["current_odometer_km","v1odo",Number],["annual_km_baseline","v1annual",Number],["usage_type","v1usage",String],["riding_intensity","v1intensity",String],["last_service_date","v1lastdate",String],["last_service_odometer_km","v1lastodo",Number]].forEach(function(x){var v=value(x[1]);if(v!=null)p[x[0]]=x[2](v);});
+  return p;
+}
+function v1ValidateScenario(p){
+  var errors=[],today=new Date().toISOString().slice(0,10),model=v1ModelById(p.model_id);
+  if(!p.brand)errors.push("Marka seç.");if(!model)errors.push("Model seç.");if(!p.production_year)errors.push("Model yılı gir.");
+  if(p.production_year<1900||p.production_year>new Date().getFullYear())errors.push("Model yılı geçersiz.");
+  if(p.current_odometer_km==null)errors.push("Güncel kilometre gerekli.");
+  if(!p.last_service_date)errors.push("Son servis tarihi gerekli.");
+  if(p.last_service_odometer_km==null)errors.push("Son servis kilometresi gerekli.");
+  if(p.last_service_date&&p.last_service_date>today)errors.push("Son servis tarihi gelecekte olamaz.");
+  if(p.last_service_odometer_km!=null&&p.current_odometer_km!=null&&p.last_service_odometer_km>p.current_odometer_km)errors.push("Son servis kilometresi güncel kilometreden büyük olamaz.");
+  return errors;
+}
+function v1ScenarioMaintenanceCard(m){
+  if(!m)return '';
+  var kind=m.status==="OVERDUE"?"bad":m.status==="DUE_SOON"?"warn":"good";
+  var urgency=m.maintenance_urgency_score!=null?n1(m.maintenance_urgency_score)+" / 100 · "+m.maintenance_urgency_level:"—";
+  return finding(kind,"DETERMİNİSTİK BAKIM DURUMU · "+esc(m.label||m.status),
+    '<p><b>'+esc(m.action_label||"Bakım durumu hesaplandı.")+'</b> Bu bakım politikası kararıdır; V1 müşterinin bir sonraki servis zaman/mesafe davranışını tahmin eder.</p>')
+    +'<div class="grid g3" style="margin-top:10px">'
+    +kpi("BAKIM İLERLEMESİ",m.progress_pct!=null?n1(m.progress_pct)+"%":"—","yüksek olan km/zaman oranı","cyan")
+    +kpi("BAKIM ACİLİYETİ",urgency,esc(m.maintenance_urgency_reason||"deterministik politika"),kind)
+    +kpi("BELİRLEYİCİ ÖLÇÜT",esc(m.determining_dimension||m.driving_metric||"—"),"KM / TIME / BOTH","plain")+'</div>';
+}
+function v1ScenarioCoverageCard(d){
+  var coverage=d.coverage||{},days=coverage.days||{},km=coverage.km||{},union=coverage.union||{};
+  var rows=(d.provenance||[]).map(function(x){return '<tr><td class="k"><code>'+esc(x.feature)+'</code></td><td>'+esc(x.source)+'</td><td>'+(x.in_days_model?'✓':'—')+'</td><td>'+(x.in_km_model?'✓':'—')+'</td></tr>';}).join('');
+  return card("V1 BİLGİ KAPSAMI","coverage güven skoru değildir",
+    '<div class="grid g3">'
+    +kpi("DAYS",(days.known_or_derived||0)+' <small>/ '+(days.total||114)+'</small>',(days.missing||0)+" eksik feature","cyan")
+    +kpi("KM",(km.known_or_derived||0)+' <small>/ '+(km.total||113)+'</small>',(km.missing||0)+" eksik feature","plain")
+    +kpi("BİRLEŞİK",(union.known_or_derived||0)+' <small>/ '+(union.total||119)+'</small>',"USER_INPUT + MODEL_MASTER + DERIVED","plain")+'</div>'
+    +'<details style="margin-top:12px"><summary style="cursor:pointer;color:var(--text-2)">Feature provenance tablosu</summary><div class="twrap" style="margin-top:8px;max-height:340px;overflow:auto"><table class="tbl"><thead><tr><th>Feature</th><th>Kaynak</th><th>DAYS</th><th>KM</th></tr></thead><tbody>'+rows+'</tbody></table></div></details>');
+}
+function v1ScenarioPredictionCard(d){
+  var decision=d.decision||{};
+  if(!decision.show_v1_point_estimate||!d.prediction){
+    return finding("warn","V1 İLERİ TARİH / MESAFE TAHMİNİ GÖSTERİLMEDİ",'<p>'+esc(decision.v1_suppressed_reason||"Deterministik bakım kararı önceliklidir.")+'</p>');
+  }
+  var p=d.prediction,derived=d.derived||{},te=d.typical_model_error||{};
+  var out=finding("good","V1 DAYS / KM SENARYO TAHMİNİ",
+    "<p>Bu sonuç frozen V1 modellerinden canlı hesaplandı. Kısıtlı bilgiyle üretilen bir senaryodur; gerçek filo doğrulaması değildir.</p>")
+    +'<div class="grid g2" style="margin-top:10px">'
+    +kpi("TAHMİNİ SONRAKİ SERVİS","~"+n0(p.next_service_days)+' <small>GÜN SONRA</small>',"V1 DAYS nokta tahmini","cyan")
+    +kpi("TAHMİNİ KALAN MESAFE","~"+n0(p.next_service_km)+' <small>KM SONRA</small>',"V1 KM nokta tahmini")+'</div>'
+    +'<div class="grid g2" style="margin-top:10px">'
+    +kpi("TAHMİNİ SERVİS TARİHİ",esc(derived.estimated_service_date||"—"),"snapshot + tahmini gün","plain")
+    +kpi("TAHMİNİ SERVİS KİLOMETRESİ",derived.estimated_service_odometer_km!=null?n0(derived.estimated_service_odometer_km)+' <small>km</small>':"—","güncel km + tahmini kalan km","plain")+'</div>'
+    +'<div class="grid g2" style="margin-top:10px">'
+    +kpi("DAYS · TEST MAE",te.days_mae!=null?"~"+n1(te.days_mae)+' <small>gün</small>':"—","ortalama hata; güven yüzdesi değildir","plain")
+    +kpi("KM · TEST MAE",te.km_mae!=null?"~"+n0(te.km_mae)+' <small>km</small>':"—","ortalama hata; güven yüzdesi değildir","plain")+'</div>';
+  if((d.warnings||[]).length)out+=finding("warn","GİRDİ / OOD UYARILARI",'<ul style="margin:0;padding-left:18px">'+d.warnings.map(function(w){return '<li>'+esc(w)+'</li>';}).join('')+'</ul>');
+  return out;
+}
+function v1RunScenario(){
+  var api=(window.__V2_API__||"").replace(/\/$/,"");
+  var err=document.getElementById("v1scenarioErr"),out=document.getElementById("v1scenarioOut"),payload=v1ScenarioPayload(),errors=v1ValidateScenario(payload);
+  if(errors.length){err.style.display="block";err.innerHTML=errors.map(esc).join("<br>");return;}
+  err.style.display="none";out.innerHTML='<p class="copy"><span class="dot"></span> Frozen V1 DAYS/KM modelleri çalışıyor…</p>';
+  var attempt=0;
+  (function run(){
+    v1Json(api+"/api/v1/predict/scenario",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(payload)})
+      .then(function(d){out.innerHTML=v1ScenarioMaintenanceCard(d.maintenance)+'<div class="sec">'+v1ScenarioPredictionCard(d)+'</div><div class="sec">'+v1ScenarioCoverageCard(d)+'</div>';})
+      .catch(function(e){
+        if(attempt++<2){out.innerHTML='<p class="copy"><span class="dot"></span> Model servisi uyanıyor, tekrar deneniyor… (deneme '+(attempt+1)+'/3)</p>';setTimeout(run,4000);return;}
+        out.innerHTML='<div class="empty">V1 senaryo API hatası — '+esc(String(e))+'. Sahte tahmin üretilmez.</div>';
+      });
+  })();
 }
 function v1ModeDemo(){
   var box=document.getElementById("v1modeBox");if(!box)return;
@@ -1130,15 +1290,18 @@ function v1ModeOwn(){
 }
 function wireV1Predict(){
   v1ApiPing(0);
-  var demo=document.getElementById("v1mDemo"),own=document.getElementById("v1mOwn");
+  var scenario=document.getElementById("v1mScenario"),demo=document.getElementById("v1mDemo"),own=document.getElementById("v1mOwn");
   function sel(mode){
+    window.__V1_MODE__=mode;
+    if(scenario)scenario.classList.toggle("active",mode==="scenario");
     if(demo)demo.classList.toggle("active",mode==="demo");
     if(own)own.classList.toggle("active",mode==="own");
-    (mode==="demo"?v1ModeDemo:v1ModeOwn)();
+    (mode==="scenario"?v1ModeScenario:mode==="demo"?v1ModeDemo:v1ModeOwn)();
   }
+  if(scenario)scenario.addEventListener("click",function(){sel("scenario");});
   if(demo)demo.addEventListener("click",function(){sel("demo");});
   if(own)own.addEventListener("click",function(){sel("own");});
-  sel("demo");
+  sel("scenario");
 }
 function v1Verdict(){
   var v1=M.v1||{}, vd=v1.verdict||{}, qa=v1.qa||[];

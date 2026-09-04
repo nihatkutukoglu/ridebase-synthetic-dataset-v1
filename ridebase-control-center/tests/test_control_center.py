@@ -1,5 +1,6 @@
 """Contract checks for the authoritative static Control Center source/build."""
 
+import json
 from pathlib import Path
 import subprocess
 import unittest
@@ -13,10 +14,15 @@ class V1LivePredictionTests(unittest.TestCase):
     def setUpClass(cls):
         cls.template = (ROOT / "template.html").read_text()
         cls.built = (ROOT / "public" / "index.html").read_text()
+        cls.manifest = json.loads((ROOT / "data" / "manifest.json").read_text())
 
     def assertInBoth(self, text):
         self.assertIn(text, self.template)
         self.assertIn(text, self.built)
+
+    @staticmethod
+    def function_body(source, name, next_name):
+        return source.split(f"function {name}(){{", 1)[1].split(f"function {next_name}", 1)[0]
 
     def test_v1_live_route_and_wiring_render(self):
         self.assertInBoth("data-go=\"v1/'+t[0]+'\"")
@@ -38,6 +44,43 @@ class V1LivePredictionTests(unittest.TestCase):
         self.assertInBoth('BU ÖRNEĞİ TAHMİN ET')
         self.assertInBoth('ÖRNEK MOTOR DEMOSU')
         self.assertInBoth('Bu senin motosikletin değil.')
+
+    def test_v1_natural_input_scenario_mode_is_primary(self):
+        for text in (
+            "SENARYO TAHMİNİ",
+            "KISITLI BİLGİYLE V1 SENARYO TAHMİNİ",
+            "/api/v1/motorcycle-models",
+            "/api/v1/predict/scenario",
+            "V1 DAYS / KM TAHMİNİNİ HESAPLA",
+            "DAYS 114 · KM 113 frozen feature",
+            "V1 BİLGİ KAPSAMI",
+            "Feature provenance tablosu",
+            "DETERMİNİSTİK BAKIM DURUMU",
+        ):
+            self.assertInBoth(text)
+        self.assertInBoth('sel("scenario");')
+
+    def test_v1_scenario_collects_product_inputs_without_demo_fallback(self):
+        for field_id in (
+            "v1brand", "v1model", "v1year", "v1odo", "v1annual",
+            "v1usage", "v1intensity", "v1lastdate", "v1lastodo",
+        ):
+            self.assertInBoth(f'id="{field_id}"')
+        for source in (self.template, self.built):
+            body = self.function_body(source, "v1RunScenario", "v1ModeDemo")
+            self.assertIn('/api/v1/predict/scenario', body)
+            self.assertNotIn('/api/v1/sample', body)
+            self.assertNotIn('__V1_SAMPLE__', body)
+
+    def test_v1_scenario_suppression_and_honest_copy_render(self):
+        for text in (
+            "V1 İLERİ TARİH / MESAFE TAHMİNİ GÖSTERİLMEDİ",
+            "Deterministik bakım kararı önceliklidir.",
+            "Bu gerçek filo kaydıyla doğrulanmış kişisel tahmin değildir.",
+            "Sahte tahmin üretilmez.",
+            "coverage güven skoru değildir",
+        ):
+            self.assertInBoth(text)
 
     def test_v1_outputs_and_derived_fields_render(self):
         for label in (
@@ -80,6 +123,14 @@ class V1LivePredictionTests(unittest.TestCase):
         self.assertInBoth('/api/predict/service')
         self.assertInBoth('risk_30d')
         self.assertInBoth('function wireV2Predict()')
+
+    def test_v1_manifest_declares_scenario_ready_without_claiming_real_pipeline(self):
+        live = self.manifest["v1"]["live_prediction"]
+        self.assertEqual(live["mode"], "SCENARIO_READY_REAL_MOTOR_PIPELINE_PENDING")
+        self.assertEqual(live["api"]["endpoint"], "POST /api/v1/predict/scenario")
+        self.assertEqual(live["api"]["catalog"], "GET /api/v1/motorcycle-models")
+        self.assertEqual(live["api"]["feature_count_days"], 114)
+        self.assertEqual(live["api"]["feature_count_km"], 113)
 
 
 class V2ScenarioPredictionTests(unittest.TestCase):
@@ -363,7 +414,6 @@ class V2ScenarioPredictionTests(unittest.TestCase):
         completed = subprocess.run(
             ["node", str(runner)], input=payload, text=True, capture_output=True, check=True
         )
-        import json
         canonical, fallback = json.loads(completed.stdout)
         self.assertEqual(canonical["source"], "BACKEND_CANONICAL")
         self.assertEqual(canonical["score"], 17)

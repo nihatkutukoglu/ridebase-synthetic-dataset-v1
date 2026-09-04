@@ -1,6 +1,7 @@
-"""Motorcycle catalog and deterministic partial-snapshot derivation for V2.
+"""Shared motorcycle catalog and deterministic partial-snapshot derivation.
 
-No model is trained here and no sample/default motorcycle is consulted. Scenario
+V1 and V2 scenario endpoints reuse this context. No model is trained here and no
+sample/default motorcycle is consulted. Scenario
 inputs have exactly four possible provenances: USER_INPUT, MODEL_MASTER, DERIVED,
 or MISSING_PREPROCESSOR.
 """
@@ -424,7 +425,7 @@ def _feature_group(feature: str) -> Tuple[str, str]:
     return "service_history", "Servis geçmişi"
 
 
-def _coverage(feature_order: Iterable[str], origins: Dict[str, Dict[str, str]]) -> Tuple[Dict[str, Any], List[Dict[str, str]]]:
+def coverage_for_features(feature_order: Iterable[str], origins: Dict[str, Dict[str, str]]) -> Tuple[Dict[str, Any], List[Dict[str, str]]]:
     grouped: Dict[str, Dict[str, Any]] = {}
     provenance: List[Dict[str, str]] = []
     known = 0
@@ -459,8 +460,20 @@ def _coverage(feature_order: Iterable[str], origins: Dict[str, Dict[str, str]]) 
     }, provenance
 
 
-def derive_scenario(req: V2ScenarioRequest, predictor: Any) -> Dict[str, Any]:
-    """Validate product inputs and create only defensible frozen V2 features."""
+def derive_scenario(
+    req: Any,
+    predictor: Any = None,
+    *,
+    feature_order: Optional[Iterable[str]] = None,
+    options: Optional[Dict[str, List[Any]]] = None,
+) -> Dict[str, Any]:
+    """Validate natural inputs and create only defensible frozen model features."""
+    if predictor is not None:
+        feature_order = predictor.feature_cols
+        options = predictor.options
+    if feature_order is None:
+        raise ValueError("feature_order or predictor is required")
+    options = options or {}
     today = dt.date.today()
     if req.snapshot_date > today:
         raise ScenarioInputError("snapshot_date cannot be in the future")
@@ -476,7 +489,7 @@ def derive_scenario(req: V2ScenarioRequest, predictor: Any) -> Dict[str, Any]:
 
     model = _selected_model(req.brand, req.model_id, req.production_year)
     for key, value in (("usage_type", req.usage_type), ("riding_intensity", req.riding_intensity)):
-        allowed = predictor.options.get(key, [])
+        allowed = options.get(key, [])
         if value is not None and allowed and value not in allowed:
             raise ScenarioInputError(f"Invalid {key}: {value!r}")
 
@@ -549,10 +562,10 @@ def derive_scenario(req: V2ScenarioRequest, predictor: Any) -> Dict[str, Any]:
         warnings.append(
             "Son servis sonrası tempo yıllık km girdisiyle belirgin biçimde çelişiyor: "
             f"son dönem yıllıklandırılmış ~{maintenance['recent_annualized_km']:.0f} km, "
-            f"girilen yıllık {req.annual_km_baseline:.0f} km. V2 bu iki sinyali birlikte kullanır."
+            f"girilen yıllık {req.annual_km_baseline:.0f} km. Dondurulmuş model bu iki sinyali birlikte kullanır."
         )
 
-    coverage, provenance = _coverage(predictor.feature_cols, origins)
+    coverage, provenance = coverage_for_features(feature_order, origins)
     return {
         "model": model,
         "features": features,
