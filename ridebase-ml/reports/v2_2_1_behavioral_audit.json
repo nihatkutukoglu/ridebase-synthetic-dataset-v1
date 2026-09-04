@@ -1,0 +1,59 @@
+{
+  "status": "PASS",
+  "checks": {
+    "scenario_count_at_least_5000": true,
+    "due_pressure_monotone_rate": true,
+    "overdue_lift_material": true,
+    "severe_overdue_saturates": true,
+    "severe_overdue_not_deterministic": true,
+    "high_usage_overdue_lift": true,
+    "adherence_direction": true,
+    "no_show_counteracts_return": true,
+    "known_appointment_intent_lift": true,
+    "breakdown_pressure_lift": true,
+    "service_recency_interpretable": true,
+    "horizon_monotonicity": true,
+    "p30_non_degenerate": true,
+    "same_input_deterministic": true,
+    "calendar_year_invariance": true,
+    "ood_finite_and_bounded": true,
+    "ood_warnings_explicit": true
+  },
+  "failed_checks": [],
+  "diagnostics": {
+    "scenario_count": 5120,
+    "base_rows": 160,
+    "due_monotone_rate": 1.0,
+    "mean_due_lift_p30_0_9_to_1_5": 0.10310769783242724,
+    "mean_severe_increment_p30_3_to_4": 0.0,
+    "mean_p30_at_due_ratio_4": 0.5179804381084561,
+    "usage_monotone_rate": 1.0,
+    "mean_usage_lift_p30_6k_to_36k": 0.4440854301028695,
+    "adherence_monotone_rate": 1.0,
+    "no_show_nonincreasing_rate": 0.96875,
+    "appointment_lift_rate": 1.0,
+    "mean_appointment_lift_p30": 0.3068675702002167,
+    "breakdown_monotone_rate": 1.0,
+    "recency_monotone_rate": 1.0,
+    "p30_min": 0.08181016393645885,
+    "p30_median": 0.4065590543540665,
+    "p30_max": 0.8514899647252943,
+    "p30_unique_6dp": 2100,
+    "ood_warnings": [
+      "unknown categorical values mapped to the predeclared -1 encoder bucket",
+      "annual_km_baseline outside TRAIN support must be flagged by any future serving adapter"
+    ]
+  },
+  "probability_resolution": {
+    "validation_p30_exact_zero_share": 0.0,
+    "validation_p30_unique_8dp": 17314,
+    "validation_p30_largest_plateau_share": 0.4867081835889276,
+    "median_service_days_distribution": {
+      "30": 3289,
+      "60": 7426,
+      "90": 6184,
+      "120": 7144,
+      "121": 12408
+    }
+  }
+}

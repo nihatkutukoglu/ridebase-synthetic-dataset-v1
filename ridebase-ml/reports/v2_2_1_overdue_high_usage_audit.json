@@ -1,0 +1,282 @@
+{
+  "status": "PASS",
+  "failed_checks": [],
+  "checks": {
+    "maintenance_policy_independent": true,
+    "adherent_overdue_above_not_due": true,
+    "no_show_counteracts_severe_overdue": true,
+    "severe_overdue_saturates": true,
+    "high_usage_direction": true,
+    "horizon_monotonicity": true,
+    "maintenance_due_not_return_risk": true,
+    "no_exact_probability_target": true
+  },
+  "test_rows_read": false,
+  "table": [
+    {
+      "annual_km": 30000,
+      "profile": "ADHERENT",
+      "maintenance_state": "NOT_DUE",
+      "km_due_ratio": 0.65,
+      "maintenance_due_now": false,
+      "p30": 0.46108568697873076,
+      "p60": 0.8373483598662412,
+      "p90": 0.9396126697585296,
+      "p120": 0.9738021112339305
+    },
+    {
+      "annual_km": 30000,
+      "profile": "ADHERENT",
+      "maintenance_state": "NEAR_DUE",
+      "km_due_ratio": 0.95,
+      "maintenance_due_now": false,
+      "p30": 0.6083887820326765,
+      "p60": 0.9080408690544151,
+      "p90": 0.963058723348089,
+      "p120": 0.9796976408038613
+    },
+    {
+      "annual_km": 30000,
+      "profile": "ADHERENT",
+      "maintenance_state": "OVERDUE",
+      "km_due_ratio": 1.5,
+      "maintenance_due_now": true,
+      "p30": 0.618108474822828,
+      "p60": 0.9106230819219989,
+      "p90": 0.9634155694404813,
+      "p120": 0.9797313381764717
+    },
+    {
+      "annual_km": 30000,
+      "profile": "ADHERENT",
+      "maintenance_state": "SEVERE_OVERDUE",
+      "km_due_ratio": 3.0,
+      "maintenance_due_now": true,
+      "p30": 0.622192008845132,
+      "p60": 0.9110678900449767,
+      "p90": 0.9634705900855817,
+      "p120": 0.9797348609258139
+    },
+    {
+      "annual_km": 30000,
+      "profile": "NORMAL",
+      "maintenance_state": "NOT_DUE",
+      "km_due_ratio": 0.65,
+      "maintenance_due_now": false,
+      "p30": 0.23102151397718257,
+      "p60": 0.5461701201667752,
+      "p90": 0.7996477077546001,
+      "p120": 0.9067338198920151
+    },
+    {
+      "annual_km": 30000,
+      "profile": "NORMAL",
+      "maintenance_state": "NEAR_DUE",
+      "km_due_ratio": 0.95,
+      "maintenance_due_now": false,
+      "p30": 0.2902145048221223,
+      "p60": 0.6596529943146926,
+      "p90": 0.8524122709221318,
+      "p120": 0.9353187107828589
+    },
+    {
+      "annual_km": 30000,
+      "profile": "NORMAL",
+      "maintenance_state": "OVERDUE",
+      "km_due_ratio": 1.5,
+      "maintenance_due_now": true,
+      "p30": 0.30733485578895603,
+      "p60": 0.6667507303270214,
+      "p90": 0.8573588832614002,
+      "p120": 0.9375118945094865
+    },
+    {
+      "annual_km": 30000,
+      "profile": "NORMAL",
+      "maintenance_state": "SEVERE_OVERDUE",
+      "km_due_ratio": 3.0,
+      "maintenance_due_now": true,
+      "p30": 0.30808226393106125,
+      "p60": 0.6681564286443059,
+      "p90": 0.8582858902776198,
+      "p120": 0.9378887686667955
+    },
+    {
+      "annual_km": 30000,
+      "profile": "DELAYER_NO_SHOW",
+      "maintenance_state": "NOT_DUE",
+      "km_due_ratio": 0.65,
+      "maintenance_due_now": false,
+      "p30": 0.202496178046751,
+      "p60": 0.47453773399405674,
+      "p90": 0.7160949982520135,
+      "p120": 0.8687070543135176
+    },
+    {
+      "annual_km": 30000,
+      "profile": "DELAYER_NO_SHOW",
+      "maintenance_state": "NEAR_DUE",
+      "km_due_ratio": 0.95,
+      "maintenance_due_now": false,
+      "p30": 0.23100797733169692,
+      "p60": 0.5461361072014214,
+      "p90": 0.7996134536847894,
+      "p120": 0.9067131410549617
+    },
+    {
+      "annual_km": 30000,
+      "profile": "DELAYER_NO_SHOW",
+      "maintenance_state": "OVERDUE",
+      "km_due_ratio": 1.5,
+      "maintenance_due_now": true,
+      "p30": 0.23888076938161334,
+      "p60": 0.5521948442408819,
+      "p90": 0.805508616133482,
+      "p120": 0.910149291639074
+    },
+    {
+      "annual_km": 30000,
+      "profile": "DELAYER_NO_SHOW",
+      "maintenance_state": "SEVERE_OVERDUE",
+      "km_due_ratio": 3.0,
+      "maintenance_due_now": true,
+      "p30": 0.23938897324888692,
+      "p60": 0.5568322319831583,
+      "p90": 0.8066464563521684,
+      "p120": 0.9107843165892873
+    },
+    {
+      "annual_km": 60000,
+      "profile": "ADHERENT",
+      "maintenance_state": "NOT_DUE",
+      "km_due_ratio": 0.65,
+      "maintenance_due_now": false,
+      "p30": 0.47817340226455507,
+      "p60": 0.8447547724082051,
+      "p90": 0.9413918963192722,
+      "p120": 0.9741248870430212
+    },
+    {
+      "annual_km": 60000,
+      "profile": "ADHERENT",
+      "maintenance_state": "NEAR_DUE",
+      "km_due_ratio": 0.95,
+      "maintenance_due_now": false,
+      "p30": 0.6250779005855633,
+      "p60": 0.9117074154466984,
+      "p90": 0.9635455803284901,
+      "p120": 0.9797381468997031
+    },
+    {
+      "annual_km": 60000,
+      "profile": "ADHERENT",
+      "maintenance_state": "OVERDUE",
+      "km_due_ratio": 1.5,
+      "maintenance_due_now": true,
+      "p30": 0.6346782997127542,
+      "p60": 0.9135436729990349,
+      "p90": 0.9637235508187226,
+      "p120": 0.9797253759343344
+    },
+    {
+      "annual_km": 60000,
+      "profile": "ADHERENT",
+      "maintenance_state": "SEVERE_OVERDUE",
+      "km_due_ratio": 3.0,
+      "maintenance_due_now": true,
+      "p30": 0.6365240152758662,
+      "p60": 0.9138471267626841,
+      "p90": 0.9637447453295449,
+      "p120": 0.9824017655959469
+    },
+    {
+      "annual_km": 60000,
+      "profile": "NORMAL",
+      "maintenance_state": "NOT_DUE",
+      "km_due_ratio": 0.65,
+      "maintenance_due_now": false,
+      "p30": 0.24430640432453293,
+      "p60": 0.5579420321468704,
+      "p90": 0.8170027051328422,
+      "p120": 0.9113463575971619
+    },
+    {
+      "annual_km": 60000,
+      "profile": "NORMAL",
+      "maintenance_state": "NEAR_DUE",
+      "km_due_ratio": 0.95,
+      "maintenance_due_now": false,
+      "p30": 0.30874537309646355,
+      "p60": 0.6693863392690429,
+      "p90": 0.8590831056833612,
+      "p120": 0.9382081765545132
+    },
+    {
+      "annual_km": 60000,
+      "profile": "NORMAL",
+      "maintenance_state": "OVERDUE",
+      "km_due_ratio": 1.5,
+      "maintenance_due_now": true,
+      "p30": 0.31562855215433194,
+      "p60": 0.7134941755850976,
+      "p90": 0.8801029871454267,
+      "p120": 0.9500854883491288
+    },
+    {
+      "annual_km": 60000,
+      "profile": "NORMAL",
+      "maintenance_state": "SEVERE_OVERDUE",
+      "km_due_ratio": 3.0,
+      "maintenance_due_now": true,
+      "p30": 0.3164773942370015,
+      "p60": 0.721065991736421,
+      "p90": 0.8809284252433962,
+      "p120": 0.9503861516876975
+    },
+    {
+      "annual_km": 60000,
+      "profile": "DELAYER_NO_SHOW",
+      "maintenance_state": "NOT_DUE",
+      "km_due_ratio": 0.65,
+      "maintenance_due_now": false,
+      "p30": 0.20485348809903303,
+      "p60": 0.48767945788913575,
+      "p90": 0.7405566556973429,
+      "p120": 0.874831591193297
+    },
+    {
+      "annual_km": 60000,
+      "profile": "DELAYER_NO_SHOW",
+      "maintenance_state": "NEAR_DUE",
+      "km_due_ratio": 0.95,
+      "maintenance_due_now": false,
+      "p30": 0.2442910659805343,
+      "p60": 0.5579056574958191,
+      "p90": 0.8169694568280348,
+      "p120": 0.9113281669813973
+    },
+    {
+      "annual_km": 60000,
+      "profile": "DELAYER_NO_SHOW",
+      "maintenance_state": "OVERDUE",
+      "km_due_ratio": 1.5,
+      "maintenance_due_now": true,
+      "p30": 0.27077590694492065,
+      "p60": 0.6090784882954653,
+      "p90": 0.8358246823090064,
+      "p120": 0.9283007358364435
+    },
+    {
+      "annual_km": 60000,
+      "profile": "DELAYER_NO_SHOW",
+      "maintenance_state": "SEVERE_OVERDUE",
+      "km_due_ratio": 3.0,
+      "maintenance_due_now": true,
+      "p30": 0.2736838035527049,
+      "p60": 0.6112499969422462,
+      "p90": 0.8369123473817592,
+      "p120": 0.9290670781333193
+    }
+  ],
+  "semantic_note": "Maintenance Due is deterministic policy state; Service Return Risk models customer return behavior. They are not interchangeable."
+}
