@@ -1,0 +1,122 @@
+{
+  "study": "RIDEBASE_V1_5_GENERATOR_ORACLE",
+  "sample_size_val": 36451,
+  "overall_metrics": {
+    "ipcw_c_index": 0.670691,
+    "harrell_c_index": 0.671013,
+    "mean_horizon_auc": 0.743,
+    "horizon_metrics": {
+      "30": {
+        "eligible_samples": 36357,
+        "empirical_event_rate": 0.2055,
+        "roc_auc": 0.7499,
+        "brier_score": 0.1397
+      },
+      "60": {
+        "eligible_samples": 36275,
+        "empirical_event_rate": 0.3872,
+        "roc_auc": 0.7417,
+        "brier_score": 0.1977
+      },
+      "90": {
+        "eligible_samples": 36215,
+        "empirical_event_rate": 0.5329,
+        "roc_auc": 0.7406,
+        "brier_score": 0.216
+      },
+      "120": {
+        "eligible_samples": 36174,
+        "empirical_event_rate": 0.6508,
+        "roc_auc": 0.7399,
+        "brier_score": 0.2148
+      }
+    }
+  },
+  "temporal_slice_ipcw_c": {
+    "slice_jul_aug": 0.6791,
+    "slice_sep_oct": 0.6735,
+    "slice_nov_dec": 0.6623
+  },
+  "decile_calibration_table": [
+    {
+      "decile": 1,
+      "count": 3622,
+      "min_hazard": 0.0,
+      "max_hazard": 0.006774,
+      "mean_propensity_90d": 0.1519,
+      "empirical_event_rate_90d": 0.2526
+    },
+    {
+      "decile": 2,
+      "count": 3621,
+      "min_hazard": 0.006776,
+      "max_hazard": 0.008332,
+      "mean_propensity_90d": 0.2032,
+      "empirical_event_rate_90d": 0.3024
+    },
+    {
+      "decile": 3,
+      "count": 3622,
+      "min_hazard": 0.008333,
+      "max_hazard": 0.009899,
+      "mean_propensity_90d": 0.2387,
+      "empirical_event_rate_90d": 0.3446
+    },
+    {
+      "decile": 4,
+      "count": 3621,
+      "min_hazard": 0.009901,
+      "max_hazard": 0.011884,
+      "mean_propensity_90d": 0.2778,
+      "empirical_event_rate_90d": 0.4079
+    },
+    {
+      "decile": 5,
+      "count": 3622,
+      "min_hazard": 0.011884,
+      "max_hazard": 0.01468,
+      "mean_propensity_90d": 0.3269,
+      "empirical_event_rate_90d": 0.4644
+    },
+    {
+      "decile": 6,
+      "count": 3621,
+      "min_hazard": 0.014682,
+      "max_hazard": 0.019105,
+      "mean_propensity_90d": 0.3935,
+      "empirical_event_rate_90d": 0.5374
+    },
+    {
+      "decile": 7,
+      "count": 3621,
+      "min_hazard": 0.019109,
+      "max_hazard": 0.026401,
+      "mean_propensity_90d": 0.4894,
+      "empirical_event_rate_90d": 0.6098
+    },
+    {
+      "decile": 8,
+      "count": 3622,
+      "min_hazard": 0.026405,
+      "max_hazard": 0.039279,
+      "mean_propensity_90d": 0.6176,
+      "empirical_event_rate_90d": 0.6985
+    },
+    {
+      "decile": 9,
+      "count": 3621,
+      "min_hazard": 0.039283,
+      "max_hazard": 0.06553,
+      "mean_propensity_90d": 0.7751,
+      "empirical_event_rate_90d": 0.8017
+    },
+    {
+      "decile": 10,
+      "count": 3622,
+      "min_hazard": 0.065559,
+      "max_hazard": 0.34981,
+      "mean_propensity_90d": 0.9392,
+      "empirical_event_rate_90d": 0.9097
+    }
+  ]
+}

@@ -1,0 +1,71 @@
+{
+  "study": "RIDEBASE_V1_5_MODEL_FAMILY_GAP",
+  "train_samples": 40000,
+  "val_samples": 36451,
+  "families_tested": [
+    "xgb_cox",
+    "xgb_aft",
+    "discrete_time_xgb",
+    "coxnet"
+  ],
+  "o2_results": {
+    "xgb_cox": {
+      "family_name": "XGBoost Cox PH",
+      "ipcw_c_index": 0.736665,
+      "harrell_c_index": 0.736892,
+      "auc_90d": 0.8204
+    },
+    "xgb_aft": {
+      "family_name": "XGBoost AFT (Log-Normal)",
+      "ipcw_c_index": 0.743247,
+      "harrell_c_index": 0.743572,
+      "auc_90d": 0.8247
+    },
+    "discrete_time_xgb": {
+      "family_name": "Discrete-Time Hazard XGB (90d)",
+      "ipcw_c_index": 0.729916,
+      "harrell_c_index": 0.730194,
+      "auc_90d": 0.826
+    },
+    "coxnet": {
+      "family_name": "Penalized CoxNet (Linear)",
+      "ipcw_c_index": 0.725357,
+      "harrell_c_index": 0.725604,
+      "auc_90d": 0.8079
+    }
+  },
+  "m4_oracle_results": {
+    "xgb_cox": {
+      "family_name": "XGBoost Cox PH",
+      "ipcw_c_index": 0.746448,
+      "harrell_c_index": 0.746681,
+      "auc_90d": 0.831
+    },
+    "xgb_aft": {
+      "family_name": "XGBoost AFT (Log-Normal)",
+      "ipcw_c_index": 0.750247,
+      "harrell_c_index": 0.750556,
+      "auc_90d": 0.8327
+    },
+    "discrete_time_xgb": {
+      "family_name": "Discrete-Time Hazard XGB (90d)",
+      "ipcw_c_index": 0.739278,
+      "harrell_c_index": 0.739559,
+      "auc_90d": 0.8357
+    },
+    "coxnet": {
+      "family_name": "Penalized CoxNet (Linear)",
+      "ipcw_c_index": 0.731908,
+      "harrell_c_index": 0.732148,
+      "auc_90d": 0.8154
+    }
+  },
+  "model_gaps": {
+    "best_family_o2_ipcw": 0.743247,
+    "xgb_cox_o2_ipcw": 0.736665,
+    "model_family_gap_o2": 0.006582,
+    "best_family_m4_ipcw": 0.750247,
+    "xgb_cox_m4_ipcw": 0.746448,
+    "model_family_gap_m4": 0.003799
+  }
+}
