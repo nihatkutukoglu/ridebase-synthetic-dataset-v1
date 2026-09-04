@@ -1717,63 +1717,131 @@ function v2MaintenanceCard(m, p){
     +kpi("SON SERVİSTEN BERİ",since,"doğrudan kullanıcı girdilerinden","plain")+'</div>'+recent+policyNote;
 }
 
+function v2RoundHalfEven(value, digits){
+  var factor = Math.pow(10, digits || 0);
+  var scaled = value * factor;
+  var lower = Math.floor(scaled);
+  var fraction = scaled - lower;
+  var rounded = Math.abs(fraction - 0.5) <= 1e-9
+    ? (lower % 2 === 0 ? lower : lower + 1)
+    : Math.round(scaled);
+  return rounded / factor;
+}
+
+function v2UrgencyLevelCopy(level){
+  return ({
+    "NORMAL":"Bakım periyodu içinde.",
+    "YAKLAŞIYOR":"Bakım zamanı yaklaşıyor.",
+    "GECİKMİŞ":"Bakım periyodu aşılmış.",
+    "ÇOK GECİKMİŞ":"Bakım periyodu önemli ölçüde aşılmış.",
+    "KRİTİK":"Bakım periyodu ciddi ölçüde aşılmış."
+  })[level] || "Bakım aciliyeti hesaplandı.";
+}
+
 function v2CalculateUrgency(m, p){
   if(!m || m.status==="UNKNOWN") return null;
 
-  var score = null, level = null, reason = null, dim = null;
-  if(m.maintenance_urgency_score != null && m.maintenance_urgency_level != null){
-    score = Number(m.maintenance_urgency_score);
-    level = m.maintenance_urgency_level;
-    reason = m.maintenance_urgency_reason;
-    dim = m.determining_dimension;
+  var canonicalScore = Number(m.maintenance_urgency_score);
+  var canonicalRatio = Number(m.progress_ratio);
+  var hasCanonical = m.maintenance_urgency_score != null
+    && Number.isFinite(canonicalScore)
+    && canonicalScore >= 0
+    && canonicalScore <= 100
+    && typeof m.maintenance_urgency_level === "string"
+    && ["NORMAL","YAKLAŞIYOR","GECİKMİŞ","ÇOK GECİKMİŞ","KRİTİK"].indexOf(m.maintenance_urgency_level) >= 0
+    && typeof m.maintenance_urgency_reason === "string"
+    && m.maintenance_urgency_reason.length > 0
+    && ["KM","TIME","BOTH"].indexOf(m.determining_dimension) >= 0
+    && m.progress_ratio != null
+    && Number.isFinite(canonicalRatio)
+    && canonicalRatio >= 0;
+
+  // Fallback only; backend urgency fields are canonical.
+  if(hasCanonical){
+    var canonicalExact = m.urgency
+      && m.urgency.maintenance_urgency_score_exact != null
+      && Number.isFinite(Number(m.urgency.maintenance_urgency_score_exact))
+      ? Number(m.urgency.maintenance_urgency_score_exact)
+      : canonicalScore;
+    return {
+      score: canonicalScore,
+      score_exact: canonicalExact,
+      level: m.maintenance_urgency_level,
+      reason: m.maintenance_urgency_reason,
+      determining_dimension: m.determining_dimension,
+      km_progress_ratio: m.km_progress_ratio != null ? Number(m.km_progress_ratio) : null,
+      time_progress_ratio: m.time_progress_ratio != null ? Number(m.time_progress_ratio) : null,
+      progress_ratio: canonicalRatio,
+      overdue_km: m.overdue_km != null ? Math.max(0, Number(m.overdue_km)) : 0,
+      overdue_days: m.overdue_days != null ? Math.max(0, Number(m.overdue_days)) : 0,
+      source: "BACKEND_CANONICAL"
+    };
   }
 
-  var kmRatio = m.km_progress_ratio != null ? Number(m.km_progress_ratio) : 0;
-  var timeRatio = m.time_progress_ratio != null ? Number(m.time_progress_ratio) : 0;
-  if(kmRatio === 0 && timeRatio === 0 && m.progress_pct != null){
-    if(m.driving_metric === "TIME") timeRatio = m.progress_pct / 100;
-    else kmRatio = m.progress_pct / 100;
+  var hasKmRatio = m.km_progress_ratio != null && Number.isFinite(Number(m.km_progress_ratio));
+  var hasTimeRatio = m.time_progress_ratio != null && Number.isFinite(Number(m.time_progress_ratio));
+  var kmRatio = hasKmRatio ? Number(m.km_progress_ratio) : 0;
+  var timeRatio = hasTimeRatio ? Number(m.time_progress_ratio) : 0;
+  if(!hasKmRatio && !hasTimeRatio && m.progress_pct != null){
+    if(m.driving_metric === "TIME"){
+      timeRatio = Number(m.progress_pct) / 100;
+      hasTimeRatio = true;
+    } else {
+      kmRatio = Number(m.progress_pct) / 100;
+      hasKmRatio = true;
+    }
   }
 
   var maxRatio = m.progress_ratio != null ? Number(m.progress_ratio) : Math.max(kmRatio, timeRatio);
-  if(!dim){
-    if(Math.abs(kmRatio - timeRatio) < 0.001) dim = "BOTH";
+  if(!Number.isFinite(maxRatio) || maxRatio < 0) return null;
+
+  var dim;
+  if(hasKmRatio && hasTimeRatio){
+    if(Math.abs(kmRatio - timeRatio) <= 0.01) dim = "BOTH";
     else if(timeRatio > kmRatio) dim = "TIME";
     else dim = "KM";
+  } else if(hasTimeRatio){
+    dim = "TIME";
+  } else {
+    dim = "KM";
   }
 
-  if(score == null){
-    if(maxRatio <= 0){
-      score = 0;
-    } else if(maxRatio < 0.80){
-      score = maxRatio * 47.5;
-    } else if(maxRatio < 1.00){
-      score = 38.0 + (maxRatio - 0.80) * 60.0;
-    } else if(maxRatio < 1.50){
-      score = 50.0 + (maxRatio - 1.00) * 50.0;
-    } else if(maxRatio < 2.00){
-      score = 75.0 + (maxRatio - 1.50) * 30.0;
-    } else if(maxRatio < 5.00){
-      score = 90.0 + (maxRatio - 2.00) * (10.0 / 3.0);
-    } else {
-      score = 100.0;
-    }
-    score = Math.max(0, Math.min(100, Math.round(score * 10) / 10));
+  var scoreExact;
+  if(maxRatio <= 0){
+    scoreExact = 0;
+  } else if(maxRatio < 0.80){
+    scoreExact = maxRatio * 47.5;
+  } else if(maxRatio < 1.00){
+    scoreExact = 38.0 + (maxRatio - 0.80) * 60.0;
+  } else if(maxRatio < 1.50){
+    scoreExact = 50.0 + (maxRatio - 1.00) * 50.0;
+  } else if(maxRatio < 2.00){
+    scoreExact = 75.0 + (maxRatio - 1.50) * 30.0;
+  } else if(maxRatio < 5.00){
+    scoreExact = 90.0 + (maxRatio - 2.00) * (10.0 / 3.0);
+  } else {
+    scoreExact = 100.0;
   }
+  scoreExact = v2RoundHalfEven(Math.max(0, Math.min(100, scoreExact)), 1);
+  var score = v2RoundHalfEven(scoreExact, 0);
 
-  if(!level){
-    if(score >= 90.0) level = "KRİTİK";
-    else if(score >= 75.0) level = "ÇOK GECİKMİŞ";
-    else if(score >= 50.0) level = "GECİKMİŞ";
-    else if(score >= 25.0) level = "YAKLAŞIYOR";
-    else level = "NORMAL";
+  var level;
+  if(scoreExact >= 90.0) level = "KRİTİK";
+  else if(scoreExact >= 75.0) level = "ÇOK GECİKMİŞ";
+  else if(scoreExact >= 50.0) level = "GECİKMİŞ";
+  else if(scoreExact >= 25.0) level = "YAKLAŞIYOR";
+  else level = "NORMAL";
+
+  if(maxRatio >= 1.0 && (level === "NORMAL" || level === "YAKLAŞIYOR")){
+    level = "GECİKMİŞ";
+    score = Math.max(50, score);
   }
 
   var overdueKm = m.overdue_km != null ? Math.max(0, Number(m.overdue_km)) : 0;
   var overdueDays = m.overdue_days != null ? Math.max(0, Number(m.overdue_days)) : 0;
 
-  if(!reason){
-    if(level === "KRİTİK" || level === "ÇOK GECİKMİŞ" || level === "GECİKMİŞ"){
+  var reason;
+  if(level === "KRİTİK" || level === "ÇOK GECİKMİŞ" || level === "GECİKMİŞ"){
       if(dim === "KM" && overdueKm > 0){
         reason = Number(overdueKm).toLocaleString("tr-TR") + " km gecikmiş (kilometre periyodu " + (Math.round(kmRatio * 10) / 10) + "× seviyesinde)";
       } else if(dim === "TIME" && overdueDays > 0){
@@ -1783,7 +1851,7 @@ function v2CalculateUrgency(m, p){
       } else {
         reason = "Bakım periyodu aşılmış (" + (Math.round(maxRatio * 100)) + "% ilerleme)";
       }
-    } else if(level === "YAKLAŞIYOR"){
+  } else if(level === "YAKLAŞIYOR"){
       var remKm = m.remaining_km != null ? Number(m.remaining_km) : null;
       var remDays = m.remaining_days != null ? Number(m.remaining_days) : null;
       if(dim === "KM" && remKm != null){
@@ -1793,13 +1861,13 @@ function v2CalculateUrgency(m, p){
       } else {
         reason = "Bakım periyodu yaklaşıyor (" + Math.round(maxRatio * 100) + "% ilerleme)";
       }
-    } else {
-      reason = "Bakım periyodu içinde, acil işlem gerektirmiyor (" + Math.round(maxRatio * 100) + "% ilerleme)";
-    }
+  } else {
+    reason = "Bakım periyodu içinde (" + Math.round(maxRatio * 100) + "% ilerleme)";
   }
 
   return {
     score: score,
+    score_exact: scoreExact,
     level: level,
     reason: reason,
     determining_dimension: dim,
@@ -1807,7 +1875,8 @@ function v2CalculateUrgency(m, p){
     time_progress_ratio: timeRatio,
     progress_ratio: maxRatio,
     overdue_km: overdueKm,
-    overdue_days: overdueDays
+    overdue_days: overdueDays,
+    source: "FRONTEND_FALLBACK"
   };
 }
 
@@ -1834,7 +1903,8 @@ function v2UrgencyCard(u, m, p){
     +'</div></div>';
 
   var header = finding(accentKind, "BAKIM ACİLİYETİ · " + n1(u.score) + " / 100 (" + u.level + ")",
-    '<p style="font-size:1.02rem;font-weight:600;margin:0 0 4px 0;color:var(--text)">' + esc(u.reason) + '</p>'
+    '<p style="font-size:1.02rem;font-weight:600;margin:0 0 4px 0;color:var(--text)">' + esc(v2UrgencyLevelCopy(u.level)) + '</p>'
+    +'<p class="copy" style="margin:0 0 4px 0;font-size:.84rem">'+esc(u.reason)+'</p>'
     +'<p class="copy" style="margin:0;font-size:.84rem">Bakım aciliyeti deterministik bakım politikasından hesaplanır. V2.1 yüzdeleri müşterinin servise dönme davranışını tahmin eder.</p>'
     + bar
   );

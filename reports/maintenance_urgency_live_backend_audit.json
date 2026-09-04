@@ -1,0 +1,46 @@
+{
+  "audit": "maintenance_urgency_live_backend",
+  "endpoint": "https://ridebase-inference-api.onrender.com/api/v2/predict/scenario",
+  "required_fields": [
+    "maintenance_urgency_score",
+    "maintenance_urgency_level",
+    "maintenance_urgency_reason",
+    "determining_dimension",
+    "progress_ratio"
+  ],
+  "audits": [
+    {
+      "stage": "pre_hardening",
+      "timestamp_utc": "2026-09-04T15:41:56Z",
+      "classification": "STALE",
+      "http_status": 200,
+      "latency_seconds": 1.079783,
+      "field_presence": {
+        "maintenance_urgency_score": false,
+        "maintenance_urgency_level": false,
+        "maintenance_urgency_reason": false,
+        "determining_dimension": false,
+        "progress_ratio": true
+      },
+      "response_excerpt": {
+        "mode": "SCENARIO_PARTIAL",
+        "maintenance": {
+          "status": "OVERDUE",
+          "progress_ratio": 10.0,
+          "maintenance_urgency_score": null,
+          "maintenance_urgency_level": null,
+          "maintenance_urgency_reason": null,
+          "determining_dimension": null
+        },
+        "v2": {
+          "risk_30d": 0.0797877,
+          "risk_60d": 0.38654509,
+          "risk_90d": 0.49490988,
+          "risk_120d": 0.82370121
+        }
+      }
+    }
+  ],
+  "current_classification": "STALE",
+  "conclusion": "The live response is healthy at the transport level but does not yet serve four canonical urgency fields. Frontend rendering alone is not accepted as backend verification."
+}

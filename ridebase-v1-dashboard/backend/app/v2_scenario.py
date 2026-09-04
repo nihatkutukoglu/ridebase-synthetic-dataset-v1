@@ -293,6 +293,8 @@ def _maintenance_assessment(req: V2ScenarioRequest, model: Dict[str, Any]) -> Di
         "km_since_service": None,
         "days_since_service": None,
         "progress_ratio": None,
+        "km_progress_ratio": None,
+        "time_progress_ratio": None,
         "progress_pct": None,
         "overdue_km": None,
         "overdue_days": None,
@@ -325,6 +327,7 @@ def _maintenance_assessment(req: V2ScenarioRequest, model: Dict[str, Any]) -> Di
         interval_km = policy.get("interval_km")
         if interval_km:
             km_ratio = km_since / float(interval_km)
+            result["km_progress_ratio"] = round(km_ratio, 4)
             progress.append(("KM", km_ratio))
             result["overdue_km"] = round(max(0.0, km_since - float(interval_km)), 2)
             result["remaining_km"] = round(max(0.0, float(interval_km) - km_since), 2)
@@ -336,6 +339,7 @@ def _maintenance_assessment(req: V2ScenarioRequest, model: Dict[str, Any]) -> Di
         interval_days = policy.get("interval_days")
         if interval_days:
             day_ratio = days_since / float(interval_days)
+            result["time_progress_ratio"] = round(day_ratio, 4)
             progress.append(("DAYS", day_ratio))
             result["overdue_days"] = round(max(0.0, days_since - float(interval_days)), 2)
             result["remaining_days"] = round(max(0.0, float(interval_days) - days_since), 2)

@@ -1,0 +1,749 @@
+{
+  "audit": "maintenance_urgency_frontend_backend_parity",
+  "timestamp_utc": "2026-09-04T15:46:31.978415+00:00",
+  "canonical_source": "ridebase_ml.policy.urgency.calculate_maintenance_urgency",
+  "frontend_source": "ridebase-control-center/template.html::v2CalculateUrgency",
+  "tolerance": 1e-09,
+  "cases_total": 23,
+  "cases_passed": 23,
+  "parity_percent": 100.0,
+  "status": "PASS",
+  "cases": [
+    {
+      "name": "progress_ratio_0",
+      "input": {
+        "progress_ratio": 0.0,
+        "km_ratio": null,
+        "day_ratio": null,
+        "overdue_km": null,
+        "overdue_days": null
+      },
+      "canonical_python": {
+        "score": 0,
+        "score_exact": 0.0,
+        "level": "NORMAL",
+        "determining_dimension": "KM"
+      },
+      "frontend_fallback": {
+        "score": 0,
+        "score_exact": 0,
+        "level": "NORMAL",
+        "determining_dimension": "KM",
+        "source": "FRONTEND_FALLBACK"
+      },
+      "checks": {
+        "score": true,
+        "score_exact": true,
+        "level": true,
+        "determining_dimension": true,
+        "saturation": true,
+        "fallback_source": true
+      },
+      "pass": true
+    },
+    {
+      "name": "progress_ratio_0.1",
+      "input": {
+        "progress_ratio": 0.1,
+        "km_ratio": null,
+        "day_ratio": null,
+        "overdue_km": null,
+        "overdue_days": null
+      },
+      "canonical_python": {
+        "score": 5,
+        "score_exact": 4.8,
+        "level": "NORMAL",
+        "determining_dimension": "KM"
+      },
+      "frontend_fallback": {
+        "score": 5,
+        "score_exact": 4.8,
+        "level": "NORMAL",
+        "determining_dimension": "KM",
+        "source": "FRONTEND_FALLBACK"
+      },
+      "checks": {
+        "score": true,
+        "score_exact": true,
+        "level": true,
+        "determining_dimension": true,
+        "saturation": true,
+        "fallback_source": true
+      },
+      "pass": true
+    },
+    {
+      "name": "progress_ratio_0.25",
+      "input": {
+        "progress_ratio": 0.25,
+        "km_ratio": null,
+        "day_ratio": null,
+        "overdue_km": null,
+        "overdue_days": null
+      },
+      "canonical_python": {
+        "score": 12,
+        "score_exact": 11.9,
+        "level": "NORMAL",
+        "determining_dimension": "KM"
+      },
+      "frontend_fallback": {
+        "score": 12,
+        "score_exact": 11.9,
+        "level": "NORMAL",
+        "determining_dimension": "KM",
+        "source": "FRONTEND_FALLBACK"
+      },
+      "checks": {
+        "score": true,
+        "score_exact": true,
+        "level": true,
+        "determining_dimension": true,
+        "saturation": true,
+        "fallback_source": true
+      },
+      "pass": true
+    },
+    {
+      "name": "progress_ratio_0.5",
+      "input": {
+        "progress_ratio": 0.5,
+        "km_ratio": null,
+        "day_ratio": null,
+        "overdue_km": null,
+        "overdue_days": null
+      },
+      "canonical_python": {
+        "score": 24,
+        "score_exact": 23.8,
+        "level": "NORMAL",
+        "determining_dimension": "KM"
+      },
+      "frontend_fallback": {
+        "score": 24,
+        "score_exact": 23.8,
+        "level": "NORMAL",
+        "determining_dimension": "KM",
+        "source": "FRONTEND_FALLBACK"
+      },
+      "checks": {
+        "score": true,
+        "score_exact": true,
+        "level": true,
+        "determining_dimension": true,
+        "saturation": true,
+        "fallback_source": true
+      },
+      "pass": true
+    },
+    {
+      "name": "progress_ratio_0.526",
+      "input": {
+        "progress_ratio": 0.526,
+        "km_ratio": null,
+        "day_ratio": null,
+        "overdue_km": null,
+        "overdue_days": null
+      },
+      "canonical_python": {
+        "score": 25,
+        "score_exact": 25.0,
+        "level": "YAKLAŞIYOR",
+        "determining_dimension": "KM"
+      },
+      "frontend_fallback": {
+        "score": 25,
+        "score_exact": 25,
+        "level": "YAKLAŞIYOR",
+        "determining_dimension": "KM",
+        "source": "FRONTEND_FALLBACK"
+      },
+      "checks": {
+        "score": true,
+        "score_exact": true,
+        "level": true,
+        "determining_dimension": true,
+        "saturation": true,
+        "fallback_source": true
+      },
+      "pass": true
+    },
+    {
+      "name": "progress_ratio_0.75",
+      "input": {
+        "progress_ratio": 0.75,
+        "km_ratio": null,
+        "day_ratio": null,
+        "overdue_km": null,
+        "overdue_days": null
+      },
+      "canonical_python": {
+        "score": 36,
+        "score_exact": 35.6,
+        "level": "YAKLAŞIYOR",
+        "determining_dimension": "KM"
+      },
+      "frontend_fallback": {
+        "score": 36,
+        "score_exact": 35.6,
+        "level": "YAKLAŞIYOR",
+        "determining_dimension": "KM",
+        "source": "FRONTEND_FALLBACK"
+      },
+      "checks": {
+        "score": true,
+        "score_exact": true,
+        "level": true,
+        "determining_dimension": true,
+        "saturation": true,
+        "fallback_source": true
+      },
+      "pass": true
+    },
+    {
+      "name": "progress_ratio_0.8",
+      "input": {
+        "progress_ratio": 0.8,
+        "km_ratio": null,
+        "day_ratio": null,
+        "overdue_km": null,
+        "overdue_days": null
+      },
+      "canonical_python": {
+        "score": 38,
+        "score_exact": 38.0,
+        "level": "YAKLAŞIYOR",
+        "determining_dimension": "KM"
+      },
+      "frontend_fallback": {
+        "score": 38,
+        "score_exact": 38,
+        "level": "YAKLAŞIYOR",
+        "determining_dimension": "KM",
+        "source": "FRONTEND_FALLBACK"
+      },
+      "checks": {
+        "score": true,
+        "score_exact": true,
+        "level": true,
+        "determining_dimension": true,
+        "saturation": true,
+        "fallback_source": true
+      },
+      "pass": true
+    },
+    {
+      "name": "progress_ratio_0.9",
+      "input": {
+        "progress_ratio": 0.9,
+        "km_ratio": null,
+        "day_ratio": null,
+        "overdue_km": null,
+        "overdue_days": null
+      },
+      "canonical_python": {
+        "score": 44,
+        "score_exact": 44.0,
+        "level": "YAKLAŞIYOR",
+        "determining_dimension": "KM"
+      },
+      "frontend_fallback": {
+        "score": 44,
+        "score_exact": 44,
+        "level": "YAKLAŞIYOR",
+        "determining_dimension": "KM",
+        "source": "FRONTEND_FALLBACK"
+      },
+      "checks": {
+        "score": true,
+        "score_exact": true,
+        "level": true,
+        "determining_dimension": true,
+        "saturation": true,
+        "fallback_source": true
+      },
+      "pass": true
+    },
+    {
+      "name": "progress_ratio_0.99",
+      "input": {
+        "progress_ratio": 0.99,
+        "km_ratio": null,
+        "day_ratio": null,
+        "overdue_km": null,
+        "overdue_days": null
+      },
+      "canonical_python": {
+        "score": 49,
+        "score_exact": 49.4,
+        "level": "YAKLAŞIYOR",
+        "determining_dimension": "KM"
+      },
+      "frontend_fallback": {
+        "score": 49,
+        "score_exact": 49.4,
+        "level": "YAKLAŞIYOR",
+        "determining_dimension": "KM",
+        "source": "FRONTEND_FALLBACK"
+      },
+      "checks": {
+        "score": true,
+        "score_exact": true,
+        "level": true,
+        "determining_dimension": true,
+        "saturation": true,
+        "fallback_source": true
+      },
+      "pass": true
+    },
+    {
+      "name": "progress_ratio_1",
+      "input": {
+        "progress_ratio": 1.0,
+        "km_ratio": null,
+        "day_ratio": null,
+        "overdue_km": null,
+        "overdue_days": null
+      },
+      "canonical_python": {
+        "score": 50,
+        "score_exact": 50.0,
+        "level": "GECİKMİŞ",
+        "determining_dimension": "KM"
+      },
+      "frontend_fallback": {
+        "score": 50,
+        "score_exact": 50,
+        "level": "GECİKMİŞ",
+        "determining_dimension": "KM",
+        "source": "FRONTEND_FALLBACK"
+      },
+      "checks": {
+        "score": true,
+        "score_exact": true,
+        "level": true,
+        "determining_dimension": true,
+        "saturation": true,
+        "fallback_source": true
+      },
+      "pass": true
+    },
+    {
+      "name": "progress_ratio_1.1",
+      "input": {
+        "progress_ratio": 1.1,
+        "km_ratio": null,
+        "day_ratio": null,
+        "overdue_km": null,
+        "overdue_days": null
+      },
+      "canonical_python": {
+        "score": 55,
+        "score_exact": 55.0,
+        "level": "GECİKMİŞ",
+        "determining_dimension": "KM"
+      },
+      "frontend_fallback": {
+        "score": 55,
+        "score_exact": 55,
+        "level": "GECİKMİŞ",
+        "determining_dimension": "KM",
+        "source": "FRONTEND_FALLBACK"
+      },
+      "checks": {
+        "score": true,
+        "score_exact": true,
+        "level": true,
+        "determining_dimension": true,
+        "saturation": true,
+        "fallback_source": true
+      },
+      "pass": true
+    },
+    {
+      "name": "progress_ratio_1.25",
+      "input": {
+        "progress_ratio": 1.25,
+        "km_ratio": null,
+        "day_ratio": null,
+        "overdue_km": null,
+        "overdue_days": null
+      },
+      "canonical_python": {
+        "score": 62,
+        "score_exact": 62.5,
+        "level": "GECİKMİŞ",
+        "determining_dimension": "KM"
+      },
+      "frontend_fallback": {
+        "score": 62,
+        "score_exact": 62.5,
+        "level": "GECİKMİŞ",
+        "determining_dimension": "KM",
+        "source": "FRONTEND_FALLBACK"
+      },
+      "checks": {
+        "score": true,
+        "score_exact": true,
+        "level": true,
+        "determining_dimension": true,
+        "saturation": true,
+        "fallback_source": true
+      },
+      "pass": true
+    },
+    {
+      "name": "progress_ratio_1.5",
+      "input": {
+        "progress_ratio": 1.5,
+        "km_ratio": null,
+        "day_ratio": null,
+        "overdue_km": null,
+        "overdue_days": null
+      },
+      "canonical_python": {
+        "score": 75,
+        "score_exact": 75.0,
+        "level": "ÇOK GECİKMİŞ",
+        "determining_dimension": "KM"
+      },
+      "frontend_fallback": {
+        "score": 75,
+        "score_exact": 75,
+        "level": "ÇOK GECİKMİŞ",
+        "determining_dimension": "KM",
+        "source": "FRONTEND_FALLBACK"
+      },
+      "checks": {
+        "score": true,
+        "score_exact": true,
+        "level": true,
+        "determining_dimension": true,
+        "saturation": true,
+        "fallback_source": true
+      },
+      "pass": true
+    },
+    {
+      "name": "progress_ratio_1.75",
+      "input": {
+        "progress_ratio": 1.75,
+        "km_ratio": null,
+        "day_ratio": null,
+        "overdue_km": null,
+        "overdue_days": null
+      },
+      "canonical_python": {
+        "score": 82,
+        "score_exact": 82.5,
+        "level": "ÇOK GECİKMİŞ",
+        "determining_dimension": "KM"
+      },
+      "frontend_fallback": {
+        "score": 82,
+        "score_exact": 82.5,
+        "level": "ÇOK GECİKMİŞ",
+        "determining_dimension": "KM",
+        "source": "FRONTEND_FALLBACK"
+      },
+      "checks": {
+        "score": true,
+        "score_exact": true,
+        "level": true,
+        "determining_dimension": true,
+        "saturation": true,
+        "fallback_source": true
+      },
+      "pass": true
+    },
+    {
+      "name": "progress_ratio_2",
+      "input": {
+        "progress_ratio": 2.0,
+        "km_ratio": null,
+        "day_ratio": null,
+        "overdue_km": null,
+        "overdue_days": null
+      },
+      "canonical_python": {
+        "score": 90,
+        "score_exact": 90.0,
+        "level": "KRİTİK",
+        "determining_dimension": "KM"
+      },
+      "frontend_fallback": {
+        "score": 90,
+        "score_exact": 90,
+        "level": "KRİTİK",
+        "determining_dimension": "KM",
+        "source": "FRONTEND_FALLBACK"
+      },
+      "checks": {
+        "score": true,
+        "score_exact": true,
+        "level": true,
+        "determining_dimension": true,
+        "saturation": true,
+        "fallback_source": true
+      },
+      "pass": true
+    },
+    {
+      "name": "progress_ratio_3",
+      "input": {
+        "progress_ratio": 3.0,
+        "km_ratio": null,
+        "day_ratio": null,
+        "overdue_km": null,
+        "overdue_days": null
+      },
+      "canonical_python": {
+        "score": 93,
+        "score_exact": 93.3,
+        "level": "KRİTİK",
+        "determining_dimension": "KM"
+      },
+      "frontend_fallback": {
+        "score": 93,
+        "score_exact": 93.3,
+        "level": "KRİTİK",
+        "determining_dimension": "KM",
+        "source": "FRONTEND_FALLBACK"
+      },
+      "checks": {
+        "score": true,
+        "score_exact": true,
+        "level": true,
+        "determining_dimension": true,
+        "saturation": true,
+        "fallback_source": true
+      },
+      "pass": true
+    },
+    {
+      "name": "progress_ratio_5",
+      "input": {
+        "progress_ratio": 5.0,
+        "km_ratio": null,
+        "day_ratio": null,
+        "overdue_km": null,
+        "overdue_days": null
+      },
+      "canonical_python": {
+        "score": 100,
+        "score_exact": 100.0,
+        "level": "KRİTİK",
+        "determining_dimension": "KM"
+      },
+      "frontend_fallback": {
+        "score": 100,
+        "score_exact": 100,
+        "level": "KRİTİK",
+        "determining_dimension": "KM",
+        "source": "FRONTEND_FALLBACK"
+      },
+      "checks": {
+        "score": true,
+        "score_exact": true,
+        "level": true,
+        "determining_dimension": true,
+        "saturation": true,
+        "fallback_source": true
+      },
+      "pass": true
+    },
+    {
+      "name": "progress_ratio_10",
+      "input": {
+        "progress_ratio": 10.0,
+        "km_ratio": null,
+        "day_ratio": null,
+        "overdue_km": null,
+        "overdue_days": null
+      },
+      "canonical_python": {
+        "score": 100,
+        "score_exact": 100.0,
+        "level": "KRİTİK",
+        "determining_dimension": "KM"
+      },
+      "frontend_fallback": {
+        "score": 100,
+        "score_exact": 100,
+        "level": "KRİTİK",
+        "determining_dimension": "KM",
+        "source": "FRONTEND_FALLBACK"
+      },
+      "checks": {
+        "score": true,
+        "score_exact": true,
+        "level": true,
+        "determining_dimension": true,
+        "saturation": true,
+        "fallback_source": true
+      },
+      "pass": true
+    },
+    {
+      "name": "km_dominant",
+      "input": {
+        "progress_ratio": 1.25,
+        "km_ratio": 1.25,
+        "day_ratio": 0.4,
+        "overdue_km": 750,
+        "overdue_days": null
+      },
+      "canonical_python": {
+        "score": 62,
+        "score_exact": 62.5,
+        "level": "GECİKMİŞ",
+        "determining_dimension": "KM"
+      },
+      "frontend_fallback": {
+        "score": 62,
+        "score_exact": 62.5,
+        "level": "GECİKMİŞ",
+        "determining_dimension": "KM",
+        "source": "FRONTEND_FALLBACK"
+      },
+      "checks": {
+        "score": true,
+        "score_exact": true,
+        "level": true,
+        "determining_dimension": true,
+        "saturation": true,
+        "fallback_source": true
+      },
+      "pass": true
+    },
+    {
+      "name": "time_dominant",
+      "input": {
+        "progress_ratio": 1.25,
+        "km_ratio": 0.4,
+        "day_ratio": 1.25,
+        "overdue_km": null,
+        "overdue_days": 45
+      },
+      "canonical_python": {
+        "score": 62,
+        "score_exact": 62.5,
+        "level": "GECİKMİŞ",
+        "determining_dimension": "TIME"
+      },
+      "frontend_fallback": {
+        "score": 62,
+        "score_exact": 62.5,
+        "level": "GECİKMİŞ",
+        "determining_dimension": "TIME",
+        "source": "FRONTEND_FALLBACK"
+      },
+      "checks": {
+        "score": true,
+        "score_exact": true,
+        "level": true,
+        "determining_dimension": true,
+        "saturation": true,
+        "fallback_source": true
+      },
+      "pass": true
+    },
+    {
+      "name": "both_within_tolerance",
+      "input": {
+        "progress_ratio": 1.25,
+        "km_ratio": 1.25,
+        "day_ratio": 1.245,
+        "overdue_km": null,
+        "overdue_days": null
+      },
+      "canonical_python": {
+        "score": 62,
+        "score_exact": 62.5,
+        "level": "GECİKMİŞ",
+        "determining_dimension": "BOTH"
+      },
+      "frontend_fallback": {
+        "score": 62,
+        "score_exact": 62.5,
+        "level": "GECİKMİŞ",
+        "determining_dimension": "BOTH",
+        "source": "FRONTEND_FALLBACK"
+      },
+      "checks": {
+        "score": true,
+        "score_exact": true,
+        "level": true,
+        "determining_dimension": true,
+        "saturation": true,
+        "fallback_source": true
+      },
+      "pass": true
+    },
+    {
+      "name": "missing_optional_fields",
+      "input": {
+        "progress_ratio": 0.526,
+        "km_ratio": null,
+        "day_ratio": null,
+        "overdue_km": null,
+        "overdue_days": null
+      },
+      "canonical_python": {
+        "score": 25,
+        "score_exact": 25.0,
+        "level": "YAKLAŞIYOR",
+        "determining_dimension": "KM"
+      },
+      "frontend_fallback": {
+        "score": 25,
+        "score_exact": 25,
+        "level": "YAKLAŞIYOR",
+        "determining_dimension": "KM",
+        "source": "FRONTEND_FALLBACK"
+      },
+      "checks": {
+        "score": true,
+        "score_exact": true,
+        "level": true,
+        "determining_dimension": true,
+        "saturation": true,
+        "fallback_source": true
+      },
+      "pass": true
+    },
+    {
+      "name": "extreme_overdue",
+      "input": {
+        "progress_ratio": 10.0,
+        "km_ratio": 10.0,
+        "day_ratio": 0.2,
+        "overdue_km": 27000,
+        "overdue_days": null
+      },
+      "canonical_python": {
+        "score": 100,
+        "score_exact": 100.0,
+        "level": "KRİTİK",
+        "determining_dimension": "KM"
+      },
+      "frontend_fallback": {
+        "score": 100,
+        "score_exact": 100,
+        "level": "KRİTİK",
+        "determining_dimension": "KM",
+        "source": "FRONTEND_FALLBACK"
+      },
+      "checks": {
+        "score": true,
+        "score_exact": true,
+        "level": true,
+        "determining_dimension": true,
+        "saturation": true,
+        "fallback_source": true
+      },
+      "pass": true
+    }
+  ]
+}

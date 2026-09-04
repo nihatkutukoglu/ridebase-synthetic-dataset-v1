@@ -1,6 +1,7 @@
 """Contract checks for the authoritative static Control Center source/build."""
 
 from pathlib import Path
+import subprocess
 import unittest
 
 
@@ -336,6 +337,12 @@ class V2ScenarioPredictionTests(unittest.TestCase):
             "Belirleyici ölçüt",
             "Aciliyet skoru",
             "Seviye",
+            "Fallback only; backend urgency fields are canonical.",
+            "Bakım periyodu içinde.",
+            "Bakım zamanı yaklaşıyor.",
+            "Bakım periyodu aşılmış.",
+            "Bakım periyodu önemli ölçüde aşılmış.",
+            "Bakım periyodu ciddi ölçüde aşılmış.",
         ):
             self.assertInBoth(text)
 
@@ -344,7 +351,43 @@ class V2ScenarioPredictionTests(unittest.TestCase):
             self.assertIn("v2CalculateUrgency", scenario_body)
             self.assertIn("v2UrgencyCard", scenario_body)
 
+    def test_backend_fields_are_canonical_and_partial_contract_uses_full_fallback(self):
+        runner = ROOT / "tests" / "maintenance_urgency_runner.cjs"
+        payload = """[
+          {"status":"OVERDUE","progress_ratio":10,"progress_pct":1000,
+           "maintenance_urgency_score":17,"maintenance_urgency_level":"NORMAL",
+           "maintenance_urgency_reason":"Backend gerekçesi","determining_dimension":"TIME"},
+          {"status":"OVERDUE","progress_ratio":10,"progress_pct":1000,
+           "maintenance_urgency_score":17,"maintenance_urgency_level":"NORMAL"}
+        ]"""
+        completed = subprocess.run(
+            ["node", str(runner)], input=payload, text=True, capture_output=True, check=True
+        )
+        import json
+        canonical, fallback = json.loads(completed.stdout)
+        self.assertEqual(canonical["source"], "BACKEND_CANONICAL")
+        self.assertEqual(canonical["score"], 17)
+        self.assertEqual(canonical["level"], "NORMAL")
+        self.assertEqual(canonical["reason"], "Backend gerekçesi")
+        self.assertEqual(canonical["determining_dimension"], "TIME")
+        self.assertEqual(fallback["source"], "FRONTEND_FALLBACK")
+        self.assertEqual(fallback["score"], 100)
+        self.assertEqual(fallback["level"], "KRİTİK")
+
+    def test_python_frontend_fallback_parity_is_complete(self):
+        audit = ROOT.parent / "scripts" / "audit_maintenance_urgency_parity.py"
+        completed = subprocess.run(
+            ["python3", str(audit)], text=True, capture_output=True, check=False
+        )
+        self.assertEqual(completed.returncode, 0, completed.stdout + completed.stderr)
+
+    def test_urgency_copy_never_implies_mechanical_failure_probability(self):
+        forbidden = ("mekanik risk", "arıza riski", "failure risk")
+        for source in (self.template, self.built):
+            lowered = source.lower()
+            for phrase in forbidden:
+                self.assertNotIn(phrase, lowered)
+
 
 if __name__ == "__main__":
     unittest.main()
-
