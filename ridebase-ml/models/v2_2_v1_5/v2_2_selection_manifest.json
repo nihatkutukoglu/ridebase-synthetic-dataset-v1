@@ -1,0 +1,181 @@
+{
+  "status": "PASS",
+  "failed_checks": [],
+  "experiment": "V2.2_OFFLINE_CHALLENGER",
+  "production_status": "NOT_DEPLOYED; V2.1 REMAINS PRODUCTION CHAMPION",
+  "model": "xgb_cox_extended60",
+  "calibration": "isotonic",
+  "feature_contract": "extended60_with_frozen_v2_1_base54",
+  "feature_count": 60,
+  "modeling_table_sha256": "44f88892f9ae2db124028bb58111300511f373716b673740dd201293b9df4449",
+  "split_manifest_sha256": "43dfcfb366afa979a80e3f816249f5f0e778bbbe485101d75cd18af4a9a82bbd",
+  "config_sha256": "a68849fea15b1ed0e177dcbbbe5b9ac7b61b57553477408bfa6a05f353b36e7c",
+  "selection_commit": "aa4e191545b413d88225a9883864b54f35a4900b",
+  "selection_split": "VALIDATION",
+  "calibration_protocol": "chronological first-half VALIDATION fit; second-half VALIDATION evaluation",
+  "test_status": "SEALED_NOT_READ",
+  "selected_validation_metrics": {
+    "ipcw_c_index": 0.7343205246489375,
+    "harrell_c_index": 0.7345568877808534,
+    "ibs_30_120": 0.3862914281250908,
+    "ipcw_brier": {
+      "30": 0.17033021109881608,
+      "60": 0.3300599155136604,
+      "90": 0.46093337629565273,
+      "120": 0.5654317740331024
+    },
+    "time_dependent_auc": {
+      "30": 0.7959855660346258,
+      "60": 0.8066936443297601,
+      "90": 0.8180765429580483,
+      "120": 0.8286515251208862
+    },
+    "mean_time_dependent_auc": 0.8098342220062126,
+    "horizons": {
+      "30": {
+        "rows": 36357,
+        "event_rate": 0.20551750694501747,
+        "brier": 0.17056932851763704,
+        "auc": 0.7958500912204826,
+        "calibration_error": 0.1703173181574595,
+        "exact_zero_share": 0.0,
+        "unique_probability_levels": 7779
+      },
+      "60": {
+        "rows": 36275,
+        "event_rate": 0.38720882150241215,
+        "brier": 0.3309135245506842,
+        "auc": 0.8067163281751821,
+        "calibration_error": 0.3333883992612724,
+        "exact_zero_share": 0.0,
+        "unique_probability_levels": 12336
+      },
+      "90": {
+        "rows": 36215,
+        "event_rate": 0.5329007317409913,
+        "brier": 0.46246391201020504,
+        "auc": 0.8181658505652685,
+        "calibration_error": 0.4670553096666094,
+        "exact_zero_share": 0.0,
+        "unique_probability_levels": 16524
+      },
+      "120": {
+        "rows": 36174,
+        "event_rate": 0.6508265605130756,
+        "brier": 0.5674805856082611,
+        "auc": 0.8287850206613352,
+        "calibration_error": 0.5739446969607794,
+        "exact_zero_share": 0.0,
+        "unique_probability_levels": 20825
+      }
+    },
+    "feature_contract": "extended60"
+  },
+  "calibrated_validation_eval": {
+    "horizons": {
+      "30": {
+        "brier": 0.12679414682534412,
+        "calibration_error": 0.011088331348501568,
+        "exact_zero_share": 0.0,
+        "unique_probability_levels": 77
+      },
+      "60": {
+        "brier": 0.17466876869670847,
+        "calibration_error": 0.024557535646406187,
+        "exact_zero_share": 0.0,
+        "unique_probability_levels": 123
+      },
+      "90": {
+        "brier": 0.18251711793834113,
+        "calibration_error": 0.030862032868750715,
+        "exact_zero_share": 0.0,
+        "unique_probability_levels": 96
+      },
+      "120": {
+        "brier": 0.16964727503891647,
+        "calibration_error": 0.032603823732519,
+        "exact_zero_share": 0.0,
+        "unique_probability_levels": 115
+      }
+    },
+    "mean_brier": 0.16340682712482757,
+    "mean_calibration_error": 0.024777930899044363
+  },
+  "calibrated_validation_survival_metrics": {
+    "ipcw_c_index": 0.7219544886165592,
+    "harrell_c_index": 0.7221639312585383,
+    "ibs_30_120": 0.16809265445665109,
+    "ipcw_brier": {
+      "30": 0.12659037693224734,
+      "60": 0.17419908698044653,
+      "90": 0.18209300944495505,
+      "120": 0.16938135695685594
+    },
+    "time_dependent_auc": {
+      "30": 0.7838238415013676,
+      "60": 0.789911963137875,
+      "90": 0.7998679728278755,
+      "120": 0.8098920505306835
+    },
+    "mean_time_dependent_auc": 0.7939062805230983,
+    "horizons": {
+      "30": {
+        "rows": 18173,
+        "event_rate": 0.20343366532768392,
+        "brier": 0.12679414682534412,
+        "auc": 0.7727479294167927,
+        "calibration_error": 0.011088331348501602,
+        "exact_zero_share": 0.0,
+        "unique_probability_levels": 77
+      },
+      "60": {
+        "rows": 18122,
+        "event_rate": 0.38119412868336827,
+        "brier": 0.17466876869670847,
+        "auc": 0.7894533497347854,
+        "calibration_error": 0.024557535646406174,
+        "exact_zero_share": 0.0,
+        "unique_probability_levels": 123
+      },
+      "90": {
+        "rows": 18097,
+        "event_rate": 0.5259435265513621,
+        "brier": 0.18251711793834113,
+        "auc": 0.7996097773505926,
+        "calibration_error": 0.0308620328687507,
+        "exact_zero_share": 0.0,
+        "unique_probability_levels": 96
+      },
+      "120": {
+        "rows": 18078,
+        "event_rate": 0.6445956411107423,
+        "brier": 0.16964727503891647,
+        "auc": 0.8098302302541621,
+        "calibration_error": 0.03260382373251901,
+        "exact_zero_share": 0.0,
+        "unique_probability_levels": 115
+      }
+    }
+  },
+  "selection_checks": {
+    "train_and_validation_only": true,
+    "test_status_sealed": true,
+    "selection_uses_extended_observable_contract": true,
+    "feature_count_60": true,
+    "frozen_base54_prefix_exact": true,
+    "observable_extension_exact": true,
+    "forbidden_features_absent": true,
+    "validation_ipcw_c_acceptable": true,
+    "calibrated_validation_ibs_acceptable": true,
+    "validation_calibration_acceptable": true,
+    "behavior_gate_pass": true
+  },
+  "behavior_audit_sha256": "6c597a8ba5434e4308baf963ed1f9cd6e4af708aec6f36ba7d82e62f9d3c905b",
+  "artifacts": {
+    "preprocessor.joblib": "45e1bc25d633c1e51941212ceded73729dab1b079aabadaa94cd14aaf509c34e",
+    "challenger_model.joblib": "c8e7a620e1cf013c019c4e20c1df72ef6e3fbf4550b50f314226a93edc6c46d8",
+    "baseline_hazard.joblib": "34a93c14cada14938504215f044d2672ffcd3f7afc4c786ef7bc3b21f823e187",
+    "calibrator.joblib": "c82a726113eb4390a611b044fa54c949a1d76d9c1ad7445042dbd85947878226",
+    "feature_list.json": "1ecc0056ad1cd2455966bcf6e58e567d8e4a0351e47da4db5917c26e1e5076c3"
+  }
+}

@@ -1,0 +1,441 @@
+{
+  "cox_ph_extended60": {
+    "status": "FAIL",
+    "checks": {
+      "behavior_contract": false,
+      "mean_calibration_error": true,
+      "calibrated_validation_ibs": true
+    },
+    "calibration": "isotonic",
+    "calibrated_validation_eval": {
+      "horizons": {
+        "30": {
+          "brier": 0.12927677128129728,
+          "calibration_error": 0.01405211254514357,
+          "exact_zero_share": 0.0008254003191547901,
+          "unique_probability_levels": 115
+        },
+        "60": {
+          "brier": 0.17915764869940554,
+          "calibration_error": 0.027393242459585396,
+          "exact_zero_share": 0.00033108928374351616,
+          "unique_probability_levels": 137
+        },
+        "90": {
+          "brier": 0.18661496567956454,
+          "calibration_error": 0.030076310203232884,
+          "exact_zero_share": 0.00033154666519312595,
+          "unique_probability_levels": 117
+        },
+        "120": {
+          "brier": 0.17367762750100263,
+          "calibration_error": 0.030848278705762677,
+          "exact_zero_share": 0.00033189512114171923,
+          "unique_probability_levels": 115
+        }
+      },
+      "mean_brier": 0.16718175329031748,
+      "mean_calibration_error": 0.025592485978431133
+    },
+    "calibrated_survival_metrics": {
+      "ipcw_c_index": 0.712929918090792,
+      "harrell_c_index": 0.7131766322194503,
+      "ibs_30_120": 0.17203266535277845,
+      "ipcw_brier": {
+        "30": 0.12905063442141737,
+        "60": 0.178679495269231,
+        "90": 0.18618716778420663,
+        "120": 0.173412031588378
+      },
+      "time_dependent_auc": {
+        "30": 0.7789556717657,
+        "60": 0.7803918297910183,
+        "90": 0.7894697993698891,
+        "120": 0.7978051863372552
+      },
+      "mean_time_dependent_auc": 0.7851853335362832,
+      "horizons": {
+        "30": {
+          "rows": 18173,
+          "event_rate": 0.20343366532768392,
+          "brier": 0.12927677128129728,
+          "auc": 0.7777000694274044,
+          "calibration_error": 0.014041107207554842,
+          "exact_zero_share": 0.0008254003191547901,
+          "unique_probability_levels": 115
+        },
+        "60": {
+          "rows": 18122,
+          "event_rate": 0.38119412868336827,
+          "brier": 0.17915764869940554,
+          "auc": 0.7802428686678669,
+          "calibration_error": 0.0273932424595854,
+          "exact_zero_share": 0.00033108928374351616,
+          "unique_probability_levels": 137
+        },
+        "90": {
+          "rows": 18097,
+          "event_rate": 0.5259435265513621,
+          "brier": 0.18661496567956454,
+          "auc": 0.7894631569178402,
+          "calibration_error": 0.030076310203232877,
+          "exact_zero_share": 0.00033154666519312595,
+          "unique_probability_levels": 117
+        },
+        "120": {
+          "rows": 18078,
+          "event_rate": 0.6445956411107423,
+          "brier": 0.17367762750100263,
+          "auc": 0.7978701832263098,
+          "calibration_error": 0.030848278705762684,
+          "exact_zero_share": 0.00033189512114171923,
+          "unique_probability_levels": 115
+        }
+      }
+    },
+    "behavior_audit": {
+      "status": "FAIL",
+      "checks": {
+        "scenario_count_at_least_5000": true,
+        "due_pressure_monotone_rate": false,
+        "overdue_lift_material": false,
+        "severe_overdue_saturates": true,
+        "severe_overdue_not_deterministic": true,
+        "high_usage_overdue_lift": true,
+        "adherence_direction": true,
+        "no_show_counteracts_return": true,
+        "known_appointment_intent_lift": true,
+        "breakdown_pressure_lift": false,
+        "service_recency_interpretable": false,
+        "horizon_monotonicity": true,
+        "p30_non_degenerate": true,
+        "same_input_deterministic": false,
+        "calendar_year_invariance": true,
+        "ood_finite_and_bounded": true,
+        "ood_warnings_explicit": true
+      },
+      "failed_checks": [
+        "due_pressure_monotone_rate",
+        "overdue_lift_material",
+        "breakdown_pressure_lift",
+        "service_recency_interpretable",
+        "same_input_deterministic"
+      ],
+      "diagnostics": {
+        "scenario_count": 5120,
+        "base_rows": 160,
+        "due_monotone_rate": 0.0,
+        "mean_due_lift_p30_0_9_to_1_5": -0.16645234329816846,
+        "mean_severe_increment_p30_3_to_4": -0.021353470046608952,
+        "mean_p30_at_due_ratio_4": 0.009450889155485375,
+        "usage_monotone_rate": 1.0,
+        "mean_usage_lift_p30_6k_to_36k": 0.42487627502556197,
+        "adherence_monotone_rate": 1.0,
+        "no_show_nonincreasing_rate": 1.0,
+        "appointment_lift_rate": 1.0,
+        "mean_appointment_lift_p30": 0.2425780616117791,
+        "breakdown_monotone_rate": 0.14375,
+        "recency_monotone_rate": 0.0,
+        "p30_min": 0.0,
+        "p30_median": 0.1534090909090909,
+        "p30_max": 1.0,
+        "p30_unique_6dp": 71,
+        "ood_warnings": [
+          "unknown categorical values mapped to the predeclared -1 encoder bucket",
+          "annual_km_baseline outside TRAIN support must be flagged by any future serving adapter"
+        ]
+      }
+    }
+  },
+  "coxnet_extended60": {
+    "status": "FAIL",
+    "checks": {
+      "behavior_contract": false,
+      "mean_calibration_error": true,
+      "calibrated_validation_ibs": true
+    },
+    "calibration": "isotonic",
+    "calibrated_validation_eval": {
+      "horizons": {
+        "30": {
+          "brier": 0.1293390306101046,
+          "calibration_error": 0.011669901502422477,
+          "exact_zero_share": 0.0011555604468167062,
+          "unique_probability_levels": 116
+        },
+        "60": {
+          "brier": 0.1795531900515647,
+          "calibration_error": 0.02566932017143548,
+          "exact_zero_share": 0.00027590773645293015,
+          "unique_probability_levels": 113
+        },
+        "90": {
+          "brier": 0.18689272774106266,
+          "calibration_error": 0.02867444182383405,
+          "exact_zero_share": 0.00027628888766093826,
+          "unique_probability_levels": 102
+        },
+        "120": {
+          "brier": 0.17367223970433754,
+          "calibration_error": 0.029930090714697304,
+          "exact_zero_share": 0.00027657926761809933,
+          "unique_probability_levels": 138
+        }
+      },
+      "mean_brier": 0.1673642970267674,
+      "mean_calibration_error": 0.023985938553097327
+    },
+    "calibrated_survival_metrics": {
+      "ipcw_c_index": 0.7124082354553124,
+      "harrell_c_index": 0.7126547847152547,
+      "ibs_30_120": 0.17226532188304067,
+      "ipcw_brier": {
+        "30": 0.12911309724472497,
+        "60": 0.17907308150784695,
+        "90": 0.18646362552265403,
+        "120": 0.17340541999251718
+      },
+      "time_dependent_auc": {
+        "30": 0.7780657880883861,
+        "60": 0.7795639557286218,
+        "90": 0.7886467067070198,
+        "120": 0.7971296468233229
+      },
+      "mean_time_dependent_auc": 0.7843670115138784,
+      "horizons": {
+        "30": {
+          "rows": 18173,
+          "event_rate": 0.20343366532768392,
+          "brier": 0.1293390306101046,
+          "auc": 0.7774727150450136,
+          "calibration_error": 0.011669901502422477,
+          "exact_zero_share": 0.0011555604468167062,
+          "unique_probability_levels": 116
+        },
+        "60": {
+          "rows": 18122,
+          "event_rate": 0.38119412868336827,
+          "brier": 0.1795531900515647,
+          "auc": 0.7794581985521655,
+          "calibration_error": 0.025669320171435476,
+          "exact_zero_share": 0.00027590773645293015,
+          "unique_probability_levels": 113
+        },
+        "90": {
+          "rows": 18097,
+          "event_rate": 0.5259435265513621,
+          "brier": 0.18689272774106266,
+          "auc": 0.788456799946487,
+          "calibration_error": 0.028674441823834045,
+          "exact_zero_share": 0.00027628888766093826,
+          "unique_probability_levels": 102
+        },
+        "120": {
+          "rows": 18078,
+          "event_rate": 0.6445956411107423,
+          "brier": 0.17367223970433754,
+          "auc": 0.797135167677801,
+          "calibration_error": 0.02993009071469732,
+          "exact_zero_share": 0.00027657926761809933,
+          "unique_probability_levels": 138
+        }
+      }
+    },
+    "behavior_audit": {
+      "status": "FAIL",
+      "checks": {
+        "scenario_count_at_least_5000": true,
+        "due_pressure_monotone_rate": false,
+        "overdue_lift_material": false,
+        "severe_overdue_saturates": true,
+        "severe_overdue_not_deterministic": true,
+        "high_usage_overdue_lift": true,
+        "adherence_direction": true,
+        "no_show_counteracts_return": true,
+        "known_appointment_intent_lift": true,
+        "breakdown_pressure_lift": false,
+        "service_recency_interpretable": false,
+        "horizon_monotonicity": true,
+        "p30_non_degenerate": false,
+        "same_input_deterministic": false,
+        "calendar_year_invariance": true,
+        "ood_finite_and_bounded": true,
+        "ood_warnings_explicit": true
+      },
+      "failed_checks": [
+        "due_pressure_monotone_rate",
+        "overdue_lift_material",
+        "breakdown_pressure_lift",
+        "service_recency_interpretable",
+        "p30_non_degenerate",
+        "same_input_deterministic"
+      ],
+      "diagnostics": {
+        "scenario_count": 5120,
+        "base_rows": 160,
+        "due_monotone_rate": 0.0,
+        "mean_due_lift_p30_0_9_to_1_5": -0.18687744515051627,
+        "mean_severe_increment_p30_3_to_4": -0.02213295593115446,
+        "mean_p30_at_due_ratio_4": 0.007598622291133218,
+        "usage_monotone_rate": 1.0,
+        "mean_usage_lift_p30_6k_to_36k": 0.4279697179068691,
+        "adherence_monotone_rate": 1.0,
+        "no_show_nonincreasing_rate": 1.0,
+        "appointment_lift_rate": 1.0,
+        "mean_appointment_lift_p30": 0.24549773962018168,
+        "breakdown_monotone_rate": 0.13125,
+        "recency_monotone_rate": 0.0,
+        "p30_min": 0.0,
+        "p30_median": 0.15705521472392642,
+        "p30_max": 1.0,
+        "p30_unique_6dp": 75,
+        "ood_warnings": [
+          "unknown categorical values mapped to the predeclared -1 encoder bucket",
+          "annual_km_baseline outside TRAIN support must be flagged by any future serving adapter"
+        ]
+      }
+    }
+  },
+  "xgb_cox_extended60": {
+    "status": "PASS",
+    "checks": {
+      "behavior_contract": true,
+      "mean_calibration_error": true,
+      "calibrated_validation_ibs": true
+    },
+    "calibration": "isotonic",
+    "calibrated_validation_eval": {
+      "horizons": {
+        "30": {
+          "brier": 0.12679414682534412,
+          "calibration_error": 0.011088331348501568,
+          "exact_zero_share": 0.0,
+          "unique_probability_levels": 77
+        },
+        "60": {
+          "brier": 0.17466876869670847,
+          "calibration_error": 0.024557535646406187,
+          "exact_zero_share": 0.0,
+          "unique_probability_levels": 123
+        },
+        "90": {
+          "brier": 0.18251711793834113,
+          "calibration_error": 0.030862032868750715,
+          "exact_zero_share": 0.0,
+          "unique_probability_levels": 96
+        },
+        "120": {
+          "brier": 0.16964727503891647,
+          "calibration_error": 0.032603823732519,
+          "exact_zero_share": 0.0,
+          "unique_probability_levels": 115
+        }
+      },
+      "mean_brier": 0.16340682712482757,
+      "mean_calibration_error": 0.024777930899044363
+    },
+    "calibrated_survival_metrics": {
+      "ipcw_c_index": 0.7219544886165592,
+      "harrell_c_index": 0.7221639312585383,
+      "ibs_30_120": 0.16809265445665109,
+      "ipcw_brier": {
+        "30": 0.12659037693224734,
+        "60": 0.17419908698044653,
+        "90": 0.18209300944495505,
+        "120": 0.16938135695685594
+      },
+      "time_dependent_auc": {
+        "30": 0.7838238415013676,
+        "60": 0.789911963137875,
+        "90": 0.7998679728278755,
+        "120": 0.8098920505306835
+      },
+      "mean_time_dependent_auc": 0.7939062805230983,
+      "horizons": {
+        "30": {
+          "rows": 18173,
+          "event_rate": 0.20343366532768392,
+          "brier": 0.12679414682534412,
+          "auc": 0.7727479294167927,
+          "calibration_error": 0.011088331348501602,
+          "exact_zero_share": 0.0,
+          "unique_probability_levels": 77
+        },
+        "60": {
+          "rows": 18122,
+          "event_rate": 0.38119412868336827,
+          "brier": 0.17466876869670847,
+          "auc": 0.7894533497347854,
+          "calibration_error": 0.024557535646406174,
+          "exact_zero_share": 0.0,
+          "unique_probability_levels": 123
+        },
+        "90": {
+          "rows": 18097,
+          "event_rate": 0.5259435265513621,
+          "brier": 0.18251711793834113,
+          "auc": 0.7996097773505926,
+          "calibration_error": 0.0308620328687507,
+          "exact_zero_share": 0.0,
+          "unique_probability_levels": 96
+        },
+        "120": {
+          "rows": 18078,
+          "event_rate": 0.6445956411107423,
+          "brier": 0.16964727503891647,
+          "auc": 0.8098302302541621,
+          "calibration_error": 0.03260382373251901,
+          "exact_zero_share": 0.0,
+          "unique_probability_levels": 115
+        }
+      }
+    },
+    "behavior_audit": {
+      "status": "PASS",
+      "checks": {
+        "scenario_count_at_least_5000": true,
+        "due_pressure_monotone_rate": true,
+        "overdue_lift_material": true,
+        "severe_overdue_saturates": true,
+        "severe_overdue_not_deterministic": true,
+        "high_usage_overdue_lift": true,
+        "adherence_direction": true,
+        "no_show_counteracts_return": true,
+        "known_appointment_intent_lift": true,
+        "breakdown_pressure_lift": true,
+        "service_recency_interpretable": true,
+        "horizon_monotonicity": true,
+        "p30_non_degenerate": true,
+        "same_input_deterministic": true,
+        "calendar_year_invariance": true,
+        "ood_finite_and_bounded": true,
+        "ood_warnings_explicit": true
+      },
+      "failed_checks": [],
+      "diagnostics": {
+        "scenario_count": 5120,
+        "base_rows": 160,
+        "due_monotone_rate": 1.0,
+        "mean_due_lift_p30_0_9_to_1_5": 0.09887980817388373,
+        "mean_severe_increment_p30_3_to_4": 0.0,
+        "mean_p30_at_due_ratio_4": 0.5285423917957415,
+        "usage_monotone_rate": 1.0,
+        "mean_usage_lift_p30_6k_to_36k": 0.44955150176269115,
+        "adherence_monotone_rate": 1.0,
+        "no_show_nonincreasing_rate": 0.99375,
+        "appointment_lift_rate": 1.0,
+        "mean_appointment_lift_p30": 0.3141818099667305,
+        "breakdown_monotone_rate": 1.0,
+        "recency_monotone_rate": 1.0,
+        "p30_min": 0.0699269749944678,
+        "p30_median": 0.4049079754601227,
+        "p30_max": 0.871900826446281,
+        "p30_unique_6dp": 40,
+        "ood_warnings": [
+          "unknown categorical values mapped to the predeclared -1 encoder bucket",
+          "annual_km_baseline outside TRAIN support must be flagged by any future serving adapter"
+        ]
+      }
+    }
+  }
+}

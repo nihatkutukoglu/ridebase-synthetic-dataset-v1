@@ -1,0 +1,1227 @@
+{
+  "report": "RideBase V2.2 TRAIN+VALIDATION Challenger Selection",
+  "status": "PASS",
+  "failed_checks": [],
+  "test_read": false,
+  "candidate_validation_metrics": {
+    "oem_policy_due_rule": {
+      "ipcw_c_index": 0.6805028947879826,
+      "harrell_c_index": 0.6808225588282901,
+      "ibs_30_120": 0.32665963878547466,
+      "ipcw_brier": {
+        "30": 0.17087855635203,
+        "60": 0.292736143946355,
+        "90": 0.3794695961176047,
+        "120": 0.44466779623289887
+      },
+      "time_dependent_auc": {
+        "30": 0.7581285462458515,
+        "60": 0.7525607614941925,
+        "90": 0.7535671118455762,
+        "120": 0.7536405640298578
+      },
+      "mean_time_dependent_auc": 0.7547416439457604,
+      "horizons": {
+        "30": {
+          "rows": 36357,
+          "event_rate": 0.20551750694501747,
+          "brier": 0.17113291861834745,
+          "auc": 0.7581116058140918,
+          "calibration_error": 0.15478644561761654,
+          "exact_zero_share": 0.0,
+          "unique_probability_levels": 35966
+        },
+        "60": {
+          "rows": 36275,
+          "event_rate": 0.38720882150241215,
+          "brier": 0.29350526250230463,
+          "auc": 0.7526314395083442,
+          "calibration_error": 0.2938561528555914,
+          "exact_zero_share": 0.0,
+          "unique_probability_levels": 36039
+        },
+        "90": {
+          "rows": 36215,
+          "event_rate": 0.5329007317409913,
+          "brier": 0.3807227954276358,
+          "auc": 0.7536904798356184,
+          "calibration_error": 0.4030514742482,
+          "exact_zero_share": 0.0,
+          "unique_probability_levels": 36013
+        },
+        "120": {
+          "rows": 36174,
+          "event_rate": 0.6508265605130756,
+          "brier": 0.44623855489831454,
+          "auc": 0.7538108586167664,
+          "calibration_error": 0.48920446013102825,
+          "exact_zero_share": 0.0,
+          "unique_probability_levels": 36011
+        }
+      },
+      "feature_contract": "deterministic_policy_baseline"
+    },
+    "simple_cox": {
+      "ipcw_c_index": 0.6888781684710947,
+      "harrell_c_index": 0.689069934783037,
+      "ibs_30_120": 0.18430803438155516,
+      "ipcw_brier": {
+        "30": 0.14488518226592711,
+        "60": 0.1934098604872608,
+        "90": 0.19692099168056668,
+        "120": 0.1803013196877489
+      },
+      "time_dependent_auc": {
+        "30": 0.7376971178571778,
+        "60": 0.7558011087988254,
+        "90": 0.7682613803381511,
+        "120": 0.7780723053877985
+      },
+      "mean_time_dependent_auc": 0.7569014494348053,
+      "horizons": {
+        "30": {
+          "rows": 36357,
+          "event_rate": 0.20551750694501747,
+          "brier": 0.1450854375849474,
+          "auc": 0.737684486568794,
+          "calibration_error": 0.027020091047767408,
+          "exact_zero_share": 0.0,
+          "unique_probability_levels": 36337
+        },
+        "60": {
+          "rows": 36275,
+          "event_rate": 0.38720882150241215,
+          "brier": 0.1937945034833171,
+          "auc": 0.7558298915755086,
+          "calibration_error": 0.04331229028854387,
+          "exact_zero_share": 0.0,
+          "unique_probability_levels": 36259
+        },
+        "90": {
+          "rows": 36215,
+          "event_rate": 0.5329007317409913,
+          "brier": 0.19729993313992564,
+          "auc": 0.7683618020779418,
+          "calibration_error": 0.04247923242887261,
+          "exact_zero_share": 0.0,
+          "unique_probability_levels": 36161
+        },
+        "120": {
+          "rows": 36174,
+          "event_rate": 0.6508265605130756,
+          "brier": 0.1805574644770567,
+          "auc": 0.7781786486002853,
+          "calibration_error": 0.03596651933814579,
+          "exact_zero_share": 0.0,
+          "unique_probability_levels": 36017
+        }
+      },
+      "feature_contract": "4_feature_baseline"
+    },
+    "cox_ph_extended60": {
+      "ipcw_c_index": 0.7244048581108743,
+      "harrell_c_index": 0.7246778013708992,
+      "ibs_30_120": 0.16633062172642857,
+      "ipcw_brier": {
+        "30": 0.12724607976547184,
+        "60": 0.17336539707327553,
+        "90": 0.178894321593214,
+        "120": 0.16621821326012054
+      },
+      "time_dependent_auc": {
+        "30": 0.7906007299509903,
+        "60": 0.796960887521671,
+        "90": 0.8063186781655134,
+        "120": 0.8145729661975467
+      },
+      "mean_time_dependent_auc": 0.8002353505471932,
+      "horizons": {
+        "30": {
+          "rows": 36357,
+          "event_rate": 0.20551750694501747,
+          "brier": 0.1274175359846329,
+          "auc": 0.7906038362271712,
+          "calibration_error": 0.02497712928023061,
+          "exact_zero_share": 0.0,
+          "unique_probability_levels": 36334
+        },
+        "60": {
+          "rows": 36275,
+          "event_rate": 0.38720882150241215,
+          "brier": 0.1736949558663701,
+          "auc": 0.7970245570188662,
+          "calibration_error": 0.03261970141474526,
+          "exact_zero_share": 0.0,
+          "unique_probability_levels": 36161
+        },
+        "90": {
+          "rows": 36215,
+          "event_rate": 0.5329007317409913,
+          "brier": 0.17923593921688638,
+          "auc": 0.8064307225525906,
+          "calibration_error": 0.032389965622827754,
+          "exact_zero_share": 0.0,
+          "unique_probability_levels": 35859
+        },
+        "120": {
+          "rows": 36174,
+          "event_rate": 0.6508265605130756,
+          "brier": 0.166465235416857,
+          "auc": 0.8147177979145039,
+          "calibration_error": 0.036752479809797636,
+          "exact_zero_share": 0.0,
+          "unique_probability_levels": 35319
+        }
+      },
+      "feature_contract": "extended60"
+    },
+    "coxnet_extended60": {
+      "ipcw_c_index": 0.7239698297160718,
+      "harrell_c_index": 0.7242415380169764,
+      "ibs_30_120": 0.1664211123941693,
+      "ipcw_brier": {
+        "30": 0.12736893573884273,
+        "60": 0.17349916616802616,
+        "90": 0.1789438093690373,
+        "120": 0.1662717875520462
+      },
+      "time_dependent_auc": {
+        "30": 0.789491720363441,
+        "60": 0.7961852317060384,
+        "90": 0.8057302285913786,
+        "120": 0.8140362974997538
+      },
+      "mean_time_dependent_auc": 0.7994395008826815,
+      "horizons": {
+        "30": {
+          "rows": 36357,
+          "event_rate": 0.20551750694501747,
+          "brier": 0.1275395191501322,
+          "auc": 0.7894953368578566,
+          "calibration_error": 0.023959428538212594,
+          "exact_zero_share": 0.0,
+          "unique_probability_levels": 36330
+        },
+        "60": {
+          "rows": 36275,
+          "event_rate": 0.38720882150241215,
+          "brier": 0.1738267393705923,
+          "auc": 0.796249333188747,
+          "calibration_error": 0.030350778452057876,
+          "exact_zero_share": 0.0,
+          "unique_probability_levels": 36156
+        },
+        "90": {
+          "rows": 36215,
+          "event_rate": 0.5329007317409913,
+          "brier": 0.17928265771064947,
+          "auc": 0.8058413918851244,
+          "calibration_error": 0.030111003469947138,
+          "exact_zero_share": 0.0,
+          "unique_probability_levels": 35843
+        },
+        "120": {
+          "rows": 36174,
+          "event_rate": 0.6508265605130756,
+          "brier": 0.1665165391816705,
+          "auc": 0.8141807090254638,
+          "calibration_error": 0.034810382091811747,
+          "exact_zero_share": 0.0,
+          "unique_probability_levels": 35322
+        }
+      },
+      "feature_contract": "extended60"
+    },
+    "xgb_cox_frozen54": {
+      "ipcw_c_index": 0.7264903149494104,
+      "harrell_c_index": 0.7266712701252497,
+      "ibs_30_120": 0.3956467425688959,
+      "ipcw_brier": {
+        "30": 0.1813251982129507,
+        "60": 0.3411837402758556,
+        "90": 0.4704387366611724,
+        "120": 0.5693103033263689
+      },
+      "time_dependent_auc": {
+        "30": 0.7755679765113083,
+        "60": 0.798743056411112,
+        "90": 0.8138485810696778,
+        "120": 0.8258341871166007
+      },
+      "mean_time_dependent_auc": 0.7997055425187428,
+      "horizons": {
+        "30": {
+          "rows": 36357,
+          "event_rate": 0.20551750694501747,
+          "brier": 0.18158866181915562,
+          "auc": 0.7755195531901409,
+          "calibration_error": 0.18116179937565052,
+          "exact_zero_share": 0.0,
+          "unique_probability_levels": 7960
+        },
+        "60": {
+          "rows": 36275,
+          "event_rate": 0.38720882150241215,
+          "brier": 0.3420890002198398,
+          "auc": 0.7987769529097555,
+          "calibration_error": 0.34454456875753303,
+          "exact_zero_share": 0.0,
+          "unique_probability_levels": 13013
+        },
+        "90": {
+          "rows": 36215,
+          "event_rate": 0.5329007317409913,
+          "brier": 0.4720324149667376,
+          "auc": 0.8139389803925778,
+          "calibration_error": 0.47699563046852583,
+          "exact_zero_share": 0.0,
+          "unique_probability_levels": 18092
+        },
+        "120": {
+          "rows": 36174,
+          "event_rate": 0.6508265605130756,
+          "brier": 0.5714017348513366,
+          "auc": 0.8259617217759301,
+          "calibration_error": 0.5799774012001202,
+          "exact_zero_share": 0.0,
+          "unique_probability_levels": 24443
+        }
+      },
+      "feature_contract": "frozen54"
+    },
+    "xgb_cox_extended60": {
+      "ipcw_c_index": 0.7343205246489375,
+      "harrell_c_index": 0.7345568877808534,
+      "ibs_30_120": 0.3862914281250908,
+      "ipcw_brier": {
+        "30": 0.17033021109881608,
+        "60": 0.3300599155136604,
+        "90": 0.46093337629565273,
+        "120": 0.5654317740331024
+      },
+      "time_dependent_auc": {
+        "30": 0.7959855660346258,
+        "60": 0.8066936443297601,
+        "90": 0.8180765429580483,
+        "120": 0.8286515251208862
+      },
+      "mean_time_dependent_auc": 0.8098342220062126,
+      "horizons": {
+        "30": {
+          "rows": 36357,
+          "event_rate": 0.20551750694501747,
+          "brier": 0.17056932851763704,
+          "auc": 0.7958500912204826,
+          "calibration_error": 0.1703173181574595,
+          "exact_zero_share": 0.0,
+          "unique_probability_levels": 7779
+        },
+        "60": {
+          "rows": 36275,
+          "event_rate": 0.38720882150241215,
+          "brier": 0.3309135245506842,
+          "auc": 0.8067163281751821,
+          "calibration_error": 0.3333883992612724,
+          "exact_zero_share": 0.0,
+          "unique_probability_levels": 12336
+        },
+        "90": {
+          "rows": 36215,
+          "event_rate": 0.5329007317409913,
+          "brier": 0.46246391201020504,
+          "auc": 0.8181658505652685,
+          "calibration_error": 0.4670553096666094,
+          "exact_zero_share": 0.0,
+          "unique_probability_levels": 16524
+        },
+        "120": {
+          "rows": 36174,
+          "event_rate": 0.6508265605130756,
+          "brier": 0.5674805856082611,
+          "auc": 0.8287850206613352,
+          "calibration_error": 0.5739446969607794,
+          "exact_zero_share": 0.0,
+          "unique_probability_levels": 20825
+        }
+      },
+      "feature_contract": "extended60"
+    }
+  },
+  "selected": {
+    "model": "xgb_cox_extended60",
+    "calibration": "isotonic",
+    "feature_contract": "extended60"
+  },
+  "calibration_comparison": {
+    "uncalibrated": {
+      "horizons": {
+        "30": {
+          "brier": 0.17181106498852386,
+          "calibration_error": 0.17144799386733753,
+          "exact_zero_share": 0.0,
+          "unique_probability_levels": 4464
+        },
+        "60": {
+          "brier": 0.32814771621866323,
+          "calibration_error": 0.33003458696715965,
+          "exact_zero_share": 0.0,
+          "unique_probability_levels": 7236
+        },
+        "90": {
+          "brier": 0.45858678030793704,
+          "calibration_error": 0.4626835675701857,
+          "exact_zero_share": 0.0,
+          "unique_probability_levels": 9787
+        },
+        "120": {
+          "brier": 0.5642186711372666,
+          "calibration_error": 0.5703020881437899,
+          "exact_zero_share": 0.0,
+          "unique_probability_levels": 12233
+        }
+      },
+      "mean_brier": 0.3806910581630977,
+      "mean_calibration_error": 0.3836170591371182
+    },
+    "isotonic": {
+      "horizons": {
+        "30": {
+          "brier": 0.12679414682534412,
+          "calibration_error": 0.011088331348501568,
+          "exact_zero_share": 0.0,
+          "unique_probability_levels": 77
+        },
+        "60": {
+          "brier": 0.17466876869670847,
+          "calibration_error": 0.024557535646406187,
+          "exact_zero_share": 0.0,
+          "unique_probability_levels": 123
+        },
+        "90": {
+          "brier": 0.18251711793834113,
+          "calibration_error": 0.030862032868750715,
+          "exact_zero_share": 0.0,
+          "unique_probability_levels": 96
+        },
+        "120": {
+          "brier": 0.16964727503891647,
+          "calibration_error": 0.032603823732519,
+          "exact_zero_share": 0.0,
+          "unique_probability_levels": 115
+        }
+      },
+      "mean_brier": 0.16340682712482757,
+      "mean_calibration_error": 0.024777930899044363
+    },
+    "platt": {
+      "horizons": {
+        "30": {
+          "brier": 0.13027226627927888,
+          "calibration_error": 0.03436736026087322,
+          "exact_zero_share": 0.0,
+          "unique_probability_levels": 8749
+        },
+        "60": {
+          "brier": 0.1757955328523808,
+          "calibration_error": 0.03728040537264111,
+          "exact_zero_share": 0.0,
+          "unique_probability_levels": 17350
+        },
+        "90": {
+          "brier": 0.1829656810138752,
+          "calibration_error": 0.03610521136620519,
+          "exact_zero_share": 0.0,
+          "unique_probability_levels": 17233
+        },
+        "120": {
+          "brier": 0.16966516230436604,
+          "calibration_error": 0.033892788022277846,
+          "exact_zero_share": 0.0,
+          "unique_probability_levels": 17079
+        }
+      },
+      "mean_brier": 0.16467466061247524,
+      "mean_calibration_error": 0.03541144125549934
+    },
+    "beta": {
+      "horizons": {
+        "30": {
+          "brier": 0.12854336428279778,
+          "calibration_error": 0.017028370633780182,
+          "exact_zero_share": 0.0,
+          "unique_probability_levels": 8749
+        },
+        "60": {
+          "brier": 0.17532925047972797,
+          "calibration_error": 0.031164677797136248,
+          "exact_zero_share": 0.0,
+          "unique_probability_levels": 17349
+        },
+        "90": {
+          "brier": 0.18259103586168723,
+          "calibration_error": 0.03237070047460745,
+          "exact_zero_share": 0.0,
+          "unique_probability_levels": 17295
+        },
+        "120": {
+          "brier": 0.16921679110276638,
+          "calibration_error": 0.03425907240873331,
+          "exact_zero_share": 0.0,
+          "unique_probability_levels": 17205
+        }
+      },
+      "mean_brier": 0.16392011043174484,
+      "mean_calibration_error": 0.0287057053285643
+    }
+  },
+  "candidate_eligibility": {
+    "cox_ph_extended60": {
+      "status": "FAIL",
+      "checks": {
+        "behavior_contract": false,
+        "mean_calibration_error": true,
+        "calibrated_validation_ibs": true
+      },
+      "calibration": "isotonic",
+      "calibrated_validation_eval": {
+        "horizons": {
+          "30": {
+            "brier": 0.12927677128129728,
+            "calibration_error": 0.01405211254514357,
+            "exact_zero_share": 0.0008254003191547901,
+            "unique_probability_levels": 115
+          },
+          "60": {
+            "brier": 0.17915764869940554,
+            "calibration_error": 0.027393242459585396,
+            "exact_zero_share": 0.00033108928374351616,
+            "unique_probability_levels": 137
+          },
+          "90": {
+            "brier": 0.18661496567956454,
+            "calibration_error": 0.030076310203232884,
+            "exact_zero_share": 0.00033154666519312595,
+            "unique_probability_levels": 117
+          },
+          "120": {
+            "brier": 0.17367762750100263,
+            "calibration_error": 0.030848278705762677,
+            "exact_zero_share": 0.00033189512114171923,
+            "unique_probability_levels": 115
+          }
+        },
+        "mean_brier": 0.16718175329031748,
+        "mean_calibration_error": 0.025592485978431133
+      },
+      "calibrated_survival_metrics": {
+        "ipcw_c_index": 0.712929918090792,
+        "harrell_c_index": 0.7131766322194503,
+        "ibs_30_120": 0.17203266535277845,
+        "ipcw_brier": {
+          "30": 0.12905063442141737,
+          "60": 0.178679495269231,
+          "90": 0.18618716778420663,
+          "120": 0.173412031588378
+        },
+        "time_dependent_auc": {
+          "30": 0.7789556717657,
+          "60": 0.7803918297910183,
+          "90": 0.7894697993698891,
+          "120": 0.7978051863372552
+        },
+        "mean_time_dependent_auc": 0.7851853335362832,
+        "horizons": {
+          "30": {
+            "rows": 18173,
+            "event_rate": 0.20343366532768392,
+            "brier": 0.12927677128129728,
+            "auc": 0.7777000694274044,
+            "calibration_error": 0.014041107207554842,
+            "exact_zero_share": 0.0008254003191547901,
+            "unique_probability_levels": 115
+          },
+          "60": {
+            "rows": 18122,
+            "event_rate": 0.38119412868336827,
+            "brier": 0.17915764869940554,
+            "auc": 0.7802428686678669,
+            "calibration_error": 0.0273932424595854,
+            "exact_zero_share": 0.00033108928374351616,
+            "unique_probability_levels": 137
+          },
+          "90": {
+            "rows": 18097,
+            "event_rate": 0.5259435265513621,
+            "brier": 0.18661496567956454,
+            "auc": 0.7894631569178402,
+            "calibration_error": 0.030076310203232877,
+            "exact_zero_share": 0.00033154666519312595,
+            "unique_probability_levels": 117
+          },
+          "120": {
+            "rows": 18078,
+            "event_rate": 0.6445956411107423,
+            "brier": 0.17367762750100263,
+            "auc": 0.7978701832263098,
+            "calibration_error": 0.030848278705762684,
+            "exact_zero_share": 0.00033189512114171923,
+            "unique_probability_levels": 115
+          }
+        }
+      },
+      "behavior_audit": {
+        "status": "FAIL",
+        "checks": {
+          "scenario_count_at_least_5000": true,
+          "due_pressure_monotone_rate": false,
+          "overdue_lift_material": false,
+          "severe_overdue_saturates": true,
+          "severe_overdue_not_deterministic": true,
+          "high_usage_overdue_lift": true,
+          "adherence_direction": true,
+          "no_show_counteracts_return": true,
+          "known_appointment_intent_lift": true,
+          "breakdown_pressure_lift": false,
+          "service_recency_interpretable": false,
+          "horizon_monotonicity": true,
+          "p30_non_degenerate": true,
+          "same_input_deterministic": false,
+          "calendar_year_invariance": true,
+          "ood_finite_and_bounded": true,
+          "ood_warnings_explicit": true
+        },
+        "failed_checks": [
+          "due_pressure_monotone_rate",
+          "overdue_lift_material",
+          "breakdown_pressure_lift",
+          "service_recency_interpretable",
+          "same_input_deterministic"
+        ],
+        "diagnostics": {
+          "scenario_count": 5120,
+          "base_rows": 160,
+          "due_monotone_rate": 0.0,
+          "mean_due_lift_p30_0_9_to_1_5": -0.16645234329816846,
+          "mean_severe_increment_p30_3_to_4": -0.021353470046608952,
+          "mean_p30_at_due_ratio_4": 0.009450889155485375,
+          "usage_monotone_rate": 1.0,
+          "mean_usage_lift_p30_6k_to_36k": 0.42487627502556197,
+          "adherence_monotone_rate": 1.0,
+          "no_show_nonincreasing_rate": 1.0,
+          "appointment_lift_rate": 1.0,
+          "mean_appointment_lift_p30": 0.2425780616117791,
+          "breakdown_monotone_rate": 0.14375,
+          "recency_monotone_rate": 0.0,
+          "p30_min": 0.0,
+          "p30_median": 0.1534090909090909,
+          "p30_max": 1.0,
+          "p30_unique_6dp": 71,
+          "ood_warnings": [
+            "unknown categorical values mapped to the predeclared -1 encoder bucket",
+            "annual_km_baseline outside TRAIN support must be flagged by any future serving adapter"
+          ]
+        }
+      }
+    },
+    "coxnet_extended60": {
+      "status": "FAIL",
+      "checks": {
+        "behavior_contract": false,
+        "mean_calibration_error": true,
+        "calibrated_validation_ibs": true
+      },
+      "calibration": "isotonic",
+      "calibrated_validation_eval": {
+        "horizons": {
+          "30": {
+            "brier": 0.1293390306101046,
+            "calibration_error": 0.011669901502422477,
+            "exact_zero_share": 0.0011555604468167062,
+            "unique_probability_levels": 116
+          },
+          "60": {
+            "brier": 0.1795531900515647,
+            "calibration_error": 0.02566932017143548,
+            "exact_zero_share": 0.00027590773645293015,
+            "unique_probability_levels": 113
+          },
+          "90": {
+            "brier": 0.18689272774106266,
+            "calibration_error": 0.02867444182383405,
+            "exact_zero_share": 0.00027628888766093826,
+            "unique_probability_levels": 102
+          },
+          "120": {
+            "brier": 0.17367223970433754,
+            "calibration_error": 0.029930090714697304,
+            "exact_zero_share": 0.00027657926761809933,
+            "unique_probability_levels": 138
+          }
+        },
+        "mean_brier": 0.1673642970267674,
+        "mean_calibration_error": 0.023985938553097327
+      },
+      "calibrated_survival_metrics": {
+        "ipcw_c_index": 0.7124082354553124,
+        "harrell_c_index": 0.7126547847152547,
+        "ibs_30_120": 0.17226532188304067,
+        "ipcw_brier": {
+          "30": 0.12911309724472497,
+          "60": 0.17907308150784695,
+          "90": 0.18646362552265403,
+          "120": 0.17340541999251718
+        },
+        "time_dependent_auc": {
+          "30": 0.7780657880883861,
+          "60": 0.7795639557286218,
+          "90": 0.7886467067070198,
+          "120": 0.7971296468233229
+        },
+        "mean_time_dependent_auc": 0.7843670115138784,
+        "horizons": {
+          "30": {
+            "rows": 18173,
+            "event_rate": 0.20343366532768392,
+            "brier": 0.1293390306101046,
+            "auc": 0.7774727150450136,
+            "calibration_error": 0.011669901502422477,
+            "exact_zero_share": 0.0011555604468167062,
+            "unique_probability_levels": 116
+          },
+          "60": {
+            "rows": 18122,
+            "event_rate": 0.38119412868336827,
+            "brier": 0.1795531900515647,
+            "auc": 0.7794581985521655,
+            "calibration_error": 0.025669320171435476,
+            "exact_zero_share": 0.00027590773645293015,
+            "unique_probability_levels": 113
+          },
+          "90": {
+            "rows": 18097,
+            "event_rate": 0.5259435265513621,
+            "brier": 0.18689272774106266,
+            "auc": 0.788456799946487,
+            "calibration_error": 0.028674441823834045,
+            "exact_zero_share": 0.00027628888766093826,
+            "unique_probability_levels": 102
+          },
+          "120": {
+            "rows": 18078,
+            "event_rate": 0.6445956411107423,
+            "brier": 0.17367223970433754,
+            "auc": 0.797135167677801,
+            "calibration_error": 0.02993009071469732,
+            "exact_zero_share": 0.00027657926761809933,
+            "unique_probability_levels": 138
+          }
+        }
+      },
+      "behavior_audit": {
+        "status": "FAIL",
+        "checks": {
+          "scenario_count_at_least_5000": true,
+          "due_pressure_monotone_rate": false,
+          "overdue_lift_material": false,
+          "severe_overdue_saturates": true,
+          "severe_overdue_not_deterministic": true,
+          "high_usage_overdue_lift": true,
+          "adherence_direction": true,
+          "no_show_counteracts_return": true,
+          "known_appointment_intent_lift": true,
+          "breakdown_pressure_lift": false,
+          "service_recency_interpretable": false,
+          "horizon_monotonicity": true,
+          "p30_non_degenerate": false,
+          "same_input_deterministic": false,
+          "calendar_year_invariance": true,
+          "ood_finite_and_bounded": true,
+          "ood_warnings_explicit": true
+        },
+        "failed_checks": [
+          "due_pressure_monotone_rate",
+          "overdue_lift_material",
+          "breakdown_pressure_lift",
+          "service_recency_interpretable",
+          "p30_non_degenerate",
+          "same_input_deterministic"
+        ],
+        "diagnostics": {
+          "scenario_count": 5120,
+          "base_rows": 160,
+          "due_monotone_rate": 0.0,
+          "mean_due_lift_p30_0_9_to_1_5": -0.18687744515051627,
+          "mean_severe_increment_p30_3_to_4": -0.02213295593115446,
+          "mean_p30_at_due_ratio_4": 0.007598622291133218,
+          "usage_monotone_rate": 1.0,
+          "mean_usage_lift_p30_6k_to_36k": 0.4279697179068691,
+          "adherence_monotone_rate": 1.0,
+          "no_show_nonincreasing_rate": 1.0,
+          "appointment_lift_rate": 1.0,
+          "mean_appointment_lift_p30": 0.24549773962018168,
+          "breakdown_monotone_rate": 0.13125,
+          "recency_monotone_rate": 0.0,
+          "p30_min": 0.0,
+          "p30_median": 0.15705521472392642,
+          "p30_max": 1.0,
+          "p30_unique_6dp": 75,
+          "ood_warnings": [
+            "unknown categorical values mapped to the predeclared -1 encoder bucket",
+            "annual_km_baseline outside TRAIN support must be flagged by any future serving adapter"
+          ]
+        }
+      }
+    },
+    "xgb_cox_extended60": {
+      "status": "PASS",
+      "checks": {
+        "behavior_contract": true,
+        "mean_calibration_error": true,
+        "calibrated_validation_ibs": true
+      },
+      "calibration": "isotonic",
+      "calibrated_validation_eval": {
+        "horizons": {
+          "30": {
+            "brier": 0.12679414682534412,
+            "calibration_error": 0.011088331348501568,
+            "exact_zero_share": 0.0,
+            "unique_probability_levels": 77
+          },
+          "60": {
+            "brier": 0.17466876869670847,
+            "calibration_error": 0.024557535646406187,
+            "exact_zero_share": 0.0,
+            "unique_probability_levels": 123
+          },
+          "90": {
+            "brier": 0.18251711793834113,
+            "calibration_error": 0.030862032868750715,
+            "exact_zero_share": 0.0,
+            "unique_probability_levels": 96
+          },
+          "120": {
+            "brier": 0.16964727503891647,
+            "calibration_error": 0.032603823732519,
+            "exact_zero_share": 0.0,
+            "unique_probability_levels": 115
+          }
+        },
+        "mean_brier": 0.16340682712482757,
+        "mean_calibration_error": 0.024777930899044363
+      },
+      "calibrated_survival_metrics": {
+        "ipcw_c_index": 0.7219544886165592,
+        "harrell_c_index": 0.7221639312585383,
+        "ibs_30_120": 0.16809265445665109,
+        "ipcw_brier": {
+          "30": 0.12659037693224734,
+          "60": 0.17419908698044653,
+          "90": 0.18209300944495505,
+          "120": 0.16938135695685594
+        },
+        "time_dependent_auc": {
+          "30": 0.7838238415013676,
+          "60": 0.789911963137875,
+          "90": 0.7998679728278755,
+          "120": 0.8098920505306835
+        },
+        "mean_time_dependent_auc": 0.7939062805230983,
+        "horizons": {
+          "30": {
+            "rows": 18173,
+            "event_rate": 0.20343366532768392,
+            "brier": 0.12679414682534412,
+            "auc": 0.7727479294167927,
+            "calibration_error": 0.011088331348501602,
+            "exact_zero_share": 0.0,
+            "unique_probability_levels": 77
+          },
+          "60": {
+            "rows": 18122,
+            "event_rate": 0.38119412868336827,
+            "brier": 0.17466876869670847,
+            "auc": 0.7894533497347854,
+            "calibration_error": 0.024557535646406174,
+            "exact_zero_share": 0.0,
+            "unique_probability_levels": 123
+          },
+          "90": {
+            "rows": 18097,
+            "event_rate": 0.5259435265513621,
+            "brier": 0.18251711793834113,
+            "auc": 0.7996097773505926,
+            "calibration_error": 0.0308620328687507,
+            "exact_zero_share": 0.0,
+            "unique_probability_levels": 96
+          },
+          "120": {
+            "rows": 18078,
+            "event_rate": 0.6445956411107423,
+            "brier": 0.16964727503891647,
+            "auc": 0.8098302302541621,
+            "calibration_error": 0.03260382373251901,
+            "exact_zero_share": 0.0,
+            "unique_probability_levels": 115
+          }
+        }
+      },
+      "behavior_audit": {
+        "status": "PASS",
+        "checks": {
+          "scenario_count_at_least_5000": true,
+          "due_pressure_monotone_rate": true,
+          "overdue_lift_material": true,
+          "severe_overdue_saturates": true,
+          "severe_overdue_not_deterministic": true,
+          "high_usage_overdue_lift": true,
+          "adherence_direction": true,
+          "no_show_counteracts_return": true,
+          "known_appointment_intent_lift": true,
+          "breakdown_pressure_lift": true,
+          "service_recency_interpretable": true,
+          "horizon_monotonicity": true,
+          "p30_non_degenerate": true,
+          "same_input_deterministic": true,
+          "calendar_year_invariance": true,
+          "ood_finite_and_bounded": true,
+          "ood_warnings_explicit": true
+        },
+        "failed_checks": [],
+        "diagnostics": {
+          "scenario_count": 5120,
+          "base_rows": 160,
+          "due_monotone_rate": 1.0,
+          "mean_due_lift_p30_0_9_to_1_5": 0.09887980817388373,
+          "mean_severe_increment_p30_3_to_4": 0.0,
+          "mean_p30_at_due_ratio_4": 0.5285423917957415,
+          "usage_monotone_rate": 1.0,
+          "mean_usage_lift_p30_6k_to_36k": 0.44955150176269115,
+          "adherence_monotone_rate": 1.0,
+          "no_show_nonincreasing_rate": 0.99375,
+          "appointment_lift_rate": 1.0,
+          "mean_appointment_lift_p30": 0.3141818099667305,
+          "breakdown_monotone_rate": 1.0,
+          "recency_monotone_rate": 1.0,
+          "p30_min": 0.0699269749944678,
+          "p30_median": 0.4049079754601227,
+          "p30_max": 0.871900826446281,
+          "p30_unique_6dp": 40,
+          "ood_warnings": [
+            "unknown categorical values mapped to the predeclared -1 encoder bucket",
+            "annual_km_baseline outside TRAIN support must be flagged by any future serving adapter"
+          ]
+        }
+      }
+    }
+  },
+  "calibrated_validation_eval": {
+    "horizons": {
+      "30": {
+        "brier": 0.12679414682534412,
+        "calibration_error": 0.011088331348501568,
+        "exact_zero_share": 0.0,
+        "unique_probability_levels": 77
+      },
+      "60": {
+        "brier": 0.17466876869670847,
+        "calibration_error": 0.024557535646406187,
+        "exact_zero_share": 0.0,
+        "unique_probability_levels": 123
+      },
+      "90": {
+        "brier": 0.18251711793834113,
+        "calibration_error": 0.030862032868750715,
+        "exact_zero_share": 0.0,
+        "unique_probability_levels": 96
+      },
+      "120": {
+        "brier": 0.16964727503891647,
+        "calibration_error": 0.032603823732519,
+        "exact_zero_share": 0.0,
+        "unique_probability_levels": 115
+      }
+    },
+    "mean_brier": 0.16340682712482757,
+    "mean_calibration_error": 0.024777930899044363
+  },
+  "behavior_audit": {
+    "status": "PASS",
+    "checks": {
+      "scenario_count_at_least_5000": true,
+      "due_pressure_monotone_rate": true,
+      "overdue_lift_material": true,
+      "severe_overdue_saturates": true,
+      "severe_overdue_not_deterministic": true,
+      "high_usage_overdue_lift": true,
+      "adherence_direction": true,
+      "no_show_counteracts_return": true,
+      "known_appointment_intent_lift": true,
+      "breakdown_pressure_lift": true,
+      "service_recency_interpretable": true,
+      "horizon_monotonicity": true,
+      "p30_non_degenerate": true,
+      "same_input_deterministic": true,
+      "calendar_year_invariance": true,
+      "ood_finite_and_bounded": true,
+      "ood_warnings_explicit": true
+    },
+    "failed_checks": [],
+    "diagnostics": {
+      "scenario_count": 5120,
+      "base_rows": 160,
+      "due_monotone_rate": 1.0,
+      "mean_due_lift_p30_0_9_to_1_5": 0.09887980817388373,
+      "mean_severe_increment_p30_3_to_4": 0.0,
+      "mean_p30_at_due_ratio_4": 0.5285423917957415,
+      "usage_monotone_rate": 1.0,
+      "mean_usage_lift_p30_6k_to_36k": 0.44955150176269115,
+      "adherence_monotone_rate": 1.0,
+      "no_show_nonincreasing_rate": 0.99375,
+      "appointment_lift_rate": 1.0,
+      "mean_appointment_lift_p30": 0.3141818099667305,
+      "breakdown_monotone_rate": 1.0,
+      "recency_monotone_rate": 1.0,
+      "p30_min": 0.0699269749944678,
+      "p30_median": 0.4049079754601227,
+      "p30_max": 0.871900826446281,
+      "p30_unique_6dp": 40,
+      "ood_warnings": [
+        "unknown categorical values mapped to the predeclared -1 encoder bucket",
+        "annual_km_baseline outside TRAIN support must be flagged by any future serving adapter"
+      ]
+    }
+  },
+  "selection_checks": {
+    "train_and_validation_only": true,
+    "test_status_sealed": true,
+    "selection_uses_extended_observable_contract": true,
+    "feature_count_60": true,
+    "frozen_base54_prefix_exact": true,
+    "observable_extension_exact": true,
+    "forbidden_features_absent": true,
+    "validation_ipcw_c_acceptable": true,
+    "calibrated_validation_ibs_acceptable": true,
+    "validation_calibration_acceptable": true,
+    "behavior_gate_pass": true
+  },
+  "feature_importance_top25": [
+    {
+      "feature": "km_due_ratio",
+      "importance": 0.2370738834142685
+    },
+    {
+      "feature": "km_since_last_service",
+      "importance": 0.09644765406847
+    },
+    {
+      "feature": "annual_km_baseline",
+      "importance": 0.05835750699043274
+    },
+    {
+      "feature": "recent_90d_km",
+      "importance": 0.05419352650642395
+    },
+    {
+      "feature": "known_appointment_within_30d",
+      "importance": 0.04946243017911911
+    },
+    {
+      "feature": "max_due_ratio",
+      "importance": 0.045617904514074326
+    },
+    {
+      "feature": "policy_group",
+      "importance": 0.04410654678940773
+    },
+    {
+      "feature": "recent_service_count_365d",
+      "importance": 0.037860654294490814
+    },
+    {
+      "feature": "days_to_next_known_appointment",
+      "importance": 0.032672297209501266
+    },
+    {
+      "feature": "oem_interval_km",
+      "importance": 0.02783082239329815
+    },
+    {
+      "feature": "riding_intensity",
+      "importance": 0.027167245745658875
+    },
+    {
+      "feature": "recent_service_count_90d",
+      "importance": 0.018308626487851143
+    },
+    {
+      "feature": "days_since_last_service",
+      "importance": 0.015858715400099754
+    },
+    {
+      "feature": "due_task_count",
+      "importance": 0.015053984709084034
+    },
+    {
+      "feature": "last_service_task_count",
+      "importance": 0.012544623576104641
+    },
+    {
+      "feature": "landmark_month_cos",
+      "importance": 0.011208202689886093
+    },
+    {
+      "feature": "historical_on_time_rate",
+      "importance": 0.01113453134894371
+    },
+    {
+      "feature": "cumulative_service_spend",
+      "importance": 0.010986974462866783
+    },
+    {
+      "feature": "days_due_ratio",
+      "importance": 0.01088270079344511
+    },
+    {
+      "feature": "last_service_spend",
+      "importance": 0.010289049707353115
+    },
+    {
+      "feature": "days_until_next_scheduled_due",
+      "importance": 0.009022916667163372
+    },
+    {
+      "feature": "km_until_next_scheduled_due",
+      "importance": 0.008915157988667488
+    },
+    {
+      "feature": "brand",
+      "importance": 0.008726115338504314
+    },
+    {
+      "feature": "landmark_month_sin",
+      "importance": 0.008419005200266838
+    },
+    {
+      "feature": "prior_periodic_service_count",
+      "importance": 0.008212820626795292
+    }
+  ],
+  "generator_vs_features_ablation": {
+    "same_v1_5_world_frozen54": {
+      "ipcw_c_index": 0.7264903149494104,
+      "harrell_c_index": 0.7266712701252497,
+      "ibs_30_120": 0.3956467425688959,
+      "ipcw_brier": {
+        "30": 0.1813251982129507,
+        "60": 0.3411837402758556,
+        "90": 0.4704387366611724,
+        "120": 0.5693103033263689
+      },
+      "time_dependent_auc": {
+        "30": 0.7755679765113083,
+        "60": 0.798743056411112,
+        "90": 0.8138485810696778,
+        "120": 0.8258341871166007
+      },
+      "mean_time_dependent_auc": 0.7997055425187428,
+      "horizons": {
+        "30": {
+          "rows": 36357,
+          "event_rate": 0.20551750694501747,
+          "brier": 0.18158866181915562,
+          "auc": 0.7755195531901409,
+          "calibration_error": 0.18116179937565052,
+          "exact_zero_share": 0.0,
+          "unique_probability_levels": 7960
+        },
+        "60": {
+          "rows": 36275,
+          "event_rate": 0.38720882150241215,
+          "brier": 0.3420890002198398,
+          "auc": 0.7987769529097555,
+          "calibration_error": 0.34454456875753303,
+          "exact_zero_share": 0.0,
+          "unique_probability_levels": 13013
+        },
+        "90": {
+          "rows": 36215,
+          "event_rate": 0.5329007317409913,
+          "brier": 0.4720324149667376,
+          "auc": 0.8139389803925778,
+          "calibration_error": 0.47699563046852583,
+          "exact_zero_share": 0.0,
+          "unique_probability_levels": 18092
+        },
+        "120": {
+          "rows": 36174,
+          "event_rate": 0.6508265605130756,
+          "brier": 0.5714017348513366,
+          "auc": 0.8259617217759301,
+          "calibration_error": 0.5799774012001202,
+          "exact_zero_share": 0.0,
+          "unique_probability_levels": 24443
+        }
+      },
+      "feature_contract": "frozen54"
+    },
+    "same_v1_5_world_extended60": {
+      "ipcw_c_index": 0.7343205246489375,
+      "harrell_c_index": 0.7345568877808534,
+      "ibs_30_120": 0.3862914281250908,
+      "ipcw_brier": {
+        "30": 0.17033021109881608,
+        "60": 0.3300599155136604,
+        "90": 0.46093337629565273,
+        "120": 0.5654317740331024
+      },
+      "time_dependent_auc": {
+        "30": 0.7959855660346258,
+        "60": 0.8066936443297601,
+        "90": 0.8180765429580483,
+        "120": 0.8286515251208862
+      },
+      "mean_time_dependent_auc": 0.8098342220062126,
+      "horizons": {
+        "30": {
+          "rows": 36357,
+          "event_rate": 0.20551750694501747,
+          "brier": 0.17056932851763704,
+          "auc": 0.7958500912204826,
+          "calibration_error": 0.1703173181574595,
+          "exact_zero_share": 0.0,
+          "unique_probability_levels": 7779
+        },
+        "60": {
+          "rows": 36275,
+          "event_rate": 0.38720882150241215,
+          "brier": 0.3309135245506842,
+          "auc": 0.8067163281751821,
+          "calibration_error": 0.3333883992612724,
+          "exact_zero_share": 0.0,
+          "unique_probability_levels": 12336
+        },
+        "90": {
+          "rows": 36215,
+          "event_rate": 0.5329007317409913,
+          "brier": 0.46246391201020504,
+          "auc": 0.8181658505652685,
+          "calibration_error": 0.4670553096666094,
+          "exact_zero_share": 0.0,
+          "unique_probability_levels": 16524
+        },
+        "120": {
+          "rows": 36174,
+          "event_rate": 0.6508265605130756,
+          "brier": 0.5674805856082611,
+          "auc": 0.8287850206613352,
+          "calibration_error": 0.5739446969607794,
+          "exact_zero_share": 0.0,
+          "unique_probability_levels": 20825
+        }
+      },
+      "feature_contract": "extended60"
+    }
+  },
+  "selection_manifest": "/Users/nihatkutukoglu/Downloads/ridebase_synthetic_dataset_v1/ridebase-ml/models/v2_2_v1_5/v2_2_selection_manifest.json"
+}

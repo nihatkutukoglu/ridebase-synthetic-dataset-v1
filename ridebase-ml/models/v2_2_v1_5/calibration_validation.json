@@ -1,0 +1,122 @@
+{
+  "uncalibrated": {
+    "horizons": {
+      "30": {
+        "brier": 0.17181106498852386,
+        "calibration_error": 0.17144799386733753,
+        "exact_zero_share": 0.0,
+        "unique_probability_levels": 4464
+      },
+      "60": {
+        "brier": 0.32814771621866323,
+        "calibration_error": 0.33003458696715965,
+        "exact_zero_share": 0.0,
+        "unique_probability_levels": 7236
+      },
+      "90": {
+        "brier": 0.45858678030793704,
+        "calibration_error": 0.4626835675701857,
+        "exact_zero_share": 0.0,
+        "unique_probability_levels": 9787
+      },
+      "120": {
+        "brier": 0.5642186711372666,
+        "calibration_error": 0.5703020881437899,
+        "exact_zero_share": 0.0,
+        "unique_probability_levels": 12233
+      }
+    },
+    "mean_brier": 0.3806910581630977,
+    "mean_calibration_error": 0.3836170591371182
+  },
+  "isotonic": {
+    "horizons": {
+      "30": {
+        "brier": 0.12679414682534412,
+        "calibration_error": 0.011088331348501568,
+        "exact_zero_share": 0.0,
+        "unique_probability_levels": 77
+      },
+      "60": {
+        "brier": 0.17466876869670847,
+        "calibration_error": 0.024557535646406187,
+        "exact_zero_share": 0.0,
+        "unique_probability_levels": 123
+      },
+      "90": {
+        "brier": 0.18251711793834113,
+        "calibration_error": 0.030862032868750715,
+        "exact_zero_share": 0.0,
+        "unique_probability_levels": 96
+      },
+      "120": {
+        "brier": 0.16964727503891647,
+        "calibration_error": 0.032603823732519,
+        "exact_zero_share": 0.0,
+        "unique_probability_levels": 115
+      }
+    },
+    "mean_brier": 0.16340682712482757,
+    "mean_calibration_error": 0.024777930899044363
+  },
+  "platt": {
+    "horizons": {
+      "30": {
+        "brier": 0.13027226627927888,
+        "calibration_error": 0.03436736026087322,
+        "exact_zero_share": 0.0,
+        "unique_probability_levels": 8749
+      },
+      "60": {
+        "brier": 0.1757955328523808,
+        "calibration_error": 0.03728040537264111,
+        "exact_zero_share": 0.0,
+        "unique_probability_levels": 17350
+      },
+      "90": {
+        "brier": 0.1829656810138752,
+        "calibration_error": 0.03610521136620519,
+        "exact_zero_share": 0.0,
+        "unique_probability_levels": 17233
+      },
+      "120": {
+        "brier": 0.16966516230436604,
+        "calibration_error": 0.033892788022277846,
+        "exact_zero_share": 0.0,
+        "unique_probability_levels": 17079
+      }
+    },
+    "mean_brier": 0.16467466061247524,
+    "mean_calibration_error": 0.03541144125549934
+  },
+  "beta": {
+    "horizons": {
+      "30": {
+        "brier": 0.12854336428279778,
+        "calibration_error": 0.017028370633780182,
+        "exact_zero_share": 0.0,
+        "unique_probability_levels": 8749
+      },
+      "60": {
+        "brier": 0.17532925047972797,
+        "calibration_error": 0.031164677797136248,
+        "exact_zero_share": 0.0,
+        "unique_probability_levels": 17349
+      },
+      "90": {
+        "brier": 0.18259103586168723,
+        "calibration_error": 0.03237070047460745,
+        "exact_zero_share": 0.0,
+        "unique_probability_levels": 17295
+      },
+      "120": {
+        "brier": 0.16921679110276638,
+        "calibration_error": 0.03425907240873331,
+        "exact_zero_share": 0.0,
+        "unique_probability_levels": 17205
+      }
+    },
+    "mean_brier": 0.16392011043174484,
+    "mean_calibration_error": 0.0287057053285643
+  }
+}
