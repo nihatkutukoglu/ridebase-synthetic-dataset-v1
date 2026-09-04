@@ -1,0 +1,752 @@
+{
+  "status": "PASS",
+  "rows": 5270,
+  "scope": "TRAIN_VALIDATION_AUDIT_ONLY",
+  "hidden_profile_use": "AUDIT_ONLY_NOT_A_PREDICTOR",
+  "checks": {
+    "train_validation_only": true,
+    "latent_not_joined_to_model_table": true,
+    "one_row_per_motorcycle": true,
+    "all_proxies_production_derivable": true,
+    "evidence_for_each_tendency": true,
+    "observable_signal_detected": true
+  },
+  "summary": {
+    "CHURN_RISK": {
+      "best_proxy": "interservice_km_cv",
+      "max_mutual_information": 0.0049758899413518964,
+      "max_univariate_utility": 0.5397231028013199
+    },
+    "DELAYER": {
+      "best_proxy": "interservice_days_cv",
+      "max_mutual_information": 0.008642022368949842,
+      "max_univariate_utility": 0.5446866493835533
+    },
+    "HEAVY_USER": {
+      "best_proxy": "usage_volatility_6m",
+      "max_mutual_information": 0.0056799346196747535,
+      "max_univariate_utility": 0.5077243440446734
+    },
+    "NO_SHOW_PRONE": {
+      "best_proxy": "successful_appointment_rate",
+      "max_mutual_information": 0.005434051935826467,
+      "max_univariate_utility": 0.5935422103719971
+    },
+    "WORKSHOP_LOYAL": {
+      "best_proxy": "interaction_count_180d",
+      "max_mutual_information": 0.004032178494769889,
+      "max_univariate_utility": 0.5339441873132494
+    }
+  },
+  "known_observability_gaps": [
+    "CHURN_RISK",
+    "HEAVY_USER",
+    "WORKSHOP_LOYAL"
+  ],
+  "matrix": [
+    {
+      "latent_tendency": "NO_SHOW_PRONE",
+      "observable_summary": "appointments_180d",
+      "group": "appointment",
+      "correlation": -0.002245479917855355,
+      "mutual_information": 0.0,
+      "univariate_auc_oriented": 0.518706827357873,
+      "production_derivable": true,
+      "leakage_risk": "LOW_WITH_ENFORCED_CUTOFF",
+      "decision": "KEEP_AS_COMPOSITE_CANDIDATE"
+    },
+    {
+      "latent_tendency": "NO_SHOW_PRONE",
+      "observable_summary": "attended_appointment_count",
+      "group": "appointment",
+      "correlation": 0.017341885675985574,
+      "mutual_information": 0.0,
+      "univariate_auc_oriented": 0.5186180179489198,
+      "production_derivable": true,
+      "leakage_risk": "LOW_WITH_ENFORCED_CUTOFF",
+      "decision": "KEEP_AS_COMPOSITE_CANDIDATE"
+    },
+    {
+      "latent_tendency": "NO_SHOW_PRONE",
+      "observable_summary": "no_show_rate",
+      "group": "appointment",
+      "correlation": 0.10468081944308134,
+      "mutual_information": 0.0032552780260410863,
+      "univariate_auc_oriented": 0.5933218688459958,
+      "production_derivable": true,
+      "leakage_risk": "LOW_WITH_ENFORCED_CUTOFF",
+      "decision": "KEEP"
+    },
+    {
+      "latent_tendency": "NO_SHOW_PRONE",
+      "observable_summary": "cancellation_rate",
+      "group": "appointment",
+      "correlation": 0.018854066775924543,
+      "mutual_information": 0.0033688520757380047,
+      "univariate_auc_oriented": 0.5342010416267192,
+      "production_derivable": true,
+      "leakage_risk": "LOW_WITH_ENFORCED_CUTOFF",
+      "decision": "KEEP"
+    },
+    {
+      "latent_tendency": "NO_SHOW_PRONE",
+      "observable_summary": "successful_appointment_rate",
+      "group": "appointment",
+      "correlation": -0.06433793606202266,
+      "mutual_information": 0.005434051935826467,
+      "univariate_auc_oriented": 0.5926652174585842,
+      "production_derivable": true,
+      "leakage_risk": "LOW_WITH_ENFORCED_CUTOFF",
+      "decision": "KEEP"
+    },
+    {
+      "latent_tendency": "NO_SHOW_PRONE",
+      "observable_summary": "rebook_after_no_show_rate",
+      "group": "appointment",
+      "correlation": 0.06149568551770798,
+      "mutual_information": 0.0049722016643307665,
+      "univariate_auc_oriented": 0.5577560553551738,
+      "production_derivable": true,
+      "leakage_risk": "LOW_WITH_ENFORCED_CUTOFF",
+      "decision": "KEEP"
+    },
+    {
+      "latent_tendency": "NO_SHOW_PRONE",
+      "observable_summary": "days_since_last_appointment",
+      "group": "appointment",
+      "correlation": 0.00634246876051164,
+      "mutual_information": 0.0011771121124584116,
+      "univariate_auc_oriented": 0.5164563161991726,
+      "production_derivable": true,
+      "leakage_risk": "LOW_WITH_ENFORCED_CUTOFF",
+      "decision": "KEEP"
+    },
+    {
+      "latent_tendency": "NO_SHOW_PRONE",
+      "observable_summary": "known_open_appointment_count",
+      "group": "appointment",
+      "correlation": 0.026601807919826602,
+      "mutual_information": 0.0015642475548509616,
+      "univariate_auc_oriented": 0.5137896791356422,
+      "production_derivable": true,
+      "leakage_risk": "LOW_WITH_ENFORCED_CUTOFF",
+      "decision": "KEEP"
+    },
+    {
+      "latent_tendency": "NO_SHOW_PRONE",
+      "observable_summary": "recent_no_show_without_rebook",
+      "group": "appointment",
+      "correlation": 0.07290313894829555,
+      "mutual_information": 0.00090297169109399,
+      "univariate_auc_oriented": 0.5341243425917142,
+      "production_derivable": true,
+      "leakage_risk": "LOW_WITH_ENFORCED_CUTOFF",
+      "decision": "KEEP"
+    },
+    {
+      "latent_tendency": "NO_SHOW_PRONE",
+      "observable_summary": "days_since_last_any_interaction",
+      "group": "engagement",
+      "correlation": 0.016773314313957222,
+      "mutual_information": 0.0004947160883543855,
+      "univariate_auc_oriented": 0.5244108134874581,
+      "production_derivable": true,
+      "leakage_risk": "LOW_WITH_ENFORCED_CUTOFF",
+      "decision": "KEEP_AS_COMPOSITE_CANDIDATE"
+    },
+    {
+      "latent_tendency": "NO_SHOW_PRONE",
+      "observable_summary": "interaction_count_90d",
+      "group": "engagement",
+      "correlation": -0.02683112846050242,
+      "mutual_information": 0.0,
+      "univariate_auc_oriented": 0.5392520767609325,
+      "production_derivable": true,
+      "leakage_risk": "LOW_WITH_ENFORCED_CUTOFF",
+      "decision": "KEEP_AS_COMPOSITE_CANDIDATE"
+    },
+    {
+      "latent_tendency": "NO_SHOW_PRONE",
+      "observable_summary": "interaction_count_180d",
+      "group": "engagement",
+      "correlation": -0.013972737986809544,
+      "mutual_information": 0.0,
+      "univariate_auc_oriented": 0.5346743554085267,
+      "production_derivable": true,
+      "leakage_risk": "LOW_WITH_ENFORCED_CUTOFF",
+      "decision": "KEEP_AS_COMPOSITE_CANDIDATE"
+    },
+    {
+      "latent_tendency": "NO_SHOW_PRONE",
+      "observable_summary": "appointment_frequency_365d",
+      "group": "engagement",
+      "correlation": 0.01695704895498605,
+      "mutual_information": 0.0,
+      "univariate_auc_oriented": 0.504589831726354,
+      "production_derivable": true,
+      "leakage_risk": "LOW_WITH_ENFORCED_CUTOFF",
+      "decision": "KEEP_AS_COMPOSITE_CANDIDATE"
+    },
+    {
+      "latent_tendency": "NO_SHOW_PRONE",
+      "observable_summary": "prior_no_show_count",
+      "group": "inherited_extended60",
+      "correlation": 0.11436668651197013,
+      "mutual_information": 0.0027787455374392867,
+      "univariate_auc_oriented": 0.5935422103719971,
+      "production_derivable": true,
+      "leakage_risk": "LOW_WITH_ENFORCED_CUTOFF",
+      "decision": "KEEP"
+    },
+    {
+      "latent_tendency": "NO_SHOW_PRONE",
+      "observable_summary": "prior_cancelled_appointment_count",
+      "group": "inherited_extended60",
+      "correlation": 0.04799328144233168,
+      "mutual_information": 0.0007148842533253319,
+      "univariate_auc_oriented": 0.5360263441001285,
+      "production_derivable": true,
+      "leakage_risk": "LOW_WITH_ENFORCED_CUTOFF",
+      "decision": "KEEP"
+    },
+    {
+      "latent_tendency": "NO_SHOW_PRONE",
+      "observable_summary": "prior_appointment_count",
+      "group": "inherited_extended60",
+      "correlation": 0.03612723170441637,
+      "mutual_information": 0.002536428495425458,
+      "univariate_auc_oriented": 0.5160553282617779,
+      "production_derivable": true,
+      "leakage_risk": "LOW_WITH_ENFORCED_CUTOFF",
+      "decision": "KEEP"
+    },
+    {
+      "latent_tendency": "DELAYER",
+      "observable_summary": "overdue_service_share",
+      "group": "adherence",
+      "correlation": 0.04951055585506113,
+      "mutual_information": 0.0040054123429664745,
+      "univariate_auc_oriented": 0.5393891337722396,
+      "production_derivable": true,
+      "leakage_risk": "LOW_WITH_ENFORCED_CUTOFF",
+      "decision": "KEEP"
+    },
+    {
+      "latent_tendency": "DELAYER",
+      "observable_summary": "prior_service_delay_median",
+      "group": "adherence",
+      "correlation": 0.030539035793229124,
+      "mutual_information": 0.0,
+      "univariate_auc_oriented": 0.5061735916852683,
+      "production_derivable": true,
+      "leakage_risk": "LOW_WITH_ENFORCED_CUTOFF",
+      "decision": "KEEP"
+    },
+    {
+      "latent_tendency": "DELAYER",
+      "observable_summary": "prior_service_delay_p90",
+      "group": "adherence",
+      "correlation": 0.03611672631495592,
+      "mutual_information": 0.0,
+      "univariate_auc_oriented": 0.511669044860746,
+      "production_derivable": true,
+      "leakage_risk": "LOW_WITH_ENFORCED_CUTOFF",
+      "decision": "KEEP"
+    },
+    {
+      "latent_tendency": "DELAYER",
+      "observable_summary": "last3_service_delay_trend",
+      "group": "adherence",
+      "correlation": 0.02446662669181293,
+      "mutual_information": 0.0,
+      "univariate_auc_oriented": 0.51404017499741,
+      "production_derivable": true,
+      "leakage_risk": "LOW_WITH_ENFORCED_CUTOFF",
+      "decision": "KEEP_AS_COMPOSITE_CANDIDATE"
+    },
+    {
+      "latent_tendency": "DELAYER",
+      "observable_summary": "interservice_days_cv",
+      "group": "adherence",
+      "correlation": -0.02128361027259137,
+      "mutual_information": 0.008642022368949842,
+      "univariate_auc_oriented": 0.5139842521168282,
+      "production_derivable": true,
+      "leakage_risk": "LOW_WITH_ENFORCED_CUTOFF",
+      "decision": "KEEP"
+    },
+    {
+      "latent_tendency": "DELAYER",
+      "observable_summary": "interservice_km_cv",
+      "group": "adherence",
+      "correlation": -0.013134046193709871,
+      "mutual_information": 0.002893385100057211,
+      "univariate_auc_oriented": 0.5079008728678666,
+      "production_derivable": true,
+      "leakage_risk": "LOW_WITH_ENFORCED_CUTOFF",
+      "decision": "KEEP"
+    },
+    {
+      "latent_tendency": "DELAYER",
+      "observable_summary": "recency_weighted_adherence_score",
+      "group": "adherence",
+      "correlation": -0.035670296400587484,
+      "mutual_information": 0.0,
+      "univariate_auc_oriented": 0.5119078944270201,
+      "production_derivable": true,
+      "leakage_risk": "LOW_WITH_ENFORCED_CUTOFF",
+      "decision": "KEEP"
+    },
+    {
+      "latent_tendency": "DELAYER",
+      "observable_summary": "service_gap_acceleration",
+      "group": "adherence",
+      "correlation": 0.02465379822212476,
+      "mutual_information": 0.0,
+      "univariate_auc_oriented": 0.5446866493835533,
+      "production_derivable": true,
+      "leakage_risk": "LOW_WITH_ENFORCED_CUTOFF",
+      "decision": "KEEP"
+    },
+    {
+      "latent_tendency": "DELAYER",
+      "observable_summary": "historical_service_delay_mean_days",
+      "group": "inherited_extended60",
+      "correlation": 0.03866711641379472,
+      "mutual_information": 0.0,
+      "univariate_auc_oriented": 0.5114945066071411,
+      "production_derivable": true,
+      "leakage_risk": "LOW_WITH_ENFORCED_CUTOFF",
+      "decision": "KEEP"
+    },
+    {
+      "latent_tendency": "DELAYER",
+      "observable_summary": "historical_on_time_rate",
+      "group": "inherited_extended60",
+      "correlation": -0.026547632525066683,
+      "mutual_information": 0.0,
+      "univariate_auc_oriented": 0.5113929624292428,
+      "production_derivable": true,
+      "leakage_risk": "LOW_WITH_ENFORCED_CUTOFF",
+      "decision": "KEEP_AS_COMPOSITE_CANDIDATE"
+    },
+    {
+      "latent_tendency": "WORKSHOP_LOYAL",
+      "observable_summary": "days_since_last_any_interaction",
+      "group": "engagement",
+      "correlation": -0.023490024680490194,
+      "mutual_information": 0.0,
+      "univariate_auc_oriented": 0.5131309083870335,
+      "production_derivable": true,
+      "leakage_risk": "LOW_WITH_ENFORCED_CUTOFF",
+      "decision": "KEEP_AS_COMPOSITE_CANDIDATE"
+    },
+    {
+      "latent_tendency": "WORKSHOP_LOYAL",
+      "observable_summary": "interaction_count_90d",
+      "group": "engagement",
+      "correlation": 0.023390911669429512,
+      "mutual_information": 0.0,
+      "univariate_auc_oriented": 0.5312820055294076,
+      "production_derivable": true,
+      "leakage_risk": "LOW_WITH_ENFORCED_CUTOFF",
+      "decision": "KEEP_AS_COMPOSITE_CANDIDATE"
+    },
+    {
+      "latent_tendency": "WORKSHOP_LOYAL",
+      "observable_summary": "interaction_count_180d",
+      "group": "engagement",
+      "correlation": 0.019907900859688715,
+      "mutual_information": 0.004032178494769889,
+      "univariate_auc_oriented": 0.5339441873132494,
+      "production_derivable": true,
+      "leakage_risk": "LOW_WITH_ENFORCED_CUTOFF",
+      "decision": "KEEP"
+    },
+    {
+      "latent_tendency": "WORKSHOP_LOYAL",
+      "observable_summary": "appointment_frequency_365d",
+      "group": "engagement",
+      "correlation": 0.01743861110513992,
+      "mutual_information": 0.0002266717402557017,
+      "univariate_auc_oriented": 0.5268730359724542,
+      "production_derivable": true,
+      "leakage_risk": "LOW_WITH_ENFORCED_CUTOFF",
+      "decision": "KEEP_AS_COMPOSITE_CANDIDATE"
+    },
+    {
+      "latent_tendency": "WORKSHOP_LOYAL",
+      "observable_summary": "distinct_workshops_before_landmark",
+      "group": "workshop",
+      "correlation": 0.003910711676782817,
+      "mutual_information": 0.0,
+      "univariate_auc_oriented": 0.500102522042239,
+      "production_derivable": true,
+      "leakage_risk": "LOW_WITH_ENFORCED_CUTOFF",
+      "decision": "KEEP_AS_COMPOSITE_CANDIDATE"
+    },
+    {
+      "latent_tendency": "WORKSHOP_LOYAL",
+      "observable_summary": "dominant_workshop_share",
+      "group": "workshop",
+      "correlation": 0.003910711676782817,
+      "mutual_information": 0.0,
+      "univariate_auc_oriented": 0.500102522042239,
+      "production_derivable": true,
+      "leakage_risk": "LOW_WITH_ENFORCED_CUTOFF",
+      "decision": "KEEP_AS_COMPOSITE_CANDIDATE"
+    },
+    {
+      "latent_tendency": "WORKSHOP_LOYAL",
+      "observable_summary": "same_workshop_streak",
+      "group": "workshop",
+      "correlation": 0.01066821011579113,
+      "mutual_information": 0.0030111256511562434,
+      "univariate_auc_oriented": 0.5053418418802281,
+      "production_derivable": true,
+      "leakage_risk": "LOW_WITH_ENFORCED_CUTOFF",
+      "decision": "KEEP"
+    },
+    {
+      "latent_tendency": "CHURN_RISK",
+      "observable_summary": "appointments_180d",
+      "group": "appointment",
+      "correlation": -0.01839759751823918,
+      "mutual_information": 0.0,
+      "univariate_auc_oriented": 0.5167663919038701,
+      "production_derivable": true,
+      "leakage_risk": "LOW_WITH_ENFORCED_CUTOFF",
+      "decision": "KEEP_AS_COMPOSITE_CANDIDATE"
+    },
+    {
+      "latent_tendency": "CHURN_RISK",
+      "observable_summary": "attended_appointment_count",
+      "group": "appointment",
+      "correlation": -0.027725295766870953,
+      "mutual_information": 0.002858519078933419,
+      "univariate_auc_oriented": 0.5339309106210834,
+      "production_derivable": true,
+      "leakage_risk": "LOW_WITH_ENFORCED_CUTOFF",
+      "decision": "KEEP"
+    },
+    {
+      "latent_tendency": "CHURN_RISK",
+      "observable_summary": "no_show_rate",
+      "group": "appointment",
+      "correlation": 0.0021647352364548766,
+      "mutual_information": 0.0,
+      "univariate_auc_oriented": 0.5001559330018928,
+      "production_derivable": true,
+      "leakage_risk": "LOW_WITH_ENFORCED_CUTOFF",
+      "decision": "KEEP_AS_COMPOSITE_CANDIDATE"
+    },
+    {
+      "latent_tendency": "CHURN_RISK",
+      "observable_summary": "cancellation_rate",
+      "group": "appointment",
+      "correlation": 0.02082844400121691,
+      "mutual_information": 0.0,
+      "univariate_auc_oriented": 0.5078771048881678,
+      "production_derivable": true,
+      "leakage_risk": "LOW_WITH_ENFORCED_CUTOFF",
+      "decision": "KEEP_AS_COMPOSITE_CANDIDATE"
+    },
+    {
+      "latent_tendency": "CHURN_RISK",
+      "observable_summary": "successful_appointment_rate",
+      "group": "appointment",
+      "correlation": -0.011961866793223253,
+      "mutual_information": 0.001531116021554757,
+      "univariate_auc_oriented": 0.5128935027362924,
+      "production_derivable": true,
+      "leakage_risk": "LOW_WITH_ENFORCED_CUTOFF",
+      "decision": "KEEP"
+    },
+    {
+      "latent_tendency": "CHURN_RISK",
+      "observable_summary": "rebook_after_no_show_rate",
+      "group": "appointment",
+      "correlation": -0.008109122965163874,
+      "mutual_information": 0.0,
+      "univariate_auc_oriented": 0.5063819175225011,
+      "production_derivable": true,
+      "leakage_risk": "LOW_WITH_ENFORCED_CUTOFF",
+      "decision": "KEEP_AS_COMPOSITE_CANDIDATE"
+    },
+    {
+      "latent_tendency": "CHURN_RISK",
+      "observable_summary": "days_since_last_appointment",
+      "group": "appointment",
+      "correlation": 0.03747250115405359,
+      "mutual_information": 0.0017270027080851236,
+      "univariate_auc_oriented": 0.508786437588922,
+      "production_derivable": true,
+      "leakage_risk": "LOW_WITH_ENFORCED_CUTOFF",
+      "decision": "KEEP"
+    },
+    {
+      "latent_tendency": "CHURN_RISK",
+      "observable_summary": "known_open_appointment_count",
+      "group": "appointment",
+      "correlation": -0.038421816771333106,
+      "mutual_information": 0.0,
+      "univariate_auc_oriented": 0.5193268449721836,
+      "production_derivable": true,
+      "leakage_risk": "LOW_WITH_ENFORCED_CUTOFF",
+      "decision": "KEEP"
+    },
+    {
+      "latent_tendency": "CHURN_RISK",
+      "observable_summary": "recent_no_show_without_rebook",
+      "group": "appointment",
+      "correlation": -0.00070365970876068,
+      "mutual_information": 0.0,
+      "univariate_auc_oriented": 0.5002985951100074,
+      "production_derivable": true,
+      "leakage_risk": "LOW_WITH_ENFORCED_CUTOFF",
+      "decision": "KEEP_AS_COMPOSITE_CANDIDATE"
+    },
+    {
+      "latent_tendency": "CHURN_RISK",
+      "observable_summary": "overdue_service_share",
+      "group": "adherence",
+      "correlation": 0.002334869677915301,
+      "mutual_information": 0.0,
+      "univariate_auc_oriented": 0.504953914056586,
+      "production_derivable": true,
+      "leakage_risk": "LOW_WITH_ENFORCED_CUTOFF",
+      "decision": "KEEP_AS_COMPOSITE_CANDIDATE"
+    },
+    {
+      "latent_tendency": "CHURN_RISK",
+      "observable_summary": "prior_service_delay_median",
+      "group": "adherence",
+      "correlation": 0.010196545904656911,
+      "mutual_information": 0.0,
+      "univariate_auc_oriented": 0.502454838871996,
+      "production_derivable": true,
+      "leakage_risk": "LOW_WITH_ENFORCED_CUTOFF",
+      "decision": "KEEP_AS_COMPOSITE_CANDIDATE"
+    },
+    {
+      "latent_tendency": "CHURN_RISK",
+      "observable_summary": "prior_service_delay_p90",
+      "group": "adherence",
+      "correlation": 0.010701992550739732,
+      "mutual_information": 0.0,
+      "univariate_auc_oriented": 0.5048184403492678,
+      "production_derivable": true,
+      "leakage_risk": "LOW_WITH_ENFORCED_CUTOFF",
+      "decision": "KEEP_AS_COMPOSITE_CANDIDATE"
+    },
+    {
+      "latent_tendency": "CHURN_RISK",
+      "observable_summary": "last3_service_delay_trend",
+      "group": "adherence",
+      "correlation": 0.00012435073752850782,
+      "mutual_information": 0.0,
+      "univariate_auc_oriented": 0.5036652549753411,
+      "production_derivable": true,
+      "leakage_risk": "LOW_WITH_ENFORCED_CUTOFF",
+      "decision": "KEEP_AS_COMPOSITE_CANDIDATE"
+    },
+    {
+      "latent_tendency": "CHURN_RISK",
+      "observable_summary": "interservice_days_cv",
+      "group": "adherence",
+      "correlation": -0.018938201660873837,
+      "mutual_information": 0.0012848396769342685,
+      "univariate_auc_oriented": 0.5176903778831708,
+      "production_derivable": true,
+      "leakage_risk": "LOW_WITH_ENFORCED_CUTOFF",
+      "decision": "KEEP"
+    },
+    {
+      "latent_tendency": "CHURN_RISK",
+      "observable_summary": "interservice_km_cv",
+      "group": "adherence",
+      "correlation": -0.019652765958878243,
+      "mutual_information": 0.0049758899413518964,
+      "univariate_auc_oriented": 0.5192580022107097,
+      "production_derivable": true,
+      "leakage_risk": "LOW_WITH_ENFORCED_CUTOFF",
+      "decision": "KEEP"
+    },
+    {
+      "latent_tendency": "CHURN_RISK",
+      "observable_summary": "recency_weighted_adherence_score",
+      "group": "adherence",
+      "correlation": 0.00171423202920976,
+      "mutual_information": 0.0,
+      "univariate_auc_oriented": 0.5052724155072605,
+      "production_derivable": true,
+      "leakage_risk": "LOW_WITH_ENFORCED_CUTOFF",
+      "decision": "KEEP_AS_COMPOSITE_CANDIDATE"
+    },
+    {
+      "latent_tendency": "CHURN_RISK",
+      "observable_summary": "service_gap_acceleration",
+      "group": "adherence",
+      "correlation": -0.005054752186044354,
+      "mutual_information": 0.0,
+      "univariate_auc_oriented": 0.5048350289664905,
+      "production_derivable": true,
+      "leakage_risk": "LOW_WITH_ENFORCED_CUTOFF",
+      "decision": "KEEP_AS_COMPOSITE_CANDIDATE"
+    },
+    {
+      "latent_tendency": "CHURN_RISK",
+      "observable_summary": "days_since_last_any_interaction",
+      "group": "engagement",
+      "correlation": 0.020175339012755394,
+      "mutual_information": 0.0,
+      "univariate_auc_oriented": 0.5193553220984158,
+      "production_derivable": true,
+      "leakage_risk": "LOW_WITH_ENFORCED_CUTOFF",
+      "decision": "KEEP_AS_COMPOSITE_CANDIDATE"
+    },
+    {
+      "latent_tendency": "CHURN_RISK",
+      "observable_summary": "interaction_count_90d",
+      "group": "engagement",
+      "correlation": -0.014013863870577643,
+      "mutual_information": 0.0,
+      "univariate_auc_oriented": 0.5133577075415725,
+      "production_derivable": true,
+      "leakage_risk": "LOW_WITH_ENFORCED_CUTOFF",
+      "decision": "KEEP_AS_COMPOSITE_CANDIDATE"
+    },
+    {
+      "latent_tendency": "CHURN_RISK",
+      "observable_summary": "interaction_count_180d",
+      "group": "engagement",
+      "correlation": -0.025389822625199964,
+      "mutual_information": 0.0,
+      "univariate_auc_oriented": 0.5253366245149903,
+      "production_derivable": true,
+      "leakage_risk": "LOW_WITH_ENFORCED_CUTOFF",
+      "decision": "KEEP_AS_COMPOSITE_CANDIDATE"
+    },
+    {
+      "latent_tendency": "CHURN_RISK",
+      "observable_summary": "appointment_frequency_365d",
+      "group": "engagement",
+      "correlation": -0.0385749231689735,
+      "mutual_information": 0.0,
+      "univariate_auc_oriented": 0.5397231028013199,
+      "production_derivable": true,
+      "leakage_risk": "LOW_WITH_ENFORCED_CUTOFF",
+      "decision": "KEEP"
+    },
+    {
+      "latent_tendency": "CHURN_RISK",
+      "observable_summary": "days_since_last_service",
+      "group": "inherited_extended60",
+      "correlation": 0.006740757350779041,
+      "mutual_information": 0.0,
+      "univariate_auc_oriented": 0.5027282745792159,
+      "production_derivable": true,
+      "leakage_risk": "LOW_WITH_ENFORCED_CUTOFF",
+      "decision": "KEEP_AS_COMPOSITE_CANDIDATE"
+    },
+    {
+      "latent_tendency": "HEAVY_USER",
+      "observable_summary": "recent_30d_km",
+      "group": "usage",
+      "correlation": -0.004864491895746394,
+      "mutual_information": 0.0,
+      "univariate_auc_oriented": 0.5016027917537988,
+      "production_derivable": true,
+      "leakage_risk": "LOW_WITH_ENFORCED_CUTOFF",
+      "decision": "KEEP_AS_COMPOSITE_CANDIDATE"
+    },
+    {
+      "latent_tendency": "HEAVY_USER",
+      "observable_summary": "recent_180d_km",
+      "group": "usage",
+      "correlation": -0.005050120302149935,
+      "mutual_information": 0.0,
+      "univariate_auc_oriented": 0.5036609283308171,
+      "production_derivable": true,
+      "leakage_risk": "LOW_WITH_ENFORCED_CUTOFF",
+      "decision": "KEEP_AS_COMPOSITE_CANDIDATE"
+    },
+    {
+      "latent_tendency": "HEAVY_USER",
+      "observable_summary": "usage_velocity_ratio_30_vs_180",
+      "group": "usage",
+      "correlation": 0.006909437127145017,
+      "mutual_information": 0.004778261925258986,
+      "univariate_auc_oriented": 0.5029882806979677,
+      "production_derivable": true,
+      "leakage_risk": "LOW_WITH_ENFORCED_CUTOFF",
+      "decision": "KEEP"
+    },
+    {
+      "latent_tendency": "HEAVY_USER",
+      "observable_summary": "usage_volatility_6m",
+      "group": "usage",
+      "correlation": 0.008272887938825765,
+      "mutual_information": 0.0056799346196747535,
+      "univariate_auc_oriented": 0.5074354634514661,
+      "production_derivable": true,
+      "leakage_risk": "LOW_WITH_ENFORCED_CUTOFF",
+      "decision": "KEEP"
+    },
+    {
+      "latent_tendency": "HEAVY_USER",
+      "observable_summary": "odometer_observation_recency_days",
+      "group": "usage",
+      "correlation": 0.0,
+      "mutual_information": 0.004286286395435823,
+      "univariate_auc_oriented": 0.5,
+      "production_derivable": true,
+      "leakage_risk": "LOW_WITH_ENFORCED_CUTOFF",
+      "decision": "KEEP"
+    },
+    {
+      "latent_tendency": "HEAVY_USER",
+      "observable_summary": "km_growth_slope_6m",
+      "group": "usage",
+      "correlation": 0.017478051968653124,
+      "mutual_information": 0.005541992321332234,
+      "univariate_auc_oriented": 0.5077243440446734,
+      "production_derivable": true,
+      "leakage_risk": "LOW_WITH_ENFORCED_CUTOFF",
+      "decision": "KEEP"
+    },
+    {
+      "latent_tendency": "HEAVY_USER",
+      "observable_summary": "annual_km_baseline",
+      "group": "inherited_extended60",
+      "correlation": -0.0014405303500161484,
+      "mutual_information": 0.0,
+      "univariate_auc_oriented": 0.503423069850006,
+      "production_derivable": true,
+      "leakage_risk": "LOW_WITH_ENFORCED_CUTOFF",
+      "decision": "KEEP_AS_COMPOSITE_CANDIDATE"
+    },
+    {
+      "latent_tendency": "HEAVY_USER",
+      "observable_summary": "recent_90d_km",
+      "group": "inherited_extended60",
+      "correlation": -0.0024939657624350863,
+      "mutual_information": 0.0001265508263237347,
+      "univariate_auc_oriented": 0.5013647497402094,
+      "production_derivable": true,
+      "leakage_risk": "LOW_WITH_ENFORCED_CUTOFF",
+      "decision": "KEEP_AS_COMPOSITE_CANDIDATE"
+    },
+    {
+      "latent_tendency": "HEAVY_USER",
+      "observable_summary": "avg_km_per_day_since_last_service",
+      "group": "inherited_extended60",
+      "correlation": 0.0007813314984348666,
+      "mutual_information": 0.0,
+      "univariate_auc_oriented": 0.5004524082987649,
+      "production_derivable": true,
+      "leakage_risk": "LOW_WITH_ENFORCED_CUTOFF",
+      "decision": "KEEP_AS_COMPOSITE_CANDIDATE"
+    }
+  ]
+}

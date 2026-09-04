@@ -1,0 +1,48 @@
+{
+  "report": "RideBase V2.3 behavior-state challenger preflight",
+  "status": "PASS",
+  "captured_at_utc": "2026-09-04T08:22:38.672393+00:00",
+  "git": {
+    "head": "7a8f5c30833cba1868cb49b6f3870e1e5d1474a4",
+    "branch": "main",
+    "origin_delta": [
+      "0",
+      "0"
+    ]
+  },
+  "frozen_hashes": {
+    "v1_4_metadata": "218dd0dd994fc348bf94e6f1b49714c867503a3cf7a60a960d2cfcc7f4c7f477",
+    "v1_5_metadata": "5364ec95f5f75102b749ba5670d24c64daf381bc7c6b76dd7601620fd7ef4eda",
+    "v2_1_model": "52f7b64a040745342860915e42ddc2774357ef444b306ad9c1881a4c809d8def",
+    "v2_1_calibrator": "02f9d5955d922621eca65920aa0abd7fbd8a250f174c122e460aa6a61b350945",
+    "v2_1_feature_contract": "aa8164987383bd2e1acb95456d735eae0586ae5ca9e8d73154a09892047a876a",
+    "v2_1_history_store": "a057573c9c35b1155aacabb0cf98269a6e57a87f51fa41d926741b817f2fa657",
+    "v2_2_manifest": "1658ea06634b0fa3bad8efdef77d513adfa377b2bc530045cb4c7814c331052a",
+    "v2_2_test": "3844c4be08a81998be8eb9b820b732a3116283f2dabb58dc84cfe9d9e989f94e",
+    "v2_2_1_manifest": "f41b187128ffaed758a8cf55938c32f90c5ee2f580710a3f3d97eb0bf01fa3f6",
+    "v2_2_1_test": "597a50be04c46cbc496d4719a9c0fedf24209e28ba9ae2277e231e511df8d12d"
+  },
+  "tests": {
+    "ml": 103,
+    "backend": 83,
+    "control_center": 25,
+    "total": 211
+  },
+  "checks": {
+    "expected_head": true,
+    "main_branch": true,
+    "origin_synchronized": true,
+    "clean_tree_at_start": true,
+    "all_frozen_inputs_present": true,
+    "baseline_tests_green": true
+  },
+  "constraints": {
+    "v2_1_production_frozen": true,
+    "v2_2_and_v2_2_1_frozen": true,
+    "test_sealed_until_selection_freeze": true,
+    "latent_profiles_predictor_forbidden": true,
+    "deployment_forbidden": true,
+    "v3": "ON_HOLD",
+    "real_fleet_validation": "PENDING"
+  }
+}

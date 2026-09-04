@@ -1,0 +1,251 @@
+version: 2.3.0
+parent_contract: V2.2_EXTENDED60
+feature_count: 95
+latent_profiles_allowed: false
+point_in_time_cutoff: effective_timestamp_lte_landmark
+features:
+  - name: appointments_180d
+    group: appointment
+    source: appointments.csv
+    formula: "count scheduled appointments in [landmark-179d, landmark] created by landmark"
+    missing_semantics: "0 means no qualifying observed history"
+    production_derivable: true
+    leakage_risk: LOW_WITH_ENFORCED_CUTOFF
+  - name: attended_appointment_count
+    group: appointment
+    source: appointments.csv
+    formula: "count prior appointments converted to service"
+    missing_semantics: "0 means no qualifying observed history"
+    production_derivable: true
+    leakage_risk: LOW_WITH_ENFORCED_CUTOFF
+  - name: no_show_rate
+    group: appointment
+    source: appointments.csv
+    formula: "prior no-show count / prior completed appointment count; 0 with no history"
+    missing_semantics: "0 means no qualifying observed history"
+    production_derivable: true
+    leakage_risk: LOW_WITH_ENFORCED_CUTOFF
+  - name: cancellation_rate
+    group: appointment
+    source: appointments.csv
+    formula: "prior cancellation count / prior completed appointment count; 0 with no history"
+    missing_semantics: "0 means no qualifying observed history"
+    production_derivable: true
+    leakage_risk: LOW_WITH_ENFORCED_CUTOFF
+  - name: successful_appointment_rate
+    group: appointment
+    source: appointments.csv
+    formula: "prior converted count / prior completed appointment count; 0 with no history"
+    missing_semantics: "0 means no qualifying observed history"
+    production_derivable: true
+    leakage_risk: LOW_WITH_ENFORCED_CUTOFF
+  - name: rebook_after_no_show_rate
+    group: appointment
+    source: appointments.csv
+    formula: "prior no-shows followed by a new appointment creation by landmark / prior no-shows"
+    missing_semantics: "0 means no qualifying observed history"
+    production_derivable: true
+    leakage_risk: LOW_WITH_ENFORCED_CUTOFF
+  - name: days_since_last_appointment
+    group: appointment
+    source: appointments.csv
+    formula: "landmark minus latest prior scheduled appointment date"
+    missing_semantics: "NaN when no prior scheduled appointment"
+    production_derivable: true
+    leakage_risk: LOW_WITH_ENFORCED_CUTOFF
+  - name: known_open_appointment_count
+    group: appointment
+    source: appointments.csv
+    formula: "created by landmark and scheduled after landmark; outcome ignored"
+    missing_semantics: "0 means no qualifying observed history"
+    production_derivable: true
+    leakage_risk: LOW_WITH_ENFORCED_CUTOFF
+  - name: recent_no_show_without_rebook
+    group: appointment
+    source: appointments.csv
+    formula: "1 when a no-show in prior 180d has no later creation by landmark"
+    missing_semantics: "0 means no qualifying observed history"
+    production_derivable: true
+    leakage_risk: LOW_WITH_ENFORCED_CUTOFF
+  - name: overdue_service_share
+    group: adherence
+    source: services.csv
+    formula: "share of completed services with positive recorded pre-service overdue days or km"
+    missing_semantics: "0 means no qualifying observed history"
+    production_derivable: true
+    leakage_risk: LOW_WITH_ENFORCED_CUTOFF
+  - name: prior_service_delay_median
+    group: adherence
+    source: services.csv
+    formula: "median service_delay_days over completed prior services"
+    missing_semantics: "0 means no qualifying observed history"
+    production_derivable: true
+    leakage_risk: LOW_WITH_ENFORCED_CUTOFF
+  - name: prior_service_delay_p90
+    group: adherence
+    source: services.csv
+    formula: "90th percentile service_delay_days over completed prior services"
+    missing_semantics: "0 means no qualifying observed history"
+    production_derivable: true
+    leakage_risk: LOW_WITH_ENFORCED_CUTOFF
+  - name: last3_service_delay_trend
+    group: adherence
+    source: services.csv
+    formula: "OLS slope by order over the last three completed service delays"
+    missing_semantics: "0 means no qualifying observed history"
+    production_derivable: true
+    leakage_risk: LOW_WITH_ENFORCED_CUTOFF
+  - name: interservice_days_cv
+    group: adherence
+    source: services.csv
+    formula: "coefficient of variation of completed-service date gaps; 0 with <3 services"
+    missing_semantics: "0 means no qualifying observed history"
+    production_derivable: true
+    leakage_risk: LOW_WITH_ENFORCED_CUTOFF
+  - name: interservice_km_cv
+    group: adherence
+    source: services.csv
+    formula: "coefficient of variation of positive odometer gaps; 0 with <3 services"
+    missing_semantics: "0 means no qualifying observed history"
+    production_derivable: true
+    leakage_risk: LOW_WITH_ENFORCED_CUTOFF
+  - name: recency_weighted_adherence_score
+    group: adherence
+    source: services.csv
+    formula: "exp(-age/365)-weighted share with delay <= 0; 0.5 with no history"
+    missing_semantics: "0 means no qualifying observed history"
+    production_derivable: true
+    leakage_risk: LOW_WITH_ENFORCED_CUTOFF
+  - name: service_gap_acceleration
+    group: adherence
+    source: services.csv
+    formula: "last completed-service day gap / prior-gap mean - 1; 0 with <3 services"
+    missing_semantics: "0 means no qualifying observed history"
+    production_derivable: true
+    leakage_risk: LOW_WITH_ENFORCED_CUTOFF
+  - name: days_since_last_any_interaction
+    group: engagement
+    source: appointments.csv + services.csv
+    formula: "landmark minus latest appointment creation or service delivery"
+    missing_semantics: "NaN when no prior appointment creation or completed service"
+    production_derivable: true
+    leakage_risk: LOW_WITH_ENFORCED_CUTOFF
+  - name: interaction_count_90d
+    group: engagement
+    source: appointments.csv + services.csv
+    formula: "appointment creations plus service deliveries in prior 90d"
+    missing_semantics: "0 means no qualifying observed history"
+    production_derivable: true
+    leakage_risk: LOW_WITH_ENFORCED_CUTOFF
+  - name: interaction_count_180d
+    group: engagement
+    source: appointments.csv + services.csv
+    formula: "appointment creations plus service deliveries in prior 180d"
+    missing_semantics: "0 means no qualifying observed history"
+    production_derivable: true
+    leakage_risk: LOW_WITH_ENFORCED_CUTOFF
+  - name: appointment_frequency_365d
+    group: engagement
+    source: appointments.csv + services.csv
+    formula: "appointment creations in prior 365d"
+    missing_semantics: "0 means no qualifying observed history"
+    production_derivable: true
+    leakage_risk: LOW_WITH_ENFORCED_CUTOFF
+  - name: distinct_workshops_before_landmark
+    group: workshop
+    source: services.csv
+    formula: "distinct workshops across completed prior services"
+    missing_semantics: "0 means no qualifying observed history"
+    production_derivable: true
+    leakage_risk: LOW_WITH_ENFORCED_CUTOFF
+  - name: dominant_workshop_share
+    group: workshop
+    source: services.csv
+    formula: "largest completed-service workshop share; 0 with no history"
+    missing_semantics: "0 means no qualifying observed history"
+    production_derivable: true
+    leakage_risk: LOW_WITH_ENFORCED_CUTOFF
+  - name: same_workshop_streak
+    group: workshop
+    source: services.csv
+    formula: "consecutive completed services at the most recent workshop"
+    missing_semantics: "0 means no qualifying observed history"
+    production_derivable: true
+    leakage_risk: LOW_WITH_ENFORCED_CUTOFF
+  - name: recent_30d_km
+    group: usage
+    source: mileage_timeline_monthly.csv
+    formula: "sum monthly km_added for observations ending in prior 30d"
+    missing_semantics: "0 means no qualifying observed history"
+    production_derivable: true
+    leakage_risk: LOW_WITH_ENFORCED_CUTOFF
+  - name: recent_180d_km
+    group: usage
+    source: mileage_timeline_monthly.csv
+    formula: "sum monthly km_added for observations ending in prior 180d"
+    missing_semantics: "0 means no qualifying observed history"
+    production_derivable: true
+    leakage_risk: LOW_WITH_ENFORCED_CUTOFF
+  - name: usage_velocity_ratio_30_vs_180
+    group: usage
+    source: mileage_timeline_monthly.csv
+    formula: "30d daily km / 180d daily km; 0 when 180d km is zero"
+    missing_semantics: "0 means no qualifying observed history"
+    production_derivable: true
+    leakage_risk: LOW_WITH_ENFORCED_CUTOFF
+  - name: usage_volatility_6m
+    group: usage
+    source: mileage_timeline_monthly.csv
+    formula: "coefficient of variation of last six observed monthly km values"
+    missing_semantics: "0 means no qualifying observed history"
+    production_derivable: true
+    leakage_risk: LOW_WITH_ENFORCED_CUTOFF
+  - name: odometer_observation_recency_days
+    group: usage
+    source: mileage_timeline_monthly.csv
+    formula: "landmark minus latest completed mileage period end"
+    missing_semantics: "NaN when no completed monthly observation"
+    production_derivable: true
+    leakage_risk: LOW_WITH_ENFORCED_CUTOFF
+  - name: km_growth_slope_6m
+    group: usage
+    source: mileage_timeline_monthly.csv
+    formula: "OLS slope per observation over last six monthly km values"
+    missing_semantics: "0 means no qualifying observed history"
+    production_derivable: true
+    leakage_risk: LOW_WITH_ENFORCED_CUTOFF
+  - name: breakdown_count_90d
+    group: breakdown
+    source: services.csv
+    formula: "completed breakdown services in prior 90d"
+    missing_semantics: "0 means no qualifying observed history"
+    production_derivable: true
+    leakage_risk: LOW_WITH_ENFORCED_CUTOFF
+  - name: repair_count_90d
+    group: breakdown
+    source: services.csv
+    formula: "completed REPAIR services in prior 90d"
+    missing_semantics: "0 means no qualifying observed history"
+    production_derivable: true
+    leakage_risk: LOW_WITH_ENFORCED_CUTOFF
+  - name: safety_critical_repair_recent
+    group: breakdown
+    source: services.csv
+    formula: "1 for HIGH/CRITICAL completed failure in prior 180d"
+    missing_semantics: "0 means no qualifying observed history"
+    production_derivable: true
+    leakage_risk: LOW_WITH_ENFORCED_CUTOFF
+  - name: days_since_last_breakdown
+    group: breakdown
+    source: services.csv
+    formula: "landmark minus latest completed breakdown"
+    missing_semantics: "NaN when no prior completed breakdown"
+    production_derivable: true
+    leakage_risk: LOW_WITH_ENFORCED_CUTOFF
+  - name: repeated_breakdown_flag
+    group: breakdown
+    source: services.csv
+    formula: "1 for at least two completed breakdowns in prior 365d"
+    missing_semantics: "0 means no qualifying observed history"
+    production_derivable: true
+    leakage_risk: LOW_WITH_ENFORCED_CUTOFF
