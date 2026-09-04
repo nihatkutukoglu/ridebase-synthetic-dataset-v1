@@ -1,0 +1,100 @@
+{
+  "report": "RideBase V2.2.1 statistical recovery preflight",
+  "status": "PASS",
+  "captured_at_utc": "2026-09-04T07:34:35.532951+00:00",
+  "git": {
+    "head": "54cd65511a9e4e79eb272457d095d15fb30cb4a2",
+    "branch": "main",
+    "origin_delta": [
+      0,
+      0
+    ]
+  },
+  "hashes": {
+    "v1_4_generator": "519855d08ac0ebb386bcf4749d05483eb2be7c8e1b6d4bd64262f86d63f00eb9",
+    "v1_4_metadata": "218dd0dd994fc348bf94e6f1b49714c867503a3cf7a60a960d2cfcc7f4c7f477",
+    "v1_5_generator": "bf2cc3c22427f0bf5d74ebec7b0a54d99febcb0baaca3b8c5f3193022268e854",
+    "v1_5_metadata": "5364ec95f5f75102b749ba5670d24c64daf381bc7c6b76dd7601620fd7ef4eda",
+    "v2_1_feature_contract": "aa8164987383bd2e1acb95456d735eae0586ae5ca9e8d73154a09892047a876a",
+    "v2_1_model": "52f7b64a040745342860915e42ddc2774357ef444b306ad9c1881a4c809d8def",
+    "v2_1_calibrator": "02f9d5955d922621eca65920aa0abd7fbd8a250f174c122e460aa6a61b350945",
+    "v2_1_history_store": "a057573c9c35b1155aacabb0cf98269a6e57a87f51fa41d926741b817f2fa657",
+    "v2_2_selection": "62fc781238bfd771514103ae69aba3196a9d071c5ec30b69786d2d037e712a1e",
+    "v2_2_test_report": "3844c4be08a81998be8eb9b820b732a3116283f2dabb58dc84cfe9d9e989f94e",
+    "v2_2_behavior_spec": "bace607bcca5b1d9c3c5ef47ee963f895d708a7d3f1ae34c45a0d7aecf35b2a7",
+    "v2_2_split_manifest": "14b7243534c8181fa152eb6862d2a5dea566770bbaeb215c95cf8ea5ee5b5bba"
+  },
+  "v1_4_source_checks": {
+    "appointments.csv": true,
+    "customers.csv": true,
+    "maintenance_policies.csv": true,
+    "maintenance_tasks.csv": true,
+    "mileage_timeline_monthly.csv": true,
+    "motorcycles.csv": true,
+    "ridebase_motorcycle_models_v1.csv": true,
+    "service_parts.csv": true,
+    "service_tasks.csv": true,
+    "services.csv": true,
+    "services_enriched.csv": true,
+    "usage_profiles.csv": true,
+    "workshops.csv": true
+  },
+  "v1_5_source_checks": {
+    "appointments.csv": true,
+    "customers.csv": true,
+    "maintenance_policies.csv": true,
+    "maintenance_tasks.csv": true,
+    "mileage_timeline_monthly.csv": true,
+    "motorcycles.csv": true,
+    "ridebase_motorcycle_models_v1.csv": true,
+    "service_parts.csv": true,
+    "service_tasks.csv": true,
+    "services.csv": true,
+    "services_enriched.csv": true,
+    "usage_profiles.csv": true,
+    "workshops.csv": true
+  },
+  "v2_2_artifact_checks": {
+    "baseline_hazard.joblib": true,
+    "calibration_validation.json": true,
+    "calibrator.joblib": true,
+    "candidate_eligibility.json": true,
+    "candidate_validation_metrics.json": true,
+    "challenger_model.joblib": true,
+    "feature_list.json": true,
+    "frozen_test_predictions.parquet": true,
+    "massive_behavior_audit.json": true,
+    "model_card.json": true,
+    "preprocessor.joblib": true,
+    "test_evaluation.json": true,
+    "test_first_touch.json": true,
+    "v2_2_selection_manifest.json": true
+  },
+  "tests": {
+    "ml": 84,
+    "backend": 83,
+    "control_center": 25,
+    "total": 192
+  },
+  "checks": {
+    "expected_head": true,
+    "main_branch": true,
+    "origin_synchronized": true,
+    "v1_4_sources_frozen": true,
+    "v1_5_sources_frozen": true,
+    "v2_1_core_hashes_frozen": true,
+    "v2_2_artifact_manifest_valid": true,
+    "v2_2_test_report_preserved": true,
+    "baseline_tests_green": true
+  },
+  "failed_checks": [],
+  "constraints": {
+    "v2_1_frozen": true,
+    "v2_2_frozen": true,
+    "v2_2_1_separate": true,
+    "test_selection_forbidden": true,
+    "deployment_forbidden": true,
+    "real_fleet_validation": "PENDING",
+    "v3": "ON_HOLD"
+  }
+}

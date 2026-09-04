@@ -1,0 +1,1404 @@
+{
+  "report": "RideBase V2.2.1 statistical diagnosis (TRAIN+VALIDATION only)",
+  "status": "PASS",
+  "test_rows_read": false,
+  "world_shift": {
+    "v1_4_v2_1": {
+      "rows": 170973,
+      "motorcycles": 6654,
+      "landmarks_per_motorcycle": 25.69477006311993,
+      "event_share": 0.9449445234042803,
+      "censor_share": 0.05505547659571974,
+      "horizons": {
+        "30": {
+          "eligible": 170657,
+          "event_rate": 0.17349420182002495,
+          "binary_entropy_bits": 0.6656359509302749
+        },
+        "60": {
+          "eligible": 170360,
+          "event_rate": 0.32568091101197466,
+          "binary_entropy_bits": 0.9104525836525377
+        },
+        "90": {
+          "eligible": 170104,
+          "event_rate": 0.4498248130555425,
+          "binary_entropy_bits": 0.99272364675758
+        },
+        "120": {
+          "eligible": 169889,
+          "event_rate": 0.5519603976714208,
+          "binary_entropy_bits": 0.9921957018788624
+        }
+      },
+      "numeric": {
+        "duration_days": {
+          "mean": 133.8413199744989,
+          "median": 104.0,
+          "p10": 17.0,
+          "p90": 293.0,
+          "missing_share": 0.0
+        },
+        "km_due_ratio": {
+          "mean": 0.4496268186594764,
+          "median": 0.32033333333333336,
+          "p10": 0.039,
+          "p90": 0.9843333333333333,
+          "missing_share": 0.0
+        },
+        "days_due_ratio": {
+          "mean": 0.32201220190980595,
+          "median": 0.23545516769336072,
+          "p10": 0.038329911019849415,
+          "p90": 0.7282683093771389,
+          "missing_share": 0.0
+        },
+        "max_due_ratio": {
+          "mean": 0.5455090839845173,
+          "median": 0.4517453798767967,
+          "p10": 0.08213552361396304,
+          "p90": 1.0704996577686516,
+          "missing_share": 0.0
+        },
+        "annual_km_baseline": {
+          "mean": 13296.489784936803,
+          "median": 10626.0,
+          "p10": 5199.0,
+          "p90": 25604.0,
+          "missing_share": 0.0
+        },
+        "prior_service_count": {
+          "mean": 4.271855790095512,
+          "median": 3.0,
+          "p10": 1.0,
+          "p90": 9.0,
+          "missing_share": 0.0
+        }
+      },
+      "category_mix": {
+        "SCOOTER": 0.593526,
+        "CUB": 0.169547,
+        "NAKED": 0.133021,
+        "BIG_SCOOTER": 0.068169,
+        "SUPERSPORT": 0.006843,
+        "ADVENTURE": 0.006767,
+        "ROADSTER": 0.006042,
+        "SCRAMBLER": 0.005738,
+        "TOURING": 0.005112,
+        "EV_SCOOTER": 0.002538,
+        "MINI_BIKE": 0.001491,
+        "CRUISER": 0.001205
+      }
+    },
+    "v1_5_v2_2": {
+      "rows": 171899,
+      "motorcycles": 6780,
+      "landmarks_per_motorcycle": 25.353834808259588,
+      "event_share": 0.9747817032094428,
+      "censor_share": 0.025218296790557204,
+      "horizons": {
+        "30": {
+          "eligible": 171561,
+          "event_rate": 0.20468521400551407,
+          "binary_entropy_bits": 0.7312001298267714
+        },
+        "60": {
+          "eligible": 171278,
+          "event_rate": 0.38268195565104685,
+          "binary_entropy_bits": 0.959914200938855
+        },
+        "90": {
+          "eligible": 171071,
+          "event_rate": 0.524653506438847,
+          "binary_entropy_bits": 0.9982455619429493
+        },
+        "120": {
+          "eligible": 170921,
+          "event_rate": 0.636808818108951,
+          "binary_entropy_bits": 0.9453002670210715
+        }
+      },
+      "numeric": {
+        "duration_days": {
+          "mean": 109.97294923181636,
+          "median": 84.0,
+          "p10": 15.0,
+          "p90": 244.0,
+          "missing_share": 0.0
+        },
+        "km_due_ratio": {
+          "mean": 0.3803767382784852,
+          "median": 0.2782,
+          "p10": 0.0314,
+          "p90": 0.8576666666666667,
+          "missing_share": 0.0
+        },
+        "days_due_ratio": {
+          "mean": 0.2784605873753788,
+          "median": 0.1998631074606434,
+          "p10": 0.03285420944558522,
+          "p90": 0.6324435318275154,
+          "missing_share": 0.0
+        },
+        "max_due_ratio": {
+          "mean": 0.4651129587555789,
+          "median": 0.3928,
+          "p10": 0.06844626967830253,
+          "p90": 0.9336666666666666,
+          "missing_share": 0.0
+        },
+        "annual_km_baseline": {
+          "mean": 13201.191862663542,
+          "median": 10573.0,
+          "p10": 5196.0,
+          "p90": 25401.0,
+          "missing_share": 0.0
+        },
+        "prior_service_count": {
+          "mean": 4.562487274504215,
+          "median": 3.0,
+          "p10": 1.0,
+          "p90": 10.0,
+          "missing_share": 0.0
+        }
+      },
+      "category_mix": {
+        "SCOOTER": 0.58617,
+        "CUB": 0.174003,
+        "NAKED": 0.136976,
+        "BIG_SCOOTER": 0.066719,
+        "SUPERSPORT": 0.00687,
+        "ADVENTURE": 0.00669,
+        "ROADSTER": 0.006318,
+        "TOURING": 0.005718,
+        "SCRAMBLER": 0.005631,
+        "MINI_BIKE": 0.002158,
+        "EV_SCOOTER": 0.001507,
+        "CRUISER": 0.001239
+      }
+    },
+    "source_behavior": {
+      "v1_4": {
+        "appointments": 36349,
+        "appointment_per_service": 0.6897343453510436,
+        "no_show_share": 0.05645272222069383,
+        "cancellation_share": 0.07020825882417674,
+        "delivered_services": 52700
+      },
+      "v1_5": {
+        "appointments": 42379,
+        "appointment_per_service": 0.6521351081018697,
+        "no_show_share": 0.07720805115741287,
+        "cancellation_share": 0.0916963590457538,
+        "delivered_services": 64985
+      }
+    },
+    "known_v1_5_churn_censors": 172
+  },
+  "feature_diagnostics": {
+    "shared_54": [
+      {
+        "feature": "brand",
+        "kind": "categorical",
+        "distribution_tvd": 0.012548880916104932,
+        "v1_4_levels": 12,
+        "v1_5_levels": 12,
+        "v1_4_missing": 0.0,
+        "v1_5_missing": 0.0
+      },
+      {
+        "feature": "category",
+        "kind": "categorical",
+        "distribution_tvd": 0.010021348515044565,
+        "v1_4_levels": 12,
+        "v1_5_levels": 12,
+        "v1_4_missing": 0.0,
+        "v1_5_missing": 0.0
+      },
+      {
+        "feature": "powertrain_type",
+        "kind": "categorical",
+        "distribution_tvd": 0.0010317137968983811,
+        "v1_4_levels": 2,
+        "v1_5_levels": 2,
+        "v1_4_missing": 0.0,
+        "v1_5_missing": 0.0
+      },
+      {
+        "feature": "policy_group",
+        "kind": "categorical",
+        "distribution_tvd": 0.017101294955927104,
+        "v1_4_levels": 20,
+        "v1_5_levels": 20,
+        "v1_4_missing": 0.0,
+        "v1_5_missing": 0.0
+      },
+      {
+        "feature": "customer_type",
+        "kind": "categorical",
+        "distribution_tvd": 0.0015892231229065745,
+        "v1_4_levels": 3,
+        "v1_5_levels": 3,
+        "v1_4_missing": 0.0,
+        "v1_5_missing": 0.0
+      },
+      {
+        "feature": "usage_type",
+        "kind": "categorical",
+        "distribution_tvd": 0.010969977667123817,
+        "v1_4_levels": 7,
+        "v1_5_levels": 7,
+        "v1_4_missing": 0.0,
+        "v1_5_missing": 0.0
+      },
+      {
+        "feature": "riding_intensity",
+        "kind": "categorical",
+        "distribution_tvd": 0.006053178359061662,
+        "v1_4_levels": 3,
+        "v1_5_levels": 3,
+        "v1_4_missing": 0.0,
+        "v1_5_missing": 0.0
+      },
+      {
+        "feature": "climate_zone",
+        "kind": "categorical",
+        "distribution_tvd": 0.005104762850441272,
+        "v1_4_levels": 7,
+        "v1_5_levels": 7,
+        "v1_4_missing": 0.0,
+        "v1_5_missing": 0.0
+      },
+      {
+        "feature": "storage_condition",
+        "kind": "categorical",
+        "distribution_tvd": 0.00453531990915243,
+        "v1_4_levels": 4,
+        "v1_5_levels": 4,
+        "v1_4_missing": 0.0,
+        "v1_5_missing": 0.0
+      },
+      {
+        "feature": "workshop_region",
+        "kind": "categorical",
+        "distribution_tvd": 0.005104762850441258,
+        "v1_4_levels": 6,
+        "v1_5_levels": 6,
+        "v1_4_missing": 0.0,
+        "v1_5_missing": 0.0
+      },
+      {
+        "feature": "workshop_price_level",
+        "kind": "categorical",
+        "distribution_tvd": 0.004914125277255224,
+        "v1_4_levels": 4,
+        "v1_5_levels": 4,
+        "v1_4_missing": 0.0,
+        "v1_5_missing": 0.0
+      },
+      {
+        "feature": "last_service_type_code",
+        "kind": "categorical",
+        "distribution_tvd": 0.011202578503960352,
+        "v1_4_levels": 4,
+        "v1_5_levels": 4,
+        "v1_4_missing": 0.0,
+        "v1_5_missing": 0.0
+      },
+      {
+        "feature": "last_arrival_mode",
+        "kind": "categorical",
+        "distribution_tvd": 0.04386491023691804,
+        "v1_4_levels": 3,
+        "v1_5_levels": 3,
+        "v1_4_missing": 0.0,
+        "v1_5_missing": 0.0
+      },
+      {
+        "feature": "production_age_days",
+        "kind": "numeric",
+        "v1_4_mean": 1472.9963970919384,
+        "v1_5_mean": 1467.4800842355103,
+        "standardized_mean_difference": -0.007556122621252554,
+        "v1_4_missing": 0.0,
+        "v1_5_missing": 0.0,
+        "spearman_event90_v1_5": 0.031790995839987284
+      },
+      {
+        "feature": "ownership_age_days",
+        "kind": "numeric",
+        "v1_4_mean": 1102.9118632766576,
+        "v1_5_mean": 1101.1929912332241,
+        "standardized_mean_difference": -0.0030508255846947653,
+        "v1_4_missing": 0.0,
+        "v1_5_missing": 0.0,
+        "spearman_event90_v1_5": 0.020042817885872272
+      },
+      {
+        "feature": "is_fleet_customer",
+        "kind": "numeric",
+        "v1_4_mean": 0.04769174080117913,
+        "v1_5_mean": 0.047882768369798545,
+        "standardized_mean_difference": 0.0008955127828492921,
+        "v1_4_missing": 0.0,
+        "v1_5_missing": 0.0,
+        "spearman_event90_v1_5": 0.10392704663671073
+      },
+      {
+        "feature": "current_odometer_km_at_landmark",
+        "kind": "numeric",
+        "v1_4_mean": 42061.331444146155,
+        "v1_5_mean": 41522.48509880802,
+        "standardized_mean_difference": -0.014118682240192509,
+        "v1_4_missing": 0.0,
+        "v1_5_missing": 0.0,
+        "spearman_event90_v1_5": 0.2732210607930844
+      },
+      {
+        "feature": "annual_km_baseline",
+        "kind": "numeric",
+        "v1_4_mean": 13296.489784936803,
+        "v1_5_mean": 13201.191862663542,
+        "standardized_mean_difference": -0.011165230868432192,
+        "v1_4_missing": 0.0,
+        "v1_5_missing": 0.0,
+        "spearman_event90_v1_5": 0.40639885586632063
+      },
+      {
+        "feature": "recent_90d_km",
+        "kind": "numeric",
+        "v1_4_mean": 2332.9970346195014,
+        "v1_5_mean": 2314.5227662755456,
+        "standardized_mean_difference": -0.008670970776129536,
+        "v1_4_missing": 0.0,
+        "v1_5_missing": 0.0,
+        "spearman_event90_v1_5": 0.4141562913942564
+      },
+      {
+        "feature": "recent_vs_baseline_usage_ratio",
+        "kind": "numeric",
+        "v1_4_mean": 0.6291764547452728,
+        "v1_5_mean": 0.6273465027540329,
+        "standardized_mean_difference": -0.00599979472231208,
+        "v1_4_missing": 0.0,
+        "v1_5_missing": 0.0,
+        "spearman_event90_v1_5": 0.27982041672092745
+      },
+      {
+        "feature": "days_since_last_service",
+        "kind": "numeric",
+        "v1_4_mean": 113.97438776882899,
+        "v1_5_mean": 98.10809254271403,
+        "standardized_mean_difference": -0.1681687073198786,
+        "v1_4_missing": 0.0,
+        "v1_5_missing": 0.0,
+        "spearman_event90_v1_5": 0.09277843024374101
+      },
+      {
+        "feature": "km_since_last_service",
+        "kind": "numeric",
+        "v1_4_mean": 2014.2147824510303,
+        "v1_5_mean": 1713.49095108174,
+        "standardized_mean_difference": -0.1617625306178413,
+        "v1_4_missing": 0.0,
+        "v1_5_missing": 0.0,
+        "spearman_event90_v1_5": 0.4291403397265361
+      },
+      {
+        "feature": "avg_km_per_day_since_last_service",
+        "kind": "numeric",
+        "v1_4_mean": 25.869032226039796,
+        "v1_5_mean": 25.691382382938663,
+        "standardized_mean_difference": -0.0071955548150635625,
+        "v1_4_missing": 0.0,
+        "v1_5_missing": 0.0,
+        "spearman_event90_v1_5": 0.4032237439356273
+      },
+      {
+        "feature": "oem_interval_days",
+        "kind": "numeric",
+        "v1_4_mean": 361.05109798038285,
+        "v1_5_mean": 360.7953689375738,
+        "standardized_mean_difference": -0.009207211872647532,
+        "v1_4_missing": 0.0,
+        "v1_5_missing": 0.0,
+        "spearman_event90_v1_5": 0.06706049817105685
+      },
+      {
+        "feature": "oem_interval_km",
+        "kind": "numeric",
+        "v1_4_mean": 4683.46464061577,
+        "v1_5_mean": 4687.316389275097,
+        "standardized_mean_difference": 0.0035333344829657407,
+        "v1_4_missing": 0.0,
+        "v1_5_missing": 0.0,
+        "spearman_event90_v1_5": -0.2001209835702446
+      },
+      {
+        "feature": "days_due_ratio",
+        "kind": "numeric",
+        "v1_4_mean": 0.32201220190980595,
+        "v1_5_mean": 0.2784605873753788,
+        "standardized_mean_difference": -0.1543810873007456,
+        "v1_4_missing": 0.0,
+        "v1_5_missing": 0.0,
+        "spearman_event90_v1_5": 0.08446617640081444
+      },
+      {
+        "feature": "km_due_ratio",
+        "kind": "numeric",
+        "v1_4_mean": 0.4496268186594764,
+        "v1_5_mean": 0.3803767382784852,
+        "standardized_mean_difference": -0.1626287448219774,
+        "v1_4_missing": 0.0,
+        "v1_5_missing": 0.0,
+        "spearman_event90_v1_5": 0.48185491915558054
+      },
+      {
+        "feature": "max_due_ratio",
+        "kind": "numeric",
+        "v1_4_mean": 0.5455090839845173,
+        "v1_5_mean": 0.4651129587555789,
+        "standardized_mean_difference": -0.1869733427408547,
+        "v1_4_missing": 0.0,
+        "v1_5_missing": 0.0,
+        "spearman_event90_v1_5": 0.4142770724999971
+      },
+      {
+        "feature": "days_overdue",
+        "kind": "numeric",
+        "v1_4_mean": 2.6166353751761973,
+        "v1_5_mean": 1.2618274393684663,
+        "standardized_mean_difference": -0.08203471059408632,
+        "v1_4_missing": 0.0,
+        "v1_5_missing": 0.0,
+        "spearman_event90_v1_5": 0.049655538697695845
+      },
+      {
+        "feature": "km_overdue",
+        "kind": "numeric",
+        "v1_4_mean": 189.71808414194055,
+        "v1_5_mean": 78.50303957556473,
+        "standardized_mean_difference": -0.1451941026375367,
+        "v1_4_missing": 0.0,
+        "v1_5_missing": 0.0,
+        "spearman_event90_v1_5": 0.20315135113823163
+      },
+      {
+        "feature": "maintenance_due_now",
+        "kind": "numeric",
+        "v1_4_mean": 0.934527673960216,
+        "v1_5_mean": 0.9322509147813541,
+        "standardized_mean_difference": -0.00913097031353754,
+        "v1_4_missing": 0.0,
+        "v1_5_missing": 0.0,
+        "spearman_event90_v1_5": 0.18831463245147476
+      },
+      {
+        "feature": "due_task_count",
+        "kind": "numeric",
+        "v1_4_mean": 14.090657589209993,
+        "v1_5_mean": 13.993065695553785,
+        "standardized_mean_difference": -0.017419778793407354,
+        "v1_4_missing": 0.0,
+        "v1_5_missing": 0.0,
+        "spearman_event90_v1_5": 0.20614384831535412
+      },
+      {
+        "feature": "critical_due_task_count",
+        "kind": "numeric",
+        "v1_4_mean": 0.8392494721388757,
+        "v1_5_mean": 0.7839487140704716,
+        "standardized_mean_difference": -0.08180539328090619,
+        "v1_4_missing": 0.0,
+        "v1_5_missing": 0.0,
+        "spearman_event90_v1_5": 0.1882341277910549
+      },
+      {
+        "feature": "days_until_next_scheduled_due",
+        "kind": "numeric",
+        "v1_4_mean": 27.158939569405696,
+        "v1_5_mean": 27.76278512382271,
+        "standardized_mean_difference": 0.009100930752574036,
+        "v1_4_missing": 0.0,
+        "v1_5_missing": 0.0,
+        "spearman_event90_v1_5": -0.024597462357034135
+      },
+      {
+        "feature": "km_until_next_scheduled_due",
+        "kind": "numeric",
+        "v1_4_mean": 260.42321887081584,
+        "v1_5_mean": 263.7929889062764,
+        "standardized_mean_difference": 0.004044002539260391,
+        "v1_4_missing": 0.0,
+        "v1_5_missing": 0.0,
+        "spearman_event90_v1_5": -0.24359427159409877
+      },
+      {
+        "feature": "recent_service_count_90d",
+        "kind": "numeric",
+        "v1_4_mean": 0.607359056693162,
+        "v1_5_mean": 0.6926567344778038,
+        "standardized_mean_difference": 0.12355574917346857,
+        "v1_4_missing": 0.0,
+        "v1_5_missing": 0.0,
+        "spearman_event90_v1_5": 0.007097996732815304
+      },
+      {
+        "feature": "recent_service_count_365d",
+        "kind": "numeric",
+        "v1_4_mean": 2.125622174261433,
+        "v1_5_mean": 2.3536669788654967,
+        "standardized_mean_difference": 0.11843072968458242,
+        "v1_4_missing": 0.0,
+        "v1_5_missing": 0.0,
+        "spearman_event90_v1_5": 0.28721804369025966
+      },
+      {
+        "feature": "prior_service_count",
+        "kind": "numeric",
+        "v1_4_mean": 4.271855790095512,
+        "v1_5_mean": 4.562487274504215,
+        "standardized_mean_difference": 0.05847423346154488,
+        "v1_4_missing": 0.0,
+        "v1_5_missing": 0.0,
+        "spearman_event90_v1_5": 0.26480372803213725
+      },
+      {
+        "feature": "prior_periodic_service_count",
+        "kind": "numeric",
+        "v1_4_mean": 3.9389786691465902,
+        "v1_5_mean": 4.197883640975224,
+        "standardized_mean_difference": 0.0566832392618226,
+        "v1_4_missing": 0.0,
+        "v1_5_missing": 0.0,
+        "spearman_event90_v1_5": 0.26697364745194396
+      },
+      {
+        "feature": "prior_breakdown_count",
+        "kind": "numeric",
+        "v1_4_mean": 0.07189439268188544,
+        "v1_5_mean": 0.07180960913094317,
+        "standardized_mean_difference": -0.0002972266694798614,
+        "v1_4_missing": 0.0,
+        "v1_5_missing": 0.0,
+        "spearman_event90_v1_5": 0.049378326449337984
+      },
+      {
+        "feature": "prior_repair_count",
+        "kind": "numeric",
+        "v1_4_mean": 0.19393120551198142,
+        "v1_5_mean": 0.22424795955764723,
+        "standardized_mean_difference": 0.05411215780570716,
+        "v1_4_missing": 0.0,
+        "v1_5_missing": 0.0,
+        "spearman_event90_v1_5": 0.10414929446211244
+      },
+      {
+        "feature": "historical_service_delay_mean_days",
+        "kind": "numeric",
+        "v1_4_mean": 2.8914212747956363,
+        "v1_5_mean": 1.8807891502734577,
+        "standardized_mean_difference": -0.08886186285348795,
+        "v1_4_missing": 0.0,
+        "v1_5_missing": 0.0,
+        "spearman_event90_v1_5": -0.1578843630105831
+      },
+      {
+        "feature": "historical_on_time_rate",
+        "kind": "numeric",
+        "v1_4_mean": 0.9529491954738923,
+        "v1_5_mean": 0.9619661582378061,
+        "standardized_mean_difference": 0.06515576900949152,
+        "v1_4_missing": 0.0,
+        "v1_5_missing": 0.0,
+        "spearman_event90_v1_5": 0.15800199548675947
+      },
+      {
+        "feature": "cumulative_service_spend",
+        "kind": "numeric",
+        "v1_4_mean": 393.01107923473296,
+        "v1_5_mean": 882.9187165137668,
+        "standardized_mean_difference": 0.27827118499849085,
+        "v1_4_missing": 0.0,
+        "v1_5_missing": 0.0,
+        "spearman_event90_v1_5": 0.0016654918545934531
+      },
+      {
+        "feature": "last_service_was_breakdown",
+        "kind": "numeric",
+        "v1_4_mean": 0.026091839062308084,
+        "v1_5_mean": 0.020221176388460667,
+        "standardized_mean_difference": -0.03904087676604637,
+        "v1_4_missing": 0.0,
+        "v1_5_missing": 0.0,
+        "spearman_event90_v1_5": -0.004129652110959927
+      },
+      {
+        "feature": "last_service_was_warranty",
+        "kind": "numeric",
+        "v1_4_mean": 0.029922853316020657,
+        "v1_5_mean": 0.03058772884077278,
+        "standardized_mean_difference": 0.0038815976861541544,
+        "v1_4_missing": 0.0,
+        "v1_5_missing": 0.0,
+        "spearman_event90_v1_5": -0.022341696909978826
+      },
+      {
+        "feature": "last_service_task_count",
+        "kind": "numeric",
+        "v1_4_mean": 4.232334930076679,
+        "v1_5_mean": 3.9760208029133386,
+        "standardized_mean_difference": -0.1255630756181074,
+        "v1_4_missing": 0.0,
+        "v1_5_missing": 0.0,
+        "spearman_event90_v1_5": 0.022933635720517785
+      },
+      {
+        "feature": "last_service_spend",
+        "kind": "numeric",
+        "v1_4_mean": 231.6175390851187,
+        "v1_5_mean": 342.05055049767594,
+        "standardized_mean_difference": 0.16868936332384984,
+        "v1_4_missing": 0.0,
+        "v1_5_missing": 0.0,
+        "spearman_event90_v1_5": -0.002097102478680492
+      },
+      {
+        "feature": "service_bay_count",
+        "kind": "numeric",
+        "v1_4_mean": 6.307615822381312,
+        "v1_5_mean": 6.290699771377379,
+        "standardized_mean_difference": -0.01187398984252045,
+        "v1_4_missing": 0.0,
+        "v1_5_missing": 0.0,
+        "spearman_event90_v1_5": -0.02273253786186782
+      },
+      {
+        "feature": "appointment_rate",
+        "kind": "numeric",
+        "v1_4_mean": 0.6041791978850463,
+        "v1_5_mean": 0.6031668014357269,
+        "standardized_mean_difference": -0.008119764421395892,
+        "v1_4_missing": 0.0,
+        "v1_5_missing": 0.0,
+        "spearman_event90_v1_5": -0.03835649456505169
+      },
+      {
+        "feature": "avg_parts_lead_days",
+        "kind": "numeric",
+        "v1_4_mean": 1.688038462213332,
+        "v1_5_mean": 1.6911436366703703,
+        "standardized_mean_difference": 0.009097946779448796,
+        "v1_4_missing": 0.0,
+        "v1_5_missing": 0.0,
+        "spearman_event90_v1_5": 0.0293813092018183
+      },
+      {
+        "feature": "customer_volume_index",
+        "kind": "numeric",
+        "v1_4_mean": 1.0795598720265775,
+        "v1_5_mean": 1.079377483289606,
+        "standardized_mean_difference": -0.0016581289352012917,
+        "v1_4_missing": 0.0,
+        "v1_5_missing": 0.0,
+        "spearman_event90_v1_5": 0.030767565112301942
+      },
+      {
+        "feature": "landmark_month_sin",
+        "kind": "numeric",
+        "v1_4_mean": -0.07531457740230346,
+        "v1_5_mean": -0.07542005659813598,
+        "standardized_mean_difference": -0.00015155303889479455,
+        "v1_4_missing": 0.0,
+        "v1_5_missing": 0.0,
+        "spearman_event90_v1_5": -0.016071440492658563
+      },
+      {
+        "feature": "landmark_month_cos",
+        "kind": "numeric",
+        "v1_4_mean": 0.02276741564745096,
+        "v1_5_mean": 0.02343732335763654,
+        "standardized_mean_difference": 0.0009386185229590938,
+        "v1_4_missing": 0.0,
+        "v1_5_missing": 0.0,
+        "spearman_event90_v1_5": 0.005709092127361482
+      }
+    ],
+    "largest_numeric_drift": [
+      {
+        "feature": "cumulative_service_spend",
+        "kind": "numeric",
+        "v1_4_mean": 393.01107923473296,
+        "v1_5_mean": 882.9187165137668,
+        "standardized_mean_difference": 0.27827118499849085,
+        "v1_4_missing": 0.0,
+        "v1_5_missing": 0.0,
+        "spearman_event90_v1_5": 0.0016654918545934531
+      },
+      {
+        "feature": "max_due_ratio",
+        "kind": "numeric",
+        "v1_4_mean": 0.5455090839845173,
+        "v1_5_mean": 0.4651129587555789,
+        "standardized_mean_difference": -0.1869733427408547,
+        "v1_4_missing": 0.0,
+        "v1_5_missing": 0.0,
+        "spearman_event90_v1_5": 0.4142770724999971
+      },
+      {
+        "feature": "last_service_spend",
+        "kind": "numeric",
+        "v1_4_mean": 231.6175390851187,
+        "v1_5_mean": 342.05055049767594,
+        "standardized_mean_difference": 0.16868936332384984,
+        "v1_4_missing": 0.0,
+        "v1_5_missing": 0.0,
+        "spearman_event90_v1_5": -0.002097102478680492
+      },
+      {
+        "feature": "days_since_last_service",
+        "kind": "numeric",
+        "v1_4_mean": 113.97438776882899,
+        "v1_5_mean": 98.10809254271403,
+        "standardized_mean_difference": -0.1681687073198786,
+        "v1_4_missing": 0.0,
+        "v1_5_missing": 0.0,
+        "spearman_event90_v1_5": 0.09277843024374101
+      },
+      {
+        "feature": "km_due_ratio",
+        "kind": "numeric",
+        "v1_4_mean": 0.4496268186594764,
+        "v1_5_mean": 0.3803767382784852,
+        "standardized_mean_difference": -0.1626287448219774,
+        "v1_4_missing": 0.0,
+        "v1_5_missing": 0.0,
+        "spearman_event90_v1_5": 0.48185491915558054
+      },
+      {
+        "feature": "km_since_last_service",
+        "kind": "numeric",
+        "v1_4_mean": 2014.2147824510303,
+        "v1_5_mean": 1713.49095108174,
+        "standardized_mean_difference": -0.1617625306178413,
+        "v1_4_missing": 0.0,
+        "v1_5_missing": 0.0,
+        "spearman_event90_v1_5": 0.4291403397265361
+      },
+      {
+        "feature": "days_due_ratio",
+        "kind": "numeric",
+        "v1_4_mean": 0.32201220190980595,
+        "v1_5_mean": 0.2784605873753788,
+        "standardized_mean_difference": -0.1543810873007456,
+        "v1_4_missing": 0.0,
+        "v1_5_missing": 0.0,
+        "spearman_event90_v1_5": 0.08446617640081444
+      },
+      {
+        "feature": "km_overdue",
+        "kind": "numeric",
+        "v1_4_mean": 189.71808414194055,
+        "v1_5_mean": 78.50303957556473,
+        "standardized_mean_difference": -0.1451941026375367,
+        "v1_4_missing": 0.0,
+        "v1_5_missing": 0.0,
+        "spearman_event90_v1_5": 0.20315135113823163
+      },
+      {
+        "feature": "last_service_task_count",
+        "kind": "numeric",
+        "v1_4_mean": 4.232334930076679,
+        "v1_5_mean": 3.9760208029133386,
+        "standardized_mean_difference": -0.1255630756181074,
+        "v1_4_missing": 0.0,
+        "v1_5_missing": 0.0,
+        "spearman_event90_v1_5": 0.022933635720517785
+      },
+      {
+        "feature": "recent_service_count_90d",
+        "kind": "numeric",
+        "v1_4_mean": 0.607359056693162,
+        "v1_5_mean": 0.6926567344778038,
+        "standardized_mean_difference": 0.12355574917346857,
+        "v1_4_missing": 0.0,
+        "v1_5_missing": 0.0,
+        "spearman_event90_v1_5": 0.007097996732815304
+      },
+      {
+        "feature": "recent_service_count_365d",
+        "kind": "numeric",
+        "v1_4_mean": 2.125622174261433,
+        "v1_5_mean": 2.3536669788654967,
+        "standardized_mean_difference": 0.11843072968458242,
+        "v1_4_missing": 0.0,
+        "v1_5_missing": 0.0,
+        "spearman_event90_v1_5": 0.28721804369025966
+      },
+      {
+        "feature": "historical_service_delay_mean_days",
+        "kind": "numeric",
+        "v1_4_mean": 2.8914212747956363,
+        "v1_5_mean": 1.8807891502734577,
+        "standardized_mean_difference": -0.08886186285348795,
+        "v1_4_missing": 0.0,
+        "v1_5_missing": 0.0,
+        "spearman_event90_v1_5": -0.1578843630105831
+      },
+      {
+        "feature": "days_overdue",
+        "kind": "numeric",
+        "v1_4_mean": 2.6166353751761973,
+        "v1_5_mean": 1.2618274393684663,
+        "standardized_mean_difference": -0.08203471059408632,
+        "v1_4_missing": 0.0,
+        "v1_5_missing": 0.0,
+        "spearman_event90_v1_5": 0.049655538697695845
+      },
+      {
+        "feature": "critical_due_task_count",
+        "kind": "numeric",
+        "v1_4_mean": 0.8392494721388757,
+        "v1_5_mean": 0.7839487140704716,
+        "standardized_mean_difference": -0.08180539328090619,
+        "v1_4_missing": 0.0,
+        "v1_5_missing": 0.0,
+        "spearman_event90_v1_5": 0.1882341277910549
+      },
+      {
+        "feature": "historical_on_time_rate",
+        "kind": "numeric",
+        "v1_4_mean": 0.9529491954738923,
+        "v1_5_mean": 0.9619661582378061,
+        "standardized_mean_difference": 0.06515576900949152,
+        "v1_4_missing": 0.0,
+        "v1_5_missing": 0.0,
+        "spearman_event90_v1_5": 0.15800199548675947
+      }
+    ],
+    "unstable_categories": [
+      {
+        "feature": "last_arrival_mode",
+        "kind": "categorical",
+        "distribution_tvd": 0.04386491023691804,
+        "v1_4_levels": 3,
+        "v1_5_levels": 3,
+        "v1_4_missing": 0.0,
+        "v1_5_missing": 0.0
+      },
+      {
+        "feature": "policy_group",
+        "kind": "categorical",
+        "distribution_tvd": 0.017101294955927104,
+        "v1_4_levels": 20,
+        "v1_5_levels": 20,
+        "v1_4_missing": 0.0,
+        "v1_5_missing": 0.0
+      },
+      {
+        "feature": "brand",
+        "kind": "categorical",
+        "distribution_tvd": 0.012548880916104932,
+        "v1_4_levels": 12,
+        "v1_5_levels": 12,
+        "v1_4_missing": 0.0,
+        "v1_5_missing": 0.0
+      },
+      {
+        "feature": "last_service_type_code",
+        "kind": "categorical",
+        "distribution_tvd": 0.011202578503960352,
+        "v1_4_levels": 4,
+        "v1_5_levels": 4,
+        "v1_4_missing": 0.0,
+        "v1_5_missing": 0.0
+      },
+      {
+        "feature": "usage_type",
+        "kind": "categorical",
+        "distribution_tvd": 0.010969977667123817,
+        "v1_4_levels": 7,
+        "v1_5_levels": 7,
+        "v1_4_missing": 0.0,
+        "v1_5_missing": 0.0
+      },
+      {
+        "feature": "category",
+        "kind": "categorical",
+        "distribution_tvd": 0.010021348515044565,
+        "v1_4_levels": 12,
+        "v1_5_levels": 12,
+        "v1_4_missing": 0.0,
+        "v1_5_missing": 0.0
+      },
+      {
+        "feature": "riding_intensity",
+        "kind": "categorical",
+        "distribution_tvd": 0.006053178359061662,
+        "v1_4_levels": 3,
+        "v1_5_levels": 3,
+        "v1_4_missing": 0.0,
+        "v1_5_missing": 0.0
+      },
+      {
+        "feature": "climate_zone",
+        "kind": "categorical",
+        "distribution_tvd": 0.005104762850441272,
+        "v1_4_levels": 7,
+        "v1_5_levels": 7,
+        "v1_4_missing": 0.0,
+        "v1_5_missing": 0.0
+      },
+      {
+        "feature": "workshop_region",
+        "kind": "categorical",
+        "distribution_tvd": 0.005104762850441258,
+        "v1_4_levels": 6,
+        "v1_5_levels": 6,
+        "v1_4_missing": 0.0,
+        "v1_5_missing": 0.0
+      },
+      {
+        "feature": "workshop_price_level",
+        "kind": "categorical",
+        "distribution_tvd": 0.004914125277255224,
+        "v1_4_levels": 4,
+        "v1_5_levels": 4,
+        "v1_4_missing": 0.0,
+        "v1_5_missing": 0.0
+      },
+      {
+        "feature": "storage_condition",
+        "kind": "categorical",
+        "distribution_tvd": 0.00453531990915243,
+        "v1_4_levels": 4,
+        "v1_5_levels": 4,
+        "v1_4_missing": 0.0,
+        "v1_5_missing": 0.0
+      },
+      {
+        "feature": "customer_type",
+        "kind": "categorical",
+        "distribution_tvd": 0.0015892231229065745,
+        "v1_4_levels": 3,
+        "v1_5_levels": 3,
+        "v1_4_missing": 0.0,
+        "v1_5_missing": 0.0
+      },
+      {
+        "feature": "powertrain_type",
+        "kind": "categorical",
+        "distribution_tvd": 0.0010317137968983811,
+        "v1_4_levels": 2,
+        "v1_5_levels": 2,
+        "v1_4_missing": 0.0,
+        "v1_5_missing": 0.0
+      }
+    ],
+    "redundant_pairs_abs_spearman_ge_0_95": [
+      {
+        "first": "recent_90d_km",
+        "second": "avg_km_per_day_since_last_service",
+        "abs_spearman": 0.955373098452746
+      },
+      {
+        "first": "days_since_last_service",
+        "second": "days_due_ratio",
+        "abs_spearman": 0.9955558812120344
+      },
+      {
+        "first": "km_since_last_service",
+        "second": "km_due_ratio",
+        "abs_spearman": 0.9678268975995828
+      },
+      {
+        "first": "prior_service_count",
+        "second": "prior_periodic_service_count",
+        "abs_spearman": 0.9776276726733032
+      },
+      {
+        "first": "historical_service_delay_mean_days",
+        "second": "historical_on_time_rate",
+        "abs_spearman": 0.9985938005660286
+      },
+      {
+        "first": "cumulative_service_spend",
+        "second": "last_service_spend",
+        "abs_spearman": 0.9856698207868427
+      }
+    ]
+  },
+  "new_feature_diagnostics": [
+    {
+      "feature": "prior_appointment_count",
+      "missing_share": 0.0,
+      "model_importance": 0.003590848995372653,
+      "permutation_c_drop": 0.00024610249916923177,
+      "spearman_event90": 0.18708166815761235,
+      "point_in_time_safe": true
+    },
+    {
+      "feature": "prior_no_show_count",
+      "missing_share": 0.0,
+      "model_importance": 0.006359748542308807,
+      "permutation_c_drop": 0.001028631914750111,
+      "spearman_event90": 0.05183488909856633,
+      "point_in_time_safe": true
+    },
+    {
+      "feature": "prior_cancelled_appointment_count",
+      "missing_share": 0.0,
+      "model_importance": 0.007748960983008146,
+      "permutation_c_drop": 8.921235608416733e-05,
+      "spearman_event90": 0.09277646772526763,
+      "point_in_time_safe": true
+    },
+    {
+      "feature": "known_appointment_within_30d",
+      "missing_share": 0.0,
+      "model_importance": 0.04946243017911911,
+      "permutation_c_drop": 0.011436745461521514,
+      "spearman_event90": 0.19105616953903934,
+      "point_in_time_safe": true
+    },
+    {
+      "feature": "days_to_next_known_appointment",
+      "missing_share": 0.93959013470138,
+      "model_importance": 0.032672297209501266,
+      "permutation_c_drop": 0.0014115149519716708,
+      "spearman_event90": 0.19085293278585558,
+      "point_in_time_safe": true
+    },
+    {
+      "feature": "recent_breakdown_count_180d",
+      "missing_share": 0.0,
+      "model_importance": 0.0,
+      "permutation_c_drop": 0.0,
+      "spearman_event90": -0.0016778612990249616,
+      "point_in_time_safe": true
+    }
+  ],
+  "model_diagnostics": {
+    "train_harrell_c": 0.8068670556183071,
+    "validation_harrell_c": 0.7345568877808534,
+    "gap": 0.0723101678374537,
+    "risk_score": {
+      "train_mean": 6.674962043762207,
+      "train_std": 28.936063766479492,
+      "validation_mean": 5.06456995010376,
+      "validation_std": 22.401365280151367
+    },
+    "baseline_hazard": {
+      "event_times": 573,
+      "final_cumulative_hazard": 3.4592886840999797,
+      "monotone": true
+    },
+    "top_importance": [
+      {
+        "feature": "km_due_ratio",
+        "importance": 0.2370738834142685
+      },
+      {
+        "feature": "km_since_last_service",
+        "importance": 0.09644765406847
+      },
+      {
+        "feature": "annual_km_baseline",
+        "importance": 0.05835750699043274
+      },
+      {
+        "feature": "recent_90d_km",
+        "importance": 0.05419352650642395
+      },
+      {
+        "feature": "known_appointment_within_30d",
+        "importance": 0.04946243017911911
+      },
+      {
+        "feature": "max_due_ratio",
+        "importance": 0.045617904514074326
+      },
+      {
+        "feature": "policy_group",
+        "importance": 0.04410654678940773
+      },
+      {
+        "feature": "recent_service_count_365d",
+        "importance": 0.037860654294490814
+      },
+      {
+        "feature": "days_to_next_known_appointment",
+        "importance": 0.032672297209501266
+      },
+      {
+        "feature": "oem_interval_km",
+        "importance": 0.02783082239329815
+      },
+      {
+        "feature": "riding_intensity",
+        "importance": 0.027167245745658875
+      },
+      {
+        "feature": "recent_service_count_90d",
+        "importance": 0.018308626487851143
+      },
+      {
+        "feature": "days_since_last_service",
+        "importance": 0.015858715400099754
+      },
+      {
+        "feature": "due_task_count",
+        "importance": 0.015053984709084034
+      },
+      {
+        "feature": "last_service_task_count",
+        "importance": 0.012544623576104641
+      },
+      {
+        "feature": "landmark_month_cos",
+        "importance": 0.011208202689886093
+      },
+      {
+        "feature": "historical_on_time_rate",
+        "importance": 0.01113453134894371
+      },
+      {
+        "feature": "cumulative_service_spend",
+        "importance": 0.010986974462866783
+      },
+      {
+        "feature": "days_due_ratio",
+        "importance": 0.01088270079344511
+      },
+      {
+        "feature": "last_service_spend",
+        "importance": 0.010289049707353115
+      }
+    ]
+  },
+  "calibration_diagnostics": {
+    "raw": {
+      "metrics": {
+        "ipcw_c_index": 0.7343205246489375,
+        "harrell_c_index": 0.7345568877808534,
+        "ibs_30_120": 0.3862914281250908,
+        "ipcw_brier": {
+          "30": 0.17033021109881608,
+          "60": 0.3300599155136604,
+          "90": 0.46093337629565273,
+          "120": 0.5654317740331024
+        },
+        "time_dependent_auc": {
+          "30": 0.7959855660346258,
+          "60": 0.8066936443297601,
+          "90": 0.8180765429580483,
+          "120": 0.8286515251208862
+        },
+        "mean_time_dependent_auc": 0.8098342220062126,
+        "horizons": {
+          "30": {
+            "rows": 36357,
+            "event_rate": 0.20551750694501747,
+            "brier": 0.17056932851763704,
+            "auc": 0.7958500912204826,
+            "calibration_error": 0.1703173181574595,
+            "exact_zero_share": 0.0,
+            "unique_probability_levels": 7779
+          },
+          "60": {
+            "rows": 36275,
+            "event_rate": 0.38720882150241215,
+            "brier": 0.3309135245506842,
+            "auc": 0.8067163281751821,
+            "calibration_error": 0.3333883992612724,
+            "exact_zero_share": 0.0,
+            "unique_probability_levels": 12336
+          },
+          "90": {
+            "rows": 36215,
+            "event_rate": 0.5329007317409913,
+            "brier": 0.46246391201020504,
+            "auc": 0.8181658505652685,
+            "calibration_error": 0.4670553096666094,
+            "exact_zero_share": 0.0,
+            "unique_probability_levels": 16524
+          },
+          "120": {
+            "rows": 36174,
+            "event_rate": 0.6508265605130756,
+            "brier": 0.5674805856082611,
+            "auc": 0.8287850206613352,
+            "calibration_error": 0.5739446969607794,
+            "exact_zero_share": 0.0,
+            "unique_probability_levels": 20825
+          }
+        }
+      },
+      "calibration": {
+        "horizons": {
+          "30": {
+            "brier": 0.17056932851763704,
+            "calibration_error": 0.1703173181574595,
+            "exact_zero_share": 0.0,
+            "unique_probability_levels": 7779
+          },
+          "60": {
+            "brier": 0.3309135245506842,
+            "calibration_error": 0.3333883992612724,
+            "exact_zero_share": 0.0,
+            "unique_probability_levels": 12336
+          },
+          "90": {
+            "brier": 0.46246391201020504,
+            "calibration_error": 0.4670553096666094,
+            "exact_zero_share": 0.0,
+            "unique_probability_levels": 16524
+          },
+          "120": {
+            "brier": 0.5674805856082611,
+            "calibration_error": 0.5739446969607794,
+            "exact_zero_share": 0.0,
+            "unique_probability_levels": 20825
+          }
+        },
+        "mean_brier": 0.38285683767169687,
+        "mean_calibration_error": 0.3861764310115302
+      }
+    },
+    "isotonic": {
+      "metrics": {
+        "ipcw_c_index": 0.7343205246489375,
+        "harrell_c_index": 0.7345568877808534,
+        "ibs_30_120": 0.160291285879899,
+        "ipcw_brier": {
+          "30": 0.12370130044413519,
+          "60": 0.1672811627095662,
+          "90": 0.17231105201804758,
+          "120": 0.15886198538003118
+        },
+        "time_dependent_auc": {
+          "30": 0.7959855660346258,
+          "60": 0.8066936443297601,
+          "90": 0.8180765429580483,
+          "120": 0.8286515251208862
+        },
+        "mean_time_dependent_auc": 0.8098342220062126,
+        "horizons": {
+          "30": {
+            "rows": 36357,
+            "event_rate": 0.20551750694501747,
+            "brier": 0.12385775173679121,
+            "auc": 0.7850692808630844,
+            "calibration_error": 0.005542488258005894,
+            "exact_zero_share": 0.0,
+            "unique_probability_levels": 77
+          },
+          "60": {
+            "rows": 36275,
+            "event_rate": 0.38720882150241215,
+            "brier": 0.16758154865133534,
+            "auc": 0.8071308498665275,
+            "calibration_error": 0.011777366234745889,
+            "exact_zero_share": 0.0,
+            "unique_probability_levels": 123
+          },
+          "90": {
+            "rows": 36215,
+            "event_rate": 0.5329007317409913,
+            "brier": 0.17260896116482283,
+            "auc": 0.8186078286554274,
+            "calibration_error": 0.015342914411895588,
+            "exact_zero_share": 0.0,
+            "unique_probability_levels": 96
+          },
+          "120": {
+            "rows": 36174,
+            "event_rate": 0.6508265605130756,
+            "brier": 0.15905232576708836,
+            "auc": 0.8291998298976956,
+            "calibration_error": 0.016249339443014526,
+            "exact_zero_share": 0.0,
+            "unique_probability_levels": 115
+          }
+        }
+      },
+      "calibration": {
+        "horizons": {
+          "30": {
+            "brier": 0.12385775173679121,
+            "calibration_error": 0.005542488258005884,
+            "exact_zero_share": 0.0,
+            "unique_probability_levels": 77
+          },
+          "60": {
+            "brier": 0.16758154865133534,
+            "calibration_error": 0.011777366234745913,
+            "exact_zero_share": 0.0,
+            "unique_probability_levels": 123
+          },
+          "90": {
+            "brier": 0.17260896116482283,
+            "calibration_error": 0.015342914411895602,
+            "exact_zero_share": 0.0,
+            "unique_probability_levels": 96
+          },
+          "120": {
+            "brier": 0.15905232576708836,
+            "calibration_error": 0.016249339443014515,
+            "exact_zero_share": 0.0,
+            "unique_probability_levels": 115
+          }
+        },
+        "mean_brier": 0.15577514683000943,
+        "mean_calibration_error": 0.012228027086915479
+      }
+    },
+    "p30_resolution": {
+      "raw_unique_8dp": 7788,
+      "isotonic_unique_8dp": 77,
+      "isotonic_largest_plateau_share": 0.494581767304052
+    }
+  },
+  "temporal_validation": [
+    {
+      "start": "2025-07-01",
+      "end": "2025-08-31",
+      "rows": 11671,
+      "ipcw_c_index": 0.752324952909143,
+      "ibs": 0.14994862602878076,
+      "p90_calibration_error": 0.0057239442834350835
+    },
+    {
+      "start": "2025-09-01",
+      "end": "2025-10-31",
+      "rows": 12177,
+      "ipcw_c_index": 0.7324196311552388,
+      "ibs": 0.1603640792181968,
+      "p90_calibration_error": 0.014872717706830291
+    },
+    {
+      "start": "2025-11-01",
+      "end": "2025-12-31",
+      "rows": 12603,
+      "ipcw_c_index": 0.7188762472871012,
+      "ibs": 0.16979876653069234,
+      "p90_calibration_error": 0.03523267325370859
+    }
+  ],
+  "evidence_based_diagnosis": [
+    "V1.5 has a higher and more behaviorally heterogeneous return process than V1.4; latent churn/no-show tendencies intentionally add irreducible ranking noise because latent labels are forbidden model inputs.",
+    "The six observable history features add ranking signal, but days_to_next_known_appointment is structurally sparse and must be handled carefully.",
+    "The current XGB-Cox risk ranking is useful but its Breslow absolute scale is badly offset; isotonic fixes Brier/calibration while compressing P30 resolution into large plateaus.",
+    "The train-validation concordance gap quantifies model overfit; recovery should prioritize regularization and stable feature subsets rather than higher probabilities."
+  ],
+  "gate_checks": {
+    "train_validation_only": true,
+    "world_shift_measured": true,
+    "shared_54_diagnosed": true,
+    "new_6_diagnosed": true,
+    "model_gap_measured": true,
+    "raw_vs_calibrated_measured": true,
+    "temporal_folds_measured": true
+  }
+}
