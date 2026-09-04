@@ -1,0 +1,27 @@
+{
+  "study": "RIDEBASE_V1_5_SIGNAL_CEILING_FINAL_DECISION",
+  "verdict": "SIGNAL CEILING DIAGNOSIS \u2014 MISSING OBSERVABLE SIGNAL; STOP SAME-TABLE FEATURE EXPANSION",
+  "diagnostics": {
+    "primary_bottleneck": "GENERATOR_STOCHASTICITY_CEILING",
+    "secondary_bottleneck": "MISSING_OBSERVABLE_SIGNAL",
+    "model_family_gap_status": "NEGLIGIBLE_NOT_JUSTIFIED",
+    "feature_engineering_status": "DIMINISHING_RETURNS_EXHAUSTED"
+  },
+  "empirical_metrics": {
+    "tier_o1_ipcw_c": 0.736649,
+    "tier_o2_ipcw_c": 0.736747,
+    "tier_m4_oracle_ipcw_c": 0.746963,
+    "observable_gain_m2_minus_m1": 9.8e-05,
+    "total_oracle_gap_m4_minus_m2": 0.010216,
+    "generator_oracle_ipcw_c": 0.670691,
+    "irreducible_aleatoric_noise_share_pct": 89.6,
+    "epistemic_model_error_share_pct": 10.4,
+    "model_family_gap_o2": 0.006582
+  },
+  "recommendations": {
+    "build_v2_4_now": false,
+    "continue_feature_engineering_same_tables": false,
+    "freeze_synthetic_model_iteration": true,
+    "wait_for_real_fleet_data": true
+  }
+}
