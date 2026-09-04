@@ -1,0 +1,26 @@
+{
+  "status": "PASS",
+  "golden_landmarks": 300,
+  "feature_cells": 10500,
+  "classification_counts": {
+    "EXACT_PARITY": 10183,
+    "EXPECTED_MISSING": 317
+  },
+  "mismatches": [],
+  "future_injection": {
+    "future_service": true,
+    "future_mileage": true,
+    "future_appointment_creation": true,
+    "future_appointment_outcome": true,
+    "future_no_show_cancel_outcome": true,
+    "future_task_part": true,
+    "future_workshop_interaction": true
+  },
+  "checks": {
+    "golden_landmarks_at_least_300": true,
+    "no_unexplained_mismatch": true,
+    "all_future_injections_invariant": true,
+    "base60_unchanged_by_extension": true,
+    "task_part_not_consumed": true
+  }
+}
