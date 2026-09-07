@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-09-04T23:24:38",
+  "generated_at": "2026-09-07T22:21:25",
   "project": "RideBase ML",
   "current_dataset": "v1.3",
   "environment": "PILOT",
@@ -57,11 +57,12 @@
     {
       "id": "v3",
       "name": "V3 Next Task",
-      "tagline": "Next maintenance tasks",
-      "status": "planned",
-      "notebook": null,
-      "dataset": null,
-      "purpose": "Bir sonraki serviste yapılması muhtemel bakım işlemlerini tahmin etmek. Üretici bakım takvimi bilgisi 'prior' olarak mevcut."
+      "tagline": "Next completed service task probabilities",
+      "status": "done",
+      "stage": "SYNTHETIC PRODUCT CANDIDATE",
+      "notebook": "ridebase_ml.v3",
+      "dataset": "v1.4",
+      "purpose": "Bir sonraki TAMAMLANMIŞ serviste hangi bakım işlemlerinin yapılmasının muhtemel olduğu. Champion: CatBoost binary relevance, 44 etiket, 277 PIT-safe özellik, global eşik 0.31, etiket bazlı kalibrasyon. Servis zamanı tahmini DEĞİL (o V2.1), bakım gerekliliği/aciliyeti DEĞİL (onlar deterministik), mekanik arıza olasılığı DEĞİL. SENTETİK VERİDE DOĞRULANDI — GERÇEK FİLO DOĞRULAMASI BEKLENİYOR."
     }
   ],
   "notebooks": [

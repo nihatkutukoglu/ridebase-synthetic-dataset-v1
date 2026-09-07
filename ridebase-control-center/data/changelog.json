@@ -247,71 +247,6 @@
     ]
   },
   {
-    "id": "UI-11",
-    "timestamp": "2026-09-04",
-    "module": "UI",
-    "type": "UI",
-    "title": "RideBase ML Control Center",
-    "description": "EDA + V0 + V1 modüllerini tek merkezi yönetim panelinde birleştiren sistem (bu artifact).",
-    "status": "INFO",
-    "version": "v1.3",
-    "artifacts": [
-      "ridebase-control-center/README.md"
-    ]
-  },
-  {
-    "id": "V2-12",
-    "timestamp": "2026-09-04",
-    "module": "V2",
-    "type": "UI",
-    "title": "V2 LIVE PREDICTION REDESIGNED",
-    "description": "Brand→model selection, deterministic model-spec mapping and honest partial-snapshot inference replaced the previous example-snapshot overlay approach.",
-    "status": "PASS",
-    "version": "v1.3",
-    "artifacts": [
-      "ridebase-control-center/template.html"
-    ]
-  },
-  {
-    "id": "V2.1-16",
-    "timestamp": "2026-09-04",
-    "module": "V2.1",
-    "type": "PRODUCTION",
-    "title": "V2.1 predictor + /api/v2_1/* packaged",
-    "description": "ridebase_ml.v2_1.V21SurvivalPredictor + separate /api/v2_1/* routes (model/info, features, metrics, sample, predict, predict/batch, predict/scenario). V1 and V2.0 routes untouched, /api/v2/* not redirected. Golden parity over 4000 frozen TEST rows: max probability delta 8.30e-06, deterministic, horizons monotone → PASS. Real-fleet validation PENDING.",
-    "status": "PASS",
-    "version": "1.4.0-v2.1-dynamic-landmark",
-    "artifacts": [
-      "ridebase-ml/models/v2_1_v1_4/golden_parity.json"
-    ]
-  },
-  {
-    "id": "UI-23",
-    "timestamp": "2026-09-04",
-    "module": "UI",
-    "type": "UI",
-    "title": "Beginner-friendly metric explanations and terminology added",
-    "description": "Control Center'ın her modülüne 'Bu sayfa ne anlatıyor?' kutusu, teknik terimlerin Türkçe karşılığı, ⓘ tooltip'leri, 'Teknik detay' accordion'ları ve TR sözlük (docs/ml_glossary_tr.md) eklendi. R²/C-index/AUC hiçbir yerde 'doğruluk yüzdesi' olarak yazılmıyor.",
-    "status": "PASS",
-    "version": "v1.3",
-    "artifacts": [
-      "docs/ml_glossary_tr.md"
-    ]
-  },
-  {
-    "id": "API-24",
-    "timestamp": "2026-09-04",
-    "module": "API",
-    "type": "DEPLOYMENT",
-    "title": "Public V1/V2 inference API — deploy blueprint prepared",
-    "description": "render.yaml + Dockerfile.prod (ridebase_ml paketi + artifactlar bundle) + runtime API-URL config (?v2api= / RIDEBASE_V2_API) hazır.",
-    "status": "REVIEW",
-    "version": "v1.3",
-    "artifacts": [
-      "ridebase-v1-dashboard/render.yaml"
-    ]
-  },
-  {
     "id": "API-25",
     "timestamp": "2026-09-04",
     "module": "API",
@@ -325,8 +260,73 @@
     ]
   },
   {
+    "id": "UI-11",
+    "timestamp": "2026-09-07",
+    "module": "UI",
+    "type": "UI",
+    "title": "RideBase ML Control Center",
+    "description": "EDA + V0 + V1 modüllerini tek merkezi yönetim panelinde birleştiren sistem (bu artifact).",
+    "status": "INFO",
+    "version": "v1.3",
+    "artifacts": [
+      "ridebase-control-center/README.md"
+    ]
+  },
+  {
+    "id": "V2-12",
+    "timestamp": "2026-09-07",
+    "module": "V2",
+    "type": "UI",
+    "title": "V2 LIVE PREDICTION REDESIGNED",
+    "description": "Brand→model selection, deterministic model-spec mapping and honest partial-snapshot inference replaced the previous example-snapshot overlay approach.",
+    "status": "PASS",
+    "version": "v1.3",
+    "artifacts": [
+      "ridebase-control-center/template.html"
+    ]
+  },
+  {
+    "id": "V2.1-16",
+    "timestamp": "2026-09-07",
+    "module": "V2.1",
+    "type": "PRODUCTION",
+    "title": "V2.1 predictor + /api/v2_1/* packaged",
+    "description": "ridebase_ml.v2_1.V21SurvivalPredictor + separate /api/v2_1/* routes (model/info, features, metrics, sample, predict, predict/batch, predict/scenario). V1 and V2.0 routes untouched, /api/v2/* not redirected. Golden parity over 4000 frozen TEST rows: max probability delta 8.30e-06, deterministic, horizons monotone → PASS. Real-fleet validation PENDING.",
+    "status": "PASS",
+    "version": "1.4.0-v2.1-dynamic-landmark",
+    "artifacts": [
+      "ridebase-ml/models/v2_1_v1_4/golden_parity.json"
+    ]
+  },
+  {
+    "id": "UI-23",
+    "timestamp": "2026-09-07",
+    "module": "UI",
+    "type": "UI",
+    "title": "Beginner-friendly metric explanations and terminology added",
+    "description": "Control Center'ın her modülüne 'Bu sayfa ne anlatıyor?' kutusu, teknik terimlerin Türkçe karşılığı, ⓘ tooltip'leri, 'Teknik detay' accordion'ları ve TR sözlük (docs/ml_glossary_tr.md) eklendi. R²/C-index/AUC hiçbir yerde 'doğruluk yüzdesi' olarak yazılmıyor.",
+    "status": "PASS",
+    "version": "v1.3",
+    "artifacts": [
+      "docs/ml_glossary_tr.md"
+    ]
+  },
+  {
+    "id": "API-24",
+    "timestamp": "2026-09-07",
+    "module": "API",
+    "type": "DEPLOYMENT",
+    "title": "Public V1/V2 inference API — deploy blueprint prepared",
+    "description": "render.yaml + Dockerfile.prod (ridebase_ml paketi + artifactlar bundle) + runtime API-URL config (?v2api= / RIDEBASE_V2_API) hazır.",
+    "status": "REVIEW",
+    "version": "v1.3",
+    "artifacts": [
+      "ridebase-v1-dashboard/render.yaml"
+    ]
+  },
+  {
     "id": "V1-26",
-    "timestamp": "2026-09-04",
+    "timestamp": "2026-09-07",
     "module": "V1",
     "type": "UI",
     "title": "Dedicated beginner-friendly V1 live prediction added",

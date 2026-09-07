@@ -575,7 +575,7 @@ var ROUTES = {
   v1:{label:"V1 Regresyon",render:renderV1},
   v2:{label:"V2 Sağkalım",render:function(sub){return (M.v2?renderV2(sub):renderPlaceholder("v2"));}},
   v2_1:{label:"V2.1 Landmark",render:function(sub){return renderV2_1(sub);}},
-  v3:{label:"V3 Next Task",render:function(){return renderPlaceholder("v3");}},
+  v3:{label:"V3 Next Task",render:function(sub){return renderV3(sub);}},
   experiments:{label:"Deneyler",render:renderExperiments},
   models:{label:"Models",render:renderModels},
   dataset:{label:"Dataset",render:renderDataset},
@@ -586,7 +586,7 @@ function parseHash(){
   var h=(location.hash||"#overview").replace(/^#/,"");
   var parts=h.split("/");
   var route=ROUTES[parts[0]]?parts[0]:"overview";
-  var sub=parts[1]||((route==="v1"||route==="v2"||route==="v2_1")?"predict":null);
+  var sub=parts[1]||((route==="v1"||route==="v2"||route==="v2_1"||route==="v3")?"predict":null);
   /* O6: third hash segment is the predict-page mode (scenario/demo/own etc.) so
      a link to one mode opens directly on it, not always the first tab. */
   var mode=parts[2]||null;
@@ -655,6 +655,8 @@ function route(){
   if(st.route==="v1" && st.sub==="predict" && typeof wireV1Predict==="function")wireV1Predict();
   if(st.route==="v2" && st.sub==="predict" && typeof wireV2Predict==="function")wireV2Predict();
   if(st.route==="v2_1" && st.sub==="predict" && typeof wireV2_1Predict==="function")wireV2_1Predict();
+  if(st.route==="v3" && st.sub==="predict" && typeof wireV3Predict==="function")wireV3Predict();
+  if(st.route==="v3" && st.sub==="overview" && typeof v3LoadOverview==="function")v3LoadOverview();
   if(st.route==="status" && typeof wireStatusLive==="function")wireStatusLive();
   PREV_HASH=location.hash;
   closeDrawer();
@@ -711,7 +713,7 @@ function buildSidebar(st){
      +navItem("v1","V1 Regresyon",{ic:sq()})
      +navItem("v2","V2 Sağkalım",{ic:sq(),soon:!M.v2,disabled:false})
      +navItem("v2_1","V2.1 Landmark",{ic:sq(),disabled:false})
-     +navItem("v3","V3 Next Task",{ic:sq(),soon:true,disabled:false})
+     +navItem("v3","V3 Next Task",{ic:sq(),disabled:false})
   +'</div>';
   if(st.route==="v1"){
     var subs=[["predict","Canlı Tahmin"],["overview","Genel Bakış"],["days","DAYS"],["km","KM"],["models","Models"],
@@ -732,6 +734,12 @@ function buildSidebar(st){
     var v21subs=[["predict","Canlı Tahmin"],["overview","Genel Bakış"]];
     html+='<div class="nav-group">'+v21subs.map(function(s){
       return navItem("v2_1",s[1],{sub:true,hash:"v2_1/"+s[0],subOf:"v2_1",subKey:s[0]==="overview"?null:s[0]});
+    }).join('')+'</div>';
+  }
+  if(st.route==="v3"){
+    var v3subs=[["predict","Canlı Tahmin"],["overview","Genel Bakış"]];
+    html+='<div class="nav-group">'+v3subs.map(function(s){
+      return navItem("v3",s[1],{sub:true,hash:"v3/"+s[0],subOf:"v3",subKey:s[0]==="overview"?null:s[0]});
     }).join('')+'</div>';
   }
   html+='<div class="nav-group"><div class="glabel">System</div>'
@@ -776,7 +784,7 @@ function renderOverview(){
   var qa=M.qa||{};
   var out='';
   out+=modHead("RideBase ML · Control Center","RideBase ML Control Center",
-    "RideBase servis tahmini veri bilimi ve makine öğrenmesi sisteminin merkezi yönetim paneli. V1 frozen; V2.0 canlı-senaryo auditinde başarısız (yalnız araştırma baseline'ı); V2.1 dynamic-landmark survival modeli sentetik veride doğrulandı (deneysel canlı) — gerçek filo testi bekleniyor; V3 beklemede.",
+    "RideBase servis tahmini veri bilimi ve makine öğrenmesi sisteminin merkezi yönetim paneli. V1 frozen; V2.0 canlı-senaryo auditinde başarısız (yalnız araştırma baseline'ı); V2.1 dynamic-landmark survival modeli sentetik veride doğrulandı (deneysel canlı) — gerçek filo testi bekleniyor; V3 sonraki-servis işlem tahmini sentetik ürün adayı olarak paketlendi.",
     '<span class="chip cyan"><span class="dot"></span>DATASET '+esc(M.current_dataset||"v1.3")+'</span>'
    +'<span class="chip">ENV: '+esc(M.environment||"PILOT")+'</span>'
    +'<span class="chip warn"><span class="dot"></span>REAL FLEET VALIDATION: '+esc(M.real_fleet_validation||"PENDING")+'</span>',
@@ -808,7 +816,7 @@ function renderOverview(){
   out+='<div class="sec"><div class="sec-head"><h2>Yönetici Özeti</h2><span class="tag">10 soru</span></div>'
    +'<div class="grid g2">'
    + card("Proje durumu",null,
-       '<p class="copy">V1 <b>frozen</b>. V2.0 yalnız araştırma baseline’ı ve canlı-senaryo auditinde başarısız. V2.1 dynamic-landmark survival modeli data + model + davranış kapılarını geçti — <b>SENTETİK VERİDE DOĞRULANDI</b>, gerçek filo testi bekleniyor. V3 <b>ON HOLD</b>.</p>'
+       '<p class="copy">V1 <b>frozen</b>. V2.0 yalnız araştırma baseline’ı ve canlı-senaryo auditinde başarısız. V2.1 dynamic-landmark survival modeli data + model + davranış kapılarını geçti — <b>SENTETİK VERİDE DOĞRULANDI</b>, gerçek filo testi bekleniyor. V3 sonraki-servis işlem tahmini <b>SENTETİK ÜRÜN ADAYI</b> — gerçek filo doğrulaması bekleniyor.</p>'
       +'<div class="chips" style="margin-top:6px">'+mods.map(function(m){return '<span class="chip">'+esc(m.name)+' '+statusPill(m.status)+'</span>';}).join('')+'</div>')
    + card("Aktif model performansı (TEST)",null,
        '<div class="grid g2" style="gap:10px">'
@@ -3137,7 +3145,198 @@ function wireV2_1Predict(){
   select(["history","scenario"].indexOf(initialMode)>=0?initialMode:"history");
 }
 
-/* ---------------- V3 placeholder ---------------- */
+
+/* ---------------- V3 — NEXT SERVICE TASKS ---------------- */
+/* V3 answers: at the NEXT COMPLETED SERVICE, which tasks are likely performed?
+   It is NOT V2.1 (when the service happens), NOT Maintenance Due, NOT
+   Maintenance Urgency, and NOT a mechanical-failure probability. No V3 number
+   is ever combined with a V2.1 horizon probability or an urgency score. */
+var V3_HEADING="V3 — SONRAKİ SERVİSTE BEKLENEN İŞLEMLER";
+var V3_DISCLAIMER="Bu tahminler sentetik veri üzerinde doğrulanmıştır. Gerçek filo doğrulaması henüz yapılmamıştır.";
+var V3_NOT_FAILURE="Bu yüzdeler mekanik arıza olasılığı değildir.";
+var V3_SEPARATE="Bakım gereksinimi ve bakım aciliyeti deterministik bakım politikasından ayrı hesaplanır.";
+var v3State={labels:null,metrics:null,info:null};
+
+function v3ConfClass(t){return t==="YUKSEK"?"good":(t==="ORTA"?"warn":"bad");}
+function v3ConfLabel(t){return {YUKSEK:"YÜKSEK",ORTA:"ORTA",DUSUK:"DÜŞÜK",SINIRLI_VERI:"SINIRLI VERİ"}[t]||esc(t||"—");}
+
+function renderV3(sub){
+  var chips='<span class="chip warn"><span class="dot"></span>SYNTHETIC PRODUCT CANDIDATE</span>'
+    +'<span class="chip">frozen champion</span><span class="chip">44 işlem</span>'
+    +'<span class="chip bad">GERÇEK FİLO DOĞRULAMASI BEKLENİYOR</span>';
+  var head=modHead("Modül · Çoklu-Etiket Sınıflandırma",V3_HEADING,
+    "V3, bir sonraki tamamlanmış servis kaydında hangi işlemlerin görülme olasılığının daha yüksek olduğunu tahmin eder. "
+    +"Bu bir servis zamanı tahmini değildir (o V2.1), bakım gerekli mi sorusunun cevabı değildir ve mekanik arıza olasılığı değildir.",
+    chips,'api <code>/api/v3/*</code> · policy <code>config/v3_product_label_policy.json</code>');
+  return head+v3Bar(sub)+(sub==="overview"?v3Overview():v3PredictPage());
+}
+function v3Bar(sub){
+  var tabs=[["predict","Canlı Tahmin"],["overview","Genel Bakış"]];
+  return '<div class="subtabs" role="tablist" aria-label="V3 bölümleri">'+tabs.map(function(t){
+    return '<button class="subtab'+(sub===t[0]?' active':'')+'" role="tab" aria-selected="'+(sub===t[0])+'" data-go="v3/'+t[0]+'">'+esc(t[1])+'</button>';
+  }).join('')+'</div>';
+}
+function v3Disclaimers(){
+  return finding("warn","SENTETİK DOĞRULAMA",
+    "<p>"+esc(V3_DISCLAIMER)+"</p><p>"+esc(V3_NOT_FAILURE)+"</p><p>"+esc(V3_SEPARATE)+"</p>");
+}
+function v3PredictPage(){
+  return pageNote(
+    "Bir motosiklet ve bir <b>landmark tarihi</b> seç. Sistem o tarihe kadarki gerçek servis geçmişini kullanarak "
+    +"donmuş V3 modelinin beklediği <b>277 özelliği</b> yeniden üretir ve bir sonraki tamamlanmış serviste hangi "
+    +"işlemlerin görülme olasılığının yüksek olduğunu sıralar. Landmark tarihinden sonraki hiçbir kayıt kullanılmaz.",
+    "Yol: <code>motorcycle_id + landmark_date</code> → V2.1 read-only history adapter → 277 PIT-safe feature → frozen V3 (CatBoost binary relevance) → kalibre olasılık → ürün sıralaması.")
+  +'<div class="sec">'+v3Disclaimers()+'</div>'
+  +'<div class="sec" id="v3formBox"></div>'
+  +'<div class="sec" id="v3out"></div>';
+}
+function v3Form(){
+  var box=document.getElementById("v3formBox"); if(!box)return;
+  function lab(id,text,html){return '<label style="display:flex;flex-direction:column;gap:5px;font-size:.8rem;color:var(--text-2)" for="'+id+'">'+esc(text)+html+'</label>';}
+  var it=v2InputStyle();
+  box.innerHTML=card("1 · Motosiklet + landmark","açık, yeniden üretilebilir geçmiş sorgusu",
+      '<div class="grid g2">'
+      +lab("v3Id","Motorcycle ID",'<input id="v3Id" type="text" value="MC000001" placeholder="ör. MC000001" autocomplete="off" style="'+it+'">')
+      +lab("v3Date","Landmark tarihi",'<input id="v3Date" type="date" value="2026-03-31" style="'+it+'">')
+      +'</div>'
+      +'<div class="grid g2" style="margin-top:8px">'
+      +lab("v3TopK","Kaç işlem gösterilsin",'<select id="v3TopK" style="'+it+'"><option value="3" selected>3</option><option value="5">5</option></select>')
+      +'</div>'
+      +'<div class="chips" style="margin-top:8px"><button class="subtab" id="v3Random" style="border:1px solid var(--border);border-radius:8px">RASTGELE GEÇERLİ ID GETİR</button></div>'
+      +'<p class="copy" style="margin-top:8px">Landmark tarihi zorunludur; API sunucu tarihini sessizce kullanmaz. Bu demo yalnız donmuş <b>sentetik V1.4</b> kimliklerini sorgular.</p>')
+    +'<div class="sec">'+card("2 · Tahmin","geçmiş → 277 özellik → frozen V3",
+      '<div id="v3Err" class="finding bad" style="display:none"></div>'
+      +'<div class="chips" style="margin-top:4px"><button class="subtab" id="v3Run" style="border:1px solid var(--border);border-radius:8px">V3 TAHMİNİNİ ÇALIŞTIR</button></div>')+'</div>';
+  document.getElementById("v3Run").addEventListener("click",v3Run);
+  document.getElementById("v3Random").addEventListener("click",v3FillRandom);
+  restoreForm(box,location.hash);
+}
+function v3FillRandom(){
+  var api=(window.__V2_API__||"").replace(/\/$/,""),btn=document.getElementById("v3Random"),
+      errBox=document.getElementById("v3Err");
+  if(!api||!btn)return;
+  btn.disabled=true;var prev=btn.textContent;btn.textContent="Getiriliyor…";
+  v2fetch(api+"/api/v3/sample").then(v2json).then(function(s){
+    if(!s.motorcycle_id||!s.landmark_date)throw new Error("örnek yanıtında motorcycle_id/landmark_date yok");
+    var id=document.getElementById("v3Id"),d=document.getElementById("v3Date");
+    if(id)id.value=s.motorcycle_id;
+    if(d)d.value=s.landmark_date;
+    if(errBox){errBox.style.display="none";errBox.innerHTML="";}
+  }).catch(function(e){
+    if(errBox){errBox.style.display="block";errBox.innerHTML="Rastgele ID alınamadı — "+esc(String(e&&e.message||e))+".";}
+  }).then(function(){btn.disabled=false;btn.textContent=prev;});
+}
+function v3Run(){
+  var api=(window.__V2_API__||"").replace(/\/$/,"");
+  var out=document.getElementById("v3out"),errBox=document.getElementById("v3Err"),btn=document.getElementById("v3Run");
+  if(!api||!out)return;
+  var id=(document.getElementById("v3Id")||{}).value,d=(document.getElementById("v3Date")||{}).value,
+      k=parseInt((document.getElementById("v3TopK")||{}).value||"3",10);
+  if(errBox){errBox.style.display="none";errBox.innerHTML="";}
+  if(!id||!d){if(errBox){errBox.style.display="block";errBox.innerHTML="Motorcycle ID ve landmark tarihi zorunludur.";}return;}
+  var gen=++v3Gen;
+  btn.disabled=true;out.innerHTML='<div class="empty">V3 çalışıyor…</div>';
+  v2fetch(api+"/api/v3/predict/by-motorcycle",{method:"POST",headers:{"Content-Type":"application/json"},
+    body:JSON.stringify({motorcycle_id:id,landmark_date:d,top_k:k})})
+    .then(v2json)
+    .then(function(r){ if(gen!==v3Gen)return; out.innerHTML=v3Result(r); })
+    .catch(function(e){
+      if(gen!==v3Gen)return;
+      out.innerHTML="";
+      if(errBox){errBox.style.display="block";
+        errBox.innerHTML=(e&&e.status===404)?"Bu motorcycle_id sentetik kaynakta bulunamadı.":
+          (e&&e.status===422)?("Bu landmark tarihi bu motosiklet için geçersiz — "+esc(String(e.message||""))):
+          ("V3 çağrısı başarısız — "+esc(String(e&&e.message||e))+".");}
+    })
+    .then(function(){btn.disabled=false;});
+}
+var v3Gen=0;
+function v3Result(r){
+  var tasks=r.top_tasks||[];
+  if(!tasks.length)return '<div class="empty">Bu landmark için gösterilecek işlem bulunamadı.</div>';
+  var cov=r.feature_coverage;
+  var rows=tasks.map(function(t){
+    var w=Math.max(1,Math.round((t.probability||0)*100));
+    return '<div style="display:flex;align-items:center;gap:12px;padding:10px 0;border-bottom:1px solid var(--border)">'
+      +'<div style="flex:0 0 26px;color:var(--muted);font-variant-numeric:tabular-nums">'+esc(String(t.rank))+'.</div>'
+      +'<div style="flex:1 1 auto;min-width:0">'
+        +'<div style="color:var(--text);font-weight:600">'+esc(t.display_name||t.task_code)+'</div>'
+        +'<div style="height:6px;border-radius:4px;background:var(--border);margin-top:6px;overflow:hidden">'
+          +'<div style="height:100%;width:'+w+'%;background:var(--accent,#4ea1ff)"></div></div>'
+      +'</div>'
+      +'<div style="flex:0 0 64px;text-align:right;font-variant-numeric:tabular-nums;color:var(--text);font-weight:600">'+esc(pct(t.probability))+'</div>'
+      +'<div style="flex:0 0 108px;text-align:right"><span class="chip '+v3ConfClass(t.confidence)+'">'+esc(v3ConfLabel(t.confidence))+'</span></div>'
+      +'</div>';
+  }).join('');
+  var warn=(r.warnings||[]).map(function(w){return '<li>'+esc(w)+'</li>';}).join('');
+  var all=r.all_task_probabilities||{},bins=r.binary_predictions||{};
+  var allRows=Object.keys(all).sort(function(a,b){return all[b]-all[a];}).map(function(c){
+    return '<tr><td><code>'+esc(c)+'</code></td><td style="text-align:right">'+esc(pct(all[c]))+'</td>'
+      +'<td style="text-align:right">'+(bins[c]?"evet":"hayır")+'</td></tr>';
+  }).join('');
+  var tm=(r.timing_ms||{});
+  return card(V3_HEADING,"landmark "+esc(r.landmark_date||"—")+" · "+esc(r.motorcycle_id||""),
+      rows
+      +'<div class="chips" style="margin-top:12px">'
+        +'<span class="chip">özellik kapsamı '+esc(pct(cov))+'</span>'
+        +'<span class="chip">kaynak '+esc(r.input_source||"—")+'</span>'
+        +'<span class="chip warn">'+esc(r.validation_scope||"SYNTHETIC_ONLY")+'</span>'
+        +'<span class="chip bad">GERÇEK FİLO: '+esc(r.real_fleet_validation||"PENDING")+'</span>'
+      +'</div>')
+    +'<div class="sec">'+finding("warn","UYARILAR VE KAPSAM","<ul style=\"margin:0;padding-left:18px\">"+warn+"</ul>")+'</div>'
+    +'<div class="sec">'+card("Teknik detay",null,
+        techBox('<p class="copy">Tüm 44 etiketin kalibre olasılığı ve donmuş eşikteki (global '
+          +esc(String((r.provenance||{}).threshold||"—"))+') ikili kararı. Ürün sıralaması yalnız sunum politikasıdır; '
+          +'model çıktısı değiştirilmez.</p>'
+          +'<div style="overflow:auto;max-height:420px"><table class="tbl"><thead><tr><th>task_code</th>'
+          +'<th style="text-align:right">olasılık</th><th style="text-align:right">eşik üstü</th></tr></thead><tbody>'
+          +allRows+'</tbody></table></div>'
+          +'<p class="copy" style="margin-top:8px">Süre: geçmiş '+esc(String(tm.history_build||"—"))+' ms · tahmin '
+          +esc(String(tm.prediction||"—"))+' ms · toplam '+esc(String(tm.total||"—"))+' ms.</p>'))+'</div>';
+}
+function v3Overview(){
+  var box='<div class="sec" id="v3metricsBox"><div class="empty">Metrikler yükleniyor…</div></div>';
+  return pageNote(
+    "V3 donmuş sentetik araştırma şampiyonudur. Aşağıdaki metrikler <b>yalnızca sentetik TEST</b> bölümünden gelir "
+    +"ve artefaktlardan okunur — hiçbiri elle yazılmamıştır.",
+    "Şampiyon: CatBoost binary relevance · 44 etiket · 277 PIT-safe özellik · V1.4 sentetik dünya.")
+    +'<div class="sec">'+v3Disclaimers()+'</div>'+box;
+}
+function v3LoadOverview(){
+  var api=(window.__V2_API__||"").replace(/\/$/,""),box=document.getElementById("v3metricsBox");
+  if(!box)return;
+  if(!api){box.innerHTML='<div class="empty">Model API yapılandırılmadı.</div>';return;}
+  Promise.all([v2fetch(api+"/api/v3/metrics").then(v2json),v2fetch(api+"/api/v3/labels").then(v2json)])
+   .then(function(res){
+    var m=res[0]||{},L=res[1]||{},t=m.test||{},u=m.unseen_motorcycle_test||{};
+    /* P@1 is a RANKING metric. It is never labelled accuracy anywhere in this UI. */
+    var k=kpi("P@1 (sıralama)",esc(pct(t.precision_at_1)),"en olası işlem gerçekten yapıldı mı — <b>doğruluk oranı değildir</b>")
+      +kpi("P@3 (sıralama)",esc(pct(t.precision_at_3)),"ilk 3 öneride isabet payı")
+      +kpi("R@3 (sıralama)",esc(pct(t.recall_at_3)),"gerçekleşen işlemlerin ilk 3'te yakalanan payı")
+      +kpi("Micro F1",esc(pct(t.micro_f1)),"eşik uygulanmış genel denge")
+      +kpi("mAP",esc(pct(t.mean_average_precision)),"etiket başına PR-AUC ortalaması")
+      +kpi("Görülmemiş motor P@1",esc(pct(u.precision_at_1)),"eğitimde hiç görülmemiş motosikletler");
+    var c=L.product_status_counts||{};
+    box.innerHTML=card("Donmuş sentetik TEST metrikleri","yalnız sentetik · gerçek filo doğrulaması bekleniyor",
+        '<div class="kpis">'+k+'</div>'
+        +'<p class="copy" style="margin-top:10px">P@1 bir <b>sıralama</b> metriğidir: en yüksek olasılıklı işlemin '
+        +'bir sonraki tamamlanmış serviste gerçekten yapılmış olma payı. Bu bir doğruluk yüzdesi değildir.</p>')
+      +'<div class="sec">'+card("Etiket sunum politikası","modelde 44 etiketin tamamı kalır; bu yalnız sunum",
+        '<div class="chips">'
+        +'<span class="chip good">PRIMARY '+esc(String(c.PRIMARY||0))+'</span>'
+        +'<span class="chip">SECONDARY '+esc(String(c.SECONDARY||0))+'</span>'
+        +'<span class="chip warn">LOW_CONFIDENCE '+esc(String(c.LOW_CONFIDENCE||0))+'</span>'
+        +'<span class="chip bad">HIDDEN_BY_DEFAULT '+esc(String(c.HIDDEN_BY_DEFAULT||0))+'</span></div>'
+        +'<p class="copy" style="margin-top:8px">HIDDEN_BY_DEFAULT etiketler sentetik üreticide <b>rastgele olay</b> olarak '
+        +'üretilir (arıza teşhisi, servis sırasında bulunan kusur). Hiçbir landmark özelliği bunları öngöremez, bu yüzden '
+        +'öne çıkarılmazlar ve yüksek olasılık alsalar bile güven seviyeleri DÜŞÜK kalır.</p>')+'</div>';
+  }).catch(function(e){
+    box.innerHTML='<div class="empty">Metrikler alınamadı — '+esc(String(e&&e.message||e))+'</div>';
+  });
+}
+function wireV3Predict(){ v3Form(); }
+
+/* ---------------- placeholder (unused modules) ---------------- */
 function renderPlaceholder(id){
   var m=(M.modules||[]).filter(function(x){return x.id===id;})[0]||{};
   var prog=m.status==="in_progress";

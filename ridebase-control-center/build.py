@@ -98,10 +98,14 @@ MODULES = [
      "purpose": "Bir landmark tarihinde, o tarihe kadar bilinen bilgiyle, bir sonraki uygun gerçek servisin 30 / 60 / "
                 "90 / 120 gün içinde gerçekleşme olasılığı. Champion: monotone-constrained XGBoost survival:cox + "
                 "per-horizon isotonic kalibrasyon. SENTETİK VERİDE DOĞRULANDI — GERÇEK FİLO TESTİ BEKLENİYOR."},
-    {"id": "v3", "name": "V3 Next Task", "tagline": "Next maintenance tasks", "status": "planned",
-     "notebook": None, "dataset": None,
-     "purpose": "Bir sonraki serviste yapılması muhtemel bakım işlemlerini tahmin etmek. "
-                "Üretici bakım takvimi bilgisi 'prior' olarak mevcut."},
+    {"id": "v3", "name": "V3 Next Task", "tagline": "Next completed service task probabilities",
+     "status": "done", "stage": "SYNTHETIC PRODUCT CANDIDATE",
+     "notebook": "ridebase_ml.v3", "dataset": "v1.4",
+     "purpose": "Bir sonraki TAMAMLANMIŞ serviste hangi bakım işlemlerinin yapılmasının muhtemel olduğu. "
+                "Champion: CatBoost binary relevance, 44 etiket, 277 PIT-safe özellik, global eşik 0.31, "
+                "etiket bazlı kalibrasyon. Servis zamanı tahmini DEĞİL (o V2.1), bakım gerekliliği/aciliyeti "
+                "DEĞİL (onlar deterministik), mekanik arıza olasılığı DEĞİL. "
+                "SENTETİK VERİDE DOĞRULANDI — GERÇEK FİLO DOĞRULAMASI BEKLENİYOR."},
 ]
 
 NOTEBOOKS = [

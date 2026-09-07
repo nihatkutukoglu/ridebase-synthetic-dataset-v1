@@ -33,7 +33,7 @@ class V1LivePredictionTests(unittest.TestCase):
 
     def test_live_prediction_is_first_and_default_for_v1_and_v2(self):
         for source in (self.template, self.built):
-            self.assertIn('var sub=parts[1]||((route==="v1"||route==="v2"||route==="v2_1")?"predict":null);', source)
+            self.assertIn('var sub=parts[1]||((route==="v1"||route==="v2"||route==="v2_1"||route==="v3")?"predict":null);', source)
             self.assertIn('sub=sub||"predict";', source)
             self.assertIn('var subs=[["predict","Canlı Tahmin"],["overview","Genel Bakış"]', source)
             self.assertIn('var v2subs=[["predict","Canlı Tahmin"],["overview","Genel Bakış"]', source)
@@ -340,10 +340,15 @@ class V2ScenarioPredictionTests(unittest.TestCase):
         self.assertEqual(v21["selection_split"], "VALIDATION")
         self.assertEqual(v21["golden_parity"]["parity_pass"], True)
         self.assertEqual(v21["p30_health"]["exact_zero_share"], 0.0)
-        # V2.0 failure still recorded, V3 still on hold
+        # V2.0 failure still recorded. V3 is no longer on hold: it is a frozen
+        # synthetic product candidate, and the manifest must say exactly that --
+        # never "production" and never a real-fleet claim.
         self.assertIn("V2.0 LIVE-SCENARIO AUDIT FAILED", manifest["production_status"]["model"])
         v3 = [m for m in manifest["modules"] if m["id"] == "v3"][0]
-        self.assertEqual(v3["status"], "planned")
+        self.assertEqual(v3["status"], "done")
+        self.assertEqual(v3["stage"], "SYNTHETIC PRODUCT CANDIDATE")
+        self.assertIn("GERÇEK FİLO DOĞRULAMASI BEKLENİYOR", v3["purpose"])
+        self.assertNotIn("PRODUCTION", v3["purpose"].upper().replace("PRODUCT CANDIDATE", ""))
 
     def test_v2_1_primary_and_v2_0_legacy_scenario_product_contract(self):
         """Phase 9 Test: V2.1 is primary prediction, V2.0 is demoted legacy, and annual usage semantics are robust."""
@@ -1009,6 +1014,149 @@ class SecurityHardeningTests(unittest.TestCase):
         csp = next(h["value"] for h in catchall["headers"] if h["key"] == "Content-Security-Policy")
         self.assertIn("default-src 'self'", csp)
         self.assertIn("frame-ancestors 'none'", csp)
+
+
+class V3Module(unittest.TestCase):
+    """V3 next-service-task module: wiring, copy, and what a viewer actually sees."""
+
+    @classmethod
+    def setUpClass(cls):
+        cls.template = (ROOT / "template.html").read_text(encoding="utf-8")
+        cls.built = (ROOT / "RideBase_Control_Center.html").read_text(encoding="utf-8")
+        payload = {
+            "model_version": "v3.0-research",
+            "status": "V3_SYNTHETIC_PRODUCT_CANDIDATE",
+            "validation_scope": "SYNTHETIC_ONLY",
+            "real_fleet_validation": "PENDING",
+            "landmark_date": "2026-03-31",
+            "motorcycle_id": "MC000001",
+            "input_source": "SYNTHETIC_HISTORY_V1_4",
+            "feature_coverage": 1.0,
+            "top_tasks": [
+                {"task_code": "ENGINE_OIL_CHANGE", "display_name": "Motor Yağı Değişimi",
+                 "probability": 0.82, "percent": 82.0, "rank": 1, "confidence": "YUKSEK",
+                 "product_status": "PRIMARY"},
+                {"task_code": "CHAIN_CLEAN", "display_name": "Zincir Temizliği",
+                 "probability": 0.64, "percent": 64.0, "rank": 2, "confidence": "ORTA",
+                 "product_status": "PRIMARY"},
+                {"task_code": "GENERAL_SAFETY_INSPECTION", "display_name": "Genel Güvenlik Kontrolü",
+                 "probability": 0.48, "percent": 48.0, "rank": 3, "confidence": "ORTA",
+                 "product_status": "PRIMARY"},
+            ],
+            "all_task_probabilities": {"ENGINE_OIL_CHANGE": 0.82, "CHAIN_CLEAN": 0.64},
+            "binary_predictions": {"ENGINE_OIL_CHANGE": True, "CHAIN_CLEAN": True},
+            "warnings": [
+                "Bu tahminler sentetik veri üzerinde doğrulanmıştır. Gerçek filo doğrulaması henüz yapılmamıştır.",
+                "Bu yüzdeler mekanik arıza olasılığı değildir.",
+            ],
+            "provenance": {"threshold": 0.31},
+            "timing_ms": {"history_build": 30.0, "prediction": 24.0, "total": 54.0},
+        }
+        runner = ROOT / "tests" / "v3_module_runner.cjs"
+        completed = subprocess.run(["node", str(runner)], input=json.dumps(payload),
+                                   text=True, capture_output=True, check=True)
+        cls.render = json.loads(completed.stdout)
+
+    # --------------------------------------------------------------- wiring
+    def test_v3_is_a_real_module_not_a_placeholder(self):
+        for source in (self.template, self.built):
+            self.assertIn('v3:{label:"V3 Next Task",render:function(sub){return renderV3(sub);}}', source)
+            self.assertNotIn('render:function(){return renderPlaceholder("v3");}', source)
+
+    def test_v3_sidebar_entry_is_not_marked_soon(self):
+        for source in (self.template, self.built):
+            self.assertNotIn('navItem("v3","V3 Next Task",{ic:sq(),soon:true', source)
+
+    def test_v3_predict_and_overview_are_wired(self):
+        for source in (self.template, self.built):
+            self.assertIn("wireV3Predict", source)
+            self.assertIn("v3LoadOverview", source)
+
+    def test_v3_uses_the_by_motorcycle_route(self):
+        self.assertIn("/api/v3/predict/by-motorcycle", self.template)
+        self.assertIn("/api/v3/sample", self.template)
+
+    # ----------------------------------------------------------- rendering
+    def test_top_three_tasks_render_with_names_and_percentages(self):
+        text = self.render["text"]
+        for name in ("Motor Yağı Değişimi", "Zincir Temizliği", "Genel Güvenlik Kontrolü"):
+            self.assertIn(name, text)
+        for pct in ("82.0%", "64.0%", "48.0%"):
+            self.assertIn(pct, text)
+
+    def test_confidence_tiers_render_in_turkish(self):
+        self.assertIn("YÜKSEK", self.render["text"])
+        self.assertIn("ORTA", self.render["text"])
+        self.assertEqual(self.render["tiers"], ["YÜKSEK", "ORTA", "DÜŞÜK", "SINIRLI VERİ"])
+
+    def test_no_nan_or_undefined_reaches_the_viewer(self):
+        self.assertFalse(self.render["has_nan"])
+        self.assertFalse(self.render["has_undefined"])
+
+    def test_synthetic_disclaimer_is_shown(self):
+        for source in (self.template, self.built):
+            self.assertIn("Bu tahminler sentetik veri üzerinde doğrulanmıştır", source)
+            self.assertIn("Gerçek filo doğrulaması henüz yapılmamıştır", source)
+        self.assertIn("sentetik veri", self.render["disclaimers_block"])
+
+    def test_not_a_failure_probability_is_stated(self):
+        for source in (self.template, self.built):
+            self.assertIn("Bu yüzdeler mekanik arıza olasılığı değildir", source)
+
+    def test_urgency_and_due_are_stated_as_separate(self):
+        for source in (self.template, self.built):
+            self.assertIn("deterministik bakım politikasından ayrı", source)
+
+    def test_feature_coverage_and_synthetic_scope_are_visible(self):
+        text = self.render["text"]
+        self.assertIn("özellik kapsamı", text)
+        self.assertIn("SYNTHETIC_ONLY", text)
+        self.assertIn("PENDING", text)
+
+    # ---------------------------------------------------------------- copy
+    def test_p_at_1_is_never_labelled_accuracy(self):
+        """Near any P@1, the words for "accuracy" may appear only as a negation.
+
+        The UI is required to say P@1 is *not* an accuracy figure, so a blanket
+        substring ban would forbid the very disclaimer the brief demands. The
+        check is therefore that every occurrence is immediately negated.
+        """
+        for source in (self.template, self.built):
+            idx = source.find("P@1")
+            while idx != -1:
+                window = source[max(0, idx - 200): idx + 400].lower()
+                for term in ("doğruluk oranı", "accuracy"):
+                    at = window.find(term)
+                    while at != -1:
+                        ctx = window[max(0, at - 60): at + len(term) + 60]
+                        self.assertTrue(
+                            "değildir" in ctx or "not an accuracy" in ctx
+                            or "never labelled accuracy" in ctx,
+                            f"{term!r} used near P@1 without a negation: {ctx!r}")
+                        at = window.find(term, at + 1)
+                idx = source.find("P@1", idx + 1)
+
+    def test_forbidden_claims_are_absent_from_the_v3_module(self):
+        start = self.template.index("/* ---------------- V3 — NEXT SERVICE TASKS")
+        end = self.template.index("/* ---------------- placeholder (unused modules)", start)
+        module = self.template[start:end].lower()
+        for phrase in ("kesin yapılacak", "arıza riski", "gerçek veride doğruluk", "accurate"):
+            self.assertNotIn(phrase, module)
+
+    def test_v3_does_not_claim_a_time_horizon(self):
+        start = self.template.index("/* ---------------- V3 — NEXT SERVICE TASKS")
+        end = self.template.index("/* ---------------- placeholder (unused modules)", start)
+        module = self.template[start:end]
+        for phrase in ("30 gün", "60 gün", "90 gün", "120 gün", "P30", "P90"):
+            self.assertNotIn(phrase, module)
+
+    # -------------------------------------------------- existing surfaces
+    def test_v2_1_wording_is_unchanged(self):
+        self.assertIn("servise dönme", self.template)
+        self.assertIn("30 / 60 / 90 / 120", self.template)
+
+    def test_maintenance_urgency_wording_is_unchanged(self):
+        self.assertIn("v2CalculateUrgency", self.template)
 
 
 if __name__ == "__main__":
