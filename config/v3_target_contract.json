@@ -1,0 +1,59 @@
+{
+  "contract_version": "v3-target-contract-1.0.0",
+  "model_family": "multi_label_next_service_tasks",
+  "question": "At the next completed service, which maintenance tasks will be performed?",
+  "not_this": [
+    "maintenance_due",
+    "maintenance_urgency",
+    "v2_1_service_return_probability",
+    "mechanical_failure_probability",
+    "v1_next_service_regression"
+  ],
+  "source_world": "ridebase_v1_4",
+  "landmark": {
+    "definition": "end-of-month observation point for one motorcycle",
+    "source": "frozen V2.1 dynamic-landmark grid (v2_1_modeling_table.parquet)",
+    "grid": "monthly",
+    "read_only": true
+  },
+  "target_service": {
+    "definition": "first service with received_at strictly after landmark_at, within the motorcycle's administrative observation window",
+    "eligible_service_type_codes": [
+      "PERIODIC",
+      "REPAIR",
+      "TIRE",
+      "BREAKDOWN"
+    ],
+    "completion_semantics": "every services.csv row in v1.4 has status=DELIVERED; arrival implies completion (median 1.3h, 90.7% same calendar day)",
+    "censored_landmarks": "EXCLUDED - target unknown, not empty"
+  },
+  "target_label": {
+    "definition": "task_code on the target service with service_tasks.status = COMPLETED",
+    "declined_tasks": "NEGATIVE - recommended but not performed",
+    "eligibility": "maintenance_tasks.can_be_next_service_target == 1",
+    "applicability": "taxonomy powertrain / final_drive / cooling / transmission requirements vs the motorcycle's model spec"
+  },
+  "event_type_decisions": {
+    "completed_scheduled_maintenance": "COUNTS (service_type_code=PERIODIC, 46,542 services)",
+    "workshop_inspection": "COUNTS as labels where INSPECT tasks are recorded; there is no separate inspection-only service type in v1.4",
+    "oil_change": "COUNTS (ENGINE_OIL_CHANGE)",
+    "filter_replacement": "COUNTS (AIR_FILTER_CHANGE modelled; OIL_FILTER_CHANGE and FUEL_FILTER_* excluded on support - see AMBIGUOUS notes)",
+    "chain_service": "COUNTS (CHAIN_CLEAN / CHAIN_LUBRICATE / CHAIN_INSPECTION), applicable only to chain-drive motorcycles",
+    "tire_replacement": "COUNTS (FRONT_TIRE_CHANGE / REAR_TIRE_CHANGE)",
+    "brake_work": "COUNTS (pad inspect/change, fluid check/change, disc, bleed)",
+    "coolant": "COUNTS (COOLANT_LEVEL_CHECK / COOLANT_CHANGE), applicable to liquid-cooled only",
+    "battery": "COUNTS (BATTERY_TEST / BATTERY_CHANGE)",
+    "clutch": "EXCLUDED on support - only 1,898 applicable rows (manual-transmission bikes) and <200 pre-TEST positives",
+    "valve_inspection": "COUNTS (VALVE_CLEARANCE_INSPECTION modelled, VALVE_CLEARANCE_ADJUST modelled as low-frequency)",
+    "breakdown_repair": "The service COUNTS as a target service (service_type_code=BREAKDOWN, 1,664 services). Its task lines are labels like any other. V3 predicts what will be done at the next visit, whatever kind of visit it is.",
+    "warranty_service": "COUNTS. NOTE: in v1.4 is_warranty == is_breakdown exactly (both 1,664 rows) - warranty is not an independent event type in this world.",
+    "cancellation": "CANNOT be a target - CANCELLED appointments (2,552) never produce a service row",
+    "no_show": "CANNOT be a target - NO_SHOW appointments (2,052) never produce a service row",
+    "appointment_without_completion": "CANNOT be a target - only CONVERTED_TO_SERVICE appointments (30,901) reach services.csv; RESCHEDULED (844) do not"
+  },
+  "unresolved_semantics": [
+    "OIL_FILTER_CHANGE is decoupled from ENGINE_OIL_CHANGE in this generator (40 vs 34,762 positives). Real workshops almost always pair them. Marked AMBIGUOUS; not modelled.",
+    "is_warranty is perfectly collinear with is_breakdown, so 'warranty service' has no independent meaning in v1.4 and no separate contract line can be established from data.",
+    "There is no explicit service_type for a pure inspection visit; inspection tasks appear inside PERIODIC/REPAIR services."
+  ]
+}
