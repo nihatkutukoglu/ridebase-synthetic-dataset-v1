@@ -1,0 +1,411 @@
+{
+  "passed": true,
+  "failures": [],
+  "scenarios": {
+    "recent_service": {
+      "rows": 2000,
+      "all_finite": true,
+      "within_0_1": true,
+      "deterministic_repeat": true,
+      "ranking_stable": true,
+      "no_duplicate_task_codes": true,
+      "top_k_count_correct": true,
+      "top_k_5_returns_more_than_3": true,
+      "hidden_labels_never_shown": true,
+      "ranks_dense_and_ordered": true,
+      "confidence_tier_valid": true,
+      "high_confidence_only_on_primary": true,
+      "disclaimer_always_present": true,
+      "not_failure_disclaimer_present": true,
+      "no_urgency_or_v2_1_field": true,
+      "feature_coverage_reported": true,
+      "all_44_labels_returned": true,
+      "mean_top1_probability": 0.8575,
+      "confidence_mix": {
+        "YUKSEK": 2793,
+        "ORTA": 2151,
+        "DUSUK": 1056
+      },
+      "top1_task_mix": {
+        "ENGINE_OIL_CHANGE": 1995,
+        "FRONT_TIRE_CHANGE": 3,
+        "CHAIN_INSPECTION": 2
+      }
+    },
+    "near_maintenance": {
+      "rows": 1088,
+      "all_finite": true,
+      "within_0_1": true,
+      "deterministic_repeat": true,
+      "ranking_stable": true,
+      "no_duplicate_task_codes": true,
+      "top_k_count_correct": true,
+      "top_k_5_returns_more_than_3": true,
+      "hidden_labels_never_shown": true,
+      "ranks_dense_and_ordered": true,
+      "confidence_tier_valid": true,
+      "high_confidence_only_on_primary": true,
+      "disclaimer_always_present": true,
+      "not_failure_disclaimer_present": true,
+      "no_urgency_or_v2_1_field": true,
+      "feature_coverage_reported": true,
+      "all_44_labels_returned": true,
+      "mean_top1_probability": 0.8651,
+      "confidence_mix": {
+        "ORTA": 1445,
+        "YUKSEK": 1287,
+        "DUSUK": 532
+      },
+      "top1_task_mix": {
+        "ENGINE_OIL_CHANGE": 1087,
+        "CHAIN_CLEAN": 1
+      }
+    },
+    "overdue": {
+      "rows": 2000,
+      "all_finite": true,
+      "within_0_1": true,
+      "deterministic_repeat": true,
+      "ranking_stable": true,
+      "no_duplicate_task_codes": true,
+      "top_k_count_correct": true,
+      "top_k_5_returns_more_than_3": true,
+      "hidden_labels_never_shown": true,
+      "ranks_dense_and_ordered": true,
+      "confidence_tier_valid": true,
+      "high_confidence_only_on_primary": true,
+      "disclaimer_always_present": true,
+      "not_failure_disclaimer_present": true,
+      "no_urgency_or_v2_1_field": true,
+      "feature_coverage_reported": true,
+      "all_44_labels_returned": true,
+      "mean_top1_probability": 0.7311,
+      "confidence_mix": {
+        "DUSUK": 2454,
+        "YUKSEK": 1796,
+        "ORTA": 1750
+      },
+      "top1_task_mix": {
+        "ENGINE_OIL_CHANGE": 1914,
+        "FRONT_TIRE_CHANGE": 81,
+        "CHAIN_LUBRICATE": 3,
+        "CHAIN_CLEAN": 2
+      }
+    },
+    "high_usage": {
+      "rows": 791,
+      "all_finite": true,
+      "within_0_1": true,
+      "deterministic_repeat": true,
+      "ranking_stable": true,
+      "no_duplicate_task_codes": true,
+      "top_k_count_correct": true,
+      "top_k_5_returns_more_than_3": true,
+      "hidden_labels_never_shown": true,
+      "ranks_dense_and_ordered": true,
+      "confidence_tier_valid": true,
+      "high_confidence_only_on_primary": true,
+      "disclaimer_always_present": true,
+      "not_failure_disclaimer_present": true,
+      "no_urgency_or_v2_1_field": true,
+      "feature_coverage_reported": true,
+      "all_44_labels_returned": true,
+      "mean_top1_probability": 0.8357,
+      "confidence_mix": {
+        "YUKSEK": 1044,
+        "ORTA": 783,
+        "DUSUK": 546
+      },
+      "top1_task_mix": {
+        "ENGINE_OIL_CHANGE": 768,
+        "FRONT_TIRE_CHANGE": 19,
+        "CHAIN_LUBRICATE": 3,
+        "CHAIN_INSPECTION": 1
+      }
+    },
+    "low_usage": {
+      "rows": 1619,
+      "all_finite": true,
+      "within_0_1": true,
+      "deterministic_repeat": true,
+      "ranking_stable": true,
+      "no_duplicate_task_codes": true,
+      "top_k_count_correct": true,
+      "top_k_5_returns_more_than_3": true,
+      "hidden_labels_never_shown": true,
+      "ranks_dense_and_ordered": true,
+      "confidence_tier_valid": true,
+      "high_confidence_only_on_primary": true,
+      "disclaimer_always_present": true,
+      "not_failure_disclaimer_present": true,
+      "no_urgency_or_v2_1_field": true,
+      "feature_coverage_reported": true,
+      "all_44_labels_returned": true,
+      "mean_top1_probability": 0.8214,
+      "confidence_mix": {
+        "ORTA": 1896,
+        "YUKSEK": 1851,
+        "DUSUK": 1110
+      },
+      "top1_task_mix": {
+        "ENGINE_OIL_CHANGE": 1598,
+        "CHAIN_CLEAN": 9,
+        "GENERAL_SAFETY_INSPECTION": 8,
+        "CHAIN_LUBRICATE": 3,
+        "FRONT_TIRE_CHANGE": 1
+      }
+    },
+    "rich_task_history": {
+      "rows": 2000,
+      "all_finite": true,
+      "within_0_1": true,
+      "deterministic_repeat": true,
+      "ranking_stable": true,
+      "no_duplicate_task_codes": true,
+      "top_k_count_correct": true,
+      "top_k_5_returns_more_than_3": true,
+      "hidden_labels_never_shown": true,
+      "ranks_dense_and_ordered": true,
+      "confidence_tier_valid": true,
+      "high_confidence_only_on_primary": true,
+      "disclaimer_always_present": true,
+      "not_failure_disclaimer_present": true,
+      "no_urgency_or_v2_1_field": true,
+      "feature_coverage_reported": true,
+      "all_44_labels_returned": true,
+      "mean_top1_probability": 0.7908,
+      "confidence_mix": {
+        "YUKSEK": 2287,
+        "ORTA": 1875,
+        "DUSUK": 1838
+      },
+      "top1_task_mix": {
+        "ENGINE_OIL_CHANGE": 1941,
+        "FRONT_TIRE_CHANGE": 56,
+        "CHAIN_CLEAN": 1,
+        "CHAIN_LUBRICATE": 1,
+        "CHAIN_INSPECTION": 1
+      }
+    },
+    "sparse_task_history": {
+      "rows": 1318,
+      "all_finite": true,
+      "within_0_1": true,
+      "deterministic_repeat": true,
+      "ranking_stable": true,
+      "no_duplicate_task_codes": true,
+      "top_k_count_correct": true,
+      "top_k_5_returns_more_than_3": true,
+      "hidden_labels_never_shown": true,
+      "ranks_dense_and_ordered": true,
+      "confidence_tier_valid": true,
+      "high_confidence_only_on_primary": true,
+      "disclaimer_always_present": true,
+      "not_failure_disclaimer_present": true,
+      "no_urgency_or_v2_1_field": true,
+      "feature_coverage_reported": true,
+      "all_44_labels_returned": true,
+      "mean_top1_probability": 0.8593,
+      "confidence_mix": {
+        "ORTA": 1767,
+        "YUKSEK": 1605,
+        "DUSUK": 582
+      },
+      "top1_task_mix": {
+        "ENGINE_OIL_CHANGE": 1310,
+        "GENERAL_SAFETY_INSPECTION": 7,
+        "CHAIN_LUBRICATE": 1
+      }
+    },
+    "no_task_history": {
+      "rows": 10,
+      "all_finite": true,
+      "within_0_1": true,
+      "deterministic_repeat": true,
+      "ranking_stable": true,
+      "no_duplicate_task_codes": true,
+      "top_k_count_correct": true,
+      "top_k_5_returns_more_than_3": true,
+      "hidden_labels_never_shown": true,
+      "ranks_dense_and_ordered": true,
+      "confidence_tier_valid": true,
+      "high_confidence_only_on_primary": true,
+      "disclaimer_always_present": true,
+      "not_failure_disclaimer_present": true,
+      "no_urgency_or_v2_1_field": true,
+      "feature_coverage_reported": true,
+      "all_44_labels_returned": true,
+      "mean_top1_probability": 0.7563,
+      "confidence_mix": {
+        "YUKSEK": 12,
+        "DUSUK": 12,
+        "ORTA": 6
+      },
+      "top1_task_mix": {
+        "ENGINE_OIL_CHANGE": 10
+      }
+    },
+    "unseen_motorcycle": {
+      "rows": 1725,
+      "all_finite": true,
+      "within_0_1": true,
+      "deterministic_repeat": true,
+      "ranking_stable": true,
+      "no_duplicate_task_codes": true,
+      "top_k_count_correct": true,
+      "top_k_5_returns_more_than_3": true,
+      "hidden_labels_never_shown": true,
+      "ranks_dense_and_ordered": true,
+      "confidence_tier_valid": true,
+      "high_confidence_only_on_primary": true,
+      "disclaimer_always_present": true,
+      "not_failure_disclaimer_present": true,
+      "no_urgency_or_v2_1_field": true,
+      "feature_coverage_reported": true,
+      "all_44_labels_returned": true,
+      "mean_top1_probability": 0.8256,
+      "confidence_mix": {
+        "ORTA": 2124,
+        "YUKSEK": 1974,
+        "DUSUK": 1077
+      },
+      "top1_task_mix": {
+        "ENGINE_OIL_CHANGE": 1702,
+        "FRONT_TIRE_CHANGE": 16,
+        "CHAIN_LUBRICATE": 3,
+        "GENERAL_SAFETY_INSPECTION": 2,
+        "CHAIN_CLEAN": 1,
+        "CVT_CASE_INSPECTION": 1
+      }
+    },
+    "older_motorcycle": {
+      "rows": 145,
+      "all_finite": true,
+      "within_0_1": true,
+      "deterministic_repeat": true,
+      "ranking_stable": true,
+      "no_duplicate_task_codes": true,
+      "top_k_count_correct": true,
+      "top_k_5_returns_more_than_3": true,
+      "hidden_labels_never_shown": true,
+      "ranks_dense_and_ordered": true,
+      "confidence_tier_valid": true,
+      "high_confidence_only_on_primary": true,
+      "disclaimer_always_present": true,
+      "not_failure_disclaimer_present": true,
+      "no_urgency_or_v2_1_field": true,
+      "feature_coverage_reported": true,
+      "all_44_labels_returned": true,
+      "mean_top1_probability": 0.8058,
+      "confidence_mix": {
+        "ORTA": 164,
+        "YUKSEK": 152,
+        "DUSUK": 119
+      },
+      "top1_task_mix": {
+        "ENGINE_OIL_CHANGE": 142,
+        "FRONT_TIRE_CHANGE": 3
+      }
+    },
+    "newer_motorcycle": {
+      "rows": 2000,
+      "all_finite": true,
+      "within_0_1": true,
+      "deterministic_repeat": true,
+      "ranking_stable": true,
+      "no_duplicate_task_codes": true,
+      "top_k_count_correct": true,
+      "top_k_5_returns_more_than_3": true,
+      "hidden_labels_never_shown": true,
+      "ranks_dense_and_ordered": true,
+      "confidence_tier_valid": true,
+      "high_confidence_only_on_primary": true,
+      "disclaimer_always_present": true,
+      "not_failure_disclaimer_present": true,
+      "no_urgency_or_v2_1_field": true,
+      "feature_coverage_reported": true,
+      "all_44_labels_returned": true,
+      "mean_top1_probability": 0.8765,
+      "confidence_mix": {
+        "ORTA": 2754,
+        "YUKSEK": 2699,
+        "DUSUK": 547
+      },
+      "top1_task_mix": {
+        "ENGINE_OIL_CHANGE": 1990,
+        "FRONT_TIRE_CHANGE": 3,
+        "GENERAL_SAFETY_INSPECTION": 3,
+        "CHAIN_CLEAN": 2,
+        "CHAIN_LUBRICATE": 1,
+        "CHAIN_INSPECTION": 1
+      }
+    },
+    "chain_drive": {
+      "rows": 2000,
+      "all_finite": true,
+      "within_0_1": true,
+      "deterministic_repeat": true,
+      "ranking_stable": true,
+      "no_duplicate_task_codes": true,
+      "top_k_count_correct": true,
+      "top_k_5_returns_more_than_3": true,
+      "hidden_labels_never_shown": true,
+      "ranks_dense_and_ordered": true,
+      "confidence_tier_valid": true,
+      "high_confidence_only_on_primary": true,
+      "disclaimer_always_present": true,
+      "not_failure_disclaimer_present": true,
+      "no_urgency_or_v2_1_field": true,
+      "feature_coverage_reported": true,
+      "all_44_labels_returned": true,
+      "mean_top1_probability": 0.8254,
+      "confidence_mix": {
+        "YUKSEK": 3083,
+        "ORTA": 1686,
+        "DUSUK": 1231
+      },
+      "top1_task_mix": {
+        "ENGINE_OIL_CHANGE": 1954,
+        "FRONT_TIRE_CHANGE": 38,
+        "CHAIN_CLEAN": 5,
+        "CHAIN_LUBRICATE": 3
+      }
+    },
+    "scooter": {
+      "rows": 2000,
+      "all_finite": true,
+      "within_0_1": true,
+      "deterministic_repeat": true,
+      "ranking_stable": true,
+      "no_duplicate_task_codes": true,
+      "top_k_count_correct": true,
+      "top_k_5_returns_more_than_3": true,
+      "hidden_labels_never_shown": true,
+      "ranks_dense_and_ordered": true,
+      "confidence_tier_valid": true,
+      "high_confidence_only_on_primary": true,
+      "disclaimer_always_present": true,
+      "not_failure_disclaimer_present": true,
+      "no_urgency_or_v2_1_field": true,
+      "feature_coverage_reported": true,
+      "all_44_labels_returned": true,
+      "mean_top1_probability": 0.8254,
+      "confidence_mix": {
+        "ORTA": 2764,
+        "YUKSEK": 1926,
+        "DUSUK": 1310
+      },
+      "top1_task_mix": {
+        "ENGINE_OIL_CHANGE": 1991,
+        "FRONT_TIRE_CHANGE": 9
+      }
+    }
+  },
+  "weak_label_probe": {
+    "rows": 4000,
+    "landmarks_where_a_hidden_label_outranks_the_shown_leader": 0,
+    "share": 0.0,
+    "handling": "not shown in the product list; a reliability warning is attached and the tier stays DUSUK"
+  },
+  "max_rows_per_scenario": 2000
+}
