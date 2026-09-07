@@ -1,0 +1,26 @@
+{
+  "cold_start_s": 2.13,
+  "v3_predictor_load_ms": 343.6,
+  "model_loaded_once": true,
+  "by_motorcycle_ms": {
+    "p50": 58.9,
+    "p95": 65.8,
+    "min": 58.2,
+    "max": 67.4
+  },
+  "history_build_ms": 32.12,
+  "inference_ms": 23.99,
+  "rss_baseline_mb": 11.5,
+  "rss_after_startup_mb": 392.9,
+  "rss_after_first_v3_request_mb": 419.7,
+  "rss_after_30_requests_mb": 420.0,
+  "rss_growth_over_30_requests_mb": 0.3,
+  "max_batch": 100,
+  "render_free_plan_mb": 512,
+  "batch_over_limit_status": 422,
+  "empty_feature_row_status": 422,
+  "unknown_bike_status": 404,
+  "scenario_route_status": 404,
+  "pre_observation_status": 422,
+  "error_body_has_no_traceback": true
+}

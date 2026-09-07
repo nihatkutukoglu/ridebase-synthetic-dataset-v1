@@ -178,3 +178,66 @@ def test_warnings_always_carry_the_three_disclaimers(policy):
 def test_low_coverage_produces_a_data_warning(policy):
     w = PP.product_warnings([], 0.5, 0, 44)
     assert any("kapsam" in x.lower() for x in w)
+
+
+# ------------------------------------- Phase-3 policy validation (named gates)
+def test_no_duplicate_task_codes():
+    codes = [r["task_code"] for r in RAW["labels"]]
+    assert len(codes) == len(set(codes))
+
+
+def test_no_unknown_label_in_policy(policy):
+    """Every policy entry must correspond to a label the frozen model actually has."""
+    assert set(policy) <= set(FROZEN_LABELS)
+
+
+def test_every_frozen_label_is_accounted_for(policy):
+    missing = set(FROZEN_LABELS) - set(policy)
+    assert not missing, f"frozen labels absent from the policy: {sorted(missing)}"
+
+
+def test_all_statuses_are_valid(policy):
+    valid = {PP.PRIMARY, PP.SECONDARY, PP.LOW_CONFIDENCE, PP.HIDDEN}
+    for code, pol in policy.items():
+        assert pol.product_status in valid, (code, pol.product_status)
+
+
+def test_policy_metrics_are_in_range(policy):
+    for code, pol in policy.items():
+        assert 0.0 <= pol.test_pr_auc <= 1.0, code
+        assert 0.0 <= pol.test_prevalence <= 1.0, code
+        assert pol.test_support >= 0, code
+
+
+# ------------------------------------- Phase-15 weak-label product behaviour
+def test_weak_label_at_high_probability_is_excluded_and_never_high_confidence(policy):
+    """A HIDDEN_BY_DEFAULT label pinned at 0.99 must not lead, and must stay DÜŞÜK."""
+    hidden = [c for c, p in policy.items() if p.hidden_by_default]
+    assert hidden
+    probs = {c: (0.99 if c in hidden else 0.05) for c in policy}
+    ranked = PP.rank_tasks(probs, {c: True for c in policy}, policy, top_k=5)
+    assert all(r["task_code"] not in hidden for r in ranked)
+    for code in hidden:
+        assert PP.confidence_tier(0.99, policy[code])[0] == PP.TIER_LOW
+
+
+def test_low_confidence_label_may_appear_but_carries_its_marker(policy):
+    low = [c for c, p in policy.items() if p.product_status == PP.LOW_CONFIDENCE]
+    assert low
+    probs = {c: (0.9 if c in low else 0.01) for c in policy}
+    ranked = PP.rank_tasks(probs, {c: True for c in policy}, policy, top_k=3)
+    shown = [r for r in ranked if r["task_code"] in low]
+    assert shown, "a LOW_CONFIDENCE label should still be rankable"
+    for r in shown:
+        assert r["product_status"] == PP.LOW_CONFIDENCE
+        assert r["confidence"] != PP.TIER_HIGH
+
+
+def test_technical_view_keeps_every_label_available(policy):
+    """Presentation policy must never delete a model output."""
+    assert len(policy) == len(FROZEN_LABELS) == 44
+    ranked = PP.rank_tasks({c: 0.5 for c in policy}, {c: True for c in policy},
+                           policy, top_k=44, include_hidden=True)
+    assert len(ranked) == PP.MAX_TOP_K  # product list stays bounded...
+    # ...while the caller can still see all 44 through the raw probability map
+    assert len({r["task_code"] for r in ranked}) == PP.MAX_TOP_K

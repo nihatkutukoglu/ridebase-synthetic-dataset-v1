@@ -399,6 +399,63 @@
         "ENGINE_OIL_CHANGE": 1991,
         "FRONT_TIRE_CHANGE": 9
       }
+    },
+    "extreme_overdue": {
+      "rows": 426,
+      "all_finite": true,
+      "within_0_1": true,
+      "deterministic_repeat": true,
+      "ranking_stable": true,
+      "no_duplicate_task_codes": true,
+      "top_k_count_correct": true,
+      "top_k_5_returns_more_than_3": true,
+      "hidden_labels_never_shown": true,
+      "ranks_dense_and_ordered": true,
+      "confidence_tier_valid": true,
+      "high_confidence_only_on_primary": true,
+      "disclaimer_always_present": true,
+      "not_failure_disclaimer_present": true,
+      "no_urgency_or_v2_1_field": true,
+      "feature_coverage_reported": true,
+      "all_44_labels_returned": true,
+      "mean_top1_probability": 0.7164,
+      "confidence_mix": {
+        "DUSUK": 554,
+        "YUKSEK": 365,
+        "ORTA": 359
+      },
+      "top1_task_mix": {
+        "ENGINE_OIL_CHANGE": 393,
+        "FRONT_TIRE_CHANGE": 32,
+        "CHAIN_LUBRICATE": 1
+      }
+    },
+    "same_day_duplicate_records": {
+      "rows": 9,
+      "all_finite": true,
+      "within_0_1": true,
+      "deterministic_repeat": true,
+      "ranking_stable": true,
+      "no_duplicate_task_codes": true,
+      "top_k_count_correct": true,
+      "top_k_5_returns_more_than_3": true,
+      "hidden_labels_never_shown": true,
+      "ranks_dense_and_ordered": true,
+      "confidence_tier_valid": true,
+      "high_confidence_only_on_primary": true,
+      "disclaimer_always_present": true,
+      "not_failure_disclaimer_present": true,
+      "no_urgency_or_v2_1_field": true,
+      "feature_coverage_reported": true,
+      "all_44_labels_returned": true,
+      "mean_top1_probability": 0.9054,
+      "confidence_mix": {
+        "ORTA": 14,
+        "YUKSEK": 13
+      },
+      "top1_task_mix": {
+        "ENGINE_OIL_CHANGE": 9
+      }
     }
   },
   "weak_label_probe": {

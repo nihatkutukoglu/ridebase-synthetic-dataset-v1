@@ -174,3 +174,52 @@ def test_provenance_records_the_pit_boundary(ctx):
     fv = S.build_v3_features(m.motorcycle_id, m.landmark_at.date(), adapter, labels, order)
     assert fv.provenance["declined_tasks_excluded"] is True
     assert "<= landmark" in fv.provenance["task_history_boundary"]
+
+
+# ------------------------------------------------- midnight-straddle boundary
+def test_straddling_history_service_is_detected(ctx):
+    """A service that arrives before the landmark and finishes after it is flagged.
+
+    MC009503 @ 2023-04-30: SVC039193 arrives 22:52 and completes 01:43 the next
+    day. The V2.1 history builder keys its task counters on each task's completion
+    timestamp while V3 training keys history on the parent service's arrival date,
+    so the two disagree on exactly these landmarks. V3 cannot change the three
+    V2.1-owned columns without mutating a frozen contract, so it reports the
+    condition instead of hiding it.
+    """
+    from datetime import date
+
+    _, _, _, adapter = ctx
+    assert S.straddling_history_service(adapter, "MC009503", date(2023, 4, 30)) is True
+    assert S.straddling_history_service(adapter, "MC000001", date(2026, 3, 31)) is False
+
+
+def test_straddling_landmark_carries_a_warning_and_provenance_flag(ctx):
+    from datetime import date
+
+    labels, order, _, adapter = ctx
+    fv = S.build_v3_features("MC009503", date(2023, 4, 30), adapter, labels, order)
+    assert fv.provenance["straddling_history_service"] is True
+    assert any("gece yarısını" in w for w in fv.warnings)
+
+
+def test_task_fetch_lookahead_never_admits_a_future_service(ctx):
+    """The lookahead widens the FETCH, never the point-in-time boundary.
+
+    Every event returned must belong to a service that arrived at or before the
+    landmark, no matter how far ahead candidate rows were pulled from.
+    """
+    from datetime import date
+
+    _, _, prep, adapter = ctx
+    assert S.TASK_FETCH_LOOKAHEAD_DAYS > 0
+    for i in (0, 5, 11):
+        m = prep.ds.meta.iloc[i]
+        lm = m.landmark_at.date()
+        ev = S._completed_task_events(adapter, m.motorcycle_id, lm)
+        if not len(ev):
+            continue
+        allowed = {str(r["service_id"])
+                   for r in adapter.get_services_before(m.motorcycle_id, lm)}
+        assert set(ev["service_id"].astype(str)) <= allowed
+        assert ev["event_at"].max() <= pd.Timestamp(lm)

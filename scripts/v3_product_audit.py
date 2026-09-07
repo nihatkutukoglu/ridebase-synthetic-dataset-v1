@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""V3 Phase-17 top-K product audit against the FROZEN model.
+"""V3 top-K product audit against the FROZEN model (Phase 16).
 
 Every scenario is a filter over real landmarks, never a hand-built feature row:
 a synthetic row can violate the joint distribution and then "pass" a check that
@@ -40,6 +40,13 @@ SCENARIOS = {
     "newer_motorcycle":      lambda X, m: X["production_age_days"] <= 3 * 365,
     "chain_drive":           lambda X, m: X["hist_count__CHAIN_CLEAN"] > 0,
     "scooter":               lambda X, m: X["category"] == "SCOOTER",
+    # far past the OEM interval -- the tail the product is most likely to be
+    # asked about and least likely to have seen often in training
+    "extreme_overdue":       lambda X, m: X["policy_due_ratio__ENGINE_OIL_CHANGE"] >= 4.0,
+    # landmarks sitting inside a service that straddles midnight; the V2.1 history
+    # builder and the V3 training builder disagree here (Phase 7), so the product
+    # must still behave -- bounded, deterministic, warned
+    "same_day_duplicate_records": lambda X, m: m["_straddling"],
 }
 
 
@@ -49,6 +56,7 @@ def main() -> int:
     pred = V3TaskPredictor.load(MODELS)
     policy = pred.label_policy
     meta, X = prep.ds.meta, prep.ds.features
+    meta = meta.assign(_straddling=_straddling_mask(prep))
     pool = meta["v3_split"].isin(["VALIDATION", "TEST"]).to_numpy()
 
     hidden = {c for c, p in policy.items() if p.hidden_by_default}
@@ -135,10 +143,33 @@ def main() -> int:
     payload = {"passed": not failures, "failures": failures,
                "scenarios": results, "weak_label_probe": weak,
                "max_rows_per_scenario": MAX_ROWS}
-    (REPORTS / "17_topk_product_audit.json").write_text(
+    (REPORTS / "16_topk_product_audit.json").write_text(
         json.dumps(payload, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
     print("\nAUDIT:", "PASS" if not failures else f"FAIL {failures}")
     return 0 if not failures else 1
+
+
+def _straddling_mask(prep) -> np.ndarray:
+    """Landmarks that fall inside a service straddling a calendar day (Phase 7)."""
+    import pandas as pd
+
+    from ridebase_ml.v3.sources import load_table
+
+    sv = load_table("services").copy()
+    st = load_table("service_tasks")
+    sv["recv_d"] = pd.to_datetime(sv["received_at"]).dt.normalize()
+    last = pd.to_datetime(st["completed_at"]).groupby(st["service_id"]).max().dt.normalize()
+    sv["last_task_d"] = sv["service_id"].map(last)
+    strad = sv.loc[sv["last_task_d"] > sv["recv_d"], ["motorcycle_id", "recv_d", "last_task_d"]]
+    by = {m: g for m, g in strad.groupby("motorcycle_id")}
+    meta = prep.ds.meta
+    out = np.zeros(len(meta), dtype=bool)
+    for pos, (mid, lm) in enumerate(zip(meta["motorcycle_id"], meta["landmark_at"])):
+        g = by.get(mid)
+        if g is None:
+            continue
+        out[pos] = bool(((g["recv_d"] <= lm) & (g["last_task_d"] > lm)).any())
+    return out
 
 
 def _counts(it) -> dict:

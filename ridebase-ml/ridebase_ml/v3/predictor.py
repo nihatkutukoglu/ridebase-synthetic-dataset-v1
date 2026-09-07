@@ -259,6 +259,12 @@ class V3TaskPredictor:
                 "binary_predictions": {c: bool(probs[c] >= self.thresholds[j] and applicable[c])
                                        for j, c in enumerate(self.labels)},
                 "applicable_tasks": applicable,
+                "threshold_policy": {
+                    "policy": self.manifest.get("threshold_policy"),
+                    "threshold": float(self.thresholds[0]),
+                    "per_label": len(set(self.thresholds.tolist())) > 1,
+                    "tuned_on": "VALIDATION",
+                },
                 "feature_coverage": round(cov[i], 4),
                 "warnings": warnings,
                 "provenance": self._provenance(int(app[i].sum())),

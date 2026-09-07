@@ -1,0 +1,32 @@
+{
+  "sparse (<=5 prior task lines)": {
+    "rows": 60,
+    "p50_ms": 27.22,
+    "p95_ms": 28.54
+  },
+  "typical (6-30)": {
+    "rows": 60,
+    "p50_ms": 28.47,
+    "p95_ms": 30.5
+  },
+  "rich (>30)": {
+    "rows": 60,
+    "p50_ms": 32.88,
+    "p95_ms": 37.96
+  },
+  "pit_battery": {
+    "landmarks": 40,
+    "deterministic_repeat": 40,
+    "no_future_event": 40,
+    "monotone_T-1_T_T+1": 40,
+    "same_day_shuffle_invariant": 40
+  },
+  "no_task_history_landmarks": 15,
+  "no_history_example": {
+    "motorcycle_id": "MC000877",
+    "coverage": 1.0,
+    "warnings": []
+  },
+  "pre_observation": "UnknownMotorcycleError",
+  "bad_date": "HistoryInputError"
+}
