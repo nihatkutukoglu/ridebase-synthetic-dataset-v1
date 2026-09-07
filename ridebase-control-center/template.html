@@ -3187,6 +3187,7 @@ function v3PredictPage(){
     +"işlemlerin görülme olasılığının yüksek olduğunu sıralar. Landmark tarihinden sonraki hiçbir kayıt kullanılmaz.",
     "Yol: <code>motorcycle_id + landmark_date</code> → V2.1 read-only history adapter → 277 PIT-safe feature → frozen V3 (CatBoost binary relevance) → kalibre olasılık → ürün sıralaması.")
   +'<div class="sec">'+v3Disclaimers()+'</div>'
+  +'<div class="sec"><div class="chips" id="v3apiStatus"></div></div>'
   +'<div class="sec" id="v3formBox"></div>'
   +'<div class="sec" id="v3out"></div>';
 }
@@ -3334,7 +3335,38 @@ function v3LoadOverview(){
     box.innerHTML='<div class="empty">Metrikler alınamadı — '+esc(String(e&&e.message||e))+'</div>';
   });
 }
-function wireV3Predict(){ v3Form(); }
+/* The V3 backend may legitimately not be deployed yet (Render autoDeploy is off).
+   Probing /health lets the page say exactly that, instead of letting the first
+   prediction fail with a generic network error. */
+function v3ApiPing(){
+  var api=(window.__V2_API__||"").replace(/\/$/,""), el=document.getElementById("v3apiStatus");
+  if(!el)return;
+  if(!api){el.innerHTML='<span class="chip warn"><span class="dot"></span>API OFFLINE</span>';return;}
+  el.innerHTML='<span class="chip"><span class="dot"></span>Model servisine bağlanılıyor…</span>';
+  v2fetch(api+"/health").then(v2json).then(function(h){
+    var ok=(h.v3_model_loaded===true), disabled=(h.v3_status==="disabled");
+    el.innerHTML='<span class="chip good"><span class="dot"></span>BACKEND API ONLINE</span>'
+      +'<span class="chip '+(ok?'good':'bad')+'">V3 '+(ok?'LOADED':(disabled?'DEVRE DIŞI':'YOK'))+'</span>'
+      +(ok?('<span class="chip">'+esc(String(h.v3_label_count||"—"))+' etiket</span>'
+            +'<span class="chip">'+esc(String(h.v3_feature_count||"—"))+' özellik</span>'
+            +'<span class="chip">CHAMPION '+esc(String(h.v3_champion||"—").toUpperCase())+'</span>'
+            +'<span class="chip warn">REAL FLEET '+esc(h.v3_real_fleet_validation||"PENDING")+'</span>')
+          :'<span class="chip warn">bu backend sürümünde V3 uçları yok</span>');
+    var box=document.getElementById("v3formBox");
+    if(!ok&&box){
+      box.innerHTML=finding("warn","V3 BACKEND HENÜZ YAYINDA DEĞİL",
+        "<p>Bu Control Center sürümü V3 modülünü içeriyor, ancak bağlı backend "
+        +"(<code>"+esc(api)+"</code>) henüz V3 uçlarını sunmuyor. "
+        +(disabled?"V3 bu dağıtımda <code>V3_ENABLED=false</code> ile kapatılmış."
+                  :"Backend'in V3 içeren sürümü henüz deploy edilmemiş.")
+        +" Tahmin çalıştırılamaz — sahte sonuç üretilmez.</p>");
+    }
+  }).catch(function(e){
+    el.innerHTML='<span class="chip bad"><span class="dot"></span>BACKEND API ERİŞİLEMİYOR</span>'
+      +'<span class="chip">'+esc(String(e&&e.message||e))+'</span>';
+  });
+}
+function wireV3Predict(){ v3Form(); v3ApiPing(); }
 
 /* ---------------- placeholder (unused modules) ---------------- */
 function renderPlaceholder(id){

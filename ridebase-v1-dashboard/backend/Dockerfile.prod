@@ -50,6 +50,22 @@ COPY ridebase-ml/models/v2_1_v1_4 /artifacts/models/v2_1_v1_4
 RUN mkdir -p /artifacts/derived_outputs/v2_1_v1_4
 COPY ridebase-ml/derived_outputs/v2_1_v1_4/v2_1_modeling_table.parquet /artifacts/derived_outputs/v2_1_v1_4/v2_1_modeling_table.parquet
 
+# ---- V3 next-service-task (synthetic product candidate) --------------------
+# The frozen champion + calibrators + contracts (~16 MB).
+RUN mkdir -p /artifacts/models/v3_research
+COPY ridebase-ml/models/v3_research /artifacts/models/v3_research
+# Sample index for GET /api/v3/sample (motorcycle_id + landmark_date, input only).
+RUN mkdir -p /artifacts/derived_outputs/v3
+COPY ridebase-ml/derived_outputs/v3/v3_sample_landmarks.parquet /artifacts/derived_outputs/v3/v3_sample_landmarks.parquet
+# V3 needs four SMALL v1.4 reference tables (~3.4 MB) for task applicability,
+# display names and OEM intervals. services.csv / service_tasks.csv are NOT
+# shipped: per-motorcycle history comes from the V2.1 SQLite store above.
+COPY ridebase_v1_4/source_tables/maintenance_tasks.csv /app/app/v3_data/maintenance_tasks.csv
+COPY ridebase_v1_4/source_tables/maintenance_policies.csv /app/app/v3_data/maintenance_policies.csv
+COPY ridebase_v1_4/source_tables/motorcycles.csv /app/app/v3_data/motorcycles.csv
+COPY ridebase_v1_4/source_tables/ridebase_motorcycle_models_v1.csv /app/app/v3_data/ridebase_motorcycle_models_v1.csv
+COPY config/v3_product_label_policy.json /app/config/v3_product_label_policy.json
+
 EXPOSE 8000
 HEALTHCHECK --interval=30s --timeout=5s --start-period=40s --retries=3 \
     CMD curl -fsS http://localhost:8000/health || exit 1
