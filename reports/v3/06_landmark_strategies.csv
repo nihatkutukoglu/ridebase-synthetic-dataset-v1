@@ -1,0 +1,6 @@
+strategy,rows,motorcycles,target_services,landmarks_per_target,max_landmarks_per_target,landmarks_per_motorcycle,lead_days_p10,lead_days_median,lead_days_mean,lead_days_p90,pct_lead_le_30d,n_TRAIN,n_TEST,n_VALIDATION
+all,157887,7276,39451,4.002,31,21.7,13.0,70.0,98.7,231.0,0.2465,126589,17871,13427
+random_one,39451,7276,39451,1.0,1,5.42,8.0,39.0,61.3,142.0,0.4252,28191,5906,5354
+earliest,39451,7276,39451,1.0,1,5.42,19.0,78.0,106.8,244.0,0.1905,28191,5906,5354
+latest,39451,7276,39451,1.0,1,5.42,3.0,16.0,15.6,28.0,0.9811,28191,5906,5354
+annual,22826,7276,20341,1.122,3,3.14,11.0,59.0,89.1,215.0,0.2964,15176,4646,3004
