@@ -88,6 +88,9 @@ def _startup():
     init_v2_1()
     init_v2_1_history()
     log.info("v2.1 landmark survival predictor loaded=%s", v2_1_loaded())
+    from .v3_service import init_v3, v3_loaded
+    init_v3()
+    log.info("v3 next-service-task predictor loaded=%s", v3_loaded())
 
 
 app.include_router(router)

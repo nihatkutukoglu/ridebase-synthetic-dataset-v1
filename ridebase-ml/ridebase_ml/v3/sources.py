@@ -9,6 +9,8 @@ inherits them rather than inventing a parallel (and separately buggy) copy.
 from __future__ import annotations
 
 import functools
+import os
+from collections.abc import Mapping
 from pathlib import Path
 
 import pandas as pd
@@ -31,12 +33,30 @@ _TABLES = (
 )
 
 
+#: Container deployments have no repository checkout. RIDEBASE_V3_SOURCE_DIR points
+#: straight at a directory holding the four small reference tables V3 needs at
+#: serving time (maintenance_tasks, maintenance_policies, motorcycles and the model
+#: master -- about 3.4 MB). Per-motorcycle history never comes from here; it comes
+#: from the V2.1 SQLite adapter.
+SOURCE_DIR_ENV = "RIDEBASE_V3_SOURCE_DIR"
+
+
 def repo_root(start: Path | None = None) -> Path:
     here = (start or Path(__file__)).resolve()
     for parent in here.parents:
         if (parent / "ridebase_v1_4").is_dir() and (parent / ".git").is_dir():
             return parent
     raise FileNotFoundError("repo root with ridebase_v1_4/ not found")
+
+
+def source_dir(root: str | None = None) -> Path:
+    """Where the v1.4 reference tables live: explicit root, else env, else repo."""
+    if root:
+        return Path(root) / WORLD / "source_tables"
+    env = os.environ.get(SOURCE_DIR_ENV)
+    if env:
+        return Path(env).expanduser().resolve()
+    return repo_root() / WORLD / "source_tables"
 
 
 def _read(path: Path) -> pd.DataFrame:
@@ -46,12 +66,49 @@ def _read(path: Path) -> pd.DataFrame:
     return df
 
 
-@functools.lru_cache(maxsize=1)
-def load_sources(root: str | None = None) -> dict[str, pd.DataFrame]:
-    """Load the v1.4 source tables V3 uses. Cached -- callers must not mutate."""
-    base = Path(root) if root else repo_root()
-    src = base / WORLD / "source_tables"
-    return {name: _read(src / f"{name}.csv") for name in _TABLES}
+@functools.lru_cache(maxsize=32)
+def load_table(name: str, root: str | None = None) -> pd.DataFrame:
+    """Load one v1.4 source table. Cached per table -- callers must not mutate."""
+    if name not in _TABLES:
+        raise KeyError(f"unknown v1.4 table {name!r}")
+    return _read(source_dir(root) / f"{name}.csv")
+
+
+class _LazyTables(Mapping):
+    """Mapping over the v1.4 tables that reads each file only when it is touched.
+
+    Serving needs four small reference tables (maintenance_tasks 98 rows,
+    maintenance_policies 621, motorcycles 10k, the 39-row model master) and gets
+    its per-motorcycle history from the SQLite adapter instead. Eagerly loading
+    all ten tables cost **385 MB RSS** -- on a 512 MB host that is the difference
+    between running and being OOM-killed, and services.csv / service_tasks.csv
+    were never read on that path at all.
+
+    Training still touches every table and behaves exactly as before; it just
+    pays for each one at first use.
+    """
+
+    __slots__ = ("_root",)
+
+    def __init__(self, root: str | None = None):
+        self._root = root
+
+    def __getitem__(self, name: str) -> pd.DataFrame:
+        try:
+            return load_table(name, self._root)
+        except KeyError:
+            raise KeyError(name) from None
+
+    def __iter__(self):
+        return iter(_TABLES)
+
+    def __len__(self) -> int:
+        return len(_TABLES)
+
+
+def load_sources(root: str | None = None) -> Mapping[str, pd.DataFrame]:
+    """The v1.4 source tables V3 uses, read lazily per table."""
+    return _LazyTables(root)
 
 
 @functools.lru_cache(maxsize=1)
@@ -62,8 +119,7 @@ def load_v2_1_landmarks(root: str | None = None) -> pd.DataFrame:
     feature contract, the ``next_service_id`` pointer and the temporal split.
     """
     base = Path(root) if root else repo_root()
-    path = base / "ridebase-ml/derived_outputs/v2_1_v1_4/v2_1_modeling_table.parquet"
-    return pd.read_parquet(path)
+    return pd.read_parquet(base / "ridebase-ml/derived_outputs/v2_1_v1_4/v2_1_modeling_table.parquet")
 
 
 def motorcycle_specs(root: str | None = None) -> pd.DataFrame:

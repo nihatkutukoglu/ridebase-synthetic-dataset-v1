@@ -67,6 +67,13 @@ class Settings:
     MAX_REQUEST_BYTES: int = int(os.environ.get("MAX_REQUEST_BYTES", 1_000_000))
     SCATTER_SAMPLE: int = int(os.environ.get("SCATTER_SAMPLE", 1500))
 
+    # V3 loads 44 CatBoost models (~94 MB) plus reference tables (~19 MB). The
+    # full stack peaks near 452 MB against Render free's 512 MB, so this flag is
+    # a no-code-change kill switch if a deploy runs out of memory: set
+    # V3_ENABLED=false and /api/v3/* degrades to 503 while V1/V2/V2.1 keep serving.
+    V3_ENABLED: bool = os.environ.get("V3_ENABLED", "true").strip().lower() not in (
+        "0", "false", "no", "off")
+
     # Bearer token guarding POST /admin/reload. Empty (unset) means the route
     # always rejects — a misconfigured deploy fails closed, not open.
     RIDEBASE_ADMIN_TOKEN: str = os.environ.get("RIDEBASE_ADMIN_TOKEN", "")
