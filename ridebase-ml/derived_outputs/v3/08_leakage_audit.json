@@ -1,0 +1,105 @@
+{
+  "passed": true,
+  "checks": [
+    {
+      "check": "name_screen",
+      "columns_checked": 277,
+      "violations": [],
+      "allowlisted": [
+        {
+          "column": "days_until_next_scheduled_due",
+          "reason": "forbidden token 'next_'",
+          "justification": "V2.1 contract feature: days until the next OEM *scheduled maintenance due date*, computed at the landmark from maintenance_policies intervals. It refers to a policy deadline, not to the next service event, and is unchanged by anything that happens after the landmark."
+        },
+        {
+          "column": "km_until_next_scheduled_due",
+          "reason": "forbidden token 'next_'",
+          "justification": "Same as above on the km axis."
+        },
+        {
+          "column": "avg_parts_lead_days",
+          "reason": "forbidden token 'lead_days'",
+          "justification": "Workshop-level average parts procurement lead time. Trips the screen only because V3's landmark-to-target gap is also called lead_days; the two are unrelated and this one is a workshop attribute known at the landmark."
+        }
+      ],
+      "passed": true
+    },
+    {
+      "check": "future_injection_invariance",
+      "landmarks_tested": 4000,
+      "injected_events": 16000,
+      "digest_before": "44f4072646e28888014c1d9cfcc5fa2f02ff093436eaeaab15c1975d19e331b2",
+      "digest_after": "44f4072646e28888014c1d9cfcc5fa2f02ff093436eaeaab15c1975d19e331b2",
+      "changed_columns": [],
+      "changed_column_count": 0,
+      "passed": true
+    },
+    {
+      "check": "boundary_T_minus_1_T_T_plus_1",
+      "task_code": "ENGINE_OIL_CHANGE",
+      "expected": "T-1 and T visible (all rows change); T+1 invisible (no row changes)",
+      "results": {
+        "T_minus_1": {
+          "changed_rows": 4000,
+          "total_rows": 4000
+        },
+        "T": {
+          "changed_rows": 4000,
+          "total_rows": 4000
+        },
+        "T_plus_1": {
+          "changed_rows": 0,
+          "total_rows": 4000
+        }
+      },
+      "passed": true
+    }
+  ],
+  "dataset_manifest": {
+    "dataset_version": "v3.0-research-random_one",
+    "builder_version": "v3-dataset-builder-1.0.0",
+    "source_world": "v1_4",
+    "landmark_strategy": "random_one",
+    "seed": 20260907,
+    "purged_split_bleed": true,
+    "rows": 39451,
+    "motorcycles": 7276,
+    "target_services": 39451,
+    "label_count": 44,
+    "feature_count": 277,
+    "date_range": [
+      "2021-02-28",
+      "2026-07-31"
+    ],
+    "target_date_range": [
+      "2021-03-24",
+      "2026-08-01"
+    ],
+    "split_rows": {
+      "TRAIN": 28191,
+      "TEST": 5906,
+      "VALIDATION": 5354
+    },
+    "target_service_type_mix": {
+      "PERIODIC": 34699,
+      "REPAIR": 2031,
+      "TIRE": 1446,
+      "BREAKDOWN": 1275
+    },
+    "lead_days": {
+      "min": 1,
+      "median": 39.0,
+      "mean": 61.30283136042179,
+      "max": 619
+    },
+    "feature_blocks": {
+      "F0_base": 37,
+      "F1_policy": 88,
+      "F2_hist": 47,
+      "F3_recency": 88,
+      "F4_behaviour": 17
+    },
+    "feature_sha256": "fde53783f9dbf28d76f5a82340871f703e0b4a31a9edfaf1f9b92c1ef9d1b72b",
+    "target_sha256": "439fa479f08b79cdfbf9eb0043047d2b86cec0bf7286f0f4e683fa56ea8ea1fd"
+  }
+}
