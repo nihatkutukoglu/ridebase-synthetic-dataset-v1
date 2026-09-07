@@ -1,0 +1,7 @@
+model,micro_f1,macro_f1,weighted_f1,micro_precision,micro_recall,hamming_loss,subset_accuracy,micro_pr_auc,macro_pr_auc,mean_average_precision,labels_with_positives,precision_at_1,recall_at_1,precision_at_3,recall_at_3,precision_at_5,recall_at_5,blocks,n_features
+F0_basic,0.3939,0.2189,0.5044,0.2668,0.752,0.1737,0.0211,0.5608,0.1588,0.1588,44,0.8356,0.3857,0.4866,0.5403,0.3811,0.6333,F0_base,37
+F1_plus_policy,0.4254,0.2231,0.5109,0.2972,0.7482,0.1517,0.0435,0.5706,0.1647,0.1647,44,0.8347,0.3849,0.4962,0.5483,0.3883,0.642,F0_base+F1_policy,125
+F2_plus_task_history,0.4373,0.2249,0.5133,0.3083,0.7521,0.1453,0.0396,0.5731,0.1665,0.1665,44,0.8345,0.3846,0.4957,0.5515,0.3889,0.6475,F0_base+F1_policy+F2_hist,172
+F3_plus_task_recency,0.426,0.2223,0.5097,0.2992,0.7399,0.1496,0.0473,0.5702,0.1637,0.1637,44,0.8349,0.3848,0.4964,0.5524,0.3883,0.6468,F0_base+F1_policy+F2_hist+F3_recency,260
+F4_plus_behavioural,0.4215,0.2234,0.5138,0.291,0.7637,0.1573,0.0422,0.5771,0.165,0.165,44,0.8337,0.3847,0.5008,0.569,0.3912,0.6684,F0_base+F1_policy+F2_hist+F3_recency+F4_behaviour,277
+task_history_only_no_policy,0.4136,0.219,0.5079,0.2866,0.743,0.1581,0.0344,0.5696,0.1637,0.1637,44,0.8334,0.3836,0.4931,0.5494,0.3876,0.6443,F0_base+F2_hist+F3_recency,172

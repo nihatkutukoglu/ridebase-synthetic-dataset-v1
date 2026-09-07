@@ -1,0 +1,20 @@
+{
+  "model": "classifier_chain_xgb",
+  "micro_f1": 0.4283,
+  "macro_f1": 0.1992,
+  "weighted_f1": 0.4998,
+  "micro_precision": 0.2962,
+  "micro_recall": 0.7729,
+  "hamming_loss": 0.1548,
+  "subset_accuracy": 0.1186,
+  "micro_pr_auc": 0.5361,
+  "macro_pr_auc": 0.1567,
+  "mean_average_precision": 0.1567,
+  "labels_with_positives": 44,
+  "precision_at_1": 0.8169,
+  "recall_at_1": 0.3749,
+  "precision_at_3": 0.4759,
+  "recall_at_3": 0.5189,
+  "precision_at_5": 0.3654,
+  "recall_at_5": 0.6016
+}
