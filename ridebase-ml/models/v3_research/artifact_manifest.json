@@ -1,0 +1,66 @@
+{
+  "model_version": "v3.0-research",
+  "status": "RESEARCH_OFFLINE_SYNTHETIC_ONLY",
+  "deployed": false,
+  "champion_family": "catboost",
+  "source_world": "v1_4",
+  "landmark_strategy": "random_one",
+  "seed": 20260907,
+  "dataset_manifest": {
+    "dataset_version": "v3.0-research-random_one",
+    "builder_version": "v3-dataset-builder-1.0.0",
+    "source_world": "v1_4",
+    "landmark_strategy": "random_one",
+    "seed": 20260907,
+    "purged_split_bleed": true,
+    "rows": 39451,
+    "motorcycles": 7276,
+    "target_services": 39451,
+    "label_count": 44,
+    "feature_count": 277,
+    "date_range": [
+      "2021-02-28",
+      "2026-07-31"
+    ],
+    "target_date_range": [
+      "2021-03-24",
+      "2026-08-01"
+    ],
+    "split_rows": {
+      "TRAIN": 28191,
+      "TEST": 5906,
+      "VALIDATION": 5354
+    },
+    "target_service_type_mix": {
+      "PERIODIC": 34699,
+      "REPAIR": 2031,
+      "TIRE": 1446,
+      "BREAKDOWN": 1275
+    },
+    "lead_days": {
+      "min": 1,
+      "median": 39.0,
+      "mean": 61.30283136042179,
+      "max": 619
+    },
+    "feature_blocks": {
+      "F0_base": 37,
+      "F1_policy": 88,
+      "F2_hist": 47,
+      "F3_recency": 88,
+      "F4_behaviour": 17
+    },
+    "feature_sha256": "fde53783f9dbf28d76f5a82340871f703e0b4a31a9edfaf1f9b92c1ef9d1b72b",
+    "target_sha256": "439fa479f08b79cdfbf9eb0043047d2b86cec0bf7286f0f4e683fa56ea8ea1fd"
+  },
+  "threshold_policy": "global",
+  "calibration_policy": {
+    "none": 28,
+    "isotonic": 14,
+    "sigmoid": 2
+  },
+  "train_fit_rows": 22552,
+  "calibration_rows": 5639,
+  "validation_rows": 5354,
+  "real_fleet_validation": "PENDING"
+}

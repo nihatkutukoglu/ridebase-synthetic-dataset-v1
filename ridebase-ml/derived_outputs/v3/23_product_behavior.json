@@ -1,0 +1,409 @@
+{
+  "low_mileage_recently_serviced": {
+    "rows": 11,
+    "probabilities_within_0_1": true,
+    "no_nan": true,
+    "deterministic_repeat": true,
+    "ranking_stable_on_repeat": true,
+    "inapplicable_forced_to_zero": true,
+    "mean_predicted_tasks_at_threshold": 1.727,
+    "mean_actual_tasks": 0.818,
+    "top5_by_mean_probability": [
+      {
+        "task": "ENGINE_OIL_CHANGE",
+        "mean_probability": 0.6552,
+        "observed_rate": 0.2727
+      },
+      {
+        "task": "AIR_FILTER_INSPECTION",
+        "mean_probability": 0.124,
+        "observed_rate": 0.0
+      },
+      {
+        "task": "GENERAL_SAFETY_INSPECTION",
+        "mean_probability": 0.1067,
+        "observed_rate": 0.0
+      },
+      {
+        "task": "BRAKE_FLUID_CHECK",
+        "mean_probability": 0.1024,
+        "observed_rate": 0.0
+      },
+      {
+        "task": "BATTERY_TEST",
+        "mean_probability": 0.1014,
+        "observed_rate": 0.0
+      }
+    ]
+  },
+  "near_oil_interval": {
+    "rows": 1088,
+    "probabilities_within_0_1": true,
+    "no_nan": true,
+    "deterministic_repeat": true,
+    "ranking_stable_on_repeat": true,
+    "inapplicable_forced_to_zero": true,
+    "mean_predicted_tasks_at_threshold": 3.583,
+    "mean_actual_tasks": 3.108,
+    "top5_by_mean_probability": [
+      {
+        "task": "ENGINE_OIL_CHANGE",
+        "mean_probability": 0.8651,
+        "observed_rate": 0.8529
+      },
+      {
+        "task": "BATTERY_TEST",
+        "mean_probability": 0.2656,
+        "observed_rate": 0.2233
+      },
+      {
+        "task": "AIR_FILTER_INSPECTION",
+        "mean_probability": 0.2601,
+        "observed_rate": 0.205
+      },
+      {
+        "task": "AIR_FILTER_CHANGE",
+        "mean_probability": 0.218,
+        "observed_rate": 0.1792
+      },
+      {
+        "task": "GENERAL_SAFETY_INSPECTION",
+        "mean_probability": 0.2167,
+        "observed_rate": 0.17
+      }
+    ]
+  },
+  "overdue_oil_interval": {
+    "rows": 2000,
+    "probabilities_within_0_1": true,
+    "no_nan": true,
+    "deterministic_repeat": true,
+    "ranking_stable_on_repeat": true,
+    "inapplicable_forced_to_zero": true,
+    "mean_predicted_tasks_at_threshold": 1.845,
+    "mean_actual_tasks": 1.527,
+    "top5_by_mean_probability": [
+      {
+        "task": "ENGINE_OIL_CHANGE",
+        "mean_probability": 0.7261,
+        "observed_rate": 0.6975
+      },
+      {
+        "task": "FRONT_TIRE_CHANGE",
+        "mean_probability": 0.1586,
+        "observed_rate": 0.203
+      },
+      {
+        "task": "BATTERY_TEST",
+        "mean_probability": 0.1099,
+        "observed_rate": 0.056
+      },
+      {
+        "task": "AIR_FILTER_CHANGE",
+        "mean_probability": 0.1041,
+        "observed_rate": 0.045
+      },
+      {
+        "task": "GENERAL_SAFETY_INSPECTION",
+        "mean_probability": 0.0941,
+        "observed_rate": 0.049
+      }
+    ]
+  },
+  "chain_heavy_history": {
+    "rows": 1536,
+    "probabilities_within_0_1": true,
+    "no_nan": true,
+    "deterministic_repeat": true,
+    "ranking_stable_on_repeat": true,
+    "inapplicable_forced_to_zero": true,
+    "mean_predicted_tasks_at_threshold": 3.768,
+    "mean_actual_tasks": 2.725,
+    "top5_by_mean_probability": [
+      {
+        "task": "ENGINE_OIL_CHANGE",
+        "mean_probability": 0.7997,
+        "observed_rate": 0.7884
+      },
+      {
+        "task": "CHAIN_CLEAN",
+        "mean_probability": 0.3751,
+        "observed_rate": 0.3275
+      },
+      {
+        "task": "CHAIN_LUBRICATE",
+        "mean_probability": 0.3155,
+        "observed_rate": 0.2572
+      },
+      {
+        "task": "BATTERY_TEST",
+        "mean_probability": 0.1986,
+        "observed_rate": 0.1686
+      },
+      {
+        "task": "CHAIN_INSPECTION",
+        "mean_probability": 0.1858,
+        "observed_rate": 0.1634
+      }
+    ]
+  },
+  "repeated_front_brake_pad_history": {
+    "rows": 767,
+    "probabilities_within_0_1": true,
+    "no_nan": true,
+    "deterministic_repeat": true,
+    "ranking_stable_on_repeat": true,
+    "inapplicable_forced_to_zero": true,
+    "mean_predicted_tasks_at_threshold": 2.841,
+    "mean_actual_tasks": 2.403,
+    "top5_by_mean_probability": [
+      {
+        "task": "ENGINE_OIL_CHANGE",
+        "mean_probability": 0.7923,
+        "observed_rate": 0.7575
+      },
+      {
+        "task": "BATTERY_TEST",
+        "mean_probability": 0.1963,
+        "observed_rate": 0.146
+      },
+      {
+        "task": "AIR_FILTER_CHANGE",
+        "mean_probability": 0.1777,
+        "observed_rate": 0.1213
+      },
+      {
+        "task": "GENERAL_SAFETY_INSPECTION",
+        "mean_probability": 0.1664,
+        "observed_rate": 0.1447
+      },
+      {
+        "task": "AIR_FILTER_INSPECTION",
+        "mean_probability": 0.1662,
+        "observed_rate": 0.1565
+      }
+    ]
+  },
+  "high_usage": {
+    "rows": 791,
+    "probabilities_within_0_1": true,
+    "no_nan": true,
+    "deterministic_repeat": true,
+    "ranking_stable_on_repeat": true,
+    "inapplicable_forced_to_zero": true,
+    "mean_predicted_tasks_at_threshold": 3.642,
+    "mean_actual_tasks": 3.12,
+    "top5_by_mean_probability": [
+      {
+        "task": "ENGINE_OIL_CHANGE",
+        "mean_probability": 0.8321,
+        "observed_rate": 0.8445
+      },
+      {
+        "task": "BATTERY_TEST",
+        "mean_probability": 0.2399,
+        "observed_rate": 0.2124
+      },
+      {
+        "task": "AIR_FILTER_INSPECTION",
+        "mean_probability": 0.2001,
+        "observed_rate": 0.2187
+      },
+      {
+        "task": "AIR_FILTER_CHANGE",
+        "mean_probability": 0.1997,
+        "observed_rate": 0.1719
+      },
+      {
+        "task": "BRAKE_FLUID_CHECK",
+        "mean_probability": 0.1923,
+        "observed_rate": 0.1681
+      }
+    ]
+  },
+  "low_usage": {
+    "rows": 1619,
+    "probabilities_within_0_1": true,
+    "no_nan": true,
+    "deterministic_repeat": true,
+    "ranking_stable_on_repeat": true,
+    "inapplicable_forced_to_zero": true,
+    "mean_predicted_tasks_at_threshold": 2.872,
+    "mean_actual_tasks": 2.261,
+    "top5_by_mean_probability": [
+      {
+        "task": "ENGINE_OIL_CHANGE",
+        "mean_probability": 0.8164,
+        "observed_rate": 0.7727
+      },
+      {
+        "task": "AIR_FILTER_INSPECTION",
+        "mean_probability": 0.2093,
+        "observed_rate": 0.1192
+      },
+      {
+        "task": "BATTERY_TEST",
+        "mean_probability": 0.2019,
+        "observed_rate": 0.1211
+      },
+      {
+        "task": "CHAIN_CLEAN",
+        "mean_probability": 0.1988,
+        "observed_rate": 0.1322
+      },
+      {
+        "task": "GENERAL_SAFETY_INSPECTION",
+        "mean_probability": 0.1861,
+        "observed_rate": 0.1137
+      }
+    ]
+  },
+  "no_previous_task_history": {
+    "rows": 10,
+    "probabilities_within_0_1": true,
+    "no_nan": true,
+    "deterministic_repeat": true,
+    "ranking_stable_on_repeat": true,
+    "inapplicable_forced_to_zero": true,
+    "mean_predicted_tasks_at_threshold": 2.5,
+    "mean_actual_tasks": 1.7,
+    "top5_by_mean_probability": [
+      {
+        "task": "ENGINE_OIL_CHANGE",
+        "mean_probability": 0.7563,
+        "observed_rate": 0.7
+      },
+      {
+        "task": "CHAIN_CLEAN",
+        "mean_probability": 0.2259,
+        "observed_rate": 0.2
+      },
+      {
+        "task": "CHAIN_LUBRICATE",
+        "mean_probability": 0.1795,
+        "observed_rate": 0.2
+      },
+      {
+        "task": "BATTERY_TEST",
+        "mean_probability": 0.1636,
+        "observed_rate": 0.1
+      },
+      {
+        "task": "AIR_FILTER_INSPECTION",
+        "mean_probability": 0.1237,
+        "observed_rate": 0.0
+      }
+    ]
+  },
+  "long_service_gap": {
+    "rows": 92,
+    "probabilities_within_0_1": true,
+    "no_nan": true,
+    "deterministic_repeat": true,
+    "ranking_stable_on_repeat": true,
+    "inapplicable_forced_to_zero": true,
+    "mean_predicted_tasks_at_threshold": 2.0,
+    "mean_actual_tasks": 1.087,
+    "top5_by_mean_probability": [
+      {
+        "task": "ENGINE_OIL_CHANGE",
+        "mean_probability": 0.8692,
+        "observed_rate": 0.7935
+      },
+      {
+        "task": "GENERAL_SAFETY_INSPECTION",
+        "mean_probability": 0.1785,
+        "observed_rate": 0.0217
+      },
+      {
+        "task": "CHAIN_CLEAN",
+        "mean_probability": 0.136,
+        "observed_rate": 0.0109
+      },
+      {
+        "task": "CHAIN_LUBRICATE",
+        "mean_probability": 0.1339,
+        "observed_rate": 0.0109
+      },
+      {
+        "task": "AIR_FILTER_CHANGE",
+        "mean_probability": 0.1327,
+        "observed_rate": 0.0109
+      }
+    ]
+  },
+  "new_motorcycle": {
+    "rows": 239,
+    "probabilities_within_0_1": true,
+    "no_nan": true,
+    "deterministic_repeat": true,
+    "ranking_stable_on_repeat": true,
+    "inapplicable_forced_to_zero": true,
+    "mean_predicted_tasks_at_threshold": 5.264,
+    "mean_actual_tasks": 4.079,
+    "top5_by_mean_probability": [
+      {
+        "task": "ENGINE_OIL_CHANGE",
+        "mean_probability": 0.916,
+        "observed_rate": 0.9205
+      },
+      {
+        "task": "BATTERY_TEST",
+        "mean_probability": 0.3736,
+        "observed_rate": 0.3222
+      },
+      {
+        "task": "AIR_FILTER_INSPECTION",
+        "mean_probability": 0.3577,
+        "observed_rate": 0.3096
+      },
+      {
+        "task": "BRAKE_FLUID_CHECK",
+        "mean_probability": 0.3295,
+        "observed_rate": 0.2971
+      },
+      {
+        "task": "GENERAL_SAFETY_INSPECTION",
+        "mean_probability": 0.3118,
+        "observed_rate": 0.2929
+      }
+    ]
+  },
+  "unseen_motorcycle": {
+    "rows": 1725,
+    "probabilities_within_0_1": true,
+    "no_nan": true,
+    "deterministic_repeat": true,
+    "ranking_stable_on_repeat": true,
+    "inapplicable_forced_to_zero": true,
+    "mean_predicted_tasks_at_threshold": 3.388,
+    "mean_actual_tasks": 2.734,
+    "top5_by_mean_probability": [
+      {
+        "task": "ENGINE_OIL_CHANGE",
+        "mean_probability": 0.8233,
+        "observed_rate": 0.8006
+      },
+      {
+        "task": "BATTERY_TEST",
+        "mean_probability": 0.2396,
+        "observed_rate": 0.1675
+      },
+      {
+        "task": "AIR_FILTER_INSPECTION",
+        "mean_probability": 0.2277,
+        "observed_rate": 0.1664
+      },
+      {
+        "task": "AIR_FILTER_CHANGE",
+        "mean_probability": 0.2031,
+        "observed_rate": 0.1438
+      },
+      {
+        "task": "BRAKE_FLUID_CHECK",
+        "mean_probability": 0.1953,
+        "observed_rate": 0.1403
+      }
+    ]
+  }
+}

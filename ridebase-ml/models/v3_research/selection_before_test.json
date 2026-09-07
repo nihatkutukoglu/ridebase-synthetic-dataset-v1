@@ -1,0 +1,65 @@
+{
+  "selected_at": "before any TEST evaluation",
+  "criteria": [
+    [
+      "leakage_gate",
+      "must be PASS -- gate, not a score"
+    ],
+    [
+      "beats_rule_baseline_mAP",
+      "mAP must exceed baseline1b_rule_projected"
+    ],
+    [
+      "mean_average_precision",
+      "primary: ranking quality across all labels"
+    ],
+    [
+      "micro_pr_auc",
+      "secondary: ranking quality weighted by prevalence"
+    ],
+    [
+      "micro_f1",
+      "thresholded decision quality"
+    ],
+    [
+      "precision_at_3",
+      "the product surface actually shows a top-3/5 list"
+    ],
+    [
+      "simplicity",
+      "tie-break: fewer moving parts wins"
+    ]
+  ],
+  "champion_family": "catboost",
+  "rule_baseline_mAP": 0.09,
+  "eligible_families": [
+    "catboost",
+    "extra_trees",
+    "random_forest",
+    "xgboost_balanced",
+    "xgboost",
+    "lightgbm",
+    "lightgbm_balanced",
+    "logreg",
+    "logreg_balanced"
+  ],
+  "validation_metrics": {
+    "micro_f1": 0.5278830105703765,
+    "macro_f1": 0.1264383108507399,
+    "weighted_f1": 0.45046112294007606,
+    "micro_precision": 0.49648676932276875,
+    "micro_recall": 0.5635180995475113,
+    "hamming_loss": 0.07564862294970626,
+    "subset_accuracy": 0.14960776989166977,
+    "micro_pr_auc": 0.5737197763018741,
+    "macro_pr_auc": 0.16266352143117252,
+    "mean_average_precision": 0.16266352143117252,
+    "labels_with_positives": 44,
+    "precision_at_1": 0.8314670715505789,
+    "recall_at_1": 0.38169150496916676,
+    "precision_at_3": 0.5006009995571582,
+    "recall_at_3": 0.5586077747351234,
+    "precision_at_5": 0.39218067944581514,
+    "recall_at_5": 0.6557661313402441
+  }
+}
