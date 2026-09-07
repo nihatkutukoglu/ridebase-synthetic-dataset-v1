@@ -27,6 +27,7 @@ import numpy as np
 import pandas as pd
 
 from . import V3_VERSION
+from . import product as PP
 
 #: probability below which a task is not worth showing at all
 DISPLAY_FLOOR = 0.01
@@ -119,8 +120,9 @@ class V3TaskPredictor:
 
     def applicability(self, X: pd.DataFrame, motorcycle_ids) -> np.ndarray:
         from .target import applicability_matrix
-        m = applicability_matrix(pd.Index(pd.unique(motorcycle_ids)), self.labels)
-        return m.reindex(np.asarray(motorcycle_ids))[self.labels].to_numpy(dtype=bool)
+        ids = pd.Index(np.asarray(motorcycle_ids, dtype=object))
+        m = applicability_matrix(ids.unique(), self.labels)
+        return m.reindex(ids)[self.labels].to_numpy(dtype=bool)
 
     # -------------------------------------------------------------- predict
     def predict_proba(self, X: pd.DataFrame, applicable: np.ndarray | None = None) -> np.ndarray:
@@ -202,6 +204,90 @@ class V3TaskPredictor:
                 "deployed": False,
             },
         )
+
+    # ------------------------------------------------------- product surface
+    @property
+    def label_policy(self) -> dict:
+        return PP.load_label_policy()
+
+    def predict_product(self, X: pd.DataFrame, motorcycle_ids=None,
+                        top_k: int = PP.DEFAULT_TOP_K, landmark_dates=None,
+                        feature_coverage: list[float] | float = 1.0,
+                        include_hidden: bool = False,
+                        extra_warnings: list[list[str]] | None = None) -> list[dict]:
+        """Phase-11 product response: ranked top-K plus every raw probability.
+
+        Raw model output and the product list are returned side by side and are
+        never mixed: ``all_task_probabilities`` is exactly what the frozen model
+        produced (after the deterministic applicability mask), while
+        ``top_tasks`` is what the presentation policy chose to lead with. No
+        V2.1 output and no maintenance rule touches either.
+        """
+        app = (self.applicability(X, motorcycle_ids) if motorcycle_ids is not None
+               else np.ones((len(X), len(self.labels)), dtype=bool))
+        proba = self.predict_proba(X, app)
+        policy = self.label_policy
+        dates = ([None] * len(X)) if landmark_dates is None else list(landmark_dates)
+        cov = ([float(feature_coverage)] * len(X) if isinstance(feature_coverage, (int, float))
+               else [float(c) for c in feature_coverage])
+
+        out = []
+        for i in range(len(X)):
+            probs = {c: float(proba[i, j]) for j, c in enumerate(self.labels)}
+            applicable = {c: bool(app[i, j]) for j, c in enumerate(self.labels)}
+            ranked = PP.rank_tasks(probs, applicable, policy, top_k=top_k,
+                                   feature_coverage=cov[i], include_hidden=include_hidden)
+            # a hidden-by-default label scoring above the leading product task is
+            # worth flagging even though it is not shown
+            lead = ranked[0]["probability"] if ranked else 0.0
+            hidden_high = [c for c, pol in policy.items()
+                           if pol.hidden_by_default and applicable.get(c) and probs[c] >= lead > 0]
+            warnings = PP.product_warnings(
+                ranked, cov[i], int((~app[i]).sum()), len(self.labels), hidden_high)
+            if extra_warnings and extra_warnings[i]:
+                warnings = list(extra_warnings[i]) + warnings
+            out.append({
+                "model_version": self.manifest.get("model_version", V3_VERSION),
+                "status": "V3_SYNTHETIC_PRODUCT_CANDIDATE",
+                "validation_scope": "SYNTHETIC_ONLY",
+                "real_fleet_validation": "PENDING",
+                "landmark_date": str(dates[i]) if dates[i] is not None else None,
+                "heading": PP.HEADING_TR,
+                "description": PP.SUBHEADING_TR,
+                "top_tasks": ranked,
+                "all_task_probabilities": {c: round(v, 4) for c, v in probs.items()},
+                "binary_predictions": {c: bool(probs[c] >= self.thresholds[j] and applicable[c])
+                                       for j, c in enumerate(self.labels)},
+                "applicable_tasks": applicable,
+                "feature_coverage": round(cov[i], 4),
+                "warnings": warnings,
+                "provenance": self._provenance(int(app[i].sum())),
+            })
+        return out
+
+    def _provenance(self, n_applicable: int) -> dict:
+        return {
+            "source_world": self.manifest.get("source_world"),
+            "champion_family": self.manifest.get("champion_family"),
+            "label_count": len(self.labels),
+            "labels_applicable": n_applicable,
+            "feature_count": len(self.feature_cols),
+            "threshold_policy": self.manifest.get("threshold_policy"),
+            "threshold": float(self.thresholds[0]),
+            "calibration_policy": self.manifest.get("calibration_policy"),
+            "target_semantics": (
+                "task recorded with status=COMPLETED on the first service "
+                "strictly after the landmark"),
+            "predicts": "tasks at the next completed service",
+            "does_not_predict": [
+                "when the next service occurs (that is V2.1)",
+                "mechanical breakdown probability",
+                "maintenance urgency",
+                "whether maintenance is required",
+            ],
+            "real_fleet_validation": "PENDING — never claimed",
+            "deployed": False,
+        }
 
     def model_info(self) -> dict:
         return {"model_version": self.manifest.get("model_version", V3_VERSION),

@@ -1,0 +1,49 @@
+{
+  "frozen_at_head": "43d2ba3d0ca564eae1e7cf96fc377039e16b267d",
+  "artifacts": {
+    "ridebase-ml/models/v3_research/champion_model.joblib": {
+      "sha256": "2a1f0103c32a10bfcf56b6f7fd7073fa9d49eac3b718df519378c0ebfbc16eb1",
+      "bytes": 15986675
+    },
+    "ridebase-ml/models/v3_research/calibrator.joblib": {
+      "sha256": "f64c9dab5d2886645f7c80fe2c01d192d58abead376625c20115dc2ff5347bb4",
+      "bytes": 18206
+    },
+    "ridebase-ml/models/v3_research/feature_list.json": {
+      "sha256": "9566bf2439a3876c8569e359461c8dc07f7883d486a2af7729b60c00184955ec",
+      "bytes": 10639
+    },
+    "ridebase-ml/models/v3_research/label_list.json": {
+      "sha256": "f1bd6d5c70d0776fbf76b1273510d411e54e6a0d015e526e4ec498c62e5d1e56",
+      "bytes": 3029
+    },
+    "ridebase-ml/models/v3_research/thresholds.json": {
+      "sha256": "12415d4f67cf62d9810aaaa0aecb42b5546ff4ce4fac39f15fb3e406e22ff550",
+      "bytes": 3501
+    },
+    "ridebase-ml/models/v3_research/artifact_manifest.json": {
+      "sha256": "182d5ac7f4da9fe8fa8331a0aa337ce98b5655ea53b8e9463116a75584c3e193",
+      "bytes": 1635
+    },
+    "ridebase-ml/models/v3_research/selection_before_test.json": {
+      "sha256": "74735ab53e4d37ac9c1f0bb2955863b20cb51d526bcd4731308ea5f58437d740",
+      "bytes": 1656
+    },
+    "ridebase-ml/models/v3_research/calibration_report.json": {
+      "sha256": "8c92418ee0b68aa334951c174dff9bd34517e81e238cddf39cc6cdf94f3f8234",
+      "bytes": 51344
+    },
+    "ridebase-ml/models/v3_research/test_evaluation.json": {
+      "sha256": "bb0fdb031e66eba145d0b43c968bf52f5ad3f6be2570fa5db76f42828f9c8f4b",
+      "bytes": 8640
+    },
+    "config/v3_label_set.json": {
+      "sha256": "ab89e0099c0f0a2f21f28e8e0142ce46799a4e628a2032a9e176f8420b46e08c",
+      "bytes": 7715
+    },
+    "config/v3_target_contract.json": {
+      "sha256": "4bb810a9fe93654310d50487a740c968bdf8352ac8f02870a5ee411e624748d6",
+      "bytes": 3902
+    }
+  }
+}
