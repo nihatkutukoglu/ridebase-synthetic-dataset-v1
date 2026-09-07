@@ -1,0 +1,186 @@
+{
+  "typical": {
+    "input": {
+      "motorcycle_id": "MC000002",
+      "landmark_date": "2026-03-31"
+    },
+    "status": "V3_SYNTHETIC_PRODUCT_CANDIDATE",
+    "feature_coverage": 1.0,
+    "top_tasks": [
+      {
+        "task_code": "ENGINE_OIL_CHANGE",
+        "display_name": "Motor Yağı Değişimi",
+        "percent": 86.3,
+        "confidence": "YÜKSEK",
+        "product_status": "PRIMARY"
+      },
+      {
+        "task_code": "AIR_FILTER_INSPECTION",
+        "display_name": "Hava Filtresi Kontrolü",
+        "percent": 38.5,
+        "confidence": "ORTA",
+        "product_status": "PRIMARY"
+      },
+      {
+        "task_code": "BATTERY_TEST",
+        "display_name": "Akü Testi",
+        "percent": 36.9,
+        "confidence": "ORTA",
+        "product_status": "PRIMARY"
+      }
+    ],
+    "warnings": [
+      "3/44 işlem bu motosikletin donanımına uygun değil ve 0.0 olarak sabitlendi.",
+      "Bu tahminler sentetik veri üzerinde doğrulanmıştır. Gerçek filo doğrulaması henüz yapılmamıştır.",
+      "Bu yüzdeler mekanik arıza olasılığı değildir.",
+      "Bakım gereksinimi ve bakım aciliyeti deterministik bakım politikasından ayrı hesaplanır."
+    ],
+    "history": {
+      "prior_services_used": 4,
+      "prior_task_lines_used": 12
+    },
+    "timing_ms": {
+      "history_build": 429.92,
+      "prediction": 415.42,
+      "total": 934.96
+    }
+  },
+  "sparse_history": {
+    "input": {
+      "motorcycle_id": "MC000039",
+      "landmark_date": "2026-03-31"
+    },
+    "status": "V3_SYNTHETIC_PRODUCT_CANDIDATE",
+    "feature_coverage": 1.0,
+    "top_tasks": [
+      {
+        "task_code": "ENGINE_OIL_CHANGE",
+        "display_name": "Motor Yağı Değişimi",
+        "percent": 93.3,
+        "confidence": "YÜKSEK",
+        "product_status": "PRIMARY"
+      },
+      {
+        "task_code": "BATTERY_TEST",
+        "display_name": "Akü Testi",
+        "percent": 39.0,
+        "confidence": "ORTA",
+        "product_status": "PRIMARY"
+      },
+      {
+        "task_code": "AIR_FILTER_INSPECTION",
+        "display_name": "Hava Filtresi Kontrolü",
+        "percent": 36.7,
+        "confidence": "ORTA",
+        "product_status": "PRIMARY"
+      }
+    ],
+    "warnings": [
+      "5/44 işlem bu motosikletin donanımına uygun değil ve 0.0 olarak sabitlendi.",
+      "Bu tahminler sentetik veri üzerinde doğrulanmıştır. Gerçek filo doğrulaması henüz yapılmamıştır.",
+      "Bu yüzdeler mekanik arıza olasılığı değildir.",
+      "Bakım gereksinimi ve bakım aciliyeti deterministik bakım politikasından ayrı hesaplanır."
+    ],
+    "history": {
+      "prior_services_used": 1,
+      "prior_task_lines_used": 3
+    },
+    "timing_ms": {
+      "history_build": 451.87,
+      "prediction": 398.61,
+      "total": 855.28
+    }
+  },
+  "overdue": {
+    "input": {
+      "motorcycle_id": "MC000008",
+      "landmark_date": "2026-01-31"
+    },
+    "status": "V3_SYNTHETIC_PRODUCT_CANDIDATE",
+    "feature_coverage": 1.0,
+    "top_tasks": [
+      {
+        "task_code": "ENGINE_OIL_CHANGE",
+        "display_name": "Motor Yağı Değişimi",
+        "percent": 69.8,
+        "confidence": "YÜKSEK",
+        "product_status": "PRIMARY"
+      },
+      {
+        "task_code": "FRONT_TIRE_CHANGE",
+        "display_name": "Ön Lastik Değişimi",
+        "percent": 19.0,
+        "confidence": "DÜŞÜK",
+        "product_status": "SECONDARY"
+      },
+      {
+        "task_code": "AIR_FILTER_CHANGE",
+        "display_name": "Hava Filtresi Değişimi",
+        "percent": 4.3,
+        "confidence": "DÜŞÜK",
+        "product_status": "PRIMARY"
+      }
+    ],
+    "warnings": [
+      "10/44 işlem bu motosikletin donanımına uygun değil ve 0.0 olarak sabitlendi.",
+      "Bu tahminler sentetik veri üzerinde doğrulanmıştır. Gerçek filo doğrulaması henüz yapılmamıştır.",
+      "Bu yüzdeler mekanik arıza olasılığı değildir.",
+      "Bakım gereksinimi ve bakım aciliyeti deterministik bakım politikasından ayrı hesaplanır."
+    ],
+    "history": {
+      "prior_services_used": 31,
+      "prior_task_lines_used": 162
+    },
+    "timing_ms": {
+      "history_build": 625.5,
+      "prediction": 399.6,
+      "total": 1028.46
+    }
+  },
+  "unseen_motorcycle": {
+    "input": {
+      "motorcycle_id": "MC000007",
+      "landmark_date": "2025-07-31"
+    },
+    "status": "V3_SYNTHETIC_PRODUCT_CANDIDATE",
+    "feature_coverage": 1.0,
+    "top_tasks": [
+      {
+        "task_code": "ENGINE_OIL_CHANGE",
+        "display_name": "Motor Yağı Değişimi",
+        "percent": 91.3,
+        "confidence": "YÜKSEK",
+        "product_status": "PRIMARY"
+      },
+      {
+        "task_code": "AIR_FILTER_INSPECTION",
+        "display_name": "Hava Filtresi Kontrolü",
+        "percent": 36.4,
+        "confidence": "ORTA",
+        "product_status": "PRIMARY"
+      },
+      {
+        "task_code": "BATTERY_TEST",
+        "display_name": "Akü Testi",
+        "percent": 34.1,
+        "confidence": "ORTA",
+        "product_status": "PRIMARY"
+      }
+    ],
+    "warnings": [
+      "5/44 işlem bu motosikletin donanımına uygun değil ve 0.0 olarak sabitlendi.",
+      "Bu tahminler sentetik veri üzerinde doğrulanmıştır. Gerçek filo doğrulaması henüz yapılmamıştır.",
+      "Bu yüzdeler mekanik arıza olasılığı değildir.",
+      "Bakım gereksinimi ve bakım aciliyeti deterministik bakım politikasından ayrı hesaplanır."
+    ],
+    "history": {
+      "prior_services_used": 6,
+      "prior_task_lines_used": 27
+    },
+    "timing_ms": {
+      "history_build": 435.67,
+      "prediction": 310.55,
+      "total": 832.9
+    }
+  }
+}
