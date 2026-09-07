@@ -244,14 +244,27 @@ manifest's V3 "planned" status); both were updated to assert the new truthful st
 | commit | `1f7a128` |
 | verification | 16/16 static checks pass on the live HTML |
 
-### Backend — **MANUAL DEPLOY REQUIRED**
+### Backend — **LIVE**
 
-The live API at `https://ridebase-inference-api.onrender.com` serves V1, V2.0 and
-V2.1 correctly but returns **404 on `/api/v3/*`** — it is running a pre-V3 commit.
-`render.yaml` sets `autoDeploy: false`, there is no Render CLI and no deploy token
-in this environment, so **the backend is not live and is not claimed to be.**
+| item | value |
+|---|---|
+| service | `ridebase-inference-api` on Render (existing service, not duplicated) |
+| URL | https://ridebase-inference-api.onrender.com |
+| `/health` | `v3_status: ok`, `v3_model_loaded: true`, `v3_enabled: true` |
+| champion | `catboost`, 44 labels, 277 features |
+| V3 load time | 795.7 ms |
+| `/docs`, `/openapi.json` | 404 — production hardening intact |
+| CORS | preflight and simple requests allowed for `https://ridebase-ml-control-center.vercel.app` |
 
-Three real blockers were found and fixed in code so that a deploy will work:
+**Note on how it went live.** At the time the frontend was deployed, the backend
+still returned 404 on `/api/v3/*`: `render.yaml` sets `autoDeploy: false`, and this
+environment has no Render CLI and no deploy token, so the backend deploy was not
+performed from here. It was deployed externally shortly after the push, and this
+report was updated only after verifying the live service directly rather than
+assuming the deploy had happened.
+
+Three real blockers were found and fixed in code beforehand, which is why that
+deploy worked at all:
 
 1. `collect_prod_artifacts.sh` excluded `models/v3_research/` from the bundle.
 2. `Dockerfile.prod` never copied the V3 artifacts or the sample index.
@@ -262,28 +275,44 @@ Three real blockers were found and fixed in code so that a deploy will work:
    `RIDEBASE_V3_LABEL_POLICY`) now make the package work with no repository
    checkout, verified by running it from a temp directory.
 
-**Exact manual step:**
+**Memory.** V3 adds ~113 MB and the full stack peaks near **452 MB against the free
+plan's 512 MB** — about 12% headroom, and this service has been OOM-killed before.
+Loading was made lazy during this session (V3 alone dropped from 473 MB to 113 MB by
+not reading the two large source tables the serving path never touches), which is
+what brought it inside the limit. If a future deploy does run out of memory, set
+**`V3_ENABLED=false`** and redeploy: `/api/v3/*` degrades to 503 and V1/V2.0/V2.1
+keep serving, with no code change. Upgrading the Render plan is the durable fix.
+`RIDEBASE_ADMIN_TOKEN` was not touched and must remain set.
 
-1. Open the Render dashboard → service `ridebase-inference-api`.
-2. **Manual Deploy → Deploy latest commit** (`1f7a128` on `main`).
-3. Confirm the env vars from `render.yaml` are present:
-   `RIDEBASE_V3_SOURCE_DIR=/app/app/v3_data`,
-   `RIDEBASE_V3_LABEL_POLICY=/app/config/v3_product_label_policy.json`,
-   `V3_ENABLED=true`. `RIDEBASE_ADMIN_TOKEN` must remain set — it is unchanged and
-   must not be bypassed.
-4. Verify `GET /health` reports `v3_status: ok`, `v3_label_count: 44`,
-   `v3_feature_count: 277`.
+### Live route verification
 
-**Memory warning for that deploy.** V3 adds ~113 MB. The full stack peaks near
-**452 MB against the free plan's 512 MB** — roughly 12% headroom, and this service
-has been OOM-killed before. Loading was made lazy during this session (V3 alone went
-from 473 MB to 113 MB by not reading the two large source tables the serving path
-never touches), but if the deploy still runs out of memory, set **`V3_ENABLED=false`**
-and redeploy: `/api/v3/*` degrades to 503 and V1/V2.0/V2.1 keep serving, with no
-code change. Upgrading the Render plan is the durable fix.
+| route | status | latency |
+|---|---|---|
+| `GET /health` | 200 | 400 ms |
+| `GET /api/v3/model/info` | 200 | 388 ms |
+| `GET /api/v3/labels` | 200 | 537 ms |
+| `GET /api/v3/metrics` | 200 | 348 ms |
+| `GET /api/v3/sample` | 200 | 454 ms |
+| `POST /api/v3/predict/by-motorcycle` | 200 | 1,656 ms (cold-ish) |
+| `POST /api/v3/predict/scenario` | 404 | not implemented, as designed |
+| unknown `motorcycle_id` | 404 | clean |
+| pre-observation landmark | 422 | clean |
 
-Until that deploy happens the Control Center V3 tab states plainly that the V3
-backend is not yet live and refuses to run a prediction. **No fake result is shown.**
+Live response checks: `status: V3_SYNTHETIC_PRODUCT_CANDIDATE`,
+`validation_scope: SYNTHETIC_ONLY`, `real_fleet_validation: PENDING`,
+`provenance.deployed: false`, feature coverage 1.0, all 44 labels returned,
+probabilities finite and in `[0, 1]`, **byte-identical on repeat**, 4 warnings
+including both mandatory disclaimers, label policy 12/13/4/15, and
+`metric_notes.precision_at_1` stating it is a ranking metric and not an accuracy
+figure.
+
+A live top-3, for illustration (MC000197 @ 2025-09-30):
+
+```
+1. Motor Yağı Değişimi          75.3%   YÜKSEK
+2. Fren Hidroliği Kontrolü      32.6%   ORTA
+3. Hava Filtresi Kontrolü       31.8%   ORTA
+```
 
 ### Live audit performed
 
@@ -291,8 +320,9 @@ backend is not yet live and refuses to run a prediction. **No fake result is sho
 |---|---|
 | frontend static/HTTP | **yes** — 16/16 checks on the live page |
 | frontend visual (browser) | **no** — no browser automation was run; only static HTML inspection |
-| backend HTTP | **yes** — `/health` 200, `/api/v3/*` 404 (pre-V3 build confirmed) |
-| backend V3 routes live | **no** — pending the manual deploy |
+| backend HTTP | **yes** — all 9 V3 routes exercised live, including error paths |
+| backend V3 routes live | **yes** — `/health` reports `v3_status: ok` |
+| CORS from the Control Center origin | **yes** — preflight and simple GET both allowed |
 
 ## 13. Git
 
@@ -316,15 +346,18 @@ data, no unrelated refactors.
 
 ## 14. Final Verdict
 
-> **V3 SYNTHETIC PRODUCTIZATION COMPLETE —
-> CODE AND FRONTEND READY; BACKEND MANUAL DEPLOY REQUIRED**
+> **V3 SYNTHETIC PRODUCT CANDIDATE LIVE —
+> SYNTHETICALLY VALIDATED, REAL FLEET VALIDATION PENDING**
 
 All ten critical gates pass (frozen artifacts unchanged, PIT/leakage, predictor
 parity, top-K behaviour, weak-label policy, API contracts, V2.1 unchanged,
-Maintenance Urgency unchanged, no real-fleet claim, full regression). The frontend
-is live. The backend is code-complete, its container packaging is fixed and
-verified, and it awaits one manual Render deploy that this environment has no
-credentials to perform.
+Maintenance Urgency unchanged, no real-fleet claim, full regression). Frontend and
+backend are both live and were verified end to end against the deployed services,
+not assumed.
+
+"Live" here means the **synthetic product candidate** is reachable. It is not a
+production-validated model, and every live response says so: `SYNTHETIC_ONLY`,
+`real_fleet_validation: PENDING`, `deployed_as_production_model: false`.
 
 ---
 
