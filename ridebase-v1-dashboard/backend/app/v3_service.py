@@ -88,6 +88,42 @@ def get_history_adapter() -> Any:
         raise V3Unavailable(f"shared V2.1 history source unavailable: {exc}")
 
 
+def motorcycle_context_payload(
+    motorcycle_id: str,
+    landmark_date: Any,
+    adapter: Any = None,
+) -> dict[str, Any]:
+    """Response-only context; failures never alter or block V3 probabilities."""
+    from .v3_context import build_motorcycle_context, friendly_motorcycle_label
+
+    active_adapter = adapter or get_history_adapter()
+    try:
+        context, provenance, warnings = build_motorcycle_context(
+            motorcycle_id, landmark_date, active_adapter
+        )
+    except Exception as exc:  # context is optional; prediction remains available
+        log.warning(
+            "V3 motorcycle context unavailable for %s @ %s: %s",
+            motorcycle_id, landmark_date, exc,
+        )
+        context = {
+            "motorcycle_id": str(motorcycle_id),
+            "landmark_date": str(landmark_date),
+            "source": "SYNTHETIC_HISTORY_V1_4",
+        }
+        provenance = {
+            "metadata_source": "unavailable",
+            "future_records_used": False,
+        }
+        warnings = ["Motosiklet bağlamı kullanılamadı; tahmin kimlik ve landmark ile gösteriliyor."]
+    return {
+        "motorcycle_context": context,
+        "motorcycle_context_provenance": provenance,
+        "motorcycle_context_warnings": warnings,
+        "friendly_motorcycle_label": friendly_motorcycle_label(context),
+    }
+
+
 def predict_by_motorcycle(motorcycle_id: str, landmark_date: Any,
                           top_k: int = 3, include_hidden: bool = False) -> dict[str, Any]:
     """ID + date -> PIT history -> frozen 277 features -> frozen V3 predictor."""
@@ -113,6 +149,10 @@ def predict_by_motorcycle(motorcycle_id: str, landmark_date: Any,
     payload["motorcycle_id"] = motorcycle_id
     payload["history_provenance"] = vector.provenance
     payload["missing_features"] = vector.missing[:20]
+    # Enrichment happens strictly after the frozen predictor call. The context is
+    # presentation-only and can never enter the 277-feature input or alter any of
+    # the 44 task probabilities.
+    payload.update(motorcycle_context_payload(motorcycle_id, landmark_date, adapter))
     payload["timing_ms"] = {
         "history_build": round(built_ms, 2),
         "prediction": round(predict_ms, 2),

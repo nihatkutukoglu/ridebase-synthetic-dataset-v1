@@ -97,7 +97,13 @@ def test_sample_is_input_only_and_leaks_no_target(sample):
     blob = json.dumps(data).lower()
     for leak in ("task__", "next_service", "target", "probability", "engine_oil"):
         assert leak not in blob
-    assert set(data) == {"motorcycle_id", "landmark_date", "split"}
+    assert set(data) == {
+        "motorcycle_id", "landmark_date", "split", "friendly_motorcycle_label",
+        "motorcycle_context", "motorcycle_context_provenance",
+        "motorcycle_context_warnings",
+    }
+    assert sample["motorcycle_id"] in sample["friendly_motorcycle_label"]
+    assert sample["motorcycle_context"]["motorcycle_id"] == sample["motorcycle_id"]
 
 
 # ------------------------------------------------------- predict/by-motorcycle
@@ -116,6 +122,12 @@ def test_by_motorcycle_returns_the_product_contract(client, sample):
     assert len(d["all_task_probabilities"]) == 44
     assert len(d["top_tasks"]) <= 3
     assert d["provenance"]["deployed"] is False
+    context = d["motorcycle_context"]
+    assert context["motorcycle_id"] == sample["motorcycle_id"]
+    assert context["landmark_date"] == sample["landmark_date"]
+    assert context["source"] == "SYNTHETIC_HISTORY_V1_4"
+    assert d["motorcycle_id"] in d["friendly_motorcycle_label"]
+    assert d["motorcycle_context_provenance"]["future_records_used"] is False
 
 
 def test_top_tasks_are_ranked_bounded_and_confident_only_when_earned(client, sample):

@@ -1,8 +1,8 @@
 # RideBase ML Control Center
 
 One central admin view of the whole RideBase ML project — EDA, V0 baseline, V1
-regression and the **V2 survival** model (packaged, 10 sub-tabs, live prediction)
-as modules of a single system; V3 declared-but-empty.
+regression, **V2/V2.1 survival**, and **V3 next-service task prediction** as
+modules of a single system.
 
 ## Production deployment
 
@@ -16,7 +16,8 @@ https://ridebase-ml-control-center.vercel.app     https://ridebase-inference-api
   `public/index.html` (+ `public/fig/`), Vercel serves `public/` as a static site
   (`vercel.json`).
 - **Production API:** <https://ridebase-inference-api.onrender.com> (V1, V2.0,
-  and V2.1; `/api/v1/*`, `/api/v2/*`, `/api/v2_1/*`, `/api/predict/service`).
+  V2.1, and V3; `/api/v1/*`, `/api/v2/*`, `/api/v2_1/*`, `/api/v3/*`,
+  `/api/predict/service`).
 - **API base URL** resolves: `?v2api=` query param → build-time
   `NEXT_PUBLIC_API_BASE_URL` / `RIDEBASE_V2_API` → hard-coded Render default.
   No `?v2api=` needed.
@@ -119,6 +120,23 @@ Both modes describe V2.1 as experimental live and synthetically validated,
 with real-fleet validation pending. Service-return probability remains separate
 from deterministic maintenance-due status.
 
+## V3 motorcycle context
+
+`V3 Next Task → Canlı Tahmin` uses `motorcycle_id + landmark_date` with the
+shared read-only V2.1 history adapter and the frozen V3 predictor. Both
+`GET /api/v3/sample` and `POST /api/v3/predict/by-motorcycle` return a
+`motorcycle_context` block containing only source-supported, PIT-safe synthetic
+identity and history fields. The UI shows that motorcycle card before Top-K task
+predictions and keeps the ID as the stable backend key.
+
+Brand, model, and production year come from the immutable V1.4 motorcycle
+reference row after its observation-start gate. Current odometer comes from the
+latest mileage row at or before the landmark; last-service fields come from the
+latest eligible delivered service at or before it; annual usage comes from the
+active usage profile. Missing values are hidden rather than replaced with fake
+zeroes. This response enrichment does not enter the 277-feature vector and does
+not alter any of the 44 frozen probabilities.
+
 ---
 
 ## Purpose
@@ -140,8 +158,8 @@ A project manager opens one link and sees, at a glance:
 | **EDA** | complete | `02_eda.ipynb` — 11 sections re-homed **verbatim** from the existing "RideBase Veri Paneli" artifact |
 | **V0 Baseline** | complete | `04_v0_rule_baseline.ipynb` · `v0_rule_baseline_metrics.csv` · `v0_vs_v1_regression_comparison.csv` |
 | **V1 Regression** | active / frozen | `06`–`12` · `v1_final_tuning_*` tables · `v1_final_tuning_config.json` · `v1_final_hyperparameter_tuning_report.md` |
-| **V2 Survival** | planned | placeholder only — no results, no fake metrics |
-| **V3 Next Task** | planned | placeholder — notes manufacturer knowledge is "available as prior" |
+| **V2 Survival** | V2.0 research / V2.1 active | frozen V2.0 benchmark + V2.1 dynamic-landmark live product surface |
+| **V3 Next Task** | synthetic product candidate | frozen 44-label predictor + PIT-safe by-motorcycle history API |
 
 System pages: **Experiments** (12 notebooks), **Models** (registry), **Dataset**
 (v1 / v1.1 / v1.2 / v1.3 registry), **Activity** (changelog), **System Status**.

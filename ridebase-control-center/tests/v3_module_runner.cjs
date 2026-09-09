@@ -19,6 +19,7 @@ function slice(from, to) {
 // helpers the V3 renderer depends on
 const helpers = `
 function esc(x){return String(x==null?"":x).replace(/[&<>"]/g,function(c){return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c];});}
+function n0(v){return v==null||v!==v?"—":Math.round(v).toLocaleString("tr-TR");}
 function pct(v,d){return v==null||v!==v?"—":(v*100).toFixed(d==null?1:d)+"%";}
 function card(title,sub,body){return '<div class="card"><h2>'+esc(title)+'</h2>'+(sub?'<div class="sub">'+esc(sub)+'</div>':'')+body+'</div>';}
 function finding(kind,label,html){return '<div class="finding '+(kind||'')+'"><div class="tl">'+esc(label)+'</div><div>'+html+'</div></div>';}
@@ -29,7 +30,7 @@ function kpi(label,value,note,accent){return '<div class="kpi '+(accent||'')+'">
 const v3src = slice("/* ---------------- V3 — NEXT SERVICE TASKS ---------------- */",
                     "/* ---------------- placeholder (unused modules) ---------------- */");
 
-const mod = new Function(`${helpers}\n${v3src}\nreturn {v3Result:v3Result,v3ConfLabel:v3ConfLabel,v3ConfClass:v3ConfClass,v3Disclaimers:v3Disclaimers,V3_HEADING:V3_HEADING,V3_DISCLAIMER:V3_DISCLAIMER,V3_NOT_FAILURE:V3_NOT_FAILURE};`)();
+const mod = new Function(`${helpers}\n${v3src}\nreturn {v3Result:v3Result,v3ContextCard:v3ContextCard,v3ContextTechnical:v3ContextTechnical,v3ConfLabel:v3ConfLabel,v3ConfClass:v3ConfClass,v3Disclaimers:v3Disclaimers,V3_HEADING:V3_HEADING,V3_DISCLAIMER:V3_DISCLAIMER,V3_NOT_FAILURE:V3_NOT_FAILURE};`)();
 
 let input = "";
 process.stdin.setEncoding("utf8");

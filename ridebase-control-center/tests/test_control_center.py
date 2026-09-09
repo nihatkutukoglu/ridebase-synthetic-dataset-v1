@@ -850,7 +850,8 @@ class AccessibilityTests(unittest.TestCase):
     def test_prediction_outputs_are_aria_live(self):
         for box_id in ("v1scenarioOut", "v1demoOut", "v2scenarioOut", "v2demoOut", "v2_1out"):
             self.assertInBoth('id="' + box_id + '"')
-        self.assertEqual(self.template.count('aria-live="polite"'), 5)
+        self.assertInBoth('id="v3SampleIdentity" aria-live="polite"')
+        self.assertEqual(self.template.count('aria-live="polite"'), 6)
 
     def test_tab_bars_use_the_tab_pattern(self):
         for text in ('role="tablist"', 'role="tab"', 'role="tabpanel"', 'aria-selected='):
@@ -1032,6 +1033,41 @@ class V3Module(unittest.TestCase):
             "motorcycle_id": "MC000001",
             "input_source": "SYNTHETIC_HISTORY_V1_4",
             "feature_coverage": 1.0,
+            "motorcycle_context": {
+                "motorcycle_id": "MC000001",
+                "brand": "Bajaj",
+                "model": "Pulsar NS200",
+                "model_year": 2022,
+                "current_odometer_km": 34250,
+                "last_service_date": "2025-12-31",
+                "last_service_odometer_km": 29800,
+                "km_since_last_service": 4450,
+                "days_since_last_service": 90,
+                "annual_usage_km": 11800,
+                "landmark_date": "2026-03-31",
+                "source": "SYNTHETIC_HISTORY_V1_4",
+            },
+            "motorcycle_context_provenance": {
+                "metadata_source": "ridebase_v1_4.motorcycles",
+                "identity_boundary": "observation_start_date <= landmark_date",
+                "odometer_source": {
+                    "table": "mileage_timeline_monthly",
+                    "period_end_date": "2026-03-31",
+                    "boundary": "period_end_date <= landmark_date",
+                },
+                "last_service_source": {
+                    "table": "services",
+                    "service_id": "SVC000099",
+                    "received_date": "2025-12-31",
+                    "boundary": "received_at.date <= landmark_date",
+                },
+                "future_records_used": False,
+            },
+            "history_provenance": {
+                "source": "v2_1_history_adapter",
+                "task_history_boundary": "parent service received_at <= landmark",
+            },
+            "motorcycle_context_warnings": [],
             "top_tasks": [
                 {"task_code": "ENGINE_OIL_CHANGE", "display_name": "Motor Yağı Değişimi",
                  "probability": 0.82, "percent": 82.0, "rank": 1, "confidence": "YUKSEK",
@@ -1053,9 +1089,22 @@ class V3Module(unittest.TestCase):
             "timing_ms": {"history_build": 30.0, "prediction": 24.0, "total": 54.0},
         }
         runner = ROOT / "tests" / "v3_module_runner.cjs"
+        cls.runner = runner
+        cls.payload = payload
         completed = subprocess.run(["node", str(runner)], input=json.dumps(payload),
                                    text=True, capture_output=True, check=True)
         cls.render = json.loads(completed.stdout)
+
+    @classmethod
+    def render_with_context(cls, context, warnings=None):
+        payload = dict(cls.payload)
+        payload["motorcycle_context"] = context
+        payload["motorcycle_context_warnings"] = warnings or []
+        completed = subprocess.run(
+            ["node", str(cls.runner)], input=json.dumps(payload), text=True,
+            capture_output=True, check=True,
+        )
+        return json.loads(completed.stdout)
 
     # --------------------------------------------------------------- wiring
     def test_v3_is_a_real_module_not_a_placeholder(self):
@@ -1083,6 +1132,69 @@ class V3Module(unittest.TestCase):
             self.assertIn(name, text)
         for pct in ("82.0%", "64.0%", "48.0%"):
             self.assertIn(pct, text)
+
+    def test_motorcycle_information_precedes_top_k_and_is_human_readable(self):
+        text = self.render["text"]
+        self.assertLess(
+            text.index("MOTOSİKLET BİLGİLERİ"),
+            text.index("V3 — SONRAKİ SERVİSTE BEKLENEN İŞLEMLER"),
+        )
+        for value in (
+            "Bajaj Pulsar NS200", "2022 Model", "MC000001", "34.250 km",
+            "31.12.2025", "29.800 km", "4.450 km", "90 gün",
+            "11.800 km/yıl", "31.03.2026", "SENTETİK MOTOSİKLET KAYDI",
+        ):
+            self.assertIn(value, text)
+
+    def test_context_copy_and_provenance_render(self):
+        text = self.render["text"]
+        self.assertIn(
+            "Bu tahmin, aşağıda bilgileri gösterilen sentetik motosikletin bir sonraki tamamlanmış servis kaydı içindir.",
+            text,
+        )
+        for value in (
+            "metadata source", "odometer source", "last service source",
+            "history provenance", "future records used", "hayır",
+        ):
+            self.assertIn(value, text)
+
+    def test_partial_context_hides_missing_values_without_fake_zeroes(self):
+        cases = [
+            ({"motorcycle_id": "MC1", "brand": "Bajaj", "model": "NS200", "model_year": 2022,
+              "landmark_date": "2026-03-31", "source": "SYNTHETIC_HISTORY_V1_4"}, "Bajaj NS200"),
+            ({"motorcycle_id": "MC2", "brand": "Honda", "model": "PCX125",
+              "landmark_date": "2026-03-31", "source": "SYNTHETIC_HISTORY_V1_4"}, "Honda PCX125"),
+            ({"motorcycle_id": "MC3", "model": "NMAX 125",
+              "landmark_date": "2026-03-31", "source": "SYNTHETIC_HISTORY_V1_4"}, "NMAX 125"),
+            ({"motorcycle_id": "MC4", "landmark_date": "2026-03-31",
+              "source": "SYNTHETIC_HISTORY_V1_4"}, "MC4"),
+        ]
+        for context, identity in cases:
+            rendered = self.render_with_context(context)["text"]
+            self.assertIn(identity, rendered)
+            self.assertNotIn("0 km", rendered)
+            self.assertNotIn("01.01.1970", rendered)
+            self.assertNotIn("undefined", rendered)
+            self.assertNotIn("null", rendered)
+
+    def test_year_is_rendered_only_when_present(self):
+        with_year = self.render_with_context({
+            "motorcycle_id": "MC1", "brand": "Bajaj", "model": "NS200",
+            "model_year": 2022, "landmark_date": "2026-03-31",
+        })["text"]
+        without_year = self.render_with_context({
+            "motorcycle_id": "MC1", "brand": "Bajaj", "model": "NS200",
+            "landmark_date": "2026-03-31",
+        })["text"]
+        self.assertIn("2022 Model", with_year)
+        self.assertNotIn("2022 Model", without_year)
+
+    def test_random_helper_uses_friendly_identity_and_clears_stale_result(self):
+        for source in (self.template, self.built):
+            self.assertIn("friendly_motorcycle_label", source)
+            self.assertIn("RASTGELE SENTETİK MOTOSİKLET GETİR", source)
+            self.assertIn('oldOut.innerHTML=""', source)
+            self.assertIn("sampleGen!==v3Gen", source)
 
     def test_confidence_tiers_render_in_turkish(self):
         self.assertIn("YÜKSEK", self.render["text"])

@@ -16,7 +16,8 @@ ENV PYTHONUNBUFFERED=1 \
     MAINTENANCE_POLICY_PATH=/app/app/data/maintenance_policies.csv \
     V2_1_HISTORY_STORE_PATH=/app/app/history_data/v2_1_history_serving.sqlite \
     V2_1_HISTORY_ADAPTER_MODE=sqlite \
-    V2_1_HISTORY_SCHEMA_CONTRACT=/app/app/history_config/source_schema_contract_v1_3.json
+    V2_1_HISTORY_SCHEMA_CONTRACT=/app/app/history_config/source_schema_contract_v1_3.json \
+    RIDEBASE_V3_SOURCE_DIR=/app/app/v3_data
 
 WORKDIR /app
 

@@ -28,7 +28,7 @@ from .v3_schemas import (V3BatchPredictRequest, V3ByMotorcycleRequest,
                          V3PredictRequest)
 from .v3_service import (MAX_BATCH, V3Unavailable, frozen_metrics,
                          get_history_adapter, get_predictor,
-                         predict_by_motorcycle)
+                         motorcycle_context_payload, predict_by_motorcycle)
 
 v3 = APIRouter(prefix="/api/v3", tags=["v3"])
 
@@ -160,13 +160,17 @@ def sample() -> Dict[str, Any]:
         raise HTTPException(status_code=503, detail="V3 sample index not available")
     frame = pd.read_parquet(path)
     row = frame.sample(1).iloc[0]
-    return _decorate({
+    payload = {
         "motorcycle_id": str(row["motorcycle_id"]),
         "landmark_date": pd.to_datetime(row["landmark_at"]).date().isoformat(),
         "split": str(row["v3_split"]),
         "note": ("Input only — a valid POST /predict/by-motorcycle payload. "
                  "No target service and no task labels are exposed."),
-    })
+    }
+    payload.update(motorcycle_context_payload(
+        payload["motorcycle_id"], payload["landmark_date"], _adapter()
+    ))
+    return _decorate(payload)
 
 
 def _one(payload: Dict[str, Any]) -> Dict[str, Any]:

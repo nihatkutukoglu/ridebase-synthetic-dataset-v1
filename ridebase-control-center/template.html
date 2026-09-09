@@ -3165,7 +3165,7 @@ function renderV3(sub){
     +'<span class="chip">frozen champion</span><span class="chip">44 işlem</span>'
     +'<span class="chip bad">GERÇEK FİLO DOĞRULAMASI BEKLENİYOR</span>';
   var head=modHead("Modül · Çoklu-Etiket Sınıflandırma",V3_HEADING,
-    "V3, bir sonraki tamamlanmış servis kaydında hangi işlemlerin görülme olasılığının daha yüksek olduğunu tahmin eder. "
+    "V3, bir sonraki tamamlanmış serviste hangi işlemlerin görülme olasılığının daha yüksek olduğunu tahmin eder. "
     +"Bu bir servis zamanı tahmini değildir (o V2.1), bakım gerekli mi sorusunun cevabı değildir ve mekanik arıza olasılığı değildir.",
     chips,'api <code>/api/v3/*</code> · policy <code>config/v3_product_label_policy.json</code>');
   return head+v3Bar(sub)+(sub==="overview"?v3Overview():v3PredictPage());
@@ -3197,33 +3197,99 @@ function v3Form(){
   var it=v2InputStyle();
   box.innerHTML=card("1 · Motosiklet + landmark","açık, yeniden üretilebilir geçmiş sorgusu",
       '<div class="grid g2">'
-      +lab("v3Id","Motorcycle ID",'<input id="v3Id" type="text" value="MC000001" placeholder="ör. MC000001" autocomplete="off" style="'+it+'">')
-      +lab("v3Date","Landmark tarihi",'<input id="v3Date" type="date" value="2026-03-31" style="'+it+'">')
+      +lab("v3Id","Motorcycle ID",'<input id="v3Id" type="text" placeholder="ör. MC000001" autocomplete="off" style="'+it+'">')
+      +lab("v3Date","Landmark tarihi",'<input id="v3Date" type="date" style="'+it+'">')
       +'</div>'
       +'<div class="grid g2" style="margin-top:8px">'
       +lab("v3TopK","Kaç işlem gösterilsin",'<select id="v3TopK" style="'+it+'"><option value="3" selected>3</option><option value="5">5</option></select>')
       +'</div>'
-      +'<div class="chips" style="margin-top:8px"><button class="subtab" id="v3Random" style="border:1px solid var(--border);border-radius:8px">RASTGELE GEÇERLİ ID GETİR</button></div>'
+      +'<div class="chips" style="margin-top:8px"><button class="subtab" id="v3Random" style="border:1px solid var(--border);border-radius:8px">RASTGELE SENTETİK MOTOSİKLET GETİR</button></div>'
+      +'<div id="v3SampleIdentity" aria-live="polite" style="margin-top:8px"></div>'
       +'<p class="copy" style="margin-top:8px">Landmark tarihi zorunludur; API sunucu tarihini sessizce kullanmaz. Bu demo yalnız donmuş <b>sentetik V1.4</b> kimliklerini sorgular.</p>')
     +'<div class="sec">'+card("2 · Tahmin","geçmiş → 277 özellik → frozen V3",
       '<div id="v3Err" class="finding bad" style="display:none"></div>'
       +'<div class="chips" style="margin-top:4px"><button class="subtab" id="v3Run" style="border:1px solid var(--border);border-radius:8px">V3 TAHMİNİNİ ÇALIŞTIR</button></div>')+'</div>';
   document.getElementById("v3Run").addEventListener("click",v3Run);
   document.getElementById("v3Random").addEventListener("click",v3FillRandom);
+  ["v3Id","v3Date"].forEach(function(id){document.getElementById(id).addEventListener("input",function(){
+    v3Gen++;var out=document.getElementById("v3out");if(out)out.innerHTML="";
+    var sample=document.getElementById("v3SampleIdentity");if(sample)sample.innerHTML="";
+  });});
   restoreForm(box,location.hash);
+}
+function v3Finite(v){return typeof v==="number"&&isFinite(v);}
+function v3DateTR(v){
+  var m=String(v||"").match(/^(\d{4})-(\d{2})-(\d{2})$/);
+  return m?m[3]+"."+m[2]+"."+m[1]:"";
+}
+function v3Identity(c){
+  c=c||{};var parts=[];
+  if(c.brand)parts.push(String(c.brand));if(c.model)parts.push(String(c.model));
+  return parts.join(" ")||String(c.motorcycle_id||"");
+}
+function v3ContextCard(r){
+  var c=r.motorcycle_context||{motorcycle_id:r.motorcycle_id,landmark_date:r.landmark_date},rows=[];
+  function add(label,value){if(value!==""&&value!=null)rows.push([label,value]);}
+  add("Motor ID",c.motorcycle_id||r.motorcycle_id||"");
+  if(v3Finite(c.current_odometer_km))add("Güncel Kilometre",n0(c.current_odometer_km)+" km");
+  var lastDate=v3DateTR(c.last_service_date);if(lastDate)add("Son Servis Tarihi",lastDate);
+  if(v3Finite(c.last_service_odometer_km))add("Son Servis Kilometresi",n0(c.last_service_odometer_km)+" km");
+  var since=[];
+  if(v3Finite(c.km_since_last_service))since.push(n0(c.km_since_last_service)+" km");
+  if(v3Finite(c.days_since_last_service))since.push(n0(c.days_since_last_service)+" gün");
+  if(since.length)add("Son Servisten Beri",since.join(" · "));
+  if(v3Finite(c.annual_usage_km))add("Yıllık Kullanım",n0(c.annual_usage_km)+" km/yıl");
+  var landmark=v3DateTR(c.landmark_date||r.landmark_date);if(landmark)add("Landmark Tarihi",landmark);
+  var year=v3Finite(c.model_year)?'<div style="color:var(--text-2);margin-top:3px">'+esc(String(Math.round(c.model_year)))+' Model</div>':'';
+  var metadata=rows.map(function(row){return '<div style="min-width:0;padding:8px 0"><div style="font-size:.72rem;color:var(--muted);text-transform:uppercase;letter-spacing:.04em">'+esc(row[0])+'</div><div style="margin-top:3px;color:var(--text);font-variant-numeric:tabular-nums;overflow-wrap:anywhere">'+esc(row[1])+'</div></div>';}).join('');
+  var contextWarnings=(r.motorcycle_context_warnings||[]).map(function(w){return '<li>'+esc(w)+'</li>';}).join('');
+  return card("MOTOSİKLET BİLGİLERİ","SENTETİK MOTOSİKLET KAYDI",
+    '<p class="copy">Bu tahmin, aşağıda bilgileri gösterilen sentetik motosikletin bir sonraki tamamlanmış servis kaydı içindir.</p>'
+    +'<div style="font-size:1.2rem;font-weight:700;color:var(--text);margin-top:12px;overflow-wrap:anywhere">'+esc(v3Identity(c))+'</div>'+year
+    +'<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));column-gap:18px;margin-top:10px">'+metadata+'</div>'
+    +'<div class="chips" style="margin-top:10px"><span class="chip warn">Kaynak: '+esc(c.source||r.input_source||"SYNTHETIC_HISTORY_V1_4")+'</span></div>'
+    +(contextWarnings?'<div class="finding warn" style="margin-top:10px"><div class="tl">EKSİK BAĞLAM</div><ul style="margin:0;padding-left:18px">'+contextWarnings+'</ul></div>':''));
+}
+function v3ContextTechnical(r){
+  var c=r.motorcycle_context||{},p=r.motorcycle_context_provenance||{},h=r.history_provenance||{};
+  function source(v){
+    if(!v)return "gösterilecek kaynak kaydı yok";
+    var bits=[v.table,v.timeline_id||v.service_id||v.usage_profile_id,v.period_end_date||v.received_date,v.boundary];
+    return bits.filter(Boolean).join(" · ");
+  }
+  var rows=[
+    ["motorcycle_id",c.motorcycle_id||r.motorcycle_id||""],
+    ["landmark",c.landmark_date||r.landmark_date||""],
+    ["metadata source",p.metadata_source||""],
+    ["identity boundary",p.identity_boundary||""],
+    ["odometer source",source(p.odometer_source)],
+    ["last service source",source(p.last_service_source)],
+    ["annual usage source",source(p.annual_usage_source)],
+    ["feature coverage",v3Finite(r.feature_coverage)?pct(r.feature_coverage):""],
+    ["history provenance",[h.source,h.task_history_boundary].filter(Boolean).join(" · ")],
+    ["future records used",p.future_records_used===false?"hayır":"belirtilmedi"]
+  ].filter(function(row){return row[1]!=="";});
+  return '<div style="overflow:auto"><table class="tbl"><tbody>'+rows.map(function(row){return '<tr><td class="k"><code>'+esc(row[0])+'</code></td><td>'+esc(row[1])+'</td></tr>';}).join('')+'</tbody></table></div>';
 }
 function v3FillRandom(){
   var api=(window.__V2_API__||"").replace(/\/$/,""),btn=document.getElementById("v3Random"),
       errBox=document.getElementById("v3Err");
   if(!api||!btn)return;
-  btn.disabled=true;var prev=btn.textContent;btn.textContent="Getiriliyor…";
+  btn.disabled=true;var prev=btn.textContent,sampleGen=++v3Gen;btn.textContent="Getiriliyor…";
+  var oldOut=document.getElementById("v3out");if(oldOut)oldOut.innerHTML="";
+  var oldIdentity=document.getElementById("v3SampleIdentity");if(oldIdentity)oldIdentity.innerHTML="";
   v2fetch(api+"/api/v3/sample").then(v2json).then(function(s){
+    if(sampleGen!==v3Gen)return;
     if(!s.motorcycle_id||!s.landmark_date)throw new Error("örnek yanıtında motorcycle_id/landmark_date yok");
     var id=document.getElementById("v3Id"),d=document.getElementById("v3Date");
     if(id)id.value=s.motorcycle_id;
     if(d)d.value=s.landmark_date;
+    var identity=document.getElementById("v3SampleIdentity");
+    if(identity)identity.innerHTML=finding("good","SEÇİLEN SENTETİK MOTOSİKLET",
+      '<p><b>'+esc(s.friendly_motorcycle_label||s.motorcycle_id)+'</b><br>Landmark: '+esc(v3DateTR(s.landmark_date)||s.landmark_date)+'</p>');
     if(errBox){errBox.style.display="none";errBox.innerHTML="";}
   }).catch(function(e){
+    if(sampleGen!==v3Gen)return;
     if(errBox){errBox.style.display="block";errBox.innerHTML="Rastgele ID alınamadı — "+esc(String(e&&e.message||e))+".";}
   }).then(function(){btn.disabled=false;btn.textContent=prev;});
 }
@@ -3254,13 +3320,12 @@ function v3Run(){
 var v3Gen=0;
 function v3Result(r){
   var tasks=r.top_tasks||[];
-  if(!tasks.length)return '<div class="empty">Bu landmark için gösterilecek işlem bulunamadı.</div>';
   var cov=r.feature_coverage;
-  var rows=tasks.map(function(t){
+  var rows=tasks.length?tasks.map(function(t){
     var w=Math.max(1,Math.round((t.probability||0)*100));
-    return '<div style="display:flex;align-items:center;gap:12px;padding:10px 0;border-bottom:1px solid var(--border)">'
+    return '<div style="display:flex;flex-wrap:wrap;align-items:center;gap:12px;padding:10px 0;border-bottom:1px solid var(--border)">'
       +'<div style="flex:0 0 26px;color:var(--muted);font-variant-numeric:tabular-nums">'+esc(String(t.rank))+'.</div>'
-      +'<div style="flex:1 1 auto;min-width:0">'
+      +'<div style="flex:1 1 180px;min-width:140px">'
         +'<div style="color:var(--text);font-weight:600">'+esc(t.display_name||t.task_code)+'</div>'
         +'<div style="height:6px;border-radius:4px;background:var(--border);margin-top:6px;overflow:hidden">'
           +'<div style="height:100%;width:'+w+'%;background:var(--accent,#4ea1ff)"></div></div>'
@@ -3268,7 +3333,7 @@ function v3Result(r){
       +'<div style="flex:0 0 64px;text-align:right;font-variant-numeric:tabular-nums;color:var(--text);font-weight:600">'+esc(pct(t.probability))+'</div>'
       +'<div style="flex:0 0 108px;text-align:right"><span class="chip '+v3ConfClass(t.confidence)+'">'+esc(v3ConfLabel(t.confidence))+'</span></div>'
       +'</div>';
-  }).join('');
+  }).join(''):'<div class="empty">Bu landmark için gösterilecek işlem bulunamadı.</div>';
   var warn=(r.warnings||[]).map(function(w){return '<li>'+esc(w)+'</li>';}).join('');
   var all=r.all_task_probabilities||{},bins=r.binary_predictions||{};
   var allRows=Object.keys(all).sort(function(a,b){return all[b]-all[a];}).map(function(c){
@@ -3276,17 +3341,19 @@ function v3Result(r){
       +'<td style="text-align:right">'+(bins[c]?"evet":"hayır")+'</td></tr>';
   }).join('');
   var tm=(r.timing_ms||{});
-  return card(V3_HEADING,"landmark "+esc(r.landmark_date||"—")+" · "+esc(r.motorcycle_id||""),
+  return v3ContextCard(r)
+    +'<div class="sec">'+card(V3_HEADING,"landmark "+esc(r.landmark_date||"—")+" · "+esc(r.motorcycle_id||""),
       rows
       +'<div class="chips" style="margin-top:12px">'
         +'<span class="chip">özellik kapsamı '+esc(pct(cov))+'</span>'
         +'<span class="chip">kaynak '+esc(r.input_source||"—")+'</span>'
         +'<span class="chip warn">'+esc(r.validation_scope||"SYNTHETIC_ONLY")+'</span>'
         +'<span class="chip bad">GERÇEK FİLO: '+esc(r.real_fleet_validation||"PENDING")+'</span>'
-      +'</div>')
+      +'</div>')+'</div>'
     +'<div class="sec">'+finding("warn","UYARILAR VE KAPSAM","<ul style=\"margin:0;padding-left:18px\">"+warn+"</ul>")+'</div>'
     +'<div class="sec">'+card("Teknik detay",null,
-        techBox('<p class="copy">Tüm 44 etiketin kalibre olasılığı ve donmuş eşikteki (global '
+        techBox(v3ContextTechnical(r)
+          +'<p class="copy" style="margin-top:10px">Tüm 44 etiketin kalibre olasılığı ve donmuş eşikteki (global '
           +esc(String((r.provenance||{}).threshold||"—"))+') ikili kararı. Ürün sıralaması yalnız sunum politikasıdır; '
           +'model çıktısı değiştirilmez.</p>'
           +'<div style="overflow:auto;max-height:420px"><table class="tbl"><thead><tr><th>task_code</th>'

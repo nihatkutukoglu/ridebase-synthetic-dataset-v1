@@ -3,7 +3,7 @@ from __future__ import annotations
 
 from typing import Any, Dict, List, Optional
 
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, ConfigDict, Field
 
 from .v3_service import MAX_BATCH
 
@@ -32,3 +32,23 @@ class V3ByMotorcycleRequest(BaseModel):
     landmark_date: str = Field(..., description="YYYY-MM-DD")
     top_k: int = TOP_K_FIELD
     include_hidden: bool = False
+
+
+class V3MotorcycleContext(BaseModel):
+    """Product-safe subject identity and PIT context for a V3 prediction."""
+
+    model_config = ConfigDict(extra="forbid")
+
+    motorcycle_id: str
+    landmark_date: str
+    source: str = "SYNTHETIC_HISTORY_V1_4"
+    brand: Optional[str] = None
+    model: Optional[str] = None
+    model_year: Optional[int] = None
+    category: Optional[str] = None
+    current_odometer_km: Optional[float] = None
+    last_service_date: Optional[str] = None
+    last_service_odometer_km: Optional[float] = None
+    km_since_last_service: Optional[float] = None
+    days_since_last_service: Optional[int] = None
+    annual_usage_km: Optional[float] = None
