@@ -454,6 +454,15 @@ _store: ArtifactStore | None = None
 _lock = threading.Lock()
 
 
+def store_ready() -> bool:
+    """Is the V1 store already loaded? Never loads, never blocks on the lock.
+
+    /health uses this so a health probe answers immediately while the warmup
+    thread still holds ``_lock`` loading the artifacts.
+    """
+    return _store is not None
+
+
 def get_store(reload: bool = False) -> ArtifactStore:
     global _store
     with _lock:

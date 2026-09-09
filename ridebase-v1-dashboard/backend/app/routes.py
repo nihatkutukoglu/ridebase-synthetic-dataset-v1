@@ -6,10 +6,12 @@ import secrets
 
 import numpy as np
 import pandas as pd
+from typing import Any, Dict
+
 from fastapi import APIRouter, Depends, Header, HTTPException, Query
 
 from . import analytics
-from .artifacts import get_store, read_predictions
+from .artifacts import get_store, store_ready, read_predictions
 from .config import settings
 from .predictor import PredictionError, predict
 from .schemas import BatchPredictRequest, PredictRequest, V1ScenarioRequest
@@ -29,8 +31,18 @@ router = APIRouter()
 
 @router.get("/health")
 def health():
-    h = dict(get_store().health())
-    h["v1"] = h.get("status")
+    """Liveness + readiness. Never triggers or waits on model loading.
+
+    Startup warms models on a background thread, so a probe can arrive while the
+    V1 artifact store is still being read. Blocking here would make the platform's
+    health check wait for the whole bundle -- the exact coupling that keeps a
+    service from being seen as up.
+    """
+    if not store_ready():
+        h: Dict[str, Any] = {"status": "warming", "v1": "loading"}
+    else:
+        h = dict(get_store().health())
+        h["v1"] = h.get("status")
     try:
         h.update(v2_health_fields())
     except Exception as exc:  # pragma: no cover

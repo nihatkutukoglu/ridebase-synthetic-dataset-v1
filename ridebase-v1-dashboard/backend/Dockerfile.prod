@@ -17,7 +17,8 @@ ENV PYTHONUNBUFFERED=1 \
     V2_1_HISTORY_STORE_PATH=/app/app/history_data/v2_1_history_serving.sqlite \
     V2_1_HISTORY_ADAPTER_MODE=sqlite \
     V2_1_HISTORY_SCHEMA_CONTRACT=/app/app/history_config/source_schema_contract_v1_3.json \
-    RIDEBASE_V3_SOURCE_DIR=/app/app/v3_data
+    RIDEBASE_V3_SOURCE_DIR=/app/app/v3_data \
+    RIDEBASE_V3_LABEL_POLICY=/app/config/v3_product_label_policy.json
 
 WORKDIR /app
 
@@ -68,6 +69,8 @@ COPY ridebase_v1_4/source_tables/ridebase_motorcycle_models_v1.csv /app/app/v3_d
 COPY config/v3_product_label_policy.json /app/config/v3_product_label_policy.json
 
 EXPOSE 8000
-HEALTHCHECK --interval=30s --timeout=5s --start-period=40s --retries=3 \
-    CMD curl -fsS http://localhost:8000/health || exit 1
+# Probe the port the app actually listens on. Render sets PORT=10000, so a
+# hard-coded 8000 here can never succeed and marks the container unhealthy.
+HEALTHCHECK --interval=30s --timeout=5s --start-period=90s --retries=5 \
+    CMD curl -fsS "http://localhost:${PORT:-8000}/health" || exit 1
 CMD ["sh", "-c", "uvicorn app.main:app --host 0.0.0.0 --port ${PORT:-8000}"]

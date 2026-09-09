@@ -192,10 +192,31 @@ def frozen_metrics() -> dict[str, Any]:
     }
 
 
+def v3_ready() -> bool:
+    """Is the predictor already in memory? Never triggers a load."""
+    return _STATE["predictor"] is not None
+
+
 def health_fields() -> dict[str, Any]:
-    ok = v3_loaded()
+    """Report V3 readiness WITHOUT loading anything.
+
+    /health must answer while the warmup thread is still reading the 44-model
+    CatBoost bundle. The previous version called ``v3_loaded()``, which lazily ran
+    ``init_v3()`` -- so the very first health probe paid the full model load, on
+    the request path, exactly when a platform is waiting to see the service come
+    up. Readiness is now observed, never forced.
+    """
+    ok = v3_ready()
+    if not settings.V3_ENABLED:
+        status = "disabled"
+    elif ok:
+        status = "ok"
+    elif _STATE["error"] is None:
+        status = "loading"          # warmup thread has not reached V3 yet
+    else:
+        status = "unavailable"
     out: dict[str, Any] = {
-        "v3_status": "ok" if ok else ("disabled" if not settings.V3_ENABLED else "unavailable"),
+        "v3_status": status,
         "v3_model_loaded": ok,
         "v3_enabled": settings.V3_ENABLED,
     }

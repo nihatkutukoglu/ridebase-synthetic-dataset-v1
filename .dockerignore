@@ -1,0 +1,57 @@
+# Build context hygiene. `dockerContext: .` is the repo root, which is ~10 GB of
+# datasets, zips and experiment artifacts. Only the paths the Dockerfile actually
+# COPYs need to reach the daemon; everything else just slows the build and can
+# make a remote build look like it hung.
+.git
+.venv
+venv
+__pycache__
+**/__pycache__
+*.pyc
+.pytest_cache
+**/.pytest_cache
+.DS_Store
+node_modules
+**/node_modules
+
+# multi-GB dataset snapshots and packaging zips (never COPYd)
+*.zip
+ridebase_v1_1/
+ridebase_v1_2/
+ridebase_v1_3/derived_outputs/
+ridebase_v1_5/
+source_tables/
+derived_outputs/
+notebooks/
+reports/
+docs/
+scripts/
+
+# only the four small v1.4 reference CSVs are COPYd; exclude the heavy ones
+ridebase_v1_4/reports/
+ridebase_v1_4/source_tables/services.csv
+ridebase_v1_4/source_tables/service_tasks.csv
+ridebase_v1_4/source_tables/service_parts.csv
+ridebase_v1_4/source_tables/services_enriched.csv
+ridebase_v1_4/source_tables/mileage_timeline_monthly.csv
+ridebase_v1_4/source_tables/appointments.csv
+ridebase_v1_4/source_tables/customers.csv
+ridebase_v1_4/source_tables/usage_profiles.csv
+ridebase_v1_4/source_tables/workshops.csv
+
+# ML experiment output the inference image never reads
+ridebase-ml/models/v1_automl/
+ridebase-ml/models/v1_3_automl/
+ridebase-ml/outputs/
+ridebase-ml/reports/
+ridebase-ml/notebooks/
+ridebase-ml/data/
+ridebase-ml/derived_outputs/v2_1/
+ridebase-ml/derived_outputs/v2_2_v1_5/
+ridebase-ml/derived_outputs/v2_3_v1_5/
+ridebase-ml/derived_outputs/signal_ceiling/
+ridebase-ml/tests/
+
+# frontend
+ridebase-control-center/
+ridebase-v1-dashboard/frontend/
