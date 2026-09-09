@@ -189,6 +189,25 @@ Produced by the current build (backend deploy pending). Synthetic serving exampl
 | 4 | Long model names, mobile layout | **EXPECTED** | at 375×812: no horizontal overflow, 0 clipped elements, card width 343 px; a 47-character model name wraps cleanly |
 | 5 | Stale-state on motorcycle switch | **EXPECTED** | A→B replaces brand, model, year, ID, odometer, service rows and Top-K with zero leftovers from A |
 
+### 10.1 Verification addendum — 2026-09-09
+
+- Existing Vercel project production deployment
+  `dpl_EgrZMz2TVHsGDEomVwB3YgvjPxUZ` reached `READY` and was aliased to
+  `https://ridebase-ml-control-center.vercel.app`; the served HTML contains
+  `MOTOSİKLET BİLGİLERİ`, `friendly_motorcycle_label`, and the new random-helper
+  copy.
+- Five current production inputs (`MC002279`, `MC003728`, `MC008356`,
+  `MC000796`, `MC006957`) were compared between the pre-enrichment live Render
+  backend and intended SHA `a14d8f9`. Each comparison covered all 44 labels:
+  maximum probability delta `0.0`, identical Top-K, and identical binary
+  decisions.
+- The live Render discriminator remains negative: `/api/v3/sample` returns no
+  `motorcycle_context`, confirming that the manual backend deployment is still
+  required.
+- Live V2.1 remained operational: `MC004649 @ 2026-07-31` returned HTTP 200 with
+  the unchanged experimental-live, synthetically-validated, real-fleet-pending
+  contract.
+
 ## 11. Final Verdict
 
 > **B. V3 MOTORCYCLE CONTEXT UX COMPLETE — MANUAL DEPLOYMENT REQUIRED**
