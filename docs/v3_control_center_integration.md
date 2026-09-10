@@ -19,12 +19,12 @@ which calls `GET /api/v3/sample`) → `POST /api/v3/predict/by-motorcycle`.
 
 Result hierarchy, in order:
 
-1. **Top 3 tasks** (5 selectable) — Turkish display name, probability bar, percentage
-2. **Confidence tier** chip — YÜKSEK / ORTA / DÜŞÜK / SINIRLI VERİ
-3. **Feature coverage**, input source, `SYNTHETIC_ONLY`, `GERÇEK FİLO: PENDING`
-4. **Warnings** block — always includes the three mandatory disclaimers
-5. **Collapsed technical details** — all 44 label probabilities, the binary decision
-   at the frozen threshold, and timing
+1. **Motosiklet bilgileri** — kimlik ve landmark anındaki PIT-safe bağlam
+2. **En olası 3 servis işlemi** — ad, olasılık, confidence; bunun yalnız alt küme olduğu açıkça yazılır
+3. **Tüm V3 tahminleri** — kullanıcı açınca 44 etiketin tamamı azalan olasılıkla; gizli/zayıf etiketler düşük güvenle
+4. **Bakım planı** — V3'ten ayrı `DETERMINISTIC_POLICY` listesi, durum şiddeti ve politika ilerlemesine göre sıralı
+5. **Warnings** block — her zaman zorunlu kapsam uyarıları
+6. **Collapsed technical details** — provenance, frozen threshold ve timing
 
 Error handling: unknown bike → clean message from the 404; pre-observation landmark
 → clean message from the 422. **No fabricated prediction is ever rendered.**
@@ -41,7 +41,10 @@ negated.
 
 ## Required copy (enforced by tests)
 
-- `V3 — SONRAKİ SERVİSTE BEKLENEN İŞLEMLER`
+- `V3 — EN OLASI 3 SERVİS İŞLEMİ`
+- `V3, 44 işlem arasından bir sonraki tamamlanmış servis kaydında görülme olasılığı en yüksek olan 3 işlemi öne çıkarır.`
+- `Bu liste yalnızca en yüksek 3 tahmini gösterir; diğer V3 tahminleri aşağıda görülebilir.`
+- `Bu bölüm ML tahmini değildir. Mevcut kilometre, süre ve bakım politikasına göre kontrol edilmesi gereken planlı bakım kalemlerini gösterir.`
 - `Bu tahminler sentetik veri üzerinde doğrulanmıştır. Gerçek filo doğrulaması henüz yapılmamıştır.`
 - `Bu yüzdeler mekanik arıza olasılığı değildir.`
 - `Bakım gereksinimi ve bakım aciliyeti deterministik bakım politikasından ayrı hesaplanır.`

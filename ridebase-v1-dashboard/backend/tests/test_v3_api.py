@@ -177,6 +177,12 @@ def test_response_never_carries_urgency_or_v2_1_scores(client, sample):
     d.pop("warnings", None)
     d.pop("probability_meaning", None)
     d.pop("warning", None)
+    # The newly added deterministic plan intentionally contains the canonical
+    # maintenance-urgency state, but remains isolated under its own source-tagged
+    # field and carries no V3 probability.
+    plan = d.pop("maintenance_plan")
+    assert plan["source"] == "DETERMINISTIC_POLICY"
+    assert all("probability" not in key.lower() for item in plan["items"] for key in item)
     d.get("provenance", {}).pop("does_not_predict", None)
     blob = json.dumps(d).lower()
     for field in FORBIDDEN_FIELDS:

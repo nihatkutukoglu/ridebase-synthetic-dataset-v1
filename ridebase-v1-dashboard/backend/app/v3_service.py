@@ -153,6 +153,15 @@ def predict_by_motorcycle(motorcycle_id: str, landmark_date: Any,
     # presentation-only and can never enter the 277-feature input or alter any of
     # the 44 task probabilities.
     payload.update(motorcycle_context_payload(motorcycle_id, landmark_date, adapter))
+    # Both enrichments are strictly downstream of the frozen predictor. The full
+    # list re-expresses the same 44 numbers with presentation metadata; the plan
+    # is deterministic policy state and never reads a V3 probability.
+    from .v3_maintenance_plan import all_task_rows, safe_maintenance_plan
+
+    payload["all_tasks"] = all_task_rows(payload, predictor)
+    payload["maintenance_plan"] = safe_maintenance_plan(
+        motorcycle_id, landmark_date, adapter
+    )
     payload["timing_ms"] = {
         "history_build": round(built_ms, 2),
         "prediction": round(predict_ms, 2),

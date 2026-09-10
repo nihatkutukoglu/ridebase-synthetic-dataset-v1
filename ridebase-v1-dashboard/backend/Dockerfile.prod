@@ -18,7 +18,8 @@ ENV PYTHONUNBUFFERED=1 \
     V2_1_HISTORY_ADAPTER_MODE=sqlite \
     V2_1_HISTORY_SCHEMA_CONTRACT=/app/app/history_config/source_schema_contract_v1_3.json \
     RIDEBASE_V3_SOURCE_DIR=/app/app/v3_data \
-    RIDEBASE_V3_LABEL_POLICY=/app/config/v3_product_label_policy.json
+    RIDEBASE_V3_LABEL_POLICY=/app/config/v3_product_label_policy.json \
+    V3_MAINTENANCE_MAPPING_PATH=/app/config/v3_maintenance_task_mapping.json
 
 WORKDIR /app
 
@@ -67,6 +68,8 @@ COPY ridebase_v1_4/source_tables/maintenance_policies.csv /app/app/v3_data/maint
 COPY ridebase_v1_4/source_tables/motorcycles.csv /app/app/v3_data/motorcycles.csv
 COPY ridebase_v1_4/source_tables/ridebase_motorcycle_models_v1.csv /app/app/v3_data/ridebase_motorcycle_models_v1.csv
 COPY config/v3_product_label_policy.json /app/config/v3_product_label_policy.json
+COPY config/v3_maintenance_task_mapping.json /app/config/v3_maintenance_task_mapping.json
+COPY config/v3_maintenance_task_mapping.json /app/config/v3_maintenance_task_mapping.json
 
 EXPOSE 8000
 # Probe the port the app actually listens on. Render sets PORT=10000, so a

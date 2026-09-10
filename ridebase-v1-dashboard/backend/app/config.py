@@ -52,6 +52,10 @@ class Settings:
         _ML_ROOT / "derived_outputs" / "v2_1_v1_4" / "v2_1_history_serving.sqlite",
     )
     V2_1_HISTORY_ADAPTER_MODE: str = os.environ.get("V2_1_HISTORY_ADAPTER_MODE", "sqlite")
+    V3_MAINTENANCE_MAPPING_PATH: Path = _path(
+        "V3_MAINTENANCE_MAPPING_PATH",
+        _REPO_ROOT / "config" / "v3_maintenance_task_mapping.json",
+    )
 
     ALLOWED_ORIGINS: list[str] = [
         o.strip()

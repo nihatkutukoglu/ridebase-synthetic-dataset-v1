@@ -58,10 +58,10 @@ MIN_FEATURE_COVERAGE = 0.80
 LIMITED_FEATURE_COVERAGE = 0.95
 
 #: Product copy. Kept here so the API, the tests and the UI cannot drift apart.
-HEADING_TR = "V3 — SONRAKİ SERVİSTE BEKLENEN İŞLEMLER"
+HEADING_TR = "V3 — EN OLASI 3 SERVİS İŞLEMİ"
 SUBHEADING_TR = (
-    "V3, bir sonraki tamamlanmış servis kaydında hangi işlemlerin görülme "
-    "olasılığının daha yüksek olduğunu tahmin eder."
+    "V3, 44 işlem arasından bir sonraki tamamlanmış servis kaydında görülme "
+    "olasılığı en yüksek olan 3 işlemi öne çıkarır."
 )
 DISCLAIMER_SYNTHETIC_TR = (
     "Bu tahminler sentetik veri üzerinde doğrulanmıştır. Gerçek filo doğrulaması "

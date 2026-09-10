@@ -1088,6 +1088,57 @@ class V3Module(unittest.TestCase):
             "provenance": {"threshold": 0.31},
             "timing_ms": {"history_build": 30.0, "prediction": 24.0, "total": 54.0},
         }
+        label_rows = json.loads(
+            (ROOT.parent / "config" / "v3_product_label_policy.json").read_text()
+        )["labels"]
+        mappings = {
+            row["v3_task_code"]: row
+            for row in json.loads(
+                (ROOT.parent / "config" / "v3_maintenance_task_mapping.json").read_text()
+            )["mappings"]
+        }
+        fixed = dict(payload["all_task_probabilities"])
+        fixed["GENERAL_SAFETY_INSPECTION"] = 0.48
+        for index, row in enumerate(label_rows):
+            fixed.setdefault(row["task_code"], round(0.40 - index * 0.005, 4))
+        ordered = sorted(label_rows, key=lambda row: (-fixed[row["task_code"]], row["task_code"]))
+        payload["all_task_probabilities"] = fixed
+        payload["binary_predictions"] = {code: value >= 0.31 for code, value in fixed.items()}
+        payload["all_tasks"] = [
+            {
+                "task_code": row["task_code"], "display_name": row["display_name_tr"],
+                "probability": fixed[row["task_code"]], "rank": rank,
+                "confidence": "DUSUK" if row["product_status"] == "HIDDEN_BY_DEFAULT" else "ORTA",
+                "confidence_display": "DÜŞÜK" if row["product_status"] == "HIDDEN_BY_DEFAULT" else "ORTA",
+                "product_status": row["product_status"],
+                "mapping_status": mappings[row["task_code"]]["status"],
+                "in_top_3": row["task_code"] in {
+                    "ENGINE_OIL_CHANGE", "CHAIN_CLEAN", "GENERAL_SAFETY_INSPECTION"
+                },
+            }
+            for rank, row in enumerate(ordered, start=1)
+        ]
+        payload["maintenance_plan"] = {
+            "source": "DETERMINISTIC_POLICY",
+            "note": "Bu bölüm ML tahmini değildir. Mevcut kilometre, süre ve bakım politikasına göre kontrol edilmesi gereken planlı bakım kalemlerini gösterir.",
+            "items": [
+                {
+                    "task_code": "ENGINE_OIL_CHANGE", "display_name": "Motor Yağı Değişimi",
+                    "status": "GECİKMİŞ", "progress_ratio": 1.2,
+                    "maintenance_urgency_reason": "800 km gecikmiş", "overdue_km": 800,
+                    "next_due_km": 33450, "policy_id": "POL1", "trigger_mode": "WHICHEVER_FIRST",
+                    "evidence_level": "SIMULATION_PRIOR", "policy_confidence": "LOW",
+                    "source_authority": "RideBase simulation prior",
+                },
+                {
+                    "task_code": "BRAKE_FLUID_CHANGE", "display_name": "Fren Hidroliği Değişimi",
+                    "status": "YAKLAŞIYOR", "progress_ratio": 0.86,
+                    "maintenance_urgency_reason": "Bakım periyoduna 51 gün kaldı",
+                    "remaining_days": 51, "next_due_date": "2026-05-21",
+                    "policy_id": "POL2", "trigger_mode": "TIME_ONLY",
+                },
+            ],
+        }
         runner = ROOT / "tests" / "v3_module_runner.cjs"
         cls.runner = runner
         cls.payload = payload
@@ -1100,6 +1151,18 @@ class V3Module(unittest.TestCase):
         payload = dict(cls.payload)
         payload["motorcycle_context"] = context
         payload["motorcycle_context_warnings"] = warnings or []
+        payload["maintenance_plan"] = {
+            "source": "DETERMINISTIC_POLICY", "items": [],
+            "empty_reason": "Bağlam testi için bakım planı yok.",
+        }
+        completed = subprocess.run(
+            ["node", str(cls.runner)], input=json.dumps(payload), text=True,
+            capture_output=True, check=True,
+        )
+        return json.loads(completed.stdout)
+
+    @classmethod
+    def render_payload(cls, payload):
         completed = subprocess.run(
             ["node", str(cls.runner)], input=json.dumps(payload), text=True,
             capture_output=True, check=True,
@@ -1137,7 +1200,7 @@ class V3Module(unittest.TestCase):
         text = self.render["text"]
         self.assertLess(
             text.index("MOTOSİKLET BİLGİLERİ"),
-            text.index("V3 — SONRAKİ SERVİSTE BEKLENEN İŞLEMLER"),
+            text.index("V3 — EN OLASI 3 SERVİS İŞLEMİ"),
         )
         for value in (
             "Bajaj Pulsar NS200", "2022 Model", "MC000001", "34.250 km",
@@ -1224,6 +1287,81 @@ class V3Module(unittest.TestCase):
         self.assertIn("özellik kapsamı", text)
         self.assertIn("SYNTHETIC_ONLY", text)
         self.assertIn("PENDING", text)
+
+    def test_top_three_is_explained_as_a_subset_of_all_44(self):
+        text = self.render["text"]
+        self.assertIn(
+            "V3, 44 işlem arasından bir sonraki tamamlanmış servis kaydında görülme olasılığı en yüksek olan 3 işlemi öne çıkarır.",
+            text,
+        )
+        self.assertIn(
+            "Bu liste yalnızca en yüksek 3 tahmini gösterir; diğer V3 tahminleri aşağıda görülebilir.",
+            text,
+        )
+        self.assertIn("TÜM V3 TAHMİNLERİ", text)
+        self.assertIn("Tüm 44 tahmini göster", text)
+        self.assertIn("HIDDEN_BY_DEFAULT", text)
+        self.assertIn("Motor Arıza Teşhisi", text)
+
+    def test_maintenance_plan_is_visually_and_semantically_separate(self):
+        text = self.render["text"]
+        self.assertIn("BAKIM PLANINA GÖRE KONTROL EDİLMESİ GEREKENLER", text)
+        self.assertIn(
+            "Bu bölüm ML tahmini değildir. Mevcut kilometre, süre ve bakım politikasına göre kontrol edilmesi gereken planlı bakım kalemlerini gösterir.",
+            text,
+        )
+        self.assertIn("DETERMINISTIC_POLICY", text)
+        self.assertIn("GECİKMİŞ", text)
+        self.assertIn("YAKLAŞIYOR", text)
+        self.assertIn("Bakım planında da yer alıyor", text)
+
+    def test_result_section_order_is_identity_top3_all_plan_warnings_technical(self):
+        text = self.render["text"]
+        headings = (
+            "MOTOSİKLET BİLGİLERİ",
+            "V3 — EN OLASI 3 SERVİS İŞLEMİ",
+            "TÜM V3 TAHMİNLERİ",
+            "BAKIM PLANINA GÖRE KONTROL EDİLMESİ GEREKENLER",
+            "UYARILAR VE KAPSAM",
+            "Teknik detay",
+        )
+        positions = [text.index(heading) for heading in headings]
+        self.assertEqual(positions, sorted(positions))
+
+    def test_hidden_and_low_confidence_rows_are_visually_weakened(self):
+        self.assertIn('style="opacity:.72"', self.render["html"])
+
+    def test_maintenance_plan_empty_and_no_overdue_states_are_explicit(self):
+        empty = dict(self.payload)
+        empty["maintenance_plan"] = {
+            "source": "DETERMINISTIC_POLICY", "items": [],
+            "empty_reason": "Bu motosiklet için bakım planı eşlemesi bulunamadı.",
+        }
+        self.assertIn(
+            "Bu motosiklet için bakım planı eşlemesi bulunamadı.",
+            self.render_payload(empty)["text"],
+        )
+        normal = dict(self.payload)
+        normal["maintenance_plan"] = {
+            "source": "DETERMINISTIC_POLICY", "due_item_count": 0,
+            "items": [{
+                "task_code": "ENGINE_OIL_CHANGE", "display_name": "Motor Yağı Değişimi",
+                "status": "NORMAL", "progress_ratio": 0.2, "due_now": False,
+            }],
+        }
+        self.assertIn(
+            "Şu anda bakım planına göre gecikmiş planlı bakım kalemi görünmüyor.",
+            self.render_payload(normal)["text"],
+        )
+
+    def test_high_mileage_context_distinguishes_total_from_since_service(self):
+        text = self.render["text"]
+        self.assertLess(text.index("34.250 km"), text.index("4.450 km"))
+        self.assertIn("Son Servisten Beri", text)
+
+    def test_all_predictions_table_uses_responsive_overflow_container(self):
+        self.assertIn('class="twrap"', self.render["html"])
+        self.assertIn("max-height:620px;overflow:auto", self.template)
 
     # ---------------------------------------------------------------- copy
     def test_p_at_1_is_never_labelled_accuracy(self):

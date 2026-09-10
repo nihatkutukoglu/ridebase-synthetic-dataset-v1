@@ -40,6 +40,7 @@ process.stdin.on("end", () => {
   const html = mod.v3Result(payload);
   const text = html.replace(/<[^>]*>/g, " ");
   process.stdout.write(JSON.stringify({
+    html: html,
     html_length: html.length,
     text: text,
     has_nan: /\bNaN\b/.test(html),

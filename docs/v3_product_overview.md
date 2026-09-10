@@ -1,9 +1,9 @@
 # V3 Product Overview
 
-**V3 — SONRAKİ SERVİSTE BEKLENEN İŞLEMLER**
+**V3 — EN OLASI 3 SERVİS İŞLEMİ**
 
-> V3, bir sonraki tamamlanmış servis kaydında hangi işlemlerin görülme olasılığının
-> daha yüksek olduğunu tahmin eder.
+> V3, 44 işlem arasından bir sonraki tamamlanmış servis kaydında görülme olasılığı
+> en yüksek olan 3 işlemi öne çıkarır.
 
 Status: **V3 SYNTHETIC PRODUCT CANDIDATE — SYNTHETICALLY VALIDATED, REAL FLEET
 VALIDATION PENDING.**
@@ -72,7 +72,18 @@ per-label TEST metrics and the Phase-9 generating-process audit
 | HIDDEN_BY_DEFAULT | 15 | never leads; random-event tasks with no learnable signal |
 
 This is **presentation only** — all 44 labels stay in the model and in every API
-response under `all_task_probabilities`.
+response under `all_task_probabilities`. Control Center ayrıca aynı 44 sayıyı
+değiştirmeden, azalan sırada ve açık kullanıcı isteğiyle genişleyen `all_tasks`
+listesinde gösterir. Top-3 bu listenin yalnız öne çıkarılan alt kümesidir.
+
+## Ayrı deterministik bakım planı
+
+`maintenance_plan`, V3 tahmini değildir. Aktif planlı bakım politikası, landmark
+tarihine kadarki kilometre ve tamamlanmış görev geçmişiyle hesaplanır. Durumlar
+`NORMAL`, `YAKLAŞIYOR`, `GECİKMİŞ`, `ÇOK GECİKMİŞ`, `KRİTİK` bantlarını kullanır.
+V3 görevleriyle ilişki sunum amaçlıdır; yalnız birebir `EXACT` eşleşme rozet alır.
+Kontrol/değişim gibi ilişkili fakat farklı eylemler birleştirilmez. Ayrıntılı
+eşleme [`v3_maintenance_task_mapping.md`](v3_maintenance_task_mapping.md) içindedir.
 
 ### Confidence tiers
 

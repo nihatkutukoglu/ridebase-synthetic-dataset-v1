@@ -3151,7 +3151,11 @@ function wireV2_1Predict(){
    It is NOT V2.1 (when the service happens), NOT Maintenance Due, NOT
    Maintenance Urgency, and NOT a mechanical-failure probability. No V3 number
    is ever combined with a V2.1 horizon probability or an urgency score. */
-var V3_HEADING="V3 — SONRAKİ SERVİSTE BEKLENEN İŞLEMLER";
+var V3_HEADING="V3 — EN OLASI 3 SERVİS İŞLEMİ";
+var V3_TOP3_COPY="V3, 44 işlem arasından bir sonraki tamamlanmış servis kaydında görülme olasılığı en yüksek olan 3 işlemi öne çıkarır.";
+var V3_ALL_COPY="Bu liste yalnızca en yüksek 3 tahmini gösterir; diğer V3 tahminleri aşağıda görülebilir.";
+var V3_PLAN_HEADING="BAKIM PLANINA GÖRE KONTROL EDİLMESİ GEREKENLER";
+var V3_PLAN_COPY="Bu bölüm ML tahmini değildir. Mevcut kilometre, süre ve bakım politikasına göre kontrol edilmesi gereken planlı bakım kalemlerini gösterir.";
 var V3_DISCLAIMER="Bu tahminler sentetik veri üzerinde doğrulanmıştır. Gerçek filo doğrulaması henüz yapılmamıştır.";
 var V3_NOT_FAILURE="Bu yüzdeler mekanik arıza olasılığı değildir.";
 var V3_SEPARATE="Bakım gereksinimi ve bakım aciliyeti deterministik bakım politikasından ayrı hesaplanır.";
@@ -3165,7 +3169,7 @@ function renderV3(sub){
     +'<span class="chip">frozen champion</span><span class="chip">44 işlem</span>'
     +'<span class="chip bad">GERÇEK FİLO DOĞRULAMASI BEKLENİYOR</span>';
   var head=modHead("Modül · Çoklu-Etiket Sınıflandırma",V3_HEADING,
-    "V3, bir sonraki tamamlanmış serviste hangi işlemlerin görülme olasılığının daha yüksek olduğunu tahmin eder. "
+    V3_TOP3_COPY+" "
     +"Bu bir servis zamanı tahmini değildir (o V2.1), bakım gerekli mi sorusunun cevabı değildir ve mekanik arıza olasılığı değildir.",
     chips,'api <code>/api/v3/*</code> · policy <code>config/v3_product_label_policy.json</code>');
   return head+v3Bar(sub)+(sub==="overview"?v3Overview():v3PredictPage());
@@ -3199,9 +3203,6 @@ function v3Form(){
       '<div class="grid g2">'
       +lab("v3Id","Motorcycle ID",'<input id="v3Id" type="text" placeholder="ör. MC000001" autocomplete="off" style="'+it+'">')
       +lab("v3Date","Landmark tarihi",'<input id="v3Date" type="date" style="'+it+'">')
-      +'</div>'
-      +'<div class="grid g2" style="margin-top:8px">'
-      +lab("v3TopK","Kaç işlem gösterilsin",'<select id="v3TopK" style="'+it+'"><option value="3" selected>3</option><option value="5">5</option></select>')
       +'</div>'
       +'<div class="chips" style="margin-top:8px"><button class="subtab" id="v3Random" style="border:1px solid var(--border);border-radius:8px">RASTGELE SENTETİK MOTOSİKLET GETİR</button></div>'
       +'<div id="v3SampleIdentity" aria-live="polite" style="margin-top:8px"></div>'
@@ -3297,8 +3298,7 @@ function v3Run(){
   var api=(window.__V2_API__||"").replace(/\/$/,"");
   var out=document.getElementById("v3out"),errBox=document.getElementById("v3Err"),btn=document.getElementById("v3Run");
   if(!api||!out)return;
-  var id=(document.getElementById("v3Id")||{}).value,d=(document.getElementById("v3Date")||{}).value,
-      k=parseInt((document.getElementById("v3TopK")||{}).value||"3",10);
+  var id=(document.getElementById("v3Id")||{}).value,d=(document.getElementById("v3Date")||{}).value,k=3;
   if(errBox){errBox.style.display="none";errBox.innerHTML="";}
   if(!id||!d){if(errBox){errBox.style.display="block";errBox.innerHTML="Motorcycle ID ve landmark tarihi zorunludur.";}return;}
   var gen=++v3Gen;
@@ -3318,8 +3318,71 @@ function v3Run(){
     .then(function(){btn.disabled=false;});
 }
 var v3Gen=0;
+function v3PlanStatusClass(status){return status==="NORMAL"?"good":(status==="YAKLAŞIYOR"?"warn":"bad");}
+function v3PlanBadge(task,planCodes){
+  return task.mapping_status==="EXACT"&&planCodes[task.task_code]
+    ?'<span class="chip good">Bakım planında da yer alıyor</span>':'';
+}
+function v3AllPredictions(r,planCodes){
+  var rows=(r.all_tasks||[]).slice();
+  if(!rows.length){
+    var all=r.all_task_probabilities||{};
+    rows=Object.keys(all).sort(function(a,b){return all[b]-all[a]||(a<b?-1:1);}).map(function(code,i){
+      return {task_code:code,display_name:code,probability:all[code],rank:i+1,confidence:"DUSUK",product_status:"—",in_top_3:i<3,mapping_status:"NO_MAPPING"};
+    });
+  }
+  var body=rows.map(function(t){
+    var weak=t.confidence==="DUSUK"||t.confidence==="SINIRLI_VERI"||t.product_status==="HIDDEN_BY_DEFAULT";
+    return '<tr style="'+(weak?'opacity:.72':'')+'">'
+      +'<td class="n">'+esc(String(t.rank||"—"))+'</td>'
+      +'<td><div style="font-weight:600;color:var(--text)">'+esc(t.display_name||t.task_code)+'</div><code>'+esc(t.task_code)+'</code>'
+        +'<div class="chips" style="margin-top:5px">'+(t.in_top_3?'<span class="chip cyan">TOP 3</span>':'')+v3PlanBadge(t,planCodes)+'</div></td>'
+      +'<td class="n" style="font-weight:600">'+esc(pct(t.probability))+'</td>'
+      +'<td><span class="chip '+v3ConfClass(t.confidence)+'">'+esc(t.confidence_display||v3ConfLabel(t.confidence))+'</span></td>'
+      +'<td><code>'+esc(t.product_status||"—")+'</code></td></tr>';
+  }).join('');
+  return card("TÜM V3 TAHMİNLERİ","44 işlemin kalibre olasılığı · azalan sıra",
+    '<p class="copy">Buradaki sıralama V3 olasılığına göredir. Bakım planı sırası değildir.</p>'
+    +'<details style="margin-top:12px"><summary style="cursor:pointer;color:var(--accent);font-weight:600">Tüm 44 tahmini göster</summary>'
+    +'<div class="twrap" style="margin-top:10px;max-height:620px;overflow:auto"><table class="tbl"><thead><tr><th>Sıra</th><th>İşlem</th><th class="n">Olasılık</th><th>Güven</th><th>Ürün durumu</th></tr></thead><tbody>'
+    +body+'</tbody></table></div></details>');
+}
+function v3MaintenancePlan(r){
+  var plan=r.maintenance_plan||{},items=plan.items||[];
+  var dueCount=v3Finite(plan.due_item_count)?plan.due_item_count:items.filter(function(item){return item.due_now;}).length;
+  var noOverdue=items.length&&dueCount===0
+    ?finding("good","PLANLI BAKIM DURUMU","<p>Şu anda bakım planına göre gecikmiş planlı bakım kalemi görünmüyor.</p>"):"";
+  var body=items.length?items.map(function(item){
+    var timing=[];
+    if(v3Finite(item.remaining_km)&&item.remaining_km>0)timing.push(n0(item.remaining_km)+" km kaldı");
+    if(v3Finite(item.overdue_km)&&item.overdue_km>0)timing.push(n0(item.overdue_km)+" km gecikmiş");
+    if(v3Finite(item.remaining_days)&&item.remaining_days>0)timing.push(n0(item.remaining_days)+" gün kaldı");
+    if(v3Finite(item.overdue_days)&&item.overdue_days>0)timing.push(n0(item.overdue_days)+" gün gecikmiş");
+    var next=[];
+    if(v3Finite(item.next_due_km))next.push("sonraki vade "+n0(item.next_due_km)+" km");
+    if(item.next_due_date)next.push("sonraki tarih "+(v3DateTR(item.next_due_date)||item.next_due_date));
+    return '<div style="padding:11px 0;border-bottom:1px solid var(--border)">'
+      +'<div style="display:flex;flex-wrap:wrap;align-items:center;gap:8px"><div style="flex:1 1 220px"><b>'+esc(item.display_name||item.task_code)+'</b><br><code>'+esc(item.task_code)+'</code></div>'
+      +'<span class="chip '+v3PlanStatusClass(item.status)+'">'+esc(item.status||"—")+'</span>'
+      +'<span class="chip">ilerleme '+esc(v3Finite(item.progress_ratio)?pct(item.progress_ratio):"—")+'</span></div>'
+      +'<div class="copy" style="margin-top:7px">'+esc(item.maintenance_urgency_reason||timing.join(" · ")||"Politika durumu hesaplandı.")+'</div>'
+      +(next.length?'<div class="copy" style="margin-top:4px">'+esc(next.join(" · "))+'</div>':'')
+      +'<details style="margin-top:6px"><summary style="cursor:pointer;color:var(--text-2);font-size:.78rem">Politika kanıtı</summary><div class="copy" style="margin-top:5px">'
+      +esc([item.policy_id,item.trigger_mode,item.evidence_level,item.policy_confidence,item.source_authority].filter(Boolean).join(" · "))+'</div></details></div>';
+  }).join(''):'<div class="empty">'+esc(plan.empty_reason||"Bu motosiklet için hesaplanabilir planlı bakım kalemi bulunamadı.")+'</div>';
+  return card(V3_PLAN_HEADING,"kaynak: "+esc(plan.source||"DETERMINISTIC_POLICY"),
+    '<p class="copy"><b>'+esc(V3_PLAN_COPY)+'</b></p>'+noOverdue+body);
+}
 function v3Result(r){
-  var tasks=r.top_tasks||[];
+  var allMeta={},tasks=(r.top_tasks||[]).slice();
+  (r.all_tasks||[]).forEach(function(item){allMeta[item.task_code]=item;});
+  tasks=tasks.map(function(task){
+    var meta=allMeta[task.task_code]||{};
+    var copy={};Object.keys(task).forEach(function(key){copy[key]=task[key];});
+    copy.mapping_status=meta.mapping_status;return copy;
+  });
+  var plan=r.maintenance_plan||{},planCodes={};
+  (plan.items||[]).forEach(function(item){planCodes[item.task_code]=true;});
   var cov=r.feature_coverage;
   var rows=tasks.length?tasks.map(function(t){
     var w=Math.max(1,Math.round((t.probability||0)*100));
@@ -3329,36 +3392,30 @@ function v3Result(r){
         +'<div style="color:var(--text);font-weight:600">'+esc(t.display_name||t.task_code)+'</div>'
         +'<div style="height:6px;border-radius:4px;background:var(--border);margin-top:6px;overflow:hidden">'
           +'<div style="height:100%;width:'+w+'%;background:var(--accent,#4ea1ff)"></div></div>'
+        +'<div class="chips" style="margin-top:6px">'+v3PlanBadge(t,planCodes)+'</div>'
       +'</div>'
       +'<div style="flex:0 0 64px;text-align:right;font-variant-numeric:tabular-nums;color:var(--text);font-weight:600">'+esc(pct(t.probability))+'</div>'
       +'<div style="flex:0 0 108px;text-align:right"><span class="chip '+v3ConfClass(t.confidence)+'">'+esc(v3ConfLabel(t.confidence))+'</span></div>'
       +'</div>';
   }).join(''):'<div class="empty">Bu landmark için gösterilecek işlem bulunamadı.</div>';
   var warn=(r.warnings||[]).map(function(w){return '<li>'+esc(w)+'</li>';}).join('');
-  var all=r.all_task_probabilities||{},bins=r.binary_predictions||{};
-  var allRows=Object.keys(all).sort(function(a,b){return all[b]-all[a];}).map(function(c){
-    return '<tr><td><code>'+esc(c)+'</code></td><td style="text-align:right">'+esc(pct(all[c]))+'</td>'
-      +'<td style="text-align:right">'+(bins[c]?"evet":"hayır")+'</td></tr>';
-  }).join('');
   var tm=(r.timing_ms||{});
   return v3ContextCard(r)
     +'<div class="sec">'+card(V3_HEADING,"landmark "+esc(r.landmark_date||"—")+" · "+esc(r.motorcycle_id||""),
-      rows
+      '<p class="copy"><b>'+esc(V3_TOP3_COPY)+'</b></p><p class="copy" style="margin-top:5px">'+esc(V3_ALL_COPY)+'</p>'+rows
       +'<div class="chips" style="margin-top:12px">'
         +'<span class="chip">özellik kapsamı '+esc(pct(cov))+'</span>'
         +'<span class="chip">kaynak '+esc(r.input_source||"—")+'</span>'
         +'<span class="chip warn">'+esc(r.validation_scope||"SYNTHETIC_ONLY")+'</span>'
         +'<span class="chip bad">GERÇEK FİLO: '+esc(r.real_fleet_validation||"PENDING")+'</span>'
       +'</div>')+'</div>'
+    +'<div class="sec">'+v3AllPredictions(r,planCodes)+'</div>'
+    +'<div class="sec">'+v3MaintenancePlan(r)+'</div>'
     +'<div class="sec">'+finding("warn","UYARILAR VE KAPSAM","<ul style=\"margin:0;padding-left:18px\">"+warn+"</ul>")+'</div>'
     +'<div class="sec">'+card("Teknik detay",null,
         techBox(v3ContextTechnical(r)
-          +'<p class="copy" style="margin-top:10px">Tüm 44 etiketin kalibre olasılığı ve donmuş eşikteki (global '
-          +esc(String((r.provenance||{}).threshold||"—"))+') ikili kararı. Ürün sıralaması yalnız sunum politikasıdır; '
-          +'model çıktısı değiştirilmez.</p>'
-          +'<div style="overflow:auto;max-height:420px"><table class="tbl"><thead><tr><th>task_code</th>'
-          +'<th style="text-align:right">olasılık</th><th style="text-align:right">eşik üstü</th></tr></thead><tbody>'
-          +allRows+'</tbody></table></div>'
+          +'<p class="copy" style="margin-top:10px">Donmuş global eşik '+esc(String((r.provenance||{}).threshold||"—"))
+          +' · ürün sıralaması yalnız sunum politikasıdır; model çıktısı değiştirilmez.</p>'
           +'<p class="copy" style="margin-top:8px">Süre: geçmiş '+esc(String(tm.history_build||"—"))+' ms · tahmin '
           +esc(String(tm.prediction||"—"))+' ms · toplam '+esc(String(tm.total||"—"))+' ms.</p>'))+'</div>';
 }

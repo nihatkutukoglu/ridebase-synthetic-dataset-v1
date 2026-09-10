@@ -47,7 +47,7 @@ excluded by default.
   "landmark_date": "2026-03-31",
   "motorcycle_id": "MC000515",
   "input_source": "SYNTHETIC_HISTORY_V1_4",
-  "heading": "V3 — SONRAKİ SERVİSTE BEKLENEN İŞLEMLER",
+  "heading": "V3 — EN OLASI 3 SERVİS İŞLEMİ",
   "top_tasks": [
     { "task_code": "ENGINE_OIL_CHANGE", "display_name": "Motor Yağı Değişimi",
       "display_name_en": "Engine Oil Change", "component_group": "ENGINE",
@@ -57,6 +57,12 @@ excluded by default.
       "product_status": "PRIMARY" }
   ],
   "all_task_probabilities": { "…": "all 44 labels, always" },
+  "all_tasks": [
+    { "rank": 1, "task_code": "ENGINE_OIL_CHANGE",
+      "display_name": "Motor Yağı Değişimi", "probability": 0.8231,
+      "confidence": "YUKSEK", "product_status": "PRIMARY",
+      "mapping_status": "EXACT", "in_top_3": true }
+  ],
   "binary_predictions":     { "…": "all 44 labels at the frozen global threshold 0.31" },
   "applicable_tasks":       { "…": "hardware applicability per label" },
   "feature_coverage": 1.0,
@@ -65,6 +71,15 @@ excluded by default.
                           "prior_task_lines_used": 38,
                           "task_history_boundary": "parent service received_at <= landmark",
                           "declined_tasks_excluded": true },
+  "maintenance_plan": {
+    "source": "DETERMINISTIC_POLICY",
+    "note": "Bu bölüm ML tahmini değildir. Mevcut kilometre, süre ve bakım politikasına göre kontrol edilmesi gereken planlı bakım kalemlerini gösterir.",
+    "items": [
+      { "task_code": "ENGINE_OIL_CHANGE", "status": "YAKLAŞIYOR",
+        "progress_ratio": 0.91, "due_now": false,
+        "next_due_km": 42000, "remaining_km": 700 }
+    ]
+  },
   "timing_ms": { "history_build": 33.4, "prediction": 24.7, "total": 58.1 },
   "warnings": ["…"],
   "provenance": { "…": "frozen policy, what V3 does not predict, deployed:false" }
@@ -74,7 +89,15 @@ excluded by default.
 **Raw model output and product presentation are returned side by side and never
 mixed.** `all_task_probabilities` is exactly what the frozen model produced after
 the deterministic applicability mask. `top_tasks` is what the presentation policy
-chose to lead with. The policy never edits a probability.
+chose to lead with. `all_tasks` is a presentation-only view of those same 44
+numbers with name, rank, confidence and product status. The policy never edits a
+probability.
+
+`maintenance_plan` is a separate deterministic output. It uses the same PIT-safe
+history adapter and existing scheduled-policy/urgency semantics, never a V3
+probability. Items are ordered by severity (`KRİTİK` → `NORMAL`) and then policy
+progress descending. Missing policy or measurement inputs produce an explicit
+empty state rather than a fabricated task or due date.
 
 ### Status codes
 
