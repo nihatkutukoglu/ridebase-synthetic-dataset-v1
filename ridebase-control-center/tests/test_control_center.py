@@ -1354,6 +1354,13 @@ class V3Module(unittest.TestCase):
             self.render_payload(normal)["text"],
         )
 
+    def test_old_backend_never_looks_like_a_computed_maintenance_plan(self):
+        old_backend = dict(self.payload)
+        old_backend.pop("maintenance_plan")
+        text = self.render_payload(old_backend)["text"]
+        self.assertIn("kaynak: KULLANILAMIYOR", text)
+        self.assertIn("Backend dağıtımı gerekli", text)
+
     def test_high_mileage_context_distinguishes_total_from_since_service(self):
         text = self.render["text"]
         self.assertLess(text.index("34.250 km"), text.index("4.450 km"))

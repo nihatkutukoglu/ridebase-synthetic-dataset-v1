@@ -3348,7 +3348,12 @@ function v3AllPredictions(r,planCodes){
     +body+'</tbody></table></div></details>');
 }
 function v3MaintenancePlan(r){
-  var plan=r.maintenance_plan||{},items=plan.items||[];
+  var available=!!r.maintenance_plan,plan=r.maintenance_plan||{},items=plan.items||[];
+  if(!available){
+    return card(V3_PLAN_HEADING,"kaynak: KULLANILAMIYOR",
+      '<p class="copy"><b>'+esc(V3_PLAN_COPY)+'</b></p>'
+      +'<div class="empty">Bağlı backend bu sürümde deterministik bakım planı alanını henüz sunmuyor. Backend dağıtımı gerekli.</div>');
+  }
   var dueCount=v3Finite(plan.due_item_count)?plan.due_item_count:items.filter(function(item){return item.due_now;}).length;
   var noOverdue=items.length&&dueCount===0
     ?finding("good","PLANLI BAKIM DURUMU","<p>Şu anda bakım planına göre gecikmiş planlı bakım kalemi görünmüyor.</p>"):"";
