@@ -1255,9 +1255,15 @@ class V3Module(unittest.TestCase):
     def test_random_helper_uses_friendly_identity_and_clears_stale_result(self):
         for source in (self.template, self.built):
             self.assertIn("friendly_motorcycle_label", source)
-            self.assertIn("RASTGELE SENTETİK MOTOSİKLET GETİR", source)
+            self.assertIn("SENTETİK MOTOSİKLET GETİR", source)
             self.assertIn('oldOut.innerHTML=""', source)
             self.assertIn("sampleGen!==v3Gen", source)
+
+    def test_brand_model_filter_narrows_the_sample_draw_without_fabricating_one(self):
+        for source in (self.template, self.built):
+            self.assertIn('"brand="+encodeURIComponent', source)
+            self.assertIn('"model_id="+encodeURIComponent', source)
+            self.assertIn("v2ModelsForBrand(brandSel.value)", source)
 
     def test_confidence_tiers_render_in_turkish(self):
         self.assertIn("YÜKSEK", self.render["text"])

@@ -106,6 +106,25 @@ def test_sample_is_input_only_and_leaks_no_target(sample):
     assert sample["motorcycle_context"]["motorcycle_id"] == sample["motorcycle_id"]
 
 
+def test_sample_can_be_filtered_to_a_real_brand(client, sample):
+    brand = sample["motorcycle_context"]["brand"]
+    r = client.get("/api/v3/sample", params={"brand": brand})
+    assert r.status_code == 200
+    assert r.json()["motorcycle_context"]["brand"] == brand
+
+
+def test_sample_filter_is_case_insensitive(client, sample):
+    brand = sample["motorcycle_context"]["brand"]
+    r = client.get("/api/v3/sample", params={"brand": brand.upper()})
+    assert r.status_code == 200
+    assert r.json()["motorcycle_context"]["brand"] == brand
+
+
+def test_sample_filter_never_fabricates_a_match(client):
+    r = client.get("/api/v3/sample", params={"brand": "NOT_A_REAL_BRAND_XYZ"})
+    assert r.status_code == 404
+
+
 # ------------------------------------------------------- predict/by-motorcycle
 def test_by_motorcycle_returns_the_product_contract(client, sample):
     r = client.post("/api/v3/predict/by-motorcycle",

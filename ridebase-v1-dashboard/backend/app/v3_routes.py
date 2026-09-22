@@ -21,7 +21,7 @@ import json
 import time
 from typing import Any, Dict
 
-from fastapi import APIRouter, HTTPException
+from fastapi import APIRouter, HTTPException, Query
 
 from .config import settings
 from .v3_schemas import (V3BatchPredictRequest, V3ByMotorcycleRequest,
@@ -146,12 +146,16 @@ def metrics() -> Dict[str, Any]:
 
 
 @v3.get("/sample")
-def sample() -> Dict[str, Any]:
+def sample(
+    brand: str | None = Query(None, description="filter to a real synthetic motorcycle of this brand"),
+    model_id: str | None = Query(None, description="filter to a real synthetic motorcycle of this model_id"),
+) -> Dict[str, Any]:
     """A real motorcycle_id + landmark_date pair that POST /predict/by-motorcycle accepts.
 
     Input only: no task list, no target service, no label is returned. The pair is
     drawn from the frozen V3 TEST split so it is guaranteed resolvable by the
-    history adapter.
+    history adapter. ``brand``/``model_id`` narrow the draw to a real motorcycle of
+    that brand/model -- never a fabricated one; if none exists, 404.
     """
     import pandas as pd
 
@@ -159,6 +163,22 @@ def sample() -> Dict[str, Any]:
     if not path.exists():
         raise HTTPException(status_code=503, detail="V3 sample index not available")
     frame = pd.read_parquet(path)
+    if brand or model_id:
+        from ridebase_ml.v3.sources import load_table
+
+        motorcycles = load_table("motorcycles")
+        mask = pd.Series(True, index=motorcycles.index)
+        if brand:
+            mask &= motorcycles["brand"].astype(str).str.casefold() == brand.casefold()
+        if model_id:
+            mask &= motorcycles["model_id"].astype(str) == model_id
+        matching_ids = set(motorcycles.loc[mask, "motorcycle_id"].astype(str))
+        frame = frame[frame["motorcycle_id"].astype(str).isin(matching_ids)]
+        if frame.empty:
+            raise HTTPException(
+                status_code=404,
+                detail="bu marka/modelde sentetik test geçmişi olan motosiklet yok",
+            )
     row = frame.sample(1).iloc[0]
     payload = {
         "motorcycle_id": str(row["motorcycle_id"]),
