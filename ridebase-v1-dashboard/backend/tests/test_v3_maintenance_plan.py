@@ -12,6 +12,7 @@ from app.v3_maintenance_plan import (
     NOTE_TR,
     SOURCE,
     build_maintenance_plan,
+    task_history_reason,
     task_mapping,
 )
 
@@ -117,6 +118,56 @@ def test_plan_and_all_task_metadata_are_deterministic(client, twelve_pairs):
     assert first["all_tasks"] == second["all_tasks"]
     assert first["all_task_probabilities"] == second["all_task_probabilities"]
     assert first["top_tasks"] == second["top_tasks"]
+
+
+def test_all_tasks_carry_a_history_reason_and_component_group(client, twelve_pairs):
+    motorcycle_id, landmark = twelve_pairs[2]
+    rows = client.post(
+        "/api/v3/predict/by-motorcycle",
+        json={"motorcycle_id": motorcycle_id, "landmark_date": landmark},
+    ).json()["all_tasks"]
+    assert len(rows) == 44
+    for row in rows:
+        assert row["component_group"]
+        assert row["history_summary"]
+        if row["history_count"] is None:
+            assert "hiç yapılmamış" in row["history_summary"]
+        else:
+            assert row["history_count"] >= 1
+            assert str(int(row["history_count"])) in row["history_summary"]
+
+
+def test_task_history_reason_never_done():
+    reason = task_history_reason("TASK_A", {
+        "hist_count__TASK_A": 0.0, "days_since__TASK_A": -1.0,
+        "km_since__TASK_A": -1.0, "policy_due_ratio__TASK_A": -1.0,
+    })
+    assert reason == {
+        "history_count": None, "days_since_last": None, "km_since_last": None,
+        "policy_due_ratio": None, "history_summary": "bu motoda daha önce hiç yapılmamış",
+    }
+
+
+def test_task_history_reason_done_before_with_active_policy():
+    reason = task_history_reason("TASK_A", {
+        "hist_count__TASK_A": 3.0, "days_since__TASK_A": 77.0,
+        "km_since__TASK_A": 3165.0, "policy_due_ratio__TASK_A": 1.0476,
+    })
+    assert reason["history_count"] == 3.0
+    assert reason["days_since_last"] == 77.0
+    assert reason["km_since_last"] == 3165.0
+    assert reason["policy_due_ratio"] == 1.0476
+    assert reason["history_summary"] == (
+        "3 kez yapılmış · son yapılıştan bu yana 3165 km / 77 gün geçti · "
+        "planlı periyodun %105'i dolmuş"
+    )
+
+
+def test_task_history_reason_missing_features_never_crashes():
+    assert task_history_reason("TASK_Z", {}) == {
+        "history_count": None, "days_since_last": None, "km_since_last": None,
+        "policy_due_ratio": None, "history_summary": "bu motoda daha önce hiç yapılmamış",
+    }
 
 
 class FakeAdapter:

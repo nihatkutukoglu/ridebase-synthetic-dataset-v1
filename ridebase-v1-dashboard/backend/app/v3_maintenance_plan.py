@@ -63,7 +63,46 @@ def task_mapping() -> dict[str, dict[str, Any]]:
     return mapping
 
 
-def all_task_rows(payload: dict[str, Any], predictor: Any) -> list[dict[str, Any]]:
+def task_history_reason(code: str, features: dict[str, Any]) -> dict[str, Any]:
+    """Human-readable 'why' for one task's probability, built from the same
+    PIT-safe per-task history features the frozen predictor already took as
+    input (hist_count/days_since/km_since/policy_due_ratio) -- never a new
+    computation, purely re-exposing what was already used."""
+    count = _number(features.get(f"hist_count__{code}"))
+    days_since = _number(features.get(f"days_since__{code}"))
+    km_since = _number(features.get(f"km_since__{code}"))
+    due_ratio = _number(features.get(f"policy_due_ratio__{code}"))
+    never_done = not count
+    days_since = days_since if (days_since is not None and days_since >= 0) else None
+    km_since = km_since if (km_since is not None and km_since >= 0) else None
+    due_ratio = due_ratio if (due_ratio is not None and due_ratio >= 0) else None
+
+    parts = []
+    if never_done:
+        parts.append("bu motoda daha önce hiç yapılmamış")
+    else:
+        parts.append(f"{int(count)} kez yapılmış")
+        since_bits = [b for b in (
+            f"{int(km_since)} km" if km_since is not None else None,
+            f"{int(days_since)} gün" if days_since is not None else None,
+        ) if b]
+        if since_bits:
+            parts.append("son yapılıştan bu yana " + " / ".join(since_bits) + " geçti")
+    if due_ratio is not None:
+        parts.append(f"planlı periyodun %{round(due_ratio * 100)}'i dolmuş")
+
+    return {
+        "history_count": None if never_done else count,
+        "days_since_last": days_since,
+        "km_since_last": km_since,
+        "policy_due_ratio": due_ratio,
+        "history_summary": " · ".join(parts) if parts else None,
+    }
+
+
+def all_task_rows(
+    payload: dict[str, Any], predictor: Any, history_features: dict[str, Any] | None = None,
+) -> list[dict[str, Any]]:
     """Add product metadata to all 44 frozen probabilities without changing them."""
     from ridebase_ml.v3.product import TIER_DISPLAY_TR, confidence_tier
 
@@ -81,9 +120,10 @@ def all_task_rows(payload: dict[str, Any], predictor: Any) -> list[dict[str, Any
             probability, pol, float(payload.get("feature_coverage", 1.0))
         )
         relation = mapping[code]
-        rows.append({
+        row = {
             "task_code": code,
             "display_name": pol.display_name_tr,
+            "component_group": pol.component_group,
             "probability": probability,
             "predicted": bool(binary.get(code)),
             "applicable": bool(applicable.get(code, True)),
@@ -94,7 +134,10 @@ def all_task_rows(payload: dict[str, Any], predictor: Any) -> list[dict[str, Any
             "mapping_status": relation["status"],
             "maintenance_task_code": relation.get("maintenance_task_code"),
             "in_top_3": code in top_three,
-        })
+        }
+        if history_features is not None:
+            row.update(task_history_reason(code, history_features))
+        rows.append(row)
     rows.sort(key=lambda row: (-row["probability"], row["task_code"]))
     for rank, row in enumerate(rows, start=1):
         row["rank"] = rank

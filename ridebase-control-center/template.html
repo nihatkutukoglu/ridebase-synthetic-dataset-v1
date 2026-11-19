@@ -1412,6 +1412,7 @@ function v1ScenarioPredictionCard(d){
     +kpi("DAYS · TEST MAE",te.days_mae!=null?"~"+n1(te.days_mae)+' <small>gün</small>':"—","ortalama hata; güven yüzdesi değildir","plain")
     +kpi("KM · TEST MAE",te.km_mae!=null?"~"+n0(te.km_mae)+' <small>km</small>':"—","ortalama hata; güven yüzdesi değildir","plain")+'</div>';
   if((d.warnings||[]).length)out+=finding("warn","GİRDİ / OOD UYARILARI",'<ul style="margin:0;padding-left:18px">'+d.warnings.map(function(w){return '<li>'+esc(w)+'</li>';}).join('')+'</ul>');
+  out+=v1DiagnosticsFinding(d.input_diagnostics);
   return out;
 }
 function v1RunScenario(){
@@ -1508,6 +1509,24 @@ function v1DemoTimeline(s,p,der){
       +'<span class="chip"><b>'+esc(x[0])+':</b>&nbsp;'+esc(x[1])+'</span>';}).join('')
     +'</div>';
 }
+function v1DiagnosticsFinding(diag){
+  diag=diag||{};
+  var ood=diag.out_of_distribution||[];
+  var parts=[];
+  if(diag.fields_supplied!=null)parts.push(diag.fields_supplied+" alan dolu");
+  if(diag.fields_imputed_days!=null)parts.push("DAYS modelinde "+diag.fields_imputed_days+" alan modelin varsayılanıyla dolduruldu");
+  if(diag.fields_imputed_km!=null)parts.push("KM modelinde "+diag.fields_imputed_km+" alan modelin varsayılanıyla dolduruldu");
+  if(!parts.length&&!ood.length)return'';
+  var body=parts.length?'<p class="copy">'+esc(parts.join(" · "))+'</p>':'';
+  if(ood.length){
+    body+='<p class="copy" style="margin-top:8px"><b>'+ood.length+' alan sentetik eğitim verisinin tipik (p01–p99) aralığının dışında:</b></p>'
+      +'<ul style="margin:4px 0 0;padding-left:18px">'+ood.map(function(o){
+        var range=o.typical_range||[];
+        return '<li><code>'+esc(o.field)+'</code>: '+esc(String(o.value))+' (tipik aralık '+esc(String(range[0]))+'–'+esc(String(range[1]))+')</li>';
+      }).join('')+'</ul>';
+  }
+  return finding(ood.length?"warn":"","GİRDİ TEŞHİSİ",body);
+}
 function v1ResultCard(d,s){
   var p=d.prediction||{},der=d.derived||{},te=d.typical_model_error||{};
   var g=finding("warn","ÖRNEK MOTOR DEMOSU",
@@ -1531,6 +1550,7 @@ function v1ResultCard(d,s){
       +(te.km_mae!=null?kpi("KM · TEST MAE","~"+n0(te.km_mae)+' <small>km</small>',"Testteki ortalama hata; güven yüzdesi değildir.","plain"):'')
       +'</div>';
   }
+  g+=v1DiagnosticsFinding(d.input_diagnostics);
   g+=finding("warn","Doğrulama durumu","<p><b>SENTETİK VERİDE DOĞRULANDI.</b> GERÇEK RIDEBASE FİLO TESTİ BEKLENİYOR.</p>");
   g+='<div class="chips" style="margin-top:12px"><button class="subtab" data-go="v2/predict" style="border:1px solid var(--border);border-radius:8px">Zamana göre olasılıkları gör: V2 Sağkalım → Canlı Tahmin</button></div>';
   return g;
@@ -3342,6 +3362,25 @@ function v3PlanBadge(task,planCodes){
   return task.mapping_status==="EXACT"&&planCodes[task.task_code]
     ?'<span class="chip good">Bakım planında da yer alıyor</span>':'';
 }
+function v3GroupByComponent(rows){
+  var byGroup={};
+  rows.forEach(function(t){var g=t.component_group||"DİĞER";(byGroup[g]=byGroup[g]||[]).push(t);});
+  return Object.keys(byGroup).map(function(g){
+    var groupRows=byGroup[g].slice().sort(function(a,b){return (b.probability||0)-(a.probability||0);});
+    return {group:g,rows:groupRows,maxP:groupRows[0]?groupRows[0].probability||0:0};
+  }).sort(function(a,b){return b.maxP-a.maxP;});
+}
+function v3TaskRow(t,planCodes){
+  var weak=t.confidence==="DUSUK"||t.confidence==="SINIRLI_VERI"||t.product_status==="HIDDEN_BY_DEFAULT";
+  return '<tr style="'+(weak?'opacity:.72':'')+'">'
+    +'<td class="n">'+esc(String(t.rank||"—"))+'</td>'
+    +'<td><div style="font-weight:600;color:var(--text)">'+esc(t.display_name||t.task_code)+'</div><code>'+esc(t.task_code)+'</code>'
+      +(t.history_summary?'<div class="copy" style="margin-top:4px;font-size:.78rem">'+esc(t.history_summary)+'</div>':'')
+      +'<div class="chips" style="margin-top:5px">'+(t.in_top_3?'<span class="chip cyan">TOP 3</span>':'')+v3PlanBadge(t,planCodes)+'</div></td>'
+    +'<td class="n" style="font-weight:600">'+esc(pct(t.probability))+'</td>'
+    +'<td><span class="chip '+v3ConfClass(t.confidence)+'">'+esc(t.confidence_display||v3ConfLabel(t.confidence))+'</span></td>'
+    +'<td><code>'+esc(t.product_status||"—")+'</code></td></tr>';
+}
 function v3AllPredictions(r,planCodes){
   var rows=(r.all_tasks||[]).slice();
   if(!rows.length){
@@ -3350,18 +3389,12 @@ function v3AllPredictions(r,planCodes){
       return {task_code:code,display_name:code,probability:all[code],rank:i+1,confidence:"DUSUK",product_status:"—",in_top_3:i<3,mapping_status:"NO_MAPPING"};
     });
   }
-  var body=rows.map(function(t){
-    var weak=t.confidence==="DUSUK"||t.confidence==="SINIRLI_VERI"||t.product_status==="HIDDEN_BY_DEFAULT";
-    return '<tr style="'+(weak?'opacity:.72':'')+'">'
-      +'<td class="n">'+esc(String(t.rank||"—"))+'</td>'
-      +'<td><div style="font-weight:600;color:var(--text)">'+esc(t.display_name||t.task_code)+'</div><code>'+esc(t.task_code)+'</code>'
-        +'<div class="chips" style="margin-top:5px">'+(t.in_top_3?'<span class="chip cyan">TOP 3</span>':'')+v3PlanBadge(t,planCodes)+'</div></td>'
-      +'<td class="n" style="font-weight:600">'+esc(pct(t.probability))+'</td>'
-      +'<td><span class="chip '+v3ConfClass(t.confidence)+'">'+esc(t.confidence_display||v3ConfLabel(t.confidence))+'</span></td>'
-      +'<td><code>'+esc(t.product_status||"—")+'</code></td></tr>';
+  var body=v3GroupByComponent(rows).map(function(grp){
+    return '<tr><td colspan="5" style="padding-top:14px;font-size:.72rem;color:var(--muted);text-transform:uppercase;letter-spacing:.04em;border-bottom:1px solid var(--border)">'
+      +esc(grp.group)+'</td></tr>'+grp.rows.map(function(t){return v3TaskRow(t,planCodes);}).join('');
   }).join('');
-  return card("TÜM V3 TAHMİNLERİ","44 işlemin kalibre olasılığı · azalan sıra",
-    '<p class="copy">Buradaki sıralama V3 olasılığına göredir. Bakım planı sırası değildir.</p>'
+  return card("TÜM V3 TAHMİNLERİ","44 işlemin kalibre olasılığı · bileşen grubuna göre",
+    '<p class="copy">Her grup içinde sıralama V3 olasılığına göredir. Bakım planı sırası değildir.</p>'
     +'<details style="margin-top:12px"><summary style="cursor:pointer;color:var(--accent);font-weight:600">Tüm 44 tahmini göster</summary>'
     +'<div class="twrap" style="margin-top:10px;max-height:620px;overflow:auto"><table class="tbl"><thead><tr><th>Sıra</th><th>İşlem</th><th class="n">Olasılık</th><th>Güven</th><th>Ürün durumu</th></tr></thead><tbody>'
     +body+'</tbody></table></div></details>');
@@ -3403,7 +3436,7 @@ function v3Result(r){
   tasks=tasks.map(function(task){
     var meta=allMeta[task.task_code]||{};
     var copy={};Object.keys(task).forEach(function(key){copy[key]=task[key];});
-    copy.mapping_status=meta.mapping_status;return copy;
+    copy.mapping_status=meta.mapping_status;copy.history_summary=meta.history_summary;return copy;
   });
   var plan=r.maintenance_plan||{},planCodes={};
   (plan.items||[]).forEach(function(item){planCodes[item.task_code]=true;});
@@ -3416,6 +3449,7 @@ function v3Result(r){
         +'<div style="color:var(--text);font-weight:600">'+esc(t.display_name||t.task_code)+'</div>'
         +'<div style="height:6px;border-radius:4px;background:var(--border);margin-top:6px;overflow:hidden">'
           +'<div style="height:100%;width:'+w+'%;background:var(--accent,#4ea1ff)"></div></div>'
+        +(t.history_summary?'<div class="copy" style="margin-top:6px;font-size:.8rem">'+esc(t.history_summary)+'</div>':'')
         +'<div class="chips" style="margin-top:6px">'+v3PlanBadge(t,planCodes)+'</div>'
       +'</div>'
       +'<div style="flex:0 0 64px;text-align:right;font-variant-numeric:tabular-nums;color:var(--text);font-weight:600">'+esc(pct(t.probability))+'</div>'

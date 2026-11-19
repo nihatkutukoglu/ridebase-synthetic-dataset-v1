@@ -158,7 +158,7 @@ def predict_by_motorcycle(motorcycle_id: str, landmark_date: Any,
     # is deterministic policy state and never reads a V3 probability.
     from .v3_maintenance_plan import all_task_rows, safe_maintenance_plan
 
-    payload["all_tasks"] = all_task_rows(payload, predictor)
+    payload["all_tasks"] = all_task_rows(payload, predictor, history_features=vector.features)
     payload["maintenance_plan"] = safe_maintenance_plan(
         motorcycle_id, landmark_date, adapter
     )

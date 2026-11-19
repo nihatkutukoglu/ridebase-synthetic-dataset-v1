@@ -791,6 +791,32 @@ class ResilienceTests(unittest.TestCase):
         self.assertIn("2026-01-10", html)
         self.assertIn("2026-07-31", html)  # 2026-01-10 plus 202 days
 
+    # --- input diagnostics (impute/OOD transparency, previously computed but unrendered) ---
+    def test_v1_diagnostics_finding_is_wired_into_demo_and_scenario_cards(self):
+        self.assertInBoth("function v1DiagnosticsFinding(diag)")
+        self.assertInBoth("g+=v1DiagnosticsFinding(d.input_diagnostics)")
+        self.assertInBoth("out+=v1DiagnosticsFinding(d.input_diagnostics)")
+
+    def test_v1_diagnostics_finding_lists_imputed_counts_and_ood_fields(self):
+        runner = ROOT / "tests" / "v1_diagnostics_runner.cjs"
+        cases = [
+            {"fields_supplied": 80, "fields_imputed_days": 5, "fields_imputed_km": 6,
+             "out_of_distribution": [{"field": "annual_km_baseline", "value": 95000,
+                                       "typical_range": [500, 60000]}], "validation_errors": []},
+            {},
+            None,
+        ]
+        completed = subprocess.run(
+            ["node", str(runner)], input=json.dumps(cases), text=True, capture_output=True, check=True
+        )
+        cards = json.loads(completed.stdout)
+        self.assertIn("5 alan modelin varsayılanıyla dolduruldu", cards[0])
+        self.assertIn("annual_km_baseline", cards[0])
+        self.assertIn("500", cards[0])
+        self.assertIn("60000", cards[0])
+        self.assertEqual(cards[1], "")  # empty diagnostics never renders an empty box
+        self.assertEqual(cards[2], "")  # missing diagnostics never crashes
+
     def test_form_state_is_snapshotted_and_restored_across_navigation(self):
         self.assertInBoth("function snapshotForm(container,key)")
         self.assertInBoth("function restoreForm(container,key)")
@@ -1104,9 +1130,14 @@ class V3Module(unittest.TestCase):
         ordered = sorted(label_rows, key=lambda row: (-fixed[row["task_code"]], row["task_code"]))
         payload["all_task_probabilities"] = fixed
         payload["binary_predictions"] = {code: value >= 0.31 for code, value in fixed.items()}
+        history_summaries = {
+            "ENGINE_OIL_CHANGE": "8 kez yapılmış · son yapılıştan bu yana 3165 km / 77 gün geçti · planlı periyodun %105'i dolmuş",
+            "CHAIN_CLEAN": "bu motoda daha önce hiç yapılmamış",
+        }
         payload["all_tasks"] = [
             {
                 "task_code": row["task_code"], "display_name": row["display_name_tr"],
+                "component_group": row["component_group"],
                 "probability": fixed[row["task_code"]], "rank": rank,
                 "confidence": "DUSUK" if row["product_status"] == "HIDDEN_BY_DEFAULT" else "ORTA",
                 "confidence_display": "DÜŞÜK" if row["product_status"] == "HIDDEN_BY_DEFAULT" else "ORTA",
@@ -1115,6 +1146,7 @@ class V3Module(unittest.TestCase):
                 "in_top_3": row["task_code"] in {
                     "ENGINE_OIL_CHANGE", "CHAIN_CLEAN", "GENERAL_SAFETY_INSPECTION"
                 },
+                "history_summary": history_summaries.get(row["task_code"]),
             }
             for rank, row in enumerate(ordered, start=1)
         ]
@@ -1195,6 +1227,20 @@ class V3Module(unittest.TestCase):
             self.assertIn(name, text)
         for pct in ("82.0%", "64.0%", "48.0%"):
             self.assertIn(pct, text)
+
+    def test_top_three_tasks_show_a_history_reason_when_available(self):
+        text = self.render["text"]
+        self.assertIn("8 kez yapılmış", text)
+        self.assertIn("3165 km / 77 gün geçti", text)
+        self.assertIn("planlı periyodun %105'i dolmuş", text)
+        self.assertIn("bu motoda daha önce hiç yapılmamış", text)
+
+    def test_all_predictions_are_grouped_by_component(self):
+        html = self.render["html"]
+        for group in ("ENGINE", "FINAL_DRIVE", "GENERAL"):
+            self.assertIn(">" + group + "<", html)
+        # a group header must precede the rows it groups
+        self.assertLess(html.index(">ENGINE<"), html.index("ENGINE_OIL_CHANGE"))
 
     def test_motorcycle_information_precedes_top_k_and_is_human_readable(self):
         text = self.render["text"]
